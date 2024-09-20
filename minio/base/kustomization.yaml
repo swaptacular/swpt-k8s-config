@@ -5,8 +5,10 @@ namespace: minio
 
 resources:
   - namespace.yaml
-  - statefulset.yaml
-  - service.yaml
+
+  # Temporarily switch these off:
+  # - statefulset.yaml
+  # - service.yaml
 
   # For our use-case, we do not need the ingress.
   # - ingress.yaml
