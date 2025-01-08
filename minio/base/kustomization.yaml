@@ -1,23 +1,6 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-namespace: minio
 
 resources:
-  - namespace.yaml
-
-  # Temporarily switch these off:
-  # - statefulset.yaml
-  # - service.yaml
-
-  # For our use-case, we do not need the ingress.
-  # - ingress.yaml
-
-  # We use a secretGenerator, so we do not need the secret.
-  # - secret.yaml
-
-secretGenerator:
-- name: minio
-  literals:
-  - rootuser=admin
-  - rootpassword=admin
+  - crds/
