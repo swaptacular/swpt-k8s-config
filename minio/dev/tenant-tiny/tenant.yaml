@@ -4,6 +4,12 @@ metadata:
   name: myminio
   namespace: minio-tenant
 spec:
+  ## Create buckets using the console user
+  buckets:
+    - name: "test-bucket1"
+      objectLock: false
+    - name: "test-bucket2"
+      objectLock: true
   ## Specification for MinIO Pool(s) in this Tenant.
   pools:
     ## Servers specifies the number of MinIO Tenant Pods / Servers in this pool.
