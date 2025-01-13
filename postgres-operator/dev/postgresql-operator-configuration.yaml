@@ -2,6 +2,7 @@ apiVersion: "acid.zalan.do/v1"
 kind: OperatorConfiguration
 metadata:
   name: postgresql-operator-default-configuration
+  namespace: postgres-operator
 configuration:
   docker_image: ghcr.io/zalando/spilo-17:4.0-p2
   max_instances: 3
