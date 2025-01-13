@@ -8,7 +8,7 @@ commonAnnotations:
   operator.min.io/support: "https://subnet.min.io"
   operator.min.io/version: v6.0.4
 
-commonLabels:
+labels:
   app.kubernetes.io/name: minio-operator
 
 resources:

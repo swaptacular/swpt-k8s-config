@@ -2,11 +2,11 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: postgres-operator
 
-commonLabels:
+labels:
   app.kubernetes.io/name: postgres-operator
 
 resources:
-  - /crds/
+  - crds/
   - namespace.yaml
   - postgresql-operator-default-configuration.yaml  
   - operator-service-account-rbac.yaml
