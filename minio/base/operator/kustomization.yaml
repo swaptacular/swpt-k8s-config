@@ -9,7 +9,7 @@ commonAnnotations:
   operator.min.io/version: v6.0.4
 
 commonLabels:
-  app.kubernetes.io/name: operator
+  app.kubernetes.io/name: minio-operator
 
 resources:
   - namespace.yaml
