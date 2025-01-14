@@ -8,8 +8,8 @@ configuration:
   max_instances: 3
   set_memory_request_to_limit: true
   kubernetes:
-    enable_finalizers: false
-    enable_owner_references: true
+    enable_finalizers: true
+    enable_owner_references: false
     enable_secrets_deletion: false
     enable_persistent_volume_claim_deletion: false
     watched_namespace: "*"
