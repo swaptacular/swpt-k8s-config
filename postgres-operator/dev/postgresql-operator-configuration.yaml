@@ -11,6 +11,8 @@ configuration:
     enable_finalizers: true
     enable_owner_references: true
     watched_namespace: "*"
+  teams_api:
+    enable_postgres_team_crd: false
   postgres_pod_resources:
     default_cpu_limit: "1"
     default_cpu_request: 100m
