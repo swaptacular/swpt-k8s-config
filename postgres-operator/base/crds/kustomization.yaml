@@ -3,3 +3,4 @@ kind: Kustomization
 resources:
   - postgresql.crd.yaml
   - operatorconfiguration.crd.yaml
+  - postgresteam.crd.yaml
