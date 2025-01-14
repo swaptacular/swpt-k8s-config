@@ -9,7 +9,7 @@ configuration:
   set_memory_request_to_limit: true
   kubernetes:
     enable_finalizers: true
-    enable_owner_references: true
+    enable_owner_references: false
     watched_namespace: "*"
   postgres_pod_resources:
     default_cpu_limit: "1"
