@@ -17,6 +17,6 @@ configuration:
     default_cpu_limit: "1"
     default_cpu_request: 100m
     default_memory_limit: 150Mi
-    default_memory_request: 100Mi
+    default_memory_request: 150Mi
   patroni:
     enable_patroni_failsafe_mode: true
