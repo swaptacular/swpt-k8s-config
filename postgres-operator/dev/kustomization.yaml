@@ -3,7 +3,8 @@ kind: Kustomization
 
 resources:
   - ../base/
-  - minimal-postgres-manifest.yaml
+  - spilo-custom-config.yaml
+  # - minimal-postgres-manifest.yaml
 
 patches:
   - path: postgresql-operator-configuration.yaml

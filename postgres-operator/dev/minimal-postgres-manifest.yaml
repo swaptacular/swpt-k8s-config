@@ -1,21 +1,33 @@
 apiVersion: "acid.zalan.do/v1"
 kind: postgresql
 metadata:
-  name: acid-minimal-cluster
+  name: test-cluster
   namespace: default
 spec:
-  teamId: "acid"
-  volume:
-    size: 1Gi
+  dockerImage: ghcr.io/zalando/spilo-17:4.0-p2
+  teamId: "swpt"
   numberOfInstances: 2
   users:
-    zalando:  # database owner
-    - superuser
-    - createdb
-    foo_user: []  # role for application foo
+    test_owner: []
   databases:
-    foo: zalando  # dbname: owner
-  preparedDatabases:
-    bar: {}
-  postgresql:
-    version: "17"
+    test: test_owner
+  patroni:
+    synchronous_mode: true
+  resources:
+    requests:
+      cpu: 10m
+    limits:
+      cpu: 500m
+      memory: 500Mi
+  volume:
+    size: 1Gi
+  additionalVolumes:
+    - name: minio-ca-certificate
+      mountPath: /certs/minio
+      targetContainers: []
+      volumeSource:
+        configMap:
+          name: kube-root-ca.crt
+  env:
+    - name: WALG_S3_CA_CERT_FILE
+      value: "/certs/minio/ca.crt"      
