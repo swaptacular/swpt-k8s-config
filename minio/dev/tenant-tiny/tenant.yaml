@@ -6,6 +6,8 @@ metadata:
 spec:
   ## Create buckets using the console user
   buckets:
+    - name: "swpt"
+      objectLock: false
     - name: "test-bucket1"
       objectLock: false
     - name: "test-bucket2"

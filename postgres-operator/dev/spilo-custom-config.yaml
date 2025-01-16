@@ -4,18 +4,18 @@ metadata:
   name: spilo-custom-config
   namespace: postgres-operator
 data:
-  WAL_S3_BUCKET: test-bucket1
+  WAL_S3_BUCKET: swpt
   WAL_BUCKET_SCOPE_PREFIX: ""
   WAL_BUCKET_SCOPE_SUFFIX: ""
   USE_WALG_BACKUP: "true"
   USE_WALG_RESTORE: "true"
   BACKUP_SCHEDULE: '00 01 * * *'
+  BACKUP_NUM_TO_RETAIN: "5"
   AWS_ACCESS_KEY_ID: console
   AWS_SECRET_ACCESS_KEY: console123
   AWS_S3_FORCE_PATH_STYLE: "true" # needed for MinIO
   AWS_ENDPOINT: https://minio.minio-tenant.svc.cluster.local:443 # Endpoint URL to your S3 Endpoint; MinIO in this example
   AWS_REGION: us-east-1
-  BACKUP_NUM_TO_RETAIN: "5"
   CLONE_USE_WALG_RESTORE: "true"
   WALG_DISABLE_S3_SSE: "true"
-  WALG_S3_CA_CERT_FILE: "/certs/minio/ca.crt"
+  WALG_S3_CA_CERT_FILE: "/certs/minio/ca.crt" # needed for MinIO
