@@ -4,7 +4,6 @@ metadata:
   name: test-cluster
   namespace: default
 spec:
-  dockerImage: ghcr.io/zalando/spilo-17:4.0-p2
   teamId: "swpt"
   numberOfInstances: 2
   users:
@@ -28,6 +27,6 @@ spec:
       volumeSource:
         configMap:
           name: kube-root-ca.crt
-  env:
-    - name: WALG_S3_CA_CERT_FILE
-      value: "/certs/minio/ca.crt"      
+  # env:
+  #   - name: WALG_S3_CA_CERT_FILE
+  #     value: "/certs/minio/ca.crt"
