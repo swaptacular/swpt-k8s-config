@@ -6,6 +6,8 @@ metadata:
 spec:
   teamId: "swpt"
   numberOfInstances: 2
+  postgresql:
+    version: "17"
   users:
     test_owner: []
   databases:
