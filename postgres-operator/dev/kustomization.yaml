@@ -6,8 +6,8 @@ secretGenerator:
   namespace: default
   literals:
     - AWS_SECRET_ACCESS_KEY=console123
-    - CLONE_AWS_SECRET_ACCESS_KEY=console123
-    - STANDBY_AWS_SECRET_ACCESS_KEY=console123
+    # - CLONE_AWS_SECRET_ACCESS_KEY=console123
+    # - STANDBY_AWS_SECRET_ACCESS_KEY=console123
 
 generatorOptions:
   disableNameSuffixHash: true
@@ -15,7 +15,7 @@ generatorOptions:
 resources:
   - ../base/
   - spilo-custom-config.yaml
-  - minimal-postgres-manifest.yaml
+  # - minimal-postgres-manifest.yaml
 
 patches:
   - path: postgresql-operator-configuration.yaml
