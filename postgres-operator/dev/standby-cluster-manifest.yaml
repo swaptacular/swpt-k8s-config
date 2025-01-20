@@ -40,8 +40,8 @@ spec:
       value: swpt
     - name: STANDBY_WAL_BUCKET_SCOPE_PREFIX
       value: ""
-    - name: STANDBY_WAL_BUCKET_SCOPE_SUFFIX
-      value: ""
+    # - name: STANDBY_WAL_BUCKET_SCOPE_SUFFIX
+    #   value: ""
     - name: STANDBY_USE_WALG_BACKUP
       value: "true"
     - name: STANDBY_USE_WALG_RESTORE
