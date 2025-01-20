@@ -5,7 +5,7 @@ metadata:
   namespace: default
 spec:
   teamId: "swpt"
-  numberOfInstances: 2
+  numberOfInstances: 1
   postgresql:
     version: "17"
   users:
