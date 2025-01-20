@@ -5,7 +5,7 @@ metadata:
   namespace: default
 spec:
   teamId: "swpt"
-  numberOfInstances: 1
+  numberOfInstances: 3
   postgresql:
     version: "17"
   users:
@@ -29,8 +29,8 @@ spec:
       volumeSource:
         configMap:
           name: kube-root-ca.crt
-  # standby:
-  #   s3_wal_path: "s3://swpt/spilo/test-cluster/wal/17"
+  standby:
+    s3_wal_path: "s3://swpt/spilo/test-cluster/wal/17"
   env:
     - name: STANDBY_WITH_WALE
       value: "true"
