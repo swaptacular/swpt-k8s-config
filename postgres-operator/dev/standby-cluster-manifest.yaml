@@ -5,15 +5,15 @@ metadata:
   namespace: default
 spec:
   teamId: "swpt"
-  numberOfInstances: 1
+  numberOfInstances: 2
   postgresql:
     version: "17"
-  users:
-    test_owner: []
-  databases:
-    test: test_owner
-  patroni:
-    synchronous_mode: true
+  # users:
+  #   test_owner: []
+  # databases:
+  #   test: test_owner
+  # patroni:
+  #   synchronous_mode: true
   resources:
     requests:
       cpu: 10m
