@@ -8,12 +8,12 @@ spec:
   numberOfInstances: 2
   postgresql:
     version: "17"
-  # users:
-  #   test_owner: []
-  # databases:
-  #   test: test_owner
-  # patroni:
-  #   synchronous_mode: true
+  users:
+    test_owner: []
+  databases:
+    test: test_owner
+  patroni:
+    synchronous_mode: true
   resources:
     requests:
       cpu: 10m
@@ -40,8 +40,8 @@ spec:
       value: swpt
     - name: STANDBY_WAL_BUCKET_SCOPE_PREFIX
       value: ""
-    # - name: STANDBY_WAL_BUCKET_SCOPE_SUFFIX
-    #   value: ""
+    - name: STANDBY_WAL_BUCKET_SCOPE_SUFFIX
+      value: ""
     - name: STANDBY_USE_WALG_BACKUP
       value: "true"
     - name: STANDBY_USE_WALG_RESTORE
