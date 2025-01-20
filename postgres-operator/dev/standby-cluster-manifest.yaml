@@ -1,0 +1,35 @@
+apiVersion: "acid.zalan.do/v1"
+kind: postgresql
+metadata:
+  name: standby-cluster
+  namespace: default
+spec:
+  teamId: "swpt"
+  numberOfInstances: 1
+  postgresql:
+    version: "17"
+  users:
+    test_owner: []
+  databases:
+    test: test_owner
+  patroni:
+    synchronous_mode: true
+  resources:
+    requests:
+      cpu: 10m
+    limits:
+      cpu: 500m
+      memory: 350Mi
+  volume:
+    size: 1Gi
+  additionalVolumes:
+    - name: minio-ca-certificate
+      mountPath: /certs/minio
+      targetContainers: []
+      volumeSource:
+        configMap:
+          name: kube-root-ca.crt
+  standby:
+    s3_wal_path: "s3://swpt/spilo/test-cluster/wal/17"
+  #   - name: WALG_S3_CA_CERT_FILE
+  #     value: "/certs/minio/ca.crt"
