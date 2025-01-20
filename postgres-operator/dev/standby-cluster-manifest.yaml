@@ -12,8 +12,8 @@ spec:
     test_owner: []
   databases:
     test: test_owner
-  patroni:
-    synchronous_mode: true
+  # patroni:
+  #   synchronous_mode: true
   resources:
     requests:
       cpu: 10m
