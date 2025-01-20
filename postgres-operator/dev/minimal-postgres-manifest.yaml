@@ -29,9 +29,6 @@ spec:
       volumeSource:
         configMap:
           name: kube-root-ca.crt
-  env:
-    - name: PGSSLMODE
-      value: disable
   # env:
   #   - name: WALG_S3_CA_CERT_FILE
   #     value: "/certs/minio/ca.crt"
