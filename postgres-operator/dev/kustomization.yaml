@@ -1,6 +1,9 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
+generatorOptions:
+  disableNameSuffixHash: true
+
 secretGenerator:
 - name: spilo-custom-secret
   namespace: default
@@ -44,9 +47,6 @@ secretGenerator:
       application: spilo
       cluster-name: test-cluster
       team: swpt
-
-generatorOptions:
-  disableNameSuffixHash: true
 
 resources:
   - ../base/
