@@ -15,8 +15,8 @@ generatorOptions:
 resources:
   - ../base/
   - spilo-custom-config.yaml
-  - minimal-postgres-manifest.yaml
-  - standby-cluster-manifest.yaml
+  # - minimal-postgres-manifest.yaml
+  # - standby-cluster-manifest.yaml
 
 patches:
   - path: postgresql-operator-configuration.yaml
