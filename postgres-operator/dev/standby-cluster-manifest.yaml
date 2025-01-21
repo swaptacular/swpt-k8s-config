@@ -40,8 +40,8 @@ spec:
       value: swpt
     - name: STANDBY_WAL_BUCKET_SCOPE_PREFIX
       value: ""
-    - name: STANDBY_WAL_BUCKET_SCOPE_SUFFIX
-      value: ""
+    # - name: STANDBY_WAL_BUCKET_SCOPE_SUFFIX
+    #   value: ""
     - name: STANDBY_USE_WALG_BACKUP
       value: "true"
     - name: STANDBY_USE_WALG_RESTORE
@@ -49,13 +49,15 @@ spec:
     - name: STANDBY_AWS_ACCESS_KEY_ID
       value: console
     - name: STANDBY_AWS_SECRET_ACCESS_KEY
-      value: console1234
+      value: console123
     - name: STANDBY_AWS_S3_FORCE_PATH_STYLE
       value: "true"
     - name: STANDBY_AWS_ENDPOINT
       value: "https://minio.minio-tenant.svc.cluster.local:443"
     - name: STANDBY_AWS_REGION
       value: us-east-1
+    - name: STANDBY_WALG_S3_CA_CERT_FILE
+      value: "/certs/minio/ca.crt"
   # env:
   #   - name: WALG_S3_CA_CERT_FILE
   #     value: "/certs/minio/ca.crt"
