@@ -14,6 +14,7 @@ configuration:
     watched_namespace: "*"
     pod_environment_configmap: "postgres-operator/spilo-custom-config"
     pod_environment_secret: "spilo-custom-secret"
+    enable_pod_disruption_budget: false
   postgres_pod_resources:
     default_cpu_limit: "1"
     default_cpu_request: 100m
