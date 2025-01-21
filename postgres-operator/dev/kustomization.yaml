@@ -15,7 +15,7 @@ generatorOptions:
 resources:
   - ../base/
   - spilo-custom-config.yaml
-  # - minimal-postgres-manifest.yaml
+  - minimal-postgres-manifest.yaml
   # - standby-cluster-manifest.yaml
 
 patches:
