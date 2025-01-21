@@ -29,6 +29,7 @@ data:
   # CLONE_AWS_S3_FORCE_PATH_STYLE: "true"
   # CLONE_AWS_ENDPOINT: "https://minio.minio-tenant.svc.cluster.local:443"
   # CLONE_AWS_REGION: us-east-1
+  # CLONE_WALG_DISABLE_S3_SSE: "true"
   # STANDBY_WITH_WALE: "true"
   # STANDBY_WALE_ENV_DIR: "/run/etc/wal-e.d/env-standby"
   # STANDBY_WAL_S3_BUCKET: swpt
@@ -41,3 +42,4 @@ data:
   # STANDBY_AWS_S3_FORCE_PATH_STYLE: "true"
   # STANDBY_AWS_ENDPOINT: "https://minio.minio-tenant.svc.cluster.local:443"
   # STANDBY_AWS_REGION: us-east-1
+  # STANDBY_WALG_DISABLE_S3_SSE: "true"

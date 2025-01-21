@@ -56,6 +56,8 @@ spec:
       value: "https://minio.minio-tenant.svc.cluster.local:443"
     - name: STANDBY_AWS_REGION
       value: us-east-1
+    - name: STANDBY_WALG_DISABLE_S3_SSE
+      value: "true"
     - name: STANDBY_WALG_S3_CA_CERT_FILE
       value: "/certs/minio/ca.crt"
   # env:
