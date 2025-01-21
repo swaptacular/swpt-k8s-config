@@ -22,6 +22,9 @@ spec:
       memory: 350Mi
   volume:
     size: 1Gi
+  clone:
+    cluster: "test-cluster"  # the same as the name of this cluster!
+    timestamp: "2199-01-01T00:00:00.000+00:00"  # far away in the future
   additionalVolumes:
     - name: minio-ca-certificate
       mountPath: /certs/minio
