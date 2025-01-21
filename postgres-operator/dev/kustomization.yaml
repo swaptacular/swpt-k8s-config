@@ -6,8 +6,44 @@ secretGenerator:
   namespace: default
   literals:
     - AWS_SECRET_ACCESS_KEY=console123
-    # - CLONE_AWS_SECRET_ACCESS_KEY=console123
-    # - STANDBY_AWS_SECRET_ACCESS_KEY=console123
+    - CLONE_AWS_SECRET_ACCESS_KEY=console123
+  options:
+    labels:
+      application: spilo
+      team: swpt
+- name: postgres.test-cluster.credentials.postgresql.acid.zalan.do
+  namespace: default
+  literals:
+    - username=postgres
+    - password=gMF2r5GpFIEoLx2AJWDbunRd61TLIRaQrj5OKHQrM20jTBJnCOTpWNt4HrpmLlW2
+  type: Opaque
+  options:
+    labels:
+      application: spilo
+      cluster-name: test-cluster
+      team: swpt
+- name: standby.test-cluster.credentials.postgresql.acid.zalan.do
+  namespace: default
+  literals:
+    - username=standby
+    - password=5n1LczUVX4abuJjtWUWERlxjWR0G1lyOMN34b4yT3Yv4l07Ctm841CK2doxiP2xo
+  type: Opaque
+  options:
+    labels:
+      application: spilo
+      cluster-name: test-cluster
+      team: swpt
+- name: test-owner.test-cluster.credentials.postgresql.acid.zalan.do
+  namespace: default
+  literals:
+    - username=test_owner
+    - password=NRvDlAID3vbwGsCZqRt8WGIoaRuMFGko9x9rahyHQrsemnMPcUzxaHTJMMBOFUbs
+  type: Opaque
+  options:
+    labels:
+      application: spilo
+      cluster-name: test-cluster
+      team: swpt
 
 generatorOptions:
   disableNameSuffixHash: true
@@ -15,7 +51,7 @@ generatorOptions:
 resources:
   - ../base/
   - spilo-custom-config.yaml
-  - minimal-postgres-manifest.yaml
+  # - minimal-postgres-manifest.yaml
   # - standby-cluster-manifest.yaml
 
 patches:
