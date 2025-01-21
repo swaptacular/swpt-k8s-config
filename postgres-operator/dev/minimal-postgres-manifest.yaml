@@ -29,9 +29,9 @@ spec:
       volumeSource:
         configMap:
           name: kube-root-ca.crt
-  # clone:
-  #   cluster: "test-cluster"  # the same as the name of this cluster!
-  #   timestamp: "2199-01-01T00:00:00.000+00:00"  # far away in the future
+  clone:
+    cluster: "test-cluster"  # the same as the name of this cluster!
+    timestamp: "2199-01-01T00:00:00.000+00:00"  # far away in the future
   # env:
   #   - name: WALG_S3_CA_CERT_FILE
   #     value: "/certs/minio/ca.crt"
