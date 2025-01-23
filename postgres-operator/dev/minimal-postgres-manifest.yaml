@@ -40,6 +40,24 @@ spec:
         secretKeyRef:
           name: spilo-env-secret
           key: AWS_SECRET_ACCESS_KEY
+    - name: CLONE_AWS_REGION
+      valueFrom:
+        secretKeyRef:
+          name: spilo-env-secret
+          key: AWS_REGION
+          optional: true
+    - name: CLONE_AWS_ENDPOINT
+      valueFrom:
+        secretKeyRef:
+          name: spilo-env-secret
+          key: AWS_ENDPOINT
+          optional: true
+    - name: CLONE_WALG_S3_CA_CERT_FILE
+      valueFrom:
+        secretKeyRef:
+          name: spilo-env-secret
+          key: WALG_S3_CA_CERT_FILE
+          optional: true
     - name: STANDBY_AWS_ACCESS_KEY_ID
       valueFrom:
         secretKeyRef:
@@ -50,6 +68,24 @@ spec:
         secretKeyRef:
           name: spilo-env-secret
           key: AWS_SECRET_ACCESS_KEY
+    - name: STANDBY_AWS_REGION
+      valueFrom:
+        secretKeyRef:
+          name: spilo-env-secret
+          key: AWS_REGION
+          optional: true
+    - name: STANDBY_AWS_ENDPOINT
+      valueFrom:
+        secretKeyRef:
+          name: spilo-env-secret
+          key: AWS_ENDPOINT
+          optional: true
+    - name: STANDBY_WALG_S3_CA_CERT_FILE
+      valueFrom:
+        secretKeyRef:
+          name: spilo-env-secret
+          key: WALG_S3_CA_CERT_FILE
+          optional: true
 
   # # Uncomment the next lines to recover from the S3 backup. Once the
   # # data has been recovered successfully, the lines can be commented again.

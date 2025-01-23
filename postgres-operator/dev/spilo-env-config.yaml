@@ -12,10 +12,7 @@ data:
   USE_WALG_BACKUP: "true"
   USE_WALG_RESTORE: "true"
   AWS_S3_FORCE_PATH_STYLE: "true" # needed for MinIO
-  AWS_ENDPOINT: "https://minio.minio-tenant.svc.cluster.local:443" # Endpoint URL to your S3 Endpoint; MinIO in this example
-  AWS_REGION: us-east-1
   WALG_DISABLE_S3_SSE: "true"
-  WALG_S3_CA_CERT_FILE: "/certs/minio/ca.crt" # needed for MinIO
   CLONE_METHOD: CLONE_WITH_WALE
   CLONE_WAL_S3_BUCKET: swpt
   CLONE_WAL_BUCKET_SCOPE_PREFIX: ""
@@ -23,10 +20,7 @@ data:
   CLONE_USE_WALG_BACKUP: "true"
   CLONE_USE_WALG_RESTORE: "true"
   CLONE_AWS_S3_FORCE_PATH_STYLE: "true"
-  CLONE_AWS_ENDPOINT: "https://minio.minio-tenant.svc.cluster.local:443"
-  CLONE_AWS_REGION: us-east-1
   CLONE_WALG_DISABLE_S3_SSE: "true"
-  CLONE_WALG_S3_CA_CERT_FILE: "/certs/minio/ca.crt"
   STANDBY_WITH_WALE: "true"
   STANDBY_WALE_ENV_DIR: "/run/etc/wal-e.d/env-standby"
   STANDBY_WAL_S3_BUCKET: swpt
@@ -35,7 +29,4 @@ data:
   STANDBY_USE_WALG_BACKUP: "true"
   STANDBY_USE_WALG_RESTORE: "true"
   STANDBY_AWS_S3_FORCE_PATH_STYLE: "true"
-  STANDBY_AWS_ENDPOINT: "https://minio.minio-tenant.svc.cluster.local:443"
-  STANDBY_AWS_REGION: us-east-1
   STANDBY_WALG_DISABLE_S3_SSE: "true"
-  STANDBY_WALG_S3_CA_CERT_FILE: "/certs/minio/ca.crt"
