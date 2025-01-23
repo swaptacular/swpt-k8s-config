@@ -5,15 +5,15 @@ metadata:
   namespace: default
 spec:
   teamId: "swpt"
-  numberOfInstances: 1
+  numberOfInstances: 2
   postgresql:
     version: "17"
   users:
     test_owner: []
   databases:
     test: test_owner
-  # patroni:
-  #   synchronous_mode: true
+  patroni:
+    synchronous_mode: true
   resources:
     requests:
       cpu: 10m
@@ -49,7 +49,10 @@ spec:
     - name: STANDBY_AWS_ACCESS_KEY_ID
       value: console
     - name: STANDBY_AWS_SECRET_ACCESS_KEY
-      value: console123
+      valueFrom:
+        secretKeyRef:
+          name: spilo-custom-secret
+          key: AWS_SECRET_ACCESS_KEY
     - name: STANDBY_AWS_S3_FORCE_PATH_STYLE
       value: "true"
     - name: STANDBY_AWS_ENDPOINT
@@ -60,6 +63,3 @@ spec:
       value: "true"
     - name: STANDBY_WALG_S3_CA_CERT_FILE
       value: "/certs/minio/ca.crt"
-  # env:
-  #   - name: WALG_S3_CA_CERT_FILE
-  #     value: "/certs/minio/ca.crt"
