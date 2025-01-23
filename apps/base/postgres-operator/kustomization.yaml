@@ -13,3 +13,6 @@ resources:
   - postgres-operator.yaml
   - api-service.yaml  # operator API to be used by the UI
   - spilo-env-config.yaml # custom configuration for all spilo images
+
+patches:
+  - path: postgresql-operator-custom-configuration.yaml
