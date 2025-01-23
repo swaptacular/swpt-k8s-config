@@ -11,8 +11,6 @@ data:
   WAL_BUCKET_SCOPE_SUFFIX: ""
   USE_WALG_BACKUP: "true"
   USE_WALG_RESTORE: "true"
-  AWS_ACCESS_KEY_ID: console
-  AWS_SECRET_ACCESS_KEY: console123
   AWS_S3_FORCE_PATH_STYLE: "true" # needed for MinIO
   AWS_ENDPOINT: "https://minio.minio-tenant.svc.cluster.local:443" # Endpoint URL to your S3 Endpoint; MinIO in this example
   AWS_REGION: us-east-1
@@ -22,9 +20,8 @@ data:
   CLONE_WAL_S3_BUCKET: swpt
   CLONE_WAL_BUCKET_SCOPE_PREFIX: ""
   CLONE_WAL_BUCKET_SCOPE_SUFFIX: ""
+  CLONE_USE_WALG_BACKUP: "true"
   CLONE_USE_WALG_RESTORE: "true"
-  CLONE_AWS_ACCESS_KEY_ID: console
-  CLONE_AWS_SECRET_ACCESS_KEY: console123
   CLONE_AWS_S3_FORCE_PATH_STYLE: "true"
   CLONE_AWS_ENDPOINT: "https://minio.minio-tenant.svc.cluster.local:443"
   CLONE_AWS_REGION: us-east-1
@@ -37,8 +34,6 @@ data:
   STANDBY_WAL_BUCKET_SCOPE_SUFFIX: ""
   STANDBY_USE_WALG_BACKUP: "true"
   STANDBY_USE_WALG_RESTORE: "true"
-  STANDBY_AWS_ACCESS_KEY_ID: console
-  STANDBY_AWS_SECRET_ACCESS_KEY: console123
   STANDBY_AWS_S3_FORCE_PATH_STYLE: "true"
   STANDBY_AWS_ENDPOINT: "https://minio.minio-tenant.svc.cluster.local:443"
   STANDBY_AWS_REGION: us-east-1

@@ -8,8 +8,8 @@ secretGenerator:
 - name: spilo-custom-secret
   namespace: default
   literals:
+    - AWS_ACCESS_KEY_ID=console
     - AWS_SECRET_ACCESS_KEY=console123
-    - CLONE_AWS_SECRET_ACCESS_KEY=console123
   options:
     labels:
       application: spilo
