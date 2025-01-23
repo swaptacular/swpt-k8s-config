@@ -15,4 +15,4 @@ resources:
   - spilo-env-config.yaml # custom configuration for all spilo images
 
 patches:
-  - path: postgresql-operator-custom-configuration.yaml
+  - path: patches/postgresql-operator-configuration-tweaks.yaml
