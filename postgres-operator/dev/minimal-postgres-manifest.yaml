@@ -33,22 +33,22 @@ spec:
     - name: CLONE_AWS_ACCESS_KEY_ID
       valueFrom:
         secretKeyRef:
-          name: spilo-custom-secret
+          name: spilo-env-secret
           key: AWS_ACCESS_KEY_ID
     - name: CLONE_AWS_SECRET_ACCESS_KEY
       valueFrom:
         secretKeyRef:
-          name: spilo-custom-secret
+          name: spilo-env-secret
           key: AWS_SECRET_ACCESS_KEY
     - name: STANDBY_AWS_ACCESS_KEY_ID
       valueFrom:
         secretKeyRef:
-          name: spilo-custom-secret
+          name: spilo-env-secret
           key: AWS_ACCESS_KEY_ID
     - name: STANDBY_AWS_SECRET_ACCESS_KEY
       valueFrom:
         secretKeyRef:
-          name: spilo-custom-secret
+          name: spilo-env-secret
           key: AWS_SECRET_ACCESS_KEY
 
   # # Uncomment the next lines to recover from the S3 backup. Once the

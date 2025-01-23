@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: spilo-custom-config
+  name: spilo-env-config
   namespace: postgres-operator
 data:
   BACKUP_SCHEDULE: '00 01 * * *'

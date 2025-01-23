@@ -5,7 +5,7 @@ generatorOptions:
   disableNameSuffixHash: true
 
 secretGenerator:
-- name: spilo-custom-secret
+- name: spilo-env-secret
   namespace: default
   literals:
     - AWS_ACCESS_KEY_ID=console
@@ -83,7 +83,7 @@ secretGenerator:
 
 resources:
   - ../base/
-  - spilo-custom-config.yaml
+  - spilo-env-config.yaml
   - minimal-postgres-manifest.yaml
   # - standby-cluster-manifest.yaml
 

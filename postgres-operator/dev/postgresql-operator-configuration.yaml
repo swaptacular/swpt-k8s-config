@@ -12,9 +12,8 @@ configuration:
     enable_owner_references: true
     enable_persistent_volume_claim_deletion: false
     watched_namespace: "*"
-    pod_environment_configmap: "postgres-operator/spilo-custom-config"
-    pod_environment_secret: "spilo-custom-secret"
-    enable_pod_disruption_budget: false
+    pod_environment_configmap: "postgres-operator/spilo-env-config"
+    pod_environment_secret: "spilo-env-secret"
   postgres_pod_resources:
     default_cpu_limit: "1"
     default_cpu_request: 100m

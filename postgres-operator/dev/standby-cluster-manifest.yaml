@@ -51,7 +51,7 @@ spec:
   #   - name: STANDBY_AWS_SECRET_ACCESS_KEY
   #     valueFrom:
   #       secretKeyRef:
-  #         name: spilo-custom-secret
+  #         name: spilo-env-secret
   #         key: AWS_SECRET_ACCESS_KEY
   #   - name: STANDBY_AWS_S3_FORCE_PATH_STYLE
   #     value: "true"
