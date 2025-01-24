@@ -108,3 +108,7 @@ spec:
   # # to detach the standby cluster from the primary cluster.
   # standby:
   #   s3_wal_path: "s3://swpt/spilo/test-cluster/wal/17"
+
+  # env:
+  #   - name: STANDBY_WITH_WALE
+  #     value: "true"
