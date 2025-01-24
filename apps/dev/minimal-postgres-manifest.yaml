@@ -30,6 +30,11 @@ spec:
         configMap:
           name: kube-root-ca.crt
   env:
+    - name: CLONE_WALG_LIBSODIUM_KEY
+      valueFrom:
+        secretKeyRef:
+          name: spilo-env-secret
+          key: WALG_LIBSODIUM_KEY
     - name: CLONE_AWS_ACCESS_KEY_ID
       valueFrom:
         secretKeyRef:
@@ -58,6 +63,11 @@ spec:
           name: spilo-env-secret
           key: WALG_S3_CA_CERT_FILE
           optional: true
+    - name: STANDBY_WALG_LIBSODIUM_KEY
+      valueFrom:
+        secretKeyRef:
+          name: spilo-env-secret
+          key: WALG_LIBSODIUM_KEY
     - name: STANDBY_AWS_ACCESS_KEY_ID
       valueFrom:
         secretKeyRef:

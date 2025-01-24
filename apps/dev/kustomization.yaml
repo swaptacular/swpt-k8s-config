@@ -8,6 +8,7 @@ secretGenerator:
 - name: spilo-env-secret
   namespace: default
   literals:
+    - WALG_LIBSODIUM_KEY=bU13L4VxsEQlyjvPQ65SLsVcDokBkvZ4FuV1sD7CWGE=  # Run `openssl rand -base64 32` to generate a key.
     - AWS_ACCESS_KEY_ID=console
     - AWS_SECRET_ACCESS_KEY=console123
     # - AWS_REGION=us-east-1  # When Amazon S3 is used, specifies the region (optional).
@@ -87,5 +88,5 @@ secretGenerator:
 resources:
   - ../base/foo-bar/
   - ../base/postgres-operator/
-  - minimal-postgres-manifest.yaml
+  # - minimal-postgres-manifest.yaml
   # - standby-cluster-manifest.yaml
