@@ -96,8 +96,8 @@ spec:
           name: spilo-env-secret
           key: WALG_S3_CA_CERT_FILE
           optional: true
-  # standby:
-  #   s3_wal_path: "s3://swpt/spilo/test-cluster/wal/17"
+  standby:
+    s3_wal_path: "s3://swpt/spilo/test-cluster/wal/17"
 
   # env:
   #   - name: STANDBY_WITH_WALE
