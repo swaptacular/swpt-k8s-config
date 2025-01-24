@@ -8,10 +8,10 @@ secretGenerator:
 - name: spilo-env-secret
   namespace: default
   literals:
-    - WALG_LIBSODIUM_KEY=bU13L4VxsEQlyjvPQ65SLsVcDokBkvZ4FuV1sD7CWGE=  # Run `openssl rand -base64 32` to generate a key.
-    - AWS_ACCESS_KEY_ID=console
-    - AWS_SECRET_ACCESS_KEY=console123
-    # - AWS_REGION=us-east-1  # When Amazon S3 is used, specifies the region (optional).
+    - "WALG_LIBSODIUM_KEY=bU13L4VxsEQlyjvPQ65SLsVcDokBkvZ4FuV1sD7CWGE="  # Run `openssl rand -base64 32` to generate a key.
+    - "AWS_ACCESS_KEY_ID=console"  # The "username" for the S3 service.
+    - "AWS_SECRET_ACCESS_KEY=console123"  # The "password" for the S3 service.
+    # - "AWS_REGION=us-east-1"  # When Amazon S3 is used, specifies the region (optional).
     - "AWS_ENDPOINT=https://minio.minio-tenant.svc.cluster.local:443"  # Use a local MinIO S3 server (optional).
     - "WALG_S3_CA_CERT_FILE=/certs/minio/ca.crt"  # The trusted CA for the local MinIO S3 server (optional).
   options:
@@ -88,5 +88,5 @@ secretGenerator:
 resources:
   - ../base/foo-bar/
   - ../base/postgres-operator/
-  # - minimal-postgres-manifest.yaml
+  - minimal-postgres-manifest.yaml
   # - standby-cluster-manifest.yaml
