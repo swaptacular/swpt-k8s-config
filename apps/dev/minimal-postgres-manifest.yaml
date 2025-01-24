@@ -97,11 +97,11 @@ spec:
           key: WALG_S3_CA_CERT_FILE
           optional: true
 
-  # # Uncomment the next lines to recover from the S3 backup. Once the
-  # # data has been recovered successfully, the lines can be commented again.
-  # clone:
-  #   cluster: "test-cluster"  # the same as the name of this cluster!
-  #   timestamp: "2199-01-01T00:00:00.000+00:00"  # far away in the future
+  # Uncomment the next lines to recover from the S3 backup. Once the
+  # data has been recovered successfully, the lines can be commented again.
+  clone:
+    cluster: "test-cluster"  # the same as the name of this cluster!
+    timestamp: "2199-01-01T00:00:00.000+00:00"  # far away in the future
 
   # # Uncomment the next lines to create a standby cluster from the S3 backup.
   # # Once the standby cluster has been sycnronized, comment the lines again
