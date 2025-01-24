@@ -88,5 +88,5 @@ secretGenerator:
 resources:
   - ../base/foo-bar/
   - ../base/postgres-operator/
-  # - minimal-postgres-manifest.yaml
+  - minimal-postgres-manifest.yaml
   # - standby-cluster-manifest.yaml
