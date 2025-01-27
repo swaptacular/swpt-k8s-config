@@ -1,0 +1,21 @@
+apiVersion: rabbitmq.com/v1beta1
+kind: RabbitmqCluster
+metadata:
+  name: test-broker
+  namespace: default
+spec:
+  replicas: 1
+  persistence:
+    # storageClassName: fast
+    storage: 1Gi
+  resources:
+    requests:
+      cpu: 100m
+      memory: 700Mi
+    limits:
+      cpu: 1000m
+      memory: 700Mi
+  rabbitmq:
+    additionalPlugins:
+      - rabbitmq_management
+      - rabbitmq_random_exchange
