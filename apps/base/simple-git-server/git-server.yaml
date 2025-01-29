@@ -35,7 +35,7 @@ spec:
       #     - /home/git/repositories
       #     volumeMounts:
       #       - mountPath: "/home/git/repositories"
-      #         name: simple-git-server-git-repositories
+      #         name: simple-git-server-repositories
       #         readOnly: false
       containers:
         - image: docker.io/rockstorm/git-server:2.47
@@ -49,9 +49,9 @@ spec:
       # imagePullSecrets:
       #   - name: <YOUR CONTAINER REGISTRY CREDENTIALS SECRET NAME>
       volumes:
-        - name: simple-git-server-git-repositories
+        - name: simple-git-server-repositories
           persistentVolumeClaim:
-            claimName: simple-git-server-git-repositories
+            claimName: simple-git-server-repositories
         # - name: simple-git-server-git-ssh
         #   configMap:
         #     name: kube-root-ca.crt
