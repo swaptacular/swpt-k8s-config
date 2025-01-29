@@ -8,10 +8,11 @@ commonLabels:
 configMapGenerator:
   - name: sshd-config
     files:
-      - sshd_config
-      - trusted_user_ca_keys
+      - config/sshd_config
+      - config/trusted_user_ca_keys
 
 resources:
   - namespace.yaml
   - pvc.yaml
-  - git-server.yaml
+  - service.yaml
+  - deployment.yaml
