@@ -44,7 +44,7 @@ spec:
             - containerPort: 22
           volumeMounts:
             - mountPath: "/srv/git"
-              name: simple-git-server-git-repositories
+              name: simple-git-server-repositories
               readOnly: false
       # imagePullSecrets:
       #   - name: <YOUR CONTAINER REGISTRY CREDENTIALS SECRET NAME>
