@@ -5,6 +5,14 @@ namespace: simple-git-server
 commonLabels:
   app.kubernetes.io/name: simple-git-server
 
+configMapGenerator:
+  - name: sshd-config
+    files:
+      - sshd_config.txt
+  - name: trusted-user-ca-keys
+    files:
+      - trusted_user_ca_keys.txt
+
 resources:
   - namespace.yaml
   - pvc.yaml

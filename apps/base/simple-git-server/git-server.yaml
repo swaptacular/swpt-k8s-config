@@ -46,6 +46,10 @@ spec:
             - mountPath: "/srv/git"
               name: simple-git-server-repositories
               readOnly: false
+            - name: simple-git-server-sshd-config
+              mountPath: /etc/ssh/sshd_config
+            - name: simple-git-server-trusted-user-ca-keys
+              mountPath: /etc/ssh/trusted_user_ca_keys
       # imagePullSecrets:
       #   - name: <YOUR CONTAINER REGISTRY CREDENTIALS SECRET NAME>
       volumes:
@@ -55,3 +59,9 @@ spec:
         # - name: simple-git-server-git-ssh
         #   configMap:
         #     name: kube-root-ca.crt
+        - name: simple-git-server-sshd-config
+          configMap:
+            name: sshd-config
+        - name: simple-git-server-trusted-user-ca-keys
+          configMap:
+            name: trusted-user-ca-keys
