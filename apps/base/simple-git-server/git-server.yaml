@@ -43,11 +43,17 @@ spec:
           ports:
             - containerPort: 22
           volumeMounts:
-            - mountPath: "/srv/git"
+            - mountPath: "/srv/git/"
               name: simple-git-server-repositories
               readOnly: false
             - name: simple-git-server-sshd-config
-              mountPath: /etc/ssh
+              mountPath: "/etc/ssh/sshd_config"
+              subPath: sshd_config
+              readOnly: true
+            - name: simple-git-server-sshd-config
+              mountPath: "/etc/ssh/trusted_user_ca_keys"
+              subPath: trusted_user_ca_keys
+              readOnly: true
       # imagePullSecrets:
       #   - name: <YOUR CONTAINER REGISTRY CREDENTIALS SECRET NAME>
       volumes:
