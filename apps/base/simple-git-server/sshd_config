@@ -14,7 +14,7 @@
 #IgnoreRhosts yes
 
 # override default of no subsystems
-Subsystem	sftp	/usr/lib/ssh/sftp-server
+# Subsystem	sftp	/usr/lib/ssh/sftp-server
 
 AllowTcpForwarding no
 GatewayPorts       no

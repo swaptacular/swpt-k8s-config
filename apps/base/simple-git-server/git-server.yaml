@@ -47,9 +47,7 @@ spec:
               name: simple-git-server-repositories
               readOnly: false
             - name: simple-git-server-sshd-config
-              mountPath: /etc/ssh/sshd_config
-            - name: simple-git-server-trusted-user-ca-keys
-              mountPath: /etc/ssh/trusted_user_ca_keys
+              mountPath: /etc/ssh
       # imagePullSecrets:
       #   - name: <YOUR CONTAINER REGISTRY CREDENTIALS SECRET NAME>
       volumes:
@@ -62,6 +60,3 @@ spec:
         - name: simple-git-server-sshd-config
           configMap:
             name: sshd-config
-        - name: simple-git-server-trusted-user-ca-keys
-          configMap:
-            name: trusted-user-ca-keys

@@ -8,10 +8,8 @@ commonLabels:
 configMapGenerator:
   - name: sshd-config
     files:
-      - sshd_config.txt
-  - name: trusted-user-ca-keys
-    files:
-      - trusted_user_ca_keys.txt
+      - sshd_config
+      - trusted_user_ca_keys
 
 resources:
   - namespace.yaml
