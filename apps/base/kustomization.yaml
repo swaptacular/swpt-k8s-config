@@ -5,3 +5,4 @@ resources:
   - foo-bar/
   - postgres-operator/
   - rabbitmq-system/
+  - simple-git-server/

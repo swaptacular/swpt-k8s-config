@@ -1,0 +1,57 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: simple-git-server
+spec:
+  ports:
+    - port: 22
+  selector:
+    app: simple-git-server
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simple-git-server
+spec:
+  strategy:
+    type: Recreate
+  replicas: 1
+  selector:
+    matchLabels:
+      app: simple-git-server
+  template:
+    metadata:
+      labels:
+        app: simple-git-server
+    spec:
+      # initContainers:
+      #   - name: take-git-repositories-dir-ownership
+      #     image: <YOUR CONTAINER REGISTRY PREFIX>/simple-git-server:latest
+      #     command:
+      #     - chown
+      #     - -R
+      #     - git:git
+      #     - /home/git/repositories
+      #     volumeMounts:
+      #       - mountPath: "/home/git/repositories"
+      #         name: simple-git-server-git-repositories
+      #         readOnly: false
+      containers:
+        - image: docker.io/rockstorm/git-server:2.47
+          name: version-control-service
+          ports:
+            - containerPort: 22
+          volumeMounts:
+            - mountPath: "/srv/git"
+              name: simple-git-server-git-repositories
+              readOnly: false
+      # imagePullSecrets:
+      #   - name: <YOUR CONTAINER REGISTRY CREDENTIALS SECRET NAME>
+      volumes:
+        - name: simple-git-server-git-repositories
+          persistentVolumeClaim:
+            claimName: simple-git-server-git-repositories
+        # - name: simple-git-server-git-ssh
+        #   configMap:
+        #     name: kube-root-ca.crt
