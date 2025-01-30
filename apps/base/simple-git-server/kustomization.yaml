@@ -11,6 +11,12 @@ configMapGenerator:
       - config/sshd_config
       - config/trusted_user_ca_keys
 
+secretGenerator:
+  - name: host-keys
+    files:
+      - secrets/ssh_host_rsa_key.pub
+      - secrets/ssh_host_rsa_key
+
 resources:
   - namespace.yaml
   - pvc.yaml

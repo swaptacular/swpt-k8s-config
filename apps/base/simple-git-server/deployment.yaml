@@ -19,6 +19,9 @@ spec:
           name: version-control-service
           ports:
             - containerPort: 22
+          env:
+            - name: SSH_HOST_KEYS_PATH
+              value: "/tmp/host-keys"
           volumeMounts:
             - mountPath: "/srv/git/"
               name: simple-git-server-repositories
@@ -31,6 +34,9 @@ spec:
               mountPath: "/etc/ssh/trusted_user_ca_keys"
               subPath: trusted_user_ca_keys
               readOnly: true
+            - mountPath: "/tmp/host-keys/"
+              name: simple-git-server-host-keys
+              readOnly: true
       volumes:
         - name: simple-git-server-repositories
           persistentVolumeClaim:
@@ -38,3 +44,6 @@ spec:
         - name: simple-git-server-sshd-config
           configMap:
             name: sshd-config
+        - name: simple-git-server-host-keys
+          secret:
+            secretName: host-keys
