@@ -34,6 +34,10 @@ spec:
               mountPath: "/etc/ssh/trusted_user_ca_keys"
               subPath: trusted_user_ca_keys
               readOnly: true
+            - name: simple-git-server-host-keys
+              mountPath: "/home/git/.ssh/authorized_keys"
+              subPath: ssh_host_rsa_key.pub
+              readOnly: true
             - mountPath: "/tmp/host-keys/"
               name: simple-git-server-host-keys
               readOnly: true
