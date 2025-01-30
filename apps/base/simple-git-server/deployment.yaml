@@ -37,10 +37,10 @@ spec:
             - name: simple-git-server-host-keys
               mountPath: "/home/git/.ssh/authorized_keys"
               subPath: ssh_host_rsa_key.pub
-              readOnly: true
+              readOnly: false
             - mountPath: "/tmp/host-keys/"
               name: simple-git-server-host-keys
-              readOnly: false
+              readOnly: true
       volumes:
         - name: simple-git-server-repositories
           persistentVolumeClaim:
