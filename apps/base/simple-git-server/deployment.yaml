@@ -39,7 +39,7 @@ spec:
             - name: simple-git-server-host-keys
               mountPath: "/etc/ssh/authorized_keys"
               subPath: ssh_host_rsa_key.pub
-              readOnly: false
+              readOnly: true
             - mountPath: "/tmp/host-keys/"
               name: simple-git-server-host-keys
               readOnly: true
