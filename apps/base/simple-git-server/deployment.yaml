@@ -22,6 +22,8 @@ spec:
           env:
             - name: SSH_HOST_KEYS_PATH
               value: "/tmp/host-keys"
+            - name: SSH_AUTHORIZED_KEYS_FILE
+              value: "/etc/ssh/authorized_keys"
           volumeMounts:
             - mountPath: "/srv/git/"
               name: simple-git-server-repositories
@@ -35,7 +37,7 @@ spec:
               subPath: trusted_user_ca_keys
               readOnly: true
             - name: simple-git-server-host-keys
-              mountPath: "/home/git/.ssh/authorized_keys"
+              mountPath: "/etc/ssh/authorized_keys"
               subPath: ssh_host_rsa_key.pub
               readOnly: false
             - mountPath: "/tmp/host-keys/"

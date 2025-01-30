@@ -18,7 +18,7 @@ PasswordAuthentication no
 ChallengeResponseAuthentication no
 
 PubkeyAuthentication yes
-AuthorizedKeysFile .ssh/authorized_keys
+AuthorizedKeysFile /etc/ssh/authorized_keys
 
 TrustedUserCAKeys /etc/ssh/trusted_user_ca_keys
 
