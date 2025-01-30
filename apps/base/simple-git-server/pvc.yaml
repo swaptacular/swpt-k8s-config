@@ -4,7 +4,7 @@ metadata:
   name: simple-git-server-repositories
 spec:
   accessModes:
-    - ReadWriteOncePod
+    - ReadWriteOnce  # Should be "ReadWriteOncePod", but this is not supported everywhere yet!
   resources:
     requests:
       storage: 1Gi
