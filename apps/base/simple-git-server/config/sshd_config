@@ -1,10 +1,3 @@
-#HostKey /etc/ssh/ssh_host_rsa_key
-#HostKey /etc/ssh/ssh_host_ecdsa_key
-#HostKey /etc/ssh/ssh_host_ed25519_key
-
-
-#AuthorizedPrincipalsFile none
-
 # For this to work you will also need host keys in /etc/ssh/ssh_known_hosts
 #HostbasedAuthentication no
 # Change to yes if you don't trust ~/.ssh/known_hosts for
@@ -13,8 +6,7 @@
 # Don't read the user's ~/.rhosts and ~/.shosts files
 #IgnoreRhosts yes
 
-# override default of no subsystems
-# Subsystem	sftp	/usr/lib/ssh/sftp-server
+#AuthorizedPrincipalsFile none
 
 AllowTcpForwarding no
 GatewayPorts       no

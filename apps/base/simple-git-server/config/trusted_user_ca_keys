@@ -1,12 +1,33 @@
-# Keys are listed one per line (normally, .pub files contain only one
-# line). Empty lines and comments starting with ‘#’ are allowed.
+# In this file, keys are listed one per line. Empty lines and comments
+# starting with ‘#’ are allowed.
 #
-# To convert your .crt file to a .pub file do this:
+# To declare your Swaptacular node's self-signed root-CA certificate as
+# a trusted certificate, you must first convert the certificate's .crt file
+# to a .pub file. To do this:
 #
-# 1. Extract the public key
-# $ openssl x509 -in CERT.crt -pubkey -noout > CERT.pub.tmp
+#   1. Extract the public key
 #
-# 2. Convert to a SSH format (PKCS8)
-# $ ssh-keygen -f CERT.pub.tmp -i -m PKCS8 > CERT.pub
+#   $ openssl x509 -in ~/src/swpt_ca_scripts/root-ca.crt -pubkey -noout > CERT.pub.tmp
+#
+#   In the above command "~/src/swpt_ca_scripts/root-ca.crt" is the path to
+#   the Swaptacular node's self-signed root-CA certificate.
+#
+#   2. Convert the public key to an SSH format (PKCS8)
+#
+#   $ ssh-keygen -f CERT.pub.tmp -i -m PKCS8 > CERT.pub
+#
+#   The above command will generate a "CERT.pub" file, the contents of wihch
+#   must be added to this configuration file.
+#
+# To generate a client certificate, run this command:
+#
+# $ ssh-keygen -s ~/src/swpt_ca_scripts/private/root-ca.key -I some_id_to_show_in_logs -n git ~/.ssh/id_rsa.pub
+#
+# In the above command "~/src/swpt_ca_scripts/private/root-ca.key" is the path
+# to the Swaptacular node's root-CA private key, and "~/.ssh/id_rsa.pub" is
+# the path to a locally generated SSH key (it could also be named "id_ed25519.pub"
+# for example). The command will generate a "id_rsa-cert.pub" file in the same
+# directory (~/.ssh/ in this example), which will be used by the ssh client
+# to authenticate.
 
 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCJfDWvw+LxOW1ECcpoHdFw+ygG4XSeVrB9JFVdIcrrVHqIXDPjvJKXrQ2TadeaTA2i1XUv+XwJr2ZN3OZ6dGLxddPQD4ZG6ciT4iK4TOjAiauE8gQPHR1uzShoK2TGfuYXma2lOnB4s/w5Tif+an5NzHRuDzAwXHPVfVeb9kgIO4A761CztwdTPyEM0jocpoz03Ch4DgYvwf2r+P+1x2Hm5htipNigkhdwtdw5yjUuTR3ylFIeokwcIZomYcGGO66i7EWGYzhr811uApgLJH5YtqeFnD054ia+AbOdCXEr1ZXvpol1Vqo6p/R015zBjMQ8wcdzd+PMSzHvXMLMjG6POhRvQ2yy3cmDpPPIzMHOcNxXhdarVLKDt8/SJlo4O+buAbHdib0pRXpqbPS6rjFwArB93H7TOcY+xl3EGAsjz+1wRPlbi1TN9XNRyQKxLK21QpYql4iYoD8Wac6iWQDDKNaTr88YFUu+MMUfZuQ+0MmXQ1yA/wfqyC9pjm4tkc0=
