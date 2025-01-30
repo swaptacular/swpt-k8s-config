@@ -40,7 +40,7 @@ spec:
               readOnly: true
             - mountPath: "/tmp/host-keys/"
               name: simple-git-server-host-keys
-              readOnly: true
+              readOnly: false
       volumes:
         - name: simple-git-server-repositories
           persistentVolumeClaim:
