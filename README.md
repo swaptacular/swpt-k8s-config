@@ -3,7 +3,7 @@ Swaptacular GitOps repo for deploying Kubernetes clusters
 
 ## Bootstrapping the GitOps
 
-```shell
+```console
 $ export MY_CLUSTER_IP=127.0.0.1  # Put here the public IP of your Kubernetes cluster.
 
 $ cd simple-git-server/
