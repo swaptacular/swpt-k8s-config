@@ -7,8 +7,8 @@ spec:
     app: simple-git-server
   ports:
     - name: ssh
+      port: 2222
       protocol: TCP
       appProtocol: ssh
-      port: 22
       targetPort: 22
   type: LoadBalancer
