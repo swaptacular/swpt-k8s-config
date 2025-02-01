@@ -39,6 +39,13 @@ The key's randomart image is:
 * Kubernetes cluster!                                          *
 ****************************************************************
 
+$ ls ~/.ssh  # Inspect the SSH keys installed on your computer:
+id_rsa  id_rsa.pub  known_hosts
+
+$ ssh-keygen -s ~/swpt_ca_scripts/private/root-ca.key -I johndoe -n git ~/.ssh/id_rsa.pub  # Issue a certificate for the "id_rsa" key.
+Enter passphrase:
+Signed user key /home/johndoe/.ssh/id_rsa-cert.pub: id "johndoe" serial 0 for git valid forever
+
 $ kubectl apply -k .  # Installs a simple Git server to your Kubernetes cluster.
 ...
 ...
@@ -48,13 +55,6 @@ secret/host-keys configured
 service/git-server configured
 persistentvolumeclaim/git-repositories configured
 deployment.apps/simple-git-server configured
-
-$ ls ~/.ssh  # Inspect the SSH keys installed on your computer:
-id_rsa  id_rsa.pub  known_hosts
-
-$ ssh-keygen -s ~/swpt_ca_scripts/private/root-ca.key -I johndoe -n git ~/.ssh/id_rsa.pub  # Issue a certificate for the "id_rsa" key.
-Enter passphrase:
-Signed user key /home/johndoe/.ssh/id_rsa-cert.pub: id "johndoe" serial 0 for git valid forever
 
 $ ssh git@$MY_CLUSTER_IP -p 2222  # Here we create an empty "/srv/git/fluxcd.git" repository:
 Welcome to the restricted login shell for Git!
