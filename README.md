@@ -65,8 +65,8 @@ Initialized empty Git repository in /srv/git/fluxcd.git/
 git> exit
 Connection to 127.0.0.1 closed.
 
-$ sudo sh -c "echo $MY_CLUSTER_IP git-server.simple-git-server.svc.cluster.local >> /etc/hosts"  # Adds the name of the repo to your hosts file.
-$ cat /etc/hosts
+$ sudo sh -c "echo $MY_CLUSTER_IP git-server.simple-git-server.svc.cluster.local >> /etc/hosts"
+$ cat /etc/hosts  # The name of the repo has been added to your hosts file.
 ...
 ...
 127.0.0.1 localhost
@@ -78,5 +78,5 @@ $ flux bootstrap git --url=ssh://git@git-server.simple-git-server.svc.cluster.lo
 Configuring the cluster to synchronize with the repository
 Flux controllers installed and configured successfully
 
-$ ./delete-secret-files.sh
+$ ./delete-secret-files.sh  # The secrets have been copied to the cluster, so we do not need them anymore.
 ```
