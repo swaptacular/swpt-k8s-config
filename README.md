@@ -12,7 +12,7 @@ $ pwd
 $ export MY_ROOT_CA_CRT_FILE=~/swpt_ca_scripts/root-ca.crt  # the path to your Swaptacular node's self-signed root-CA certificate
 $ openssl x509 -in "$MY_ROOT_CA_CRT_FILE" -pubkey -noout > CERT.tmp
 $ ssh-keygen -f CERT.tmp -i -m PKCS8 >> trusted_user_ca_keys
-$ rm CERT.tmp  # Execute these 4 lines for each one of your Swaptacular nodes.
+$ rm CERT.tmp  # Execute these 4 lines for each Swaptacular node that you will run on the cluster.
 
 $ ./generate-secret-files.sh  # Generates an SSH private/public key pair.
 Generating public/private rsa key pair.
