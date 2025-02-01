@@ -43,7 +43,7 @@ spec:
         - name: git-repositories
           persistentVolumeClaim:
             claimName: git-repositories
-        - name: config
+        - name: sshd-config
           configMap:
             name: sshd-config
         - name: host-keys
