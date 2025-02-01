@@ -11,7 +11,7 @@ spec:
     branch: master
   secretRef:
     name: flux-system
-  url: https://github.com/epandurski/swpt-k8s-config.git
+  url: ssh://git@git-server.simple-git-server.svc.cluster.local:2222/srv/git/fluxcd.git
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
