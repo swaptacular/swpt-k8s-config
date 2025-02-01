@@ -4,7 +4,7 @@ Swaptacular GitOps repo for deploying Kubernetes clusters
 ## Bootstrapping the GitOps
 
 ```console
-$ export MY_CLUSTER_IP=127.0.0.1  # Put here the public IP of your Kubernetes cluster.
+$ export MY_CLUSTER_IP=127.0.0.1
 
 $ cd simple-git-server/
 
@@ -34,11 +34,7 @@ $ <Create "fluxcd.git" empty bare repo.>
 
 $ sudo sh -c "echo $MY_CLUSTER_IP git-server.simple-git-server.svc.cluster.local >> /etc/hosts"
 
-$ flux bootstrap git \
---url=ssh://git@git-server.simple-git-server.svc.cluster.local:2222/srv/git/fluxcd.git \
---branch=master \
---private-key-file=secret-files/ssh_host_rsa_key \
---path=clusters/dev
+$ flux bootstrap git --url=ssh://git@git-server.simple-git-server.svc.cluster.local:2222/srv/git/fluxcd.git --branch=master --private-key-file=secret-files/ssh_host_rsa_key --path=clusters/dev
 
 $ ./delete-secret-files.sh
 ```
