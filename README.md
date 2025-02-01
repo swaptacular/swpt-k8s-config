@@ -49,7 +49,7 @@ service/git-server configured
 persistentvolumeclaim/git-repositories configured
 deployment.apps/simple-git-server configured
 
-$ ssh git@$MY_CLUSTER_IP -p 2222  # Here we create an empty "fluxcd.git" repository:
+$ ssh git@$MY_CLUSTER_IP -p 2222  # Here we create an empty "/srv/git/fluxcd.git" repository:
 Welcome to the restricted login shell for Git!
 Run 'help' for help, or 'exit' to leave.  Available commands:
 -------------------------------------------------------------
@@ -65,7 +65,7 @@ Initialized empty Git repository in /srv/git/fluxcd.git/
 git> exit
 Connection to 127.0.0.1 closed.
 
-$ sudo sh -c "echo $MY_CLUSTER_IP git-server.simple-git-server.svc.cluster.local >> /etc/hosts"
+$ sudo sh -c "echo $MY_CLUSTER_IP git-server.simple-git-server.svc.cluster.local >> /etc/hosts"  # Adds the name of the repo to your hosts file.
 $ cat /etc/hosts
 ...
 ...
