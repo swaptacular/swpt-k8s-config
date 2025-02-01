@@ -42,7 +42,9 @@ The key's randomart image is:
 $ ls ~/.ssh  # Inspect the SSH keys installed on your computer:
 id_rsa  id_rsa.pub  known_hosts
 
-$ ssh-keygen -s ~/swpt_ca_scripts/private/root-ca.key -I johndoe -n git ~/.ssh/id_rsa.pub  # Issue a certificate for the "id_rsa" key.
+$ export MY_ROOT_CA_PRIVATE_KEY_FILE=~/swpt_ca_scripts/private/root-ca.key  # the path to your Swaptacular node's root-CA private key
+
+$ ssh-keygen -s "$MY_ROOT_CA_PRIVATE_KEY_FILE" -I johndoe -n git ~/.ssh/id_rsa.pub  # Issue a certificate for the "id_rsa" key.
 Enter passphrase:
 Signed user key /home/johndoe/.ssh/id_rsa-cert.pub: id "johndoe" serial 0 for git valid forever
 
