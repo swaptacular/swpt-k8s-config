@@ -39,6 +39,8 @@ The key's randomart image is:
 
 $ export MY_CLUSTER_IP=127.0.0.1  # the public IP of your Kubernetes cluster
 $ kubectl apply -k .
+...
+...
 namespace/simple-git-server configured
 configmap/sshd-config-t9g57f6875 configured
 secret/host-keys configured
@@ -65,7 +67,6 @@ Connection to 127.0.0.1 closed.
 $ sudo sh -c "echo $MY_CLUSTER_IP git-server.simple-git-server.svc.cluster.local >> /etc/hosts"
 
 $ flux bootstrap git --url=ssh://git@git-server.simple-git-server.svc.cluster.local:2222/srv/git/fluxcd.git --branch=master --private-key-file=secret-files/ssh_host_rsa_key --path=clusters/dev
-...
 ...
 ...
 Configuring the cluster to synchronize with the repository
