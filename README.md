@@ -4,18 +4,23 @@ Swaptacular GitOps repo for deploying Kubernetes clusters
 ## Bootstrapping the GitOps
 
 ```console
-$ export MY_CLUSTER_IP=127.0.0.1  # the public IP of your Kubernetes cluster
 
 $ cd simple-git-server/
+$ ./generate-secret-files.sh
 
 $ export MY_ROOT_CA_CRT_FILE=~/src/swpt_ca_scripts/root-ca.crt  # the path to your Swaptacular node's self-signed root-CA certificate
 $ openssl x509 -in "$MY_ROOT_CA_CRT_FILE" -pubkey -noout > CERT.tmp
 $ ssh-keygen -f CERT.tmp -i -m PKCS8 >> trusted_user_ca_keys
 $ rm CERT.tmp  # Execute the previous 4 lines for each one of your Swaptacular nodes.
 
-$ ./generate-secret-files.sh
-
-$ kubectl apply -k simple-git-server/
+$ export MY_CLUSTER_IP=127.0.0.1  # the public IP of your Kubernetes cluster
+$ kubectl apply -k .
+namespace/simple-git-server configured
+configmap/sshd-config-t9g57f6875 configured
+secret/host-keys configured
+service/git-server configured
+persistentvolumeclaim/git-repositories configured
+deployment.apps/simple-git-server configured
 
 $ ssh git@$MY_CLUSTER_IP -p 2222
 Welcome to the restricted login shell for Git!
