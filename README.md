@@ -49,7 +49,7 @@ service/git-server configured
 persistentvolumeclaim/git-repositories configured
 deployment.apps/simple-git-server configured
 
-$ ssh git@$MY_CLUSTER_IP -p 2222
+$ ssh git@$MY_CLUSTER_IP -p 2222  # Here we create an empty "fluxcd.git" repository:
 Welcome to the restricted login shell for Git!
 Run 'help' for help, or 'exit' to leave.  Available commands:
 -------------------------------------------------------------
@@ -59,7 +59,7 @@ mkdir
 rm
 vi
 
-git> mkdir /srv/git/fluxcd.git  # Here we create an empty "fluxcd.git" repository:
+git> mkdir /srv/git/fluxcd.git
 git> git-init --bare -b master /srv/git/fluxcd.git
 Initialized empty Git repository in /srv/git/fluxcd.git/
 git> exit
