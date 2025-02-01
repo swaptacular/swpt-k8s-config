@@ -12,7 +12,7 @@ $ pwd
 $ export MY_ROOT_CA_CRT_FILE=~/swpt_ca_scripts/root-ca.crt  # the path to your Swaptacular node's self-signed root-CA certificate
 $ openssl x509 -in "$MY_ROOT_CA_CRT_FILE" -pubkey -noout > CERT.tmp
 $ ssh-keygen -f CERT.tmp -i -m PKCS8 >> trusted_user_ca_keys
-$ rm CERT.tmp  # Execute these 4 lines for each Swaptacular node that you will run on the cluster.
+$ rm CERT.tmp  # Execute these 4 lines for each Swaptacular node that you will run on your Kubernetes cluster.
 
 $ ./generate-secret-files.sh  # Generates an SSH private/public key pair.
 Generating public/private rsa key pair.
@@ -39,7 +39,7 @@ The key's randomart image is:
 * Kubernetes cluster!                                          *
 ****************************************************************
 
-$ kubectl apply -k .  # Installs a simple Git server to the your Kubernetes cluster.
+$ kubectl apply -k .  # Installs a simple Git server to your Kubernetes cluster.
 ...
 ...
 namespace/simple-git-server configured
@@ -64,6 +64,17 @@ git> git-init --bare -b master /srv/git/fluxcd.git
 Initialized empty Git repository in /srv/git/fluxcd.git/
 git> exit
 Connection to 127.0.0.1 closed.
+
+$ git remote add k8s-repo ssh://git@$MY_CLUSTER_IP:2222/srv/git/fluxcd.git
+$ git push k8s-repo master  # Copies the GitOps repo to the Git server on your Kubernetes cluster.
+Enumerating objects: 81, done.
+Counting objects: 100% (81/81), done.
+Delta compression using up to 4 threads
+Compressing objects: 100% (79/79), done.
+Writing objects: 100% (79/79), 25.67 KiB | 1.97 MiB/s, done.
+Total 79 (delta 51), reused 0 (delta 0), pack-reused 0
+To ssh://127.0.0.1:2222/srv/git/fluxcd.git
+   59b1758..b019dfe  master -> master
 
 $ sudo sh -c "echo $MY_CLUSTER_IP git-server.simple-git-server.svc.cluster.local >> /etc/hosts"
 $ cat /etc/hosts  # The name of the repo has been added to your hosts file.
