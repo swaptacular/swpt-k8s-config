@@ -49,10 +49,10 @@ service/git-server configured
 persistentvolumeclaim/git-repositories configured
 deployment.apps/simple-git-server configured
 
-$ ls -F ~/.ssh  # Inspect your SSH client keys:
+$ ls -F ~/.ssh  # Inspect the SSH keys installed on your computer:
 id_rsa  id_rsa.pub  known_hosts
 
-$ ssh-keygen -s ~/swpt_ca_scripts/private/root-ca.key -I johndoe -n git ~/.ssh/id_rsa.pub  # Sign a certificate to yourself.
+$ ssh-keygen -s ~/swpt_ca_scripts/private/root-ca.key -I johndoe -n git ~/.ssh/id_rsa.pub  # Issue a certificate for the "id_rsa" key.
 Enter passphrase:
 Signed user key /home/johndoe/.ssh/id_rsa-cert.pub: id "johndoe" serial 0 for git valid forever
 
