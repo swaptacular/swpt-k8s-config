@@ -7,7 +7,7 @@ Swaptacular GitOps repo for deploying Kubernetes clusters
 $ export MY_CLUSTER_IP=127.0.0.1  # the public IP of your Kubernetes cluster
 $ cd simple-git-server/
 $ pwd
-/home/evgeni/src/swpt-k8s-config/simple-git-server
+/home/johndoe/src/swpt-k8s-config/simple-git-server
 
 $ export MY_ROOT_CA_CRT_FILE=~/src/swpt_ca_scripts/root-ca.crt  # the path to your Swaptacular node's self-signed root-CA certificate
 $ openssl x509 -in "$MY_ROOT_CA_CRT_FILE" -pubkey -noout > CERT.tmp
@@ -19,7 +19,7 @@ Generating public/private rsa key pair.
 Your identification has been saved in secret-files/ssh_host_rsa_key
 Your public key has been saved in secret-files/ssh_host_rsa_key.pub
 The key fingerprint is:
-SHA256:V5z4od4LmSBF3MyXsTzPBjt+yYOKLJQqrZS2ULerNyM evgeni@t470s
+SHA256:V5z4od4LmSBF3MyXsTzPBjt+yYOKLJQqrZS2ULerNyM johndoe@mycomputer
 The key's randomart image is:
 +---[RSA 3072]----+
 |       ..+  .o   |
