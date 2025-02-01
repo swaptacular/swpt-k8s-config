@@ -6,6 +6,8 @@ Swaptacular GitOps repo for deploying Kubernetes clusters
 ```console
 $ export MY_CLUSTER_IP=127.0.0.1  # the public IP of your Kubernetes cluster
 $ cd simple-git-server/
+$ pwd
+/home/evgeni/src/swpt-k8s-config/simple-git-server
 
 $ export MY_ROOT_CA_CRT_FILE=~/src/swpt_ca_scripts/root-ca.crt  # the path to your Swaptacular node's self-signed root-CA certificate
 $ openssl x509 -in "$MY_ROOT_CA_CRT_FILE" -pubkey -noout > CERT.tmp
