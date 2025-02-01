@@ -9,7 +9,7 @@ $ cd simple-git-server/
 $ pwd
 /home/johndoe/swpt-k8s-config/simple-git-server
 
-$ export MY_ROOT_CA_PRIVATE_KEY_FILE=~/swpt_ca_scripts/private/root-ca.key  # the path to the root-CA private key for your Swaptacular node
+$ export MY_ROOT_CA_PRIVATE_KEY_FILE=~/swpt_ca_scripts/private/root-ca.key  # the path your Swaptacular node's private key
 
 $ export MY_ROOT_CA_CRT_FILE=~/swpt_ca_scripts/root-ca.crt  # the path to your Swaptacular node's self-signed root-CA certificate
 $ openssl x509 -in "$MY_ROOT_CA_CRT_FILE" -pubkey -noout > CERT.tmp
