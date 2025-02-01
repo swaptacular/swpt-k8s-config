@@ -4,6 +4,7 @@ set -o pipefail
 
 mkdir secret-files || true
 ssh-keygen -f secret-files/ssh_host_rsa_key -N ''
+
 echo
 echo '****************************************************************'
 echo '* IMPORTANT: Do not forget to run the "delete-secret-files.sh" *'
