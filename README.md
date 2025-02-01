@@ -4,11 +4,14 @@ Swaptacular GitOps repo for deploying Kubernetes clusters
 ## Bootstrapping the GitOps
 
 ```console
-$ export MY_CLUSTER_IP=127.0.0.1  # Put here the public IP of your Kubernetes cluster.
+$ export MY_CLUSTER_IP=127.0.0.1  # the public IP of your Kubernetes cluster
+$ export MY_ROOT_CA_CRT_FILE=~/src/swpt_ca_scripts/root-ca.crt  # the path to your Swaptacular node's self-signed root-CA certificate
 
 $ cd simple-git-server/
 
-$ <Edit the "trusted_user_ca_keys" file.>
+$ openssl x509 -in "$MY_ROOT_CA_CRT_FILE" -pubkey -noout > CERT.tmp
+$ ssh-keygen -f CERT.tmp -i -m PKCS8 >> trusted_user_ca_keys
+$ rm CERT.tmp
 
 $ ./generate-secret-files.sh
 
@@ -29,8 +32,6 @@ git> git-init --bare -b master /srv/git/fluxcd.git
 Initialized empty Git repository in /srv/git/fluxcd.git/
 git> exit
 Connection to 127.0.0.1 closed.
-
-$ <Create "fluxcd.git" empty bare repo.>
 
 $ sudo sh -c "echo $MY_CLUSTER_IP git-server.simple-git-server.svc.cluster.local >> /etc/hosts"
 
