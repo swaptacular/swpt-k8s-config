@@ -6,12 +6,36 @@ Swaptacular GitOps repo for deploying Kubernetes clusters
 ```console
 
 $ cd simple-git-server/
-$ ./generate-secret-files.sh
 
 $ export MY_ROOT_CA_CRT_FILE=~/src/swpt_ca_scripts/root-ca.crt  # the path to your Swaptacular node's self-signed root-CA certificate
 $ openssl x509 -in "$MY_ROOT_CA_CRT_FILE" -pubkey -noout > CERT.tmp
 $ ssh-keygen -f CERT.tmp -i -m PKCS8 >> trusted_user_ca_keys
-$ rm CERT.tmp  # Execute the previous 4 lines for each one of your Swaptacular nodes.
+$ rm CERT.tmp  # Execute these 4 lines for each one of your Swaptacular nodes.
+
+$ ./generate-secret-files.sh
+Generating public/private rsa key pair.
+Your identification has been saved in secret-files/ssh_host_rsa_key
+Your public key has been saved in secret-files/ssh_host_rsa_key.pub
+The key fingerprint is:
+SHA256:V5z4od4LmSBF3MyXsTzPBjt+yYOKLJQqrZS2ULerNyM evgeni@t470s
+The key's randomart image is:
++---[RSA 3072]----+
+|       ..+  .o   |
+|       .. ++oo   |
+|        . ..X    |
+|       .   + B   |
+|  . . ..S o + +  |
+| . o .o. + = = . |
+|. +..o    = + =  |
+| +E.*... . o o . |
+|  +*.o .o . .    |
++----[SHA256]-----+
+
+****************************************************************
+* IMPORTANT: Do not forget to run the "delete-secret-files.sh" *
+* script once you have successfully bootstrapped your          *
+* Kubernetes cluster!                                          *
+****************************************************************
 
 $ export MY_CLUSTER_IP=127.0.0.1  # the public IP of your Kubernetes cluster
 $ kubectl apply -k .
