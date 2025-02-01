@@ -49,6 +49,16 @@ service/git-server configured
 persistentvolumeclaim/git-repositories configured
 deployment.apps/simple-git-server configured
 
+$ ls -F ~/.ssh  # Inspect your SSH client keys:
+id_rsa  id_rsa.pub  known_hosts
+
+$ ssh-keygen -s ~/swpt_ca_scripts/private/root-ca.key -I johndoe -n git ~/.ssh/id_rsa.pub  # Sign a certificate to yourself.
+Enter passphrase:
+Signed user key /home/johndoe/.ssh/id_rsa-cert.pub: id "johndoe" serial 0 for git valid forever
+
+$ ls -F ~/.ssh  # Ensure that a "id_rsa-cert.pub" file has been created:
+id_rsa  id_rsa-cert.pub id_rsa.pub  known_hosts
+
 $ ssh git@$MY_CLUSTER_IP -p 2222  # Here we create an empty "/srv/git/fluxcd.git" repository:
 Welcome to the restricted login shell for Git!
 Run 'help' for help, or 'exit' to leave.  Available commands:
@@ -66,7 +76,7 @@ git> exit
 Connection to 127.0.0.1 closed.
 
 $ git remote add k8s-repo ssh://git@$MY_CLUSTER_IP:2222/srv/git/fluxcd.git
-$ git push k8s-repo master  # Copies the GitOps repo to the Git server on your Kubernetes cluster.
+$ git push k8s-repo master  # Copies the GitOps repo to the just created empty repository.
 Enumerating objects: 81, done.
 Counting objects: 100% (81/81), done.
 Delta compression using up to 4 threads
