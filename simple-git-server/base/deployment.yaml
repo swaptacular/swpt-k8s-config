@@ -3,9 +3,9 @@ kind: Deployment
 metadata:
   name: simple-git-server
 spec:
+  replicas: 1  # must be exactly 1
   strategy:
     type: Recreate
-  replicas: 1
   selector:
     matchLabels:
       app: simple-git-server
@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - image: docker.io/rockstorm/git-server:2.47
-          name: version-control-service
+          name: git-server
           ports:
             - containerPort: 22
           env:
@@ -26,30 +26,26 @@ spec:
               value: "/etc/ssh/authorized_keys"
           volumeMounts:
             - mountPath: "/srv/git/"
-              name: simple-git-server-repositories
+              name: git-repositories
               readOnly: false
-            - name: simple-git-server-sshd-config
+            - name: sshd-config
               mountPath: "/etc/ssh/sshd_config"
               subPath: sshd_config
-              readOnly: true
-            - name: simple-git-server-sshd-config
+            - name: sshd-config
               mountPath: "/etc/ssh/trusted_user_ca_keys"
               subPath: trusted_user_ca_keys
-              readOnly: true
-            - name: simple-git-server-host-keys
+            - name: host-keys
               mountPath: "/etc/ssh/authorized_keys"
               subPath: ssh_host_rsa_key.pub
-              readOnly: true
             - mountPath: "/tmp/host-keys/"
-              name: simple-git-server-host-keys
-              readOnly: true
+              name: host-keys
       volumes:
-        - name: simple-git-server-repositories
+        - name: git-repositories
           persistentVolumeClaim:
-            claimName: simple-git-server-repositories
-        - name: simple-git-server-sshd-config
+            claimName: git-repositories
+        - name: config
           configMap:
             name: sshd-config
-        - name: simple-git-server-host-keys
+        - name: host-keys
           secret:
             secretName: host-keys

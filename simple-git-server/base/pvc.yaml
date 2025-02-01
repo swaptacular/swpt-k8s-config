@@ -1,7 +1,7 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: simple-git-server-repositories
+  name: git-repositories
 spec:
   accessModes:
     - ReadWriteOnce  # Should be "ReadWriteOncePod", but this is not supported everywhere yet!

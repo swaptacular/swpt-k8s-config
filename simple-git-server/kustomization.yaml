@@ -1,0 +1,20 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: simple-git-server
+
+configMapGenerator:
+  - name: sshd-config
+    files:
+      - sshd_config
+      - trusted_user_ca_keys
+
+secretGenerator:
+  - name: host-keys
+    files:
+      - secret-files/ssh_host_rsa_key.pub
+      - secret-files/ssh_host_rsa_key
+    options:
+      disableNameSuffixHash: true
+
+resources:
+  - base/
