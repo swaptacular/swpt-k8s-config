@@ -65,6 +65,9 @@ Connection to 127.0.0.1 closed.
 $ sudo sh -c "echo $MY_CLUSTER_IP git-server.simple-git-server.svc.cluster.local >> /etc/hosts"
 
 $ flux bootstrap git --url=ssh://git@git-server.simple-git-server.svc.cluster.local:2222/srv/git/fluxcd.git --branch=master --private-key-file=secret-files/ssh_host_rsa_key --path=clusters/dev
+...
+Configuring the cluster to synchronize with the repository
+Flux controllers installed and configured successfully
 
 $ ./delete-secret-files.sh
 ```
