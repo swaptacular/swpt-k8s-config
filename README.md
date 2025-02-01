@@ -8,11 +8,10 @@ $ export MY_CLUSTER_IP=127.0.0.1  # the public IP of your Kubernetes cluster
 
 $ cd simple-git-server/
 
-# Repeat the next 4 line for each one of your Swaptacular nodes:
 $ export MY_ROOT_CA_CRT_FILE=~/src/swpt_ca_scripts/root-ca.crt  # the path to your Swaptacular node's self-signed root-CA certificate
 $ openssl x509 -in "$MY_ROOT_CA_CRT_FILE" -pubkey -noout > CERT.tmp
 $ ssh-keygen -f CERT.tmp -i -m PKCS8 >> trusted_user_ca_keys
-$ rm CERT.tmp
+$ rm CERT.tmp  # Execute the previous 4 lines for each one of your Swaptacular nodes.
 
 $ ./generate-secret-files.sh
 
