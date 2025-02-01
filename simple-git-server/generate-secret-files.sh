@@ -10,4 +10,3 @@ echo '* IMPORTANT: Do not forget to run the "delete-secret-files.sh" *'
 echo '* script once you have successfully bootstrapped your          *'
 echo '* Kubernetes cluster!                                          *'
 echo '****************************************************************'
-
