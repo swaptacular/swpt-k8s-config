@@ -39,7 +39,7 @@ The key's randomart image is:
 * Kubernetes cluster!                                          *
 ****************************************************************
 
-$ kubectl apply -k .
+$ kubectl apply -k .  # Installs a simple Git server to the your Kubernetes cluster.
 ...
 ...
 namespace/simple-git-server configured
@@ -59,7 +59,7 @@ mkdir
 rm
 vi
 
-git> mkdir /srv/git/fluxcd.git
+git> mkdir /srv/git/fluxcd.git  # Here we create an empty "fluxcd.git" repository:
 git> git-init --bare -b master /srv/git/fluxcd.git
 Initialized empty Git repository in /srv/git/fluxcd.git/
 git> exit
