@@ -74,7 +74,7 @@ create a new `/srv/git/fluxcd.git` repository, and copy the whole
 content of the GitOps repo to it:
 
 ``` console
-$ ssh git@$CLUSTER_IP -p 2222  # Creates an empty repo.
+$ ssh git@$CLUSTER_IP -p 2222  # Creates an empty repository.
 Welcome to the restricted login shell for Git!
 Run 'help' for help, or 'exit' to leave.  Available commands:
 -------------------------------------------------------------
@@ -185,7 +185,7 @@ $ git commit -am 'Share GPG public key for secrets generation'
  create mode 100644 clusters/dev/.sops.pub.asc
  create mode 100644 clusters/dev/.sops.yaml
 
-$ git push origin master  # Pushes the changes to the upstream git server.
+$ git push origin master  # Pushes the changes to the GitOps repository.
 Enumerating objects: 8, done.
 Counting objects: 100% (8/8), done.
 Delta compression using up to 4 threads
