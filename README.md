@@ -48,8 +48,26 @@ secret/host-keys configured
 service/git-server configured
 persistentvolumeclaim/git-repositories configured
 deployment.apps/simple-git-server configured
+```
 
-$ ssh git@$CLUSTER_IP -p 2222  # Here we create an empty "/srv/git/fluxcd.git" repository:
+To authenticate to the Git server on the Kubernetes cluster, you will need to issue an SSH certificate to yourself:
+
+``` console
+$ export ROOT_CA_PRIVATE_KEY_FILE=~/swpt_ca_scripts/private/root-ca.key  # the path to your Swaptacular node's private key
+
+$ ls ~/.ssh  # Inspect the SSH keys installed on your computer:
+id_rsa  id_rsa.pub  known_hosts
+
+$ ssh-keygen -s "$ROOT_CA_PRIVATE_KEY_FILE" -I johndoe -n git ~/.ssh/id_rsa.pub  # Issues a certificate for the "id_rsa.pub" key.
+Enter passphrase:
+Signed user key /home/johndoe/.ssh/id_rsa-cert.pub: id "johndoe" serial 0 for git valid forever
+```
+
+Then you need to connect to the Git server on the Kubernetes cluster,
+and create a new `/srv/git/fluxcd.git` repository:
+
+``` console
+$ ssh git@$CLUSTER_IP -p 2222
 Welcome to the restricted login shell for Git!
 Run 'help' for help, or 'exit' to leave.  Available commands:
 -------------------------------------------------------------
@@ -92,19 +110,6 @@ Configuring the cluster to synchronize with the repository
 Flux controllers installed and configured successfully
 
 $ ./delete-secret-files.sh  # The SSH secrets have been copied to the cluster, so we do not need them anymore.
-```
-
-To authenticate to the Git repository on the Kubernetes cluster, you will need to issue an SSH certificate to yourself:
-
-``` console
-$ export ROOT_CA_PRIVATE_KEY_FILE=~/swpt_ca_scripts/private/root-ca.key  # the path to your Swaptacular node's private key
-
-$ ls ~/.ssh  # Inspect the SSH keys installed on your computer:
-id_rsa  id_rsa.pub  known_hosts
-
-$ ssh-keygen -s "$ROOT_CA_PRIVATE_KEY_FILE" -I johndoe -n git ~/.ssh/id_rsa.pub  # Issues a certificate for the "id_rsa.pub" key.
-Enter passphrase:
-Signed user key /home/johndoe/.ssh/id_rsa-cert.pub: id "johndoe" serial 0 for git valid forever
 ```
 
 The only remaining task is to configure secrets management with SOPS and GPG:
