@@ -100,8 +100,9 @@ $ flux bootstrap git --url=ssh://git@git-server.simple-git-server.svc.cluster.lo
 Configuring the cluster to synchronize with the repository
 Flux controllers installed and configured successfully
 
-$ ./delete-secret-files.sh  # The secrets have been copied to the cluster, so we do not need them anymore.
-$ cd ..
+$ ./delete-secret-files.sh  # The SSH secrets have been copied to the cluster, so we do not need them anymore.
+
+$ cd ..  # The only remaining task is to configure managing Kubernetes secrets with SOPS and GPG.
 $ pwd
 /home/johndoe/swpt-k8s-config
 
@@ -116,7 +117,7 @@ Name-Comment: flux secrets
 Name-Real: ${CLUSTER_NAME}
 EOF
 
-$ gpg --list-secret-keys $CLUSTER_NAME  # Shows the fingerprint of the newly created key.
+$ gpg --list-secret-keys $CLUSTER_NAME  # Shows the fingerprint of the newly GPG created key.
 gpg: checking the trustdb
 gpg: marginals needed: 3  completes needed: 1  trust model: pgp
 gpg: depth: 0  valid:   3  signed:   0  trust: 0-, 0q, 0n, 0m, 0f, 3u
@@ -125,12 +126,12 @@ sec   rsa4096 2025-02-03 [SCEA]
 uid           [ultimate] cluster.yourdomain.com (flux secrets)
 ssb   rsa4096 2025-02-03 [SEA]
 
-$ export KEY_FP=46B3059077BEFD9D1BD3B1488C6B09689C8A214A  # Stores the key fingerprint.
+$ export KEY_FP=46B3059077BEFD9D1BD3B1488C6B09689C8A214A  # You should copy the GPG key fingerprint from the output of the previous command.
 
 $ gpg --export-secret-keys --armor "${KEY_FP}" | kubectl create secret generic sops-gpg --namespace=flux-system --from-file=sops.asc=/dev/stdin  # Creates a Kubernetes secret storing the GPG private key.
 secret/sops-gpg created
 
-$ gpg --export --armor "${KEY_FP}" > $CLUSTER_NAME/.sops.pub.asc
+$ gpg --export --armor "${KEY_FP}" > $CLUSTER_NAME/.sops.pub.asc  # Stores the GPG public key in the repo.
 $ git add $CLUSTER_NAME/.sops.pub.asc
 $ git commit -am 'Share GPG public key for secrets generation'
 [master 1c50aeb] Share GPG public key for secrets generation
@@ -158,7 +159,7 @@ Total 9 (delta 4), reused 0 (delta 0), pack-reused 0
 To ssh://localhost:2222/srv/git/fluxcd.git
    c378384..1c50aeb  master -> master
 
-$ gpg --delete-secret-keys "${KEY_FP}"
+$ gpg --delete-secret-keys "${KEY_FP}"  # The GPG key have been copied to the cluster, so we do not need it anymore.
 gpg (GnuPG) 2.2.40; Copyright (C) 2022 g10 Code GmbH
 This is free software: you are free to change and redistribute it.
 There is NO WARRANTY, to the extent permitted by law.
@@ -168,4 +169,9 @@ sec  rsa4096/9F85AF312DC6F642 2025-02-03 clusters/dev (flux secrets)
 
 Delete this key from the keyring? (y/N)
 This is a secret key! - really delete? (y/N) y
+
+$ gpg --import $CLUSTER_NAME/.sops.pub.asc  # Try importing the GPG public key.
+gpg: key 9F85AF312DC6F642: "clusters/dev (flux secrets)" not changed
+gpg: Total number processed: 1
+gpg:              unchanged: 1
 ```
