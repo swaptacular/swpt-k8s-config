@@ -151,7 +151,7 @@ sec   rsa4096 2025-02-03 [SCEA]
 uid           [ultimate] cluster.yourdomain.com (flux secrets)
 ssb   rsa4096 2025-02-03 [SEA]
 
-$ export KEY_FP=46B3059077BEFD9D1BD3B1488C6B09689C8A214A  # the fingerprint of the newly created GPG key
+$ export KEY_FP=46B3059077BEFD9D1BD3B1488C6B09689C8A214A  # the fingerprint of the newly generated GPG key
 
 $ gpg --export-secret-keys --armor "${KEY_FP}" | kubectl create secret generic sops-gpg --namespace=flux-system --from-file=sops.asc=/dev/stdin  # Creates a Kubernetes secret with the GPG private key.
 secret/sops-gpg created
@@ -197,7 +197,9 @@ To github.com:epandurski/swpt-k8s-config.git
    c46b496..1c50aeb  master -> master
 ```
 
-Team members can import the public PGP after they pull the Git repository:
+Now, once team members have pulled the GitOps repository, they can
+import the public GPG key:
+
 ``` console
 $ gpg --import clusters/dev/.sops.pub.asc
 gpg: key 9F85AF312DC6F642: "clusters/dev (flux secrets)" not changed
