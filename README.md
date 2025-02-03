@@ -156,10 +156,11 @@ $ git add $CLUSTER_NAME/.sops.yaml  # Stores an example SOPS configuration file 
 
 $ git commit -am 'Share GPG public key for secrets generation'
 [master 1c50aeb] Share GPG public key for secrets generation
- 1 file changed, 63 insertions(+)
+ 2 files changed, 63 insertions(+)
  create mode 100644 clusters/dev/.sops.pub.asc
+ create mode 100644 clusters/dev/.sops.yaml
 
-$ git push origin master
+$ git push origin master  # Pushes the changes to the upstream git server.
 Enumerating objects: 8, done.
 Counting objects: 100% (8/8), done.
 Delta compression using up to 4 threads
