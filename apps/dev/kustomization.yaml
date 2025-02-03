@@ -85,6 +85,8 @@ secretGenerator:
       cluster-name: standby-cluster
       team: swpt
 - name: test-encrypted-generator
+  namespace: default
+  type: Opaque
   files:
     - test=test.encrypted
   options:
