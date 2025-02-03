@@ -117,7 +117,7 @@ Name-Comment: flux secrets
 Name-Real: ${CLUSTER_NAME}
 EOF
 
-$ gpg --list-secret-keys $CLUSTER_NAME  # Shows the fingerprint of the newly GPG created key.
+$ gpg --list-secret-keys $CLUSTER_NAME  # Shows the fingerprint of the newly created GPG key.
 gpg: checking the trustdb
 gpg: marginals needed: 3  completes needed: 1  trust model: pgp
 gpg: depth: 0  valid:   3  signed:   0  trust: 0-, 0q, 0n, 0m, 0f, 3u
@@ -158,16 +158,6 @@ remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
 To github.com:epandurski/swpt-k8s-config.git
    c46b496..1c50aeb  master -> master
 
-$ git push k8s-repo master
-Enumerating objects: 13, done.
-Counting objects: 100% (13/13), done.
-Delta compression using up to 4 threads
-Compressing objects: 100% (8/8), done.
-Writing objects: 100% (9/9), 6.33 KiB | 1.27 MiB/s, done.
-Total 9 (delta 4), reused 0 (delta 0), pack-reused 0
-To ssh://localhost:2222/srv/git/fluxcd.git
-   c378384..1c50aeb  master -> master
-
 $ gpg --delete-secret-keys "${KEY_FP}"  # The GPG key have been copied to the cluster, so we do not need it anymore.
 gpg (GnuPG) 2.2.40; Copyright (C) 2022 g10 Code GmbH
 This is free software: you are free to change and redistribute it.
@@ -178,8 +168,11 @@ sec  rsa4096/9F85AF312DC6F642 2025-02-03 clusters/dev (flux secrets)
 
 Delete this key from the keyring? (y/N)
 This is a secret key! - really delete? (y/N) y
+```
 
-$ gpg --import $CLUSTER_NAME/.sops.pub.asc  # Try importing the GPG public key.
+Team members can import the public PGP after they pull the Git repository:
+``` console
+$ gpg --import clusters/dev/.sops.pub.asc
 gpg: key 9F85AF312DC6F642: "clusters/dev (flux secrets)" not changed
 gpg: Total number processed: 1
 gpg:              unchanged: 1
