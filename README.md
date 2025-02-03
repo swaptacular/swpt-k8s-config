@@ -83,7 +83,7 @@ $ cat /etc/hosts  # The name of the repo has been added to your hosts file.
 127.0.0.1 localhost
 127.0.0.1 git-server.simple-git-server.svc.cluster.local
 
-$ export CLUSTER_NAME=clusters/dev  # a subdirectory in the "./clusters" directory.
+$ export CLUSTER_NAME=clusters/dev  # must be a subdirectory in the "./clusters" directory.
 
 $ flux bootstrap git --url=ssh://git@git-server.simple-git-server.svc.cluster.local:2222/srv/git/fluxcd.git --branch=master --private-key-file=secret-files/ssh_host_rsa_key --path=$CLUSTER_NAME  # Bootstraps FluxCD from the repo.
 ...
