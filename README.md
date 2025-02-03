@@ -94,10 +94,10 @@ Flux controllers installed and configured successfully
 $ ./delete-secret-files.sh  # The SSH secrets have been copied to the cluster, so we do not need them anymore.
 ```
 
-To be able to authenticate to the Git repository on the Kubernetes cluster, you need to issue an SSH certificate:
+To authenticate to the Git repository on the Kubernetes cluster, you will need to issue an SSH certificate to yourself:
 
 ``` console
-$ export ROOT_CA_PRIVATE_KEY_FILE=~/swpt_ca_scripts/private/root-ca.key  # the path your Swaptacular node's private key
+$ export ROOT_CA_PRIVATE_KEY_FILE=~/swpt_ca_scripts/private/root-ca.key  # the path to your Swaptacular node's private key
 
 $ ls ~/.ssh  # Inspect the SSH keys installed on your computer:
 id_rsa  id_rsa.pub  known_hosts
