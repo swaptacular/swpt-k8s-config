@@ -142,17 +142,18 @@ sec  rsa4096/9F85AF312DC6F642 2025-02-03 clusters/dev (flux secrets)
 Delete this key from the keyring? (y/N)
 This is a secret key! - really delete? (y/N) y
 
-$ gpg --export --armor "${KEY_FP}" > $CLUSTER_NAME/.sops.pub.asc  # Stores the GPG public key in the repo.
-$ cat <<EOF > $CLUSTER_NAME/.sops.yaml  # Creates an example SOPS configuration file.
+$ gpg --export --armor "${KEY_FP}" > $CLUSTER_NAME/.sops.pub.asc
+$ git add $CLUSTER_NAME/.sops.pub.asc  # Stores the GPG public key in the repo.
+
+$ cat <<EOF > $CLUSTER_NAME/.sops.yaml
 creation_rules:
   - path_regex: .*.yaml
     encrypted_regex: ^(data|stringData)$
     pgp: ${KEY_FP}
   - pgp: ${KEY_FP}
 EOF
+$ git add $CLUSTER_NAME/.sops.yaml  # Stores an example SOPS configuration file in the repo.
 
-$ git add $CLUSTER_NAME/.sops.pub.asc
-$ git add $CLUSTER_NAME/.sops.yaml
 $ git commit -am 'Share GPG public key for secrets generation'
 [master 1c50aeb] Share GPG public key for secrets generation
  1 file changed, 63 insertions(+)
