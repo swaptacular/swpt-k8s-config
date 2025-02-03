@@ -54,8 +54,9 @@ persistentvolumeclaim/git-repositories configured
 deployment.apps/simple-git-server configured
 ```
 
-To authenticate to the just installed Git server on the Kubernetes
-cluster, you will need to issue an SSH certificate to yourself:
+In order to authenticate to the just installed Git server on the
+Kubernetes cluster, you will need to issue an SSH certificate to
+yourself:
 
 ``` console
 $ export ROOT_CA_PRIVATE_KEY_FILE=~/swpt_ca_scripts/private/root-ca.key  # the path to your Swaptacular node's private key
@@ -69,7 +70,8 @@ Signed user key /home/johndoe/.ssh/id_rsa-cert.pub: id "johndoe" serial 0 for gi
 ```
 
 Then you need to connect to the Git server on the Kubernetes cluster,
-and create a new `/srv/git/fluxcd.git` repository:
+create a new `/srv/git/fluxcd.git` repository, and copy the whole
+content of the GitOps repo to it:
 
 ``` console
 $ ssh git@$CLUSTER_IP -p 2222
