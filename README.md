@@ -132,7 +132,15 @@ $ gpg --export-secret-keys --armor "${KEY_FP}" | kubectl create secret generic s
 secret/sops-gpg created
 
 $ gpg --export --armor "${KEY_FP}" > $CLUSTER_NAME/.sops.pub.asc  # Stores the GPG public key in the repo.
+$ cat <<EOF > $CLUSTER_NAME/.sops.yaml
+creation_rules:
+  - path_regex: .*.yaml
+    encrypted_regex: ^(data|stringData)$
+    pgp: ${KEY_FP}
+EOF
+
 $ git add $CLUSTER_NAME/.sops.pub.asc
+$ git add $CLUSTER_NAME/.sops.yaml
 $ git commit -am 'Share GPG public key for secrets generation'
 [master 1c50aeb] Share GPG public key for secrets generation
  1 file changed, 63 insertions(+)
