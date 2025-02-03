@@ -99,13 +99,13 @@ To bootstraps FluxCD from the repo:
 
 ``` console
 $ sudo sh -c "echo $CLUSTER_IP git-server.simple-git-server.svc.cluster.local >> /etc/hosts"
-$ cat /etc/hosts  # The name of the repo has been added to your hosts file.
+$ cat /etc/hosts  # The name of the Git-server has been added to your hosts file.
 ...
 ...
 127.0.0.1 localhost
 127.0.0.1 git-server.simple-git-server.svc.cluster.local
 
-$ export CLUSTER_NAME=clusters/dev  # must be a subdirectory in the "./clusters" directory
+$ export CLUSTER_NAME=clusters/dev  # This must be one of the subdirectories in the "./clusters" directory.
 
 $ flux bootstrap git --url=ssh://git@git-server.simple-git-server.svc.cluster.local:2222/srv/git/fluxcd.git --branch=master --private-key-file=secret-files/ssh_host_rsa_key --path=$CLUSTER_NAME
 ...
@@ -113,7 +113,7 @@ $ flux bootstrap git --url=ssh://git@git-server.simple-git-server.svc.cluster.lo
 Configuring the cluster to synchronize with the repository
 Flux controllers installed and configured successfully
 
-$ ./delete-secret-files.sh  # The SSH secrets have been copied to the cluster, so we do not need them anymore.
+$ ./delete-secret-files.sh  # The SSH secrets have already been copied to the cluster.
 ```
 
 The only remaining task is to configure secrets management with SOPS and GPG:
