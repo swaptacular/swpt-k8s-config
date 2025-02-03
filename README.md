@@ -74,7 +74,7 @@ Then you need to connect to the Git server, create a new
 GitOps repo to it:
 
 ``` console
-$ ssh git@$CLUSTER_IP -p 2222  # Creates an empty repository.
+$ ssh git@$CLUSTER_IP -p 2222  # Create an empty repository:
 Welcome to the restricted login shell for Git!
 Run 'help' for help, or 'exit' to leave.  Available commands:
 -------------------------------------------------------------
@@ -107,7 +107,7 @@ To bootstraps FluxCD from the Git server on your Kubernetes cluster:
 
 ``` console
 $ sudo sh -c "echo $CLUSTER_IP git-server.simple-git-server.svc.cluster.local >> /etc/hosts"
-$ cat /etc/hosts  # The name of the Git-server has been added to your hosts file.
+$ cat /etc/hosts  # The internal name of the Git-server has been added to your hosts file.
 ...
 ...
 127.0.0.1 localhost
@@ -198,11 +198,13 @@ To github.com:epandurski/swpt-k8s-config.git
 ```
 
 Now, once team members have pulled the GitOps repository, they can
-import the public GPG key:
+import the public GPG key, and configure SOPS:
 
 ``` console
 $ gpg --import clusters/dev/.sops.pub.asc
 gpg: key 9F85AF312DC6F642: "clusters/dev (flux secrets)" not changed
 gpg: Total number processed: 1
 gpg:              unchanged: 1
+
+$ cp clusters/dev/.sops.yaml .
 ```
