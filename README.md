@@ -93,7 +93,11 @@ Writing objects: 100% (79/79), 25.67 KiB | 1.97 MiB/s, done.
 Total 79 (delta 51), reused 0 (delta 0), pack-reused 0
 To ssh://127.0.0.1:2222/srv/git/fluxcd.git
    59b1758..b019dfe  master -> master
+```
 
+To bootstraps FluxCD from the repo:
+
+``` console
 $ sudo sh -c "echo $CLUSTER_IP git-server.simple-git-server.svc.cluster.local >> /etc/hosts"
 $ cat /etc/hosts  # The name of the repo has been added to your hosts file.
 ...
@@ -101,9 +105,9 @@ $ cat /etc/hosts  # The name of the repo has been added to your hosts file.
 127.0.0.1 localhost
 127.0.0.1 git-server.simple-git-server.svc.cluster.local
 
-$ export CLUSTER_NAME=clusters/dev  # must be a subdirectory in the "./clusters" directory.
+$ export CLUSTER_NAME=clusters/dev  # must be a subdirectory in the "./clusters" directory
 
-$ flux bootstrap git --url=ssh://git@git-server.simple-git-server.svc.cluster.local:2222/srv/git/fluxcd.git --branch=master --private-key-file=secret-files/ssh_host_rsa_key --path=$CLUSTER_NAME  # Bootstraps FluxCD from the repo.
+$ flux bootstrap git --url=ssh://git@git-server.simple-git-server.svc.cluster.local:2222/srv/git/fluxcd.git --branch=master --private-key-file=secret-files/ssh_host_rsa_key --path=$CLUSTER_NAME
 ...
 ...
 Configuring the cluster to synchronize with the repository
