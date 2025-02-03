@@ -131,7 +131,7 @@ $ export KEY_FP=46B3059077BEFD9D1BD3B1488C6B09689C8A214A  # You should copy the 
 $ gpg --export-secret-keys --armor "${KEY_FP}" | kubectl create secret generic sops-gpg --namespace=flux-system --from-file=sops.asc=/dev/stdin  # Creates a Kubernetes secret storing the GPG private key.
 secret/sops-gpg created
 
-$ gpg --delete-secret-keys "${KEY_FP}"  # The private GPG key have been copied to the cluster, so we do not need it anymore.
+$ gpg --delete-secret-keys "${KEY_FP}"  # The GPG private key have been stored in the cluster, so we do not need it anymore.
 gpg (GnuPG) 2.2.40; Copyright (C) 2022 g10 Code GmbH
 This is free software: you are free to change and redistribute it.
 There is NO WARRANTY, to the extent permitted by law.
@@ -143,7 +143,7 @@ Delete this key from the keyring? (y/N)
 This is a secret key! - really delete? (y/N) y
 
 $ gpg --export --armor "${KEY_FP}" > $CLUSTER_NAME/.sops.pub.asc  # Stores the GPG public key in the repo.
-$ cat <<EOF > $CLUSTER_NAME/.sops.yaml
+$ cat <<EOF > $CLUSTER_NAME/.sops.yaml  # Creates an example SOPS configuration file.
 creation_rules:
   - path_regex: .*.yaml
     encrypted_regex: ^(data|stringData)$
