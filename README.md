@@ -103,7 +103,7 @@ Flux controllers installed and configured successfully
 $ ./delete-secret-files.sh  # The SSH secrets have been copied to the cluster, so we do not need them anymore.
 ```
 
-The only remaining task is to configure managing secrets with SOPS and GPG:
+The only remaining task is to configure secrets management with SOPS and GPG:
 
 ``` console
 $ cd ..
@@ -121,7 +121,7 @@ Name-Comment: flux secrets
 Name-Real: ${CLUSTER_NAME}
 EOF
 
-$ gpg --list-secret-keys $CLUSTER_NAME  # Get the fingerprint of the newly created GPG key.
+$ gpg --list-secret-keys $CLUSTER_NAME
 gpg: checking the trustdb
 gpg: marginals needed: 3  completes needed: 1  trust model: pgp
 gpg: depth: 0  valid:   3  signed:   0  trust: 0-, 0q, 0n, 0m, 0f, 3u
@@ -129,7 +129,7 @@ sec   rsa4096 2025-02-03 [SCEA]
       46B3059077BEFD9D1BD3B1488C6B09689C8A214A
 uid           [ultimate] cluster.yourdomain.com (flux secrets)
 ssb   rsa4096 2025-02-03 [SEA]
-$ export KEY_FP=46B3059077BEFD9D1BD3B1488C6B09689C8A214A  # taken from the output of the previous command
+$ export KEY_FP=46B3059077BEFD9D1BD3B1488C6B09689C8A214A  # Get the fingerprint of the newly created GPG key.
 
 $ gpg --export-secret-keys --armor "${KEY_FP}" | kubectl create secret generic sops-gpg --namespace=flux-system --from-file=sops.asc=/dev/stdin  # Creates a Kubernetes secret storing the GPG private key.
 secret/sops-gpg created
