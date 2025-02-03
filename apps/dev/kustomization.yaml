@@ -84,6 +84,11 @@ secretGenerator:
       application: spilo
       cluster-name: standby-cluster
       team: swpt
+- name: test-encrypted-generator
+  files:
+    - test=test.encrypted
+  options:
+    disableNameSuffixHash: true
 
 resources:
   - ../base/

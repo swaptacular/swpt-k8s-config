@@ -137,6 +137,7 @@ creation_rules:
   - path_regex: .*.yaml
     encrypted_regex: ^(data|stringData)$
     pgp: ${KEY_FP}
+  - pgp: ${KEY_FP}
 EOF
 
 $ git add $CLUSTER_NAME/.sops.pub.asc
