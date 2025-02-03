@@ -5,7 +5,8 @@ Swaptacular GitOps repo for deploying Kubernetes clusters
 
 **Note**: In this example, the name of the user is `johndoe`.
 
-First you need to install a Git server to your Kubernetes cluster:
+First you need to install a Git server to your Kubernetes cluster,
+which will contain a copy of your GitOps repository:
 
 ``` console
 $ export CLUSTER_IP=127.0.0.1  # the public IP of your Kubernetes cluster
