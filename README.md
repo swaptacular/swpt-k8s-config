@@ -4,15 +4,15 @@ Swaptacular GitOps repo for deploying Kubernetes clusters
 ## Bootstrapping the GitOps
 
 ``` console
-$ export MY_CLUSTER_IP=127.0.0.1  # the public IP of your Kubernetes cluster
+$ export CLUSTER_IP=127.0.0.1  # the public IP of your Kubernetes cluster
 $ cd simple-git-server/
 $ pwd
 /home/johndoe/swpt-k8s-config/simple-git-server
 
-$ export MY_ROOT_CA_PRIVATE_KEY_FILE=~/swpt_ca_scripts/private/root-ca.key  # the path your Swaptacular node's private key
+$ export ROOT_CA_PRIVATE_KEY_FILE=~/swpt_ca_scripts/private/root-ca.key  # the path your Swaptacular node's private key
 
-$ export MY_ROOT_CA_CRT_FILE=~/swpt_ca_scripts/root-ca.crt  # the path to your Swaptacular node's self-signed root-CA certificate
-$ openssl x509 -in "$MY_ROOT_CA_CRT_FILE" -pubkey -noout > CERT.tmp
+$ export ROOT_CA_CRT_FILE=~/swpt_ca_scripts/root-ca.crt  # the path to your Swaptacular node's self-signed root-CA certificate
+$ openssl x509 -in "$ROOT_CA_CRT_FILE" -pubkey -noout > CERT.tmp
 $ ssh-keygen -f CERT.tmp -i -m PKCS8 >> trusted_user_ca_keys
 $ rm CERT.tmp  # Execute these 4 lines for each Swaptacular node that you will run on your Kubernetes cluster.
 
@@ -44,7 +44,7 @@ The key's randomart image is:
 $ ls ~/.ssh  # Inspect the SSH keys installed on your computer:
 id_rsa  id_rsa.pub  known_hosts
 
-$ ssh-keygen -s "$MY_ROOT_CA_PRIVATE_KEY_FILE" -I johndoe -n git ~/.ssh/id_rsa.pub  # Issues a certificate for the "id_rsa.pub" key.
+$ ssh-keygen -s "$ROOT_CA_PRIVATE_KEY_FILE" -I johndoe -n git ~/.ssh/id_rsa.pub  # Issues a certificate for the "id_rsa.pub" key.
 Enter passphrase:
 Signed user key /home/johndoe/.ssh/id_rsa-cert.pub: id "johndoe" serial 0 for git valid forever
 
@@ -58,7 +58,7 @@ service/git-server configured
 persistentvolumeclaim/git-repositories configured
 deployment.apps/simple-git-server configured
 
-$ ssh git@$MY_CLUSTER_IP -p 2222  # Here we create an empty "/srv/git/fluxcd.git" repository:
+$ ssh git@$CLUSTER_IP -p 2222  # Here we create an empty "/srv/git/fluxcd.git" repository:
 Welcome to the restricted login shell for Git!
 Run 'help' for help, or 'exit' to leave.  Available commands:
 -------------------------------------------------------------
@@ -74,7 +74,7 @@ Initialized empty Git repository in /srv/git/fluxcd.git/
 git> exit
 Connection to 127.0.0.1 closed.
 
-$ git remote add k8s-repo ssh://git@$MY_CLUSTER_IP:2222/srv/git/fluxcd.git
+$ git remote add k8s-repo ssh://git@$CLUSTER_IP:2222/srv/git/fluxcd.git
 $ git push k8s-repo master  # Copies the GitOps repo to the just created empty repository.
 Enumerating objects: 81, done.
 Counting objects: 100% (81/81), done.
@@ -85,7 +85,7 @@ Total 79 (delta 51), reused 0 (delta 0), pack-reused 0
 To ssh://127.0.0.1:2222/srv/git/fluxcd.git
    59b1758..b019dfe  master -> master
 
-$ sudo sh -c "echo $MY_CLUSTER_IP git-server.simple-git-server.svc.cluster.local >> /etc/hosts"
+$ sudo sh -c "echo $CLUSTER_IP git-server.simple-git-server.svc.cluster.local >> /etc/hosts"
 $ cat /etc/hosts  # The name of the repo has been added to your hosts file.
 ...
 ...
