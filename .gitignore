@@ -1,0 +1,8 @@
+# direnv subdir
+.direnv/
+
+simple-git-server/secret-files/
+
+# Emacs files
+TAGS
+*~
