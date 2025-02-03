@@ -3,7 +3,7 @@ Swaptacular GitOps repo for deploying Kubernetes clusters
 
 ## Bootstrapping the GitOps
 
-```console
+``` console
 $ export MY_CLUSTER_IP=127.0.0.1  # the public IP of your Kubernetes cluster
 $ cd simple-git-server/
 $ pwd
@@ -104,6 +104,7 @@ $ ./delete-secret-files.sh  # The SSH secrets have been copied to the cluster, s
 ```
 
 The only remaining task is to configure managing secrets with SOPS and GPG:
+
 ``` console
 $ cd ..
 $ pwd
