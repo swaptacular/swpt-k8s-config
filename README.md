@@ -131,6 +131,17 @@ $ export KEY_FP=46B3059077BEFD9D1BD3B1488C6B09689C8A214A  # You should copy the 
 $ gpg --export-secret-keys --armor "${KEY_FP}" | kubectl create secret generic sops-gpg --namespace=flux-system --from-file=sops.asc=/dev/stdin  # Creates a Kubernetes secret storing the GPG private key.
 secret/sops-gpg created
 
+$ gpg --delete-secret-keys "${KEY_FP}"  # The private GPG key have been copied to the cluster, so we do not need it anymore.
+gpg (GnuPG) 2.2.40; Copyright (C) 2022 g10 Code GmbH
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+
+sec  rsa4096/9F85AF312DC6F642 2025-02-03 clusters/dev (flux secrets)
+
+Delete this key from the keyring? (y/N)
+This is a secret key! - really delete? (y/N) y
+
 $ gpg --export --armor "${KEY_FP}" > $CLUSTER_NAME/.sops.pub.asc  # Stores the GPG public key in the repo.
 $ cat <<EOF > $CLUSTER_NAME/.sops.yaml
 creation_rules:
@@ -157,17 +168,6 @@ Total 5 (delta 2), reused 0 (delta 0), pack-reused 0
 remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
 To github.com:epandurski/swpt-k8s-config.git
    c46b496..1c50aeb  master -> master
-
-$ gpg --delete-secret-keys "${KEY_FP}"  # The GPG key have been copied to the cluster, so we do not need it anymore.
-gpg (GnuPG) 2.2.40; Copyright (C) 2022 g10 Code GmbH
-This is free software: you are free to change and redistribute it.
-There is NO WARRANTY, to the extent permitted by law.
-
-
-sec  rsa4096/9F85AF312DC6F642 2025-02-03 clusters/dev (flux secrets)
-
-Delete this key from the keyring? (y/N)
-This is a secret key! - really delete? (y/N) y
 ```
 
 Team members can import the public PGP after they pull the Git repository:
