@@ -74,7 +74,7 @@ create a new `/srv/git/fluxcd.git` repository, and copy the whole
 content of the GitOps repo to it:
 
 ``` console
-$ ssh git@$CLUSTER_IP -p 2222
+$ ssh git@$CLUSTER_IP -p 2222  # Creates an empty repo.
 Welcome to the restricted login shell for Git!
 Run 'help' for help, or 'exit' to leave.  Available commands:
 -------------------------------------------------------------
