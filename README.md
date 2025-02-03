@@ -3,6 +3,9 @@ Swaptacular GitOps repo for deploying Kubernetes clusters
 
 ## Bootstrapping the GitOps
 
+First you need to install a Git server to your Kubernetes cluster (in
+these example, the name of the user is `johndoe`):
+
 ``` console
 $ export CLUSTER_IP=127.0.0.1  # the public IP of your Kubernetes cluster
 $ cd simple-git-server/
@@ -84,6 +87,7 @@ git> exit
 Connection to 127.0.0.1 closed.
 
 $ git remote add k8s-repo ssh://git@$CLUSTER_IP:2222/srv/git/fluxcd.git
+
 $ git push k8s-repo master  # Copies the GitOps repo to the just created empty repository.
 Enumerating objects: 81, done.
 Counting objects: 100% (81/81), done.
@@ -105,7 +109,7 @@ $ cat /etc/hosts  # The name of the Git-server has been added to your hosts file
 127.0.0.1 localhost
 127.0.0.1 git-server.simple-git-server.svc.cluster.local
 
-$ export CLUSTER_DIR=clusters/dev  # This must be one of the subdirectories in the "./clusters" directory.
+$ export CLUSTER_DIR=clusters/dev  # one of the subdirectories in the "./clusters" directory
 
 $ flux bootstrap git --url=ssh://git@git-server.simple-git-server.svc.cluster.local:2222/srv/git/fluxcd.git --branch=master --private-key-file=secret-files/ssh_host_rsa_key --path=$CLUSTER_DIR
 ...
