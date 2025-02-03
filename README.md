@@ -54,7 +54,8 @@ persistentvolumeclaim/git-repositories configured
 deployment.apps/simple-git-server configured
 ```
 
-To authenticate to the Git server on the Kubernetes cluster, you will need to issue an SSH certificate to yourself:
+To authenticate to the just installed Git server on the Kubernetes
+cluster, you will need to issue an SSH certificate to yourself:
 
 ``` console
 $ export ROOT_CA_PRIVATE_KEY_FILE=~/swpt_ca_scripts/private/root-ca.key  # the path to your Swaptacular node's private key
