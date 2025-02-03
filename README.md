@@ -9,8 +9,6 @@ $ cd simple-git-server/
 $ pwd
 /home/johndoe/swpt-k8s-config/simple-git-server
 
-$ export ROOT_CA_PRIVATE_KEY_FILE=~/swpt_ca_scripts/private/root-ca.key  # the path your Swaptacular node's private key
-
 $ export ROOT_CA_CRT_FILE=~/swpt_ca_scripts/root-ca.crt  # the path to your Swaptacular node's self-signed root-CA certificate
 $ openssl x509 -in "$ROOT_CA_CRT_FILE" -pubkey -noout > CERT.tmp
 $ ssh-keygen -f CERT.tmp -i -m PKCS8 >> trusted_user_ca_keys
@@ -40,13 +38,6 @@ The key's randomart image is:
 * script once you have successfully bootstrapped your          *
 * Kubernetes cluster!                                          *
 ****************************************************************
-
-$ ls ~/.ssh  # Inspect the SSH keys installed on your computer:
-id_rsa  id_rsa.pub  known_hosts
-
-$ ssh-keygen -s "$ROOT_CA_PRIVATE_KEY_FILE" -I johndoe -n git ~/.ssh/id_rsa.pub  # Issues a certificate for the "id_rsa.pub" key.
-Enter passphrase:
-Signed user key /home/johndoe/.ssh/id_rsa-cert.pub: id "johndoe" serial 0 for git valid forever
 
 $ kubectl apply -k .  # Installs a simple Git server to your Kubernetes cluster.
 ...
@@ -101,6 +92,19 @@ Configuring the cluster to synchronize with the repository
 Flux controllers installed and configured successfully
 
 $ ./delete-secret-files.sh  # The SSH secrets have been copied to the cluster, so we do not need them anymore.
+```
+
+To be able to authenticate to the Git repository on the Kubernetes cluster, you need to issue an SSH certificate:
+
+``` console
+$ export ROOT_CA_PRIVATE_KEY_FILE=~/swpt_ca_scripts/private/root-ca.key  # the path your Swaptacular node's private key
+
+$ ls ~/.ssh  # Inspect the SSH keys installed on your computer:
+id_rsa  id_rsa.pub  known_hosts
+
+$ ssh-keygen -s "$ROOT_CA_PRIVATE_KEY_FILE" -I johndoe -n git ~/.ssh/id_rsa.pub  # Issues a certificate for the "id_rsa.pub" key.
+Enter passphrase:
+Signed user key /home/johndoe/.ssh/id_rsa-cert.pub: id "johndoe" serial 0 for git valid forever
 ```
 
 The only remaining task is to configure secrets management with SOPS and GPG:
