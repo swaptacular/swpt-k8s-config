@@ -92,11 +92,46 @@ $ cat /etc/hosts  # The name of the repo has been added to your hosts file.
 127.0.0.1 localhost
 127.0.0.1 git-server.simple-git-server.svc.cluster.local
 
-$ flux bootstrap git --url=ssh://git@git-server.simple-git-server.svc.cluster.local:2222/srv/git/fluxcd.git --branch=master --private-key-file=secret-files/ssh_host_rsa_key --path=clusters/dev  # Bootstraps FluxCD from the repo.
+$ export CLUSTER_NAME=clusters/dev  # a subdirectory in the "./clusters" directory.
+
+$ flux bootstrap git --url=ssh://git@git-server.simple-git-server.svc.cluster.local:2222/srv/git/fluxcd.git --branch=master --private-key-file=secret-files/ssh_host_rsa_key --path=$CLUSTER_NAME  # Bootstraps FluxCD from the repo.
 ...
 ...
 Configuring the cluster to synchronize with the repository
 Flux controllers installed and configured successfully
 
 $ ./delete-secret-files.sh  # The secrets have been copied to the cluster, so we do not need them anymore.
+$ cd ..
+$ pwd
+/home/johndoe/swpt-k8s-config
+
+$ gpg --batch --full-generate-key <<EOF
+%no-protection
+Key-Type: 1
+Key-Length: 4096
+Subkey-Type: 1
+Subkey-Length: 4096
+Expire-Date: 0
+Name-Comment: flux secrets
+Name-Real: ${CLUSTER_NAME}
+EOF
+
+$ gpg --list-secret-keys $CLUSTER_NAME  # Shows the fingerprint of the newly created key.
+gpg: checking the trustdb
+gpg: marginals needed: 3  completes needed: 1  trust model: pgp
+gpg: depth: 0  valid:   3  signed:   0  trust: 0-, 0q, 0n, 0m, 0f, 3u
+sec   rsa4096 2025-02-03 [SCEA]
+      46B3059077BEFD9D1BD3B1488C6B09689C8A214A
+uid           [ultimate] cluster.yourdomain.com (flux secrets)
+ssb   rsa4096 2025-02-03 [SEA]
+
+$ export KEY_FP=46B3059077BEFD9D1BD3B1488C6B09689C8A214A  # Stores the key fingerprint.
+
+$ gpg --export-secret-keys --armor "${KEY_FP}" | kubectl create secret generic sops-gpg --namespace=flux-system --from-file=sops.asc=/dev/stdin  # Creates a Kubernetes secret storing the GPG private key.
+secret/sops-gpg created
+
+$ gpg --export --armor "${KEY_FP}" > $CLUSTER_NAME/.sops.pub.asc
+$ git add $CLUSTER_NAME/.sops.pub.asc
+$ git commit -am 'Share GPG public key for secrets generation'
+$ gpg --delete-secret-keys "${KEY_FP}"
 ```
