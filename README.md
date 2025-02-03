@@ -124,7 +124,9 @@ Flux controllers installed and configured successfully
 $ ./delete-secret-files.sh  # The SSH secrets have already been copied to the cluster.
 ```
 
-The only remaining task is to configure secrets management with SOPS and GPG:
+The only remaining task is to configure secrets management with
+[SOPS](https://github.com/getsops/sops) and
+[GPG](https://www.gnupg.org/):
 
 ``` console
 $ cd ..
