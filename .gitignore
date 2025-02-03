@@ -6,3 +6,7 @@ simple-git-server/secret-files/
 # Emacs files
 TAGS
 *~
+
+# Do not commit SOPS configuration files
+.sops.yaml
+!/clusters/**/.sops.yaml
