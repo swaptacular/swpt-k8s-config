@@ -206,5 +206,5 @@ gpg: key 9F85AF312DC6F642: "clusters/dev (flux secrets)" not changed
 gpg: Total number processed: 1
 gpg:              unchanged: 1
 
-$ cp clusters/dev/.sops.yaml .
+$ cp clusters/dev/.sops.yaml .  # Creates a SOPS configuration file.
 ```
