@@ -105,9 +105,9 @@ $ cat /etc/hosts  # The name of the Git-server has been added to your hosts file
 127.0.0.1 localhost
 127.0.0.1 git-server.simple-git-server.svc.cluster.local
 
-$ export CLUSTER_NAME=clusters/dev  # This must be one of the subdirectories in the "./clusters" directory.
+$ export CLUSTER_DIR=clusters/dev  # This must be one of the subdirectories in the "./clusters" directory.
 
-$ flux bootstrap git --url=ssh://git@git-server.simple-git-server.svc.cluster.local:2222/srv/git/fluxcd.git --branch=master --private-key-file=secret-files/ssh_host_rsa_key --path=$CLUSTER_NAME
+$ flux bootstrap git --url=ssh://git@git-server.simple-git-server.svc.cluster.local:2222/srv/git/fluxcd.git --branch=master --private-key-file=secret-files/ssh_host_rsa_key --path=$CLUSTER_DIR
 ...
 ...
 Configuring the cluster to synchronize with the repository
@@ -131,10 +131,10 @@ Subkey-Type: 1
 Subkey-Length: 4096
 Expire-Date: 0
 Name-Comment: flux secrets
-Name-Real: ${CLUSTER_NAME}
+Name-Real: ${CLUSTER_DIR}
 EOF
 
-$ gpg --list-secret-keys $CLUSTER_NAME
+$ gpg --list-secret-keys $CLUSTER_DIR
 gpg: checking the trustdb
 gpg: marginals needed: 3  completes needed: 1  trust model: pgp
 gpg: depth: 0  valid:   3  signed:   0  trust: 0-, 0q, 0n, 0m, 0f, 3u
@@ -159,17 +159,17 @@ sec  rsa4096/9F85AF312DC6F642 2025-02-03 clusters/dev (flux secrets)
 Delete this key from the keyring? (y/N)
 This is a secret key! - really delete? (y/N) y
 
-$ gpg --export --armor "${KEY_FP}" > $CLUSTER_NAME/.sops.pub.asc
-$ git add $CLUSTER_NAME/.sops.pub.asc  # Stores the GPG public key in the repo.
+$ gpg --export --armor "${KEY_FP}" > $CLUSTER_DIR/.sops.pub.asc
+$ git add $CLUSTER_DIR/.sops.pub.asc  # Stores the GPG public key in the repo.
 
-$ cat <<EOF > $CLUSTER_NAME/.sops.yaml
+$ cat <<EOF > $CLUSTER_DIR/.sops.yaml
 creation_rules:
   - path_regex: .*.yaml
     encrypted_regex: ^(data|stringData)$
     pgp: ${KEY_FP}
   - pgp: ${KEY_FP}
 EOF
-$ git add $CLUSTER_NAME/.sops.yaml  # Stores an example SOPS configuration file in the repo.
+$ git add $CLUSTER_DIR/.sops.yaml  # Stores an example SOPS configuration file in the repo.
 
 $ git commit -am 'Share GPG public key for secrets generation'
 [master 1c50aeb] Share GPG public key for secrets generation
