@@ -101,8 +101,11 @@ Configuring the cluster to synchronize with the repository
 Flux controllers installed and configured successfully
 
 $ ./delete-secret-files.sh  # The SSH secrets have been copied to the cluster, so we do not need them anymore.
+```
 
-$ cd ..  # The only remaining task is to configure managing Kubernetes secrets with SOPS and GPG.
+The only remaining task is to configure managing secrets with SOPS and GPG:
+``` console
+$ cd ..
 $ pwd
 /home/johndoe/swpt-k8s-config
 
@@ -130,7 +133,7 @@ $ export KEY_FP=46B3059077BEFD9D1BD3B1488C6B09689C8A214A  # taken from the outpu
 $ gpg --export-secret-keys --armor "${KEY_FP}" | kubectl create secret generic sops-gpg --namespace=flux-system --from-file=sops.asc=/dev/stdin  # Creates a Kubernetes secret storing the GPG private key.
 secret/sops-gpg created
 
-$ gpg --delete-secret-keys "${KEY_FP}"  # The GPG private key have been stored in the cluster, so we do not need it anymore.
+$ gpg --delete-secret-keys "${KEY_FP}"  # We do not need the GPG private anymore.
 gpg (GnuPG) 2.2.40; Copyright (C) 2022 g10 Code GmbH
 This is free software: you are free to change and redistribute it.
 There is NO WARRANTY, to the extent permitted by law.
