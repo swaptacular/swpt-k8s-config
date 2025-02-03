@@ -129,12 +129,13 @@ sec   rsa4096 2025-02-03 [SCEA]
       46B3059077BEFD9D1BD3B1488C6B09689C8A214A
 uid           [ultimate] cluster.yourdomain.com (flux secrets)
 ssb   rsa4096 2025-02-03 [SEA]
-$ export KEY_FP=46B3059077BEFD9D1BD3B1488C6B09689C8A214A  # Get the fingerprint of the newly created GPG key.
 
-$ gpg --export-secret-keys --armor "${KEY_FP}" | kubectl create secret generic sops-gpg --namespace=flux-system --from-file=sops.asc=/dev/stdin  # Creates a Kubernetes secret storing the GPG private key.
+$ export KEY_FP=46B3059077BEFD9D1BD3B1488C6B09689C8A214A  # the fingerprint of the newly created GPG key
+
+$ gpg --export-secret-keys --armor "${KEY_FP}" | kubectl create secret generic sops-gpg --namespace=flux-system --from-file=sops.asc=/dev/stdin  # Creates a Kubernetes secret with the GPG private key.
 secret/sops-gpg created
 
-$ gpg --delete-secret-keys "${KEY_FP}"  # We do not need the GPG private anymore.
+$ gpg --delete-secret-keys "${KEY_FP}"  # We do not need the GPG private key anymore.
 gpg (GnuPG) 2.2.40; Copyright (C) 2022 g10 Code GmbH
 This is free software: you are free to change and redistribute it.
 There is NO WARRANTY, to the extent permitted by law.
