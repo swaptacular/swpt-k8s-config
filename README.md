@@ -133,5 +133,39 @@ secret/sops-gpg created
 $ gpg --export --armor "${KEY_FP}" > $CLUSTER_NAME/.sops.pub.asc
 $ git add $CLUSTER_NAME/.sops.pub.asc
 $ git commit -am 'Share GPG public key for secrets generation'
+[master 1c50aeb] Share GPG public key for secrets generation
+ 1 file changed, 63 insertions(+)
+ create mode 100644 clusters/dev/.sops.pub.asc
+
+$ git push origin master
+Enumerating objects: 8, done.
+Counting objects: 100% (8/8), done.
+Delta compression using up to 4 threads
+Compressing objects: 100% (4/4), done.
+Writing objects: 100% (5/5), 3.93 KiB | 1.31 MiB/s, done.
+Total 5 (delta 2), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
+To github.com:epandurski/swpt-k8s-config.git
+   c46b496..1c50aeb  master -> master
+
+$ git push k8s-repo master
+Enumerating objects: 13, done.
+Counting objects: 100% (13/13), done.
+Delta compression using up to 4 threads
+Compressing objects: 100% (8/8), done.
+Writing objects: 100% (9/9), 6.33 KiB | 1.27 MiB/s, done.
+Total 9 (delta 4), reused 0 (delta 0), pack-reused 0
+To ssh://localhost:2222/srv/git/fluxcd.git
+   c378384..1c50aeb  master -> master
+
 $ gpg --delete-secret-keys "${KEY_FP}"
+gpg (GnuPG) 2.2.40; Copyright (C) 2022 g10 Code GmbH
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+
+sec  rsa4096/9F85AF312DC6F642 2025-02-03 clusters/dev (flux secrets)
+
+Delete this key from the keyring? (y/N)
+This is a secret key! - really delete? (y/N) y
 ```
