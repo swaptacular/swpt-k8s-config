@@ -126,7 +126,7 @@ $ ./delete-secret-files.sh  # The SSH secrets have already been copied to the cl
 
 The only remaining task is to configure secrets management with
 [SOPS](https://github.com/getsops/sops) and
-[GnuPG](https://www.gnupg.org/):
+[GnuPG/PGP](https://www.gnupg.org/):
 
 ``` console
 $ cd ..
@@ -158,7 +158,7 @@ $ export KEY_FP=46B3059077BEFD9D1BD3B1488C6B09689C8A214A  # the fingerprint of t
 $ gpg --export-secret-keys --armor "${KEY_FP}" | kubectl create secret generic sops-gpg --namespace=flux-system --from-file=sops.asc=/dev/stdin  # Creates a Kubernetes secret with the PGP private key.
 secret/sops-gpg created
 
-$ gpg --edit-key "${KEY_FP}"  # Protect the private key with a strong password:
+$ gpg --edit-key "${KEY_FP}"  # Protect the PGP private key with a strong password:
 gpg (GnuPG) 2.2.40; Copyright (C) 2022 g10 Code GmbH
 This is free software: you are free to change and redistribute it.
 There is NO WARRANTY, to the extent permitted by law.
@@ -177,9 +177,7 @@ gpg> passwd
 <Enter and confirm a new password for "sbb" (the subkey)>
 gpg> quit
 
-$ gpg --export-secret-key --armor "${KEY_FP}" > sops.private.asc
-$ <Store the "sops.private.asc" file somewhere safe.>
-$ shred -z secret-files/ssh_host_rsa_key  # Thoroughly deletes the file.
+$ gpg --export-secret-key --armor "${KEY_FP}" > /mnt/backup/sops.private.asc  # Creates a backup-copy of the PGP private key.
 
 $ gpg --export --armor "${KEY_FP}" > $CLUSTER_DIR/.sops.pub.asc
 $ git add $CLUSTER_DIR/.sops.pub.asc  # Stores the PGP public key in the repo.
@@ -239,11 +237,11 @@ Delete this key from the keyring? (y/N)
 This is a secret key! - really delete? (y/N) y
 ```
 
-You can import the secret decryption key again when you need it from
-the backup copy:
+You can always import the secret decryption key it from your backup
+copy:
 
 ``` console
-$ gpg --import sops.private.asc
+$ gpg --import /mnt/backup/sops.private.asc
 gpg: key C4E5794D9438823E: "clusters/dev (flux secrets)" not changed
 gpg: key C4E5794D9438823E: secret key imported
 gpg: Total number processed: 1
