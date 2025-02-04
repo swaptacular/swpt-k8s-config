@@ -221,8 +221,8 @@ To github.com:epandurski/swpt-k8s-config.git
    c46b496..1c50aeb  master -> master
 ```
 
-Now, once team members have pulled the GitOps repository, they can
-import the public PGP key, and configure SOPS:
+Now, when team members clone the GitOps repository, they will be able
+to import the public PGP key, and configure SOPS:
 
 ``` console
 $ gpg --import clusters/dev/.sops.pub.asc
@@ -233,7 +233,7 @@ gpg:              unchanged: 1
 $ cp clusters/dev/.sops.yaml .  # Creates a SOPS configuration file.
 ```
 
-If you do not plan to use SOPS to decrypt secrets on this machine,
+If you do not plan to use SOPS **to decrypt secrets** on this machine,
 consider deleting the secret decryption key from it:
 
 ``` console
@@ -249,8 +249,7 @@ Delete this key from the keyring? (y/N)
 This is a secret key! - really delete? (y/N) y
 ```
 
-You can always import the secret decryption key it from your backup
-copy:
+You can always import the secret decryption key from your backup copy:
 
 ``` console
 $ gpg --import /mnt/backup/sops.private.asc
