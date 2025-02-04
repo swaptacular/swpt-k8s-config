@@ -173,8 +173,8 @@ ssb  rsa4096/D9F38D9F0A76BB81
 [ultimate] (1). clusters/dev (flux secrets)
 
 gpg> passwd
-<Enter and confirm a password for "sec" (the primary key)>
-<Enter and confirm a password for "sbb" (the subkey)>
+<Choose and confirm a strong password for "sec" (the primary key)>
+<Choose and confirm a strong password for "sbb" (the subkey)>
 gpg> quit
 
 $ gpg --export-secret-key --armor "${KEY_FP}" > /mnt/backup/sops.private.asc
@@ -233,8 +233,8 @@ gpg:              unchanged: 1
 $ cp clusters/dev/.sops.yaml .  # Creates a SOPS configuration file.
 ```
 
-If you do not plan to use SOPS **to decrypt secrets on this machine**,
-consider deleting the secret decryption key from it:
+If you do not plan to use SOPS to decrypt secrets on this machine,
+consider deleting the PGP private key from it:
 
 ``` console
 $ gpg --delete-secret-keys "${KEY_FP}"
@@ -249,8 +249,9 @@ Delete this key from the keyring? (y/N)
 This is a secret key! - really delete? (y/N) y
 ```
 
-You can always **import the secret decryption key, from your backup
-copy**:
+You can always **import the secret decryption key from your backup
+copy**. Make sure you do not forget the passwords which you entered to
+protects the PGP private key:
 
 ``` console
 $ gpg --import /mnt/backup/sops.private.asc
