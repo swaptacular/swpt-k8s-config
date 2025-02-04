@@ -126,7 +126,7 @@ $ ./delete-secret-files.sh  # The SSH secrets have already been copied to the cl
 
 The only remaining task is to configure secrets management with
 [SOPS](https://github.com/getsops/sops) and
-[GnuPG/PGP](https://www.gnupg.org/):
+[GnuPG / PGP](https://www.gnupg.org/):
 
 ``` console
 $ cd ..
@@ -141,7 +141,7 @@ Subkey-Type: 1
 Subkey-Length: 4096
 Expire-Date: 0
 Name-Comment: flux secrets
-Name-Real: ${CLUSTER_DIR}
+Name-Real: Swaptacular ${CLUSTER_DIR}
 EOF
 
 $ gpg --list-secret-keys $CLUSTER_DIR
@@ -153,7 +153,7 @@ sec   rsa4096 2025-02-03 [SCEA]
 uid           [ultimate] cluster.yourdomain.com (flux secrets)
 ssb   rsa4096 2025-02-03 [SEA]
 
-$ export KEY_FP=46B3059077BEFD9D1BD3B1488C6B09689C8A214A  # the fingerprint of the newly generated PGP key
+$ export KEY_FP=46B3059077BEFD9D1BD3B1488C6B09689C8A214A  # the PGP key fingerprint
 
 $ gpg --export-secret-keys --armor "${KEY_FP}" | kubectl create secret generic sops-gpg --namespace=flux-system --from-file=sops.asc=/dev/stdin  # Creates a Kubernetes secret with the PGP private key.
 secret/sops-gpg created
