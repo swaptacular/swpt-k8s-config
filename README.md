@@ -249,7 +249,8 @@ Delete this key from the keyring? (y/N)
 This is a secret key! - really delete? (y/N) y
 ```
 
-You can always import the secret decryption key from your backup copy:
+You can always import the secret decryption key again, **from your
+backup copy**:
 
 ``` console
 $ gpg --import /mnt/backup/sops.private.asc
