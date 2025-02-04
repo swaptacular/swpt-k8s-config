@@ -250,7 +250,7 @@ This is a secret key! - really delete? (y/N) y
 ```
 
 You can always **import the secret decryption key from your backup
-copy**. Make sure you do not forget the passwords which you entered to
+copy**. Make sure you do not forget the passwords which you chose to
 protects the PGP private key:
 
 ``` console
