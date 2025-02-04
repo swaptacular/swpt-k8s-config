@@ -158,16 +158,28 @@ $ export KEY_FP=46B3059077BEFD9D1BD3B1488C6B09689C8A214A  # the fingerprint of t
 $ gpg --export-secret-keys --armor "${KEY_FP}" | kubectl create secret generic sops-gpg --namespace=flux-system --from-file=sops.asc=/dev/stdin  # Creates a Kubernetes secret with the GPG private key.
 secret/sops-gpg created
 
-$ gpg --delete-secret-keys "${KEY_FP}"  # We do not need the GPG private key anymore.
+$ gpg --edit-key "${KEY_FP}"  # Protect the private key by a strong password:
 gpg (GnuPG) 2.2.40; Copyright (C) 2022 g10 Code GmbH
 This is free software: you are free to change and redistribute it.
 There is NO WARRANTY, to the extent permitted by law.
 
+Secret key is available.
 
-sec  rsa4096/9F85AF312DC6F642 2025-02-03 clusters/dev (flux secrets)
+sec  rsa4096/C4E5794D9438823E
+     created: 2025-02-04  expires: never       usage: SCEA
+     trust: ultimate      validity: ultimate
+ssb  rsa4096/D9F38D9F0A76BB81
+     created: 2025-02-04  expires: never       usage: SEA
+[ultimate] (1). clusters/dev (flux secrets)
 
-Delete this key from the keyring? (y/N)
-This is a secret key! - really delete? (y/N) y
+gpg> passwd
+<Enter and confirm a new password for "sec" (the primary key)>
+<Enter and confirm a new password for "sbb" (the subkey)>
+gpg> quit
+
+$ gpg --export-secret-key --armor "${KEY_FP}" > sops.private.asc
+$ <Store the "sops.private.asc" file somewhere safe.>
+$ shred -z secret-files/ssh_host_rsa_key  # Thoroughly deletes the file.
 
 $ gpg --export --armor "${KEY_FP}" > $CLUSTER_DIR/.sops.pub.asc
 $ git add $CLUSTER_DIR/.sops.pub.asc  # Stores the GPG public key in the repo.
@@ -210,3 +222,33 @@ gpg:              unchanged: 1
 
 $ cp clusters/dev/.sops.yaml .  # Creates a SOPS configuration file.
 ```
+
+If you do not plan to use SOPS to decrypt secrets on this machine,
+consider deleting the secret decryption key from it:
+
+``` console
+$ gpg --delete-secret-keys "${KEY_FP}"
+gpg (GnuPG) 2.2.40; Copyright (C) 2022 g10 Code GmbH
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+
+sec  rsa4096/9F85AF312DC6F642 2025-02-03 clusters/dev (flux secrets)
+
+Delete this key from the keyring? (y/N)
+This is a secret key! - really delete? (y/N) y
+```
+
+You can import the secret decryption key again when you need it from
+the backup copy:
+
+``` console
+$ gpg --import sops.private.asc
+gpg: key C4E5794D9438823E: "clusters/dev (flux secrets)" not changed
+gpg: key C4E5794D9438823E: secret key imported
+gpg: Total number processed: 1
+gpg:              unchanged: 1
+gpg:       secret keys read: 1
+gpg:   secret keys imported: 1
+```
+
