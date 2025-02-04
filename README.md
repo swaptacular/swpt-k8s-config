@@ -126,7 +126,7 @@ $ ./delete-secret-files.sh  # The SSH secrets have already been copied to the cl
 
 The only remaining task is to configure secrets management with
 [SOPS](https://github.com/getsops/sops) and
-[GPG](https://www.gnupg.org/):
+[GnuPG](https://www.gnupg.org/):
 
 ``` console
 $ cd ..
@@ -153,12 +153,12 @@ sec   rsa4096 2025-02-03 [SCEA]
 uid           [ultimate] cluster.yourdomain.com (flux secrets)
 ssb   rsa4096 2025-02-03 [SEA]
 
-$ export KEY_FP=46B3059077BEFD9D1BD3B1488C6B09689C8A214A  # the fingerprint of the newly generated GPG key
+$ export KEY_FP=46B3059077BEFD9D1BD3B1488C6B09689C8A214A  # the fingerprint of the newly generated PGP key
 
-$ gpg --export-secret-keys --armor "${KEY_FP}" | kubectl create secret generic sops-gpg --namespace=flux-system --from-file=sops.asc=/dev/stdin  # Creates a Kubernetes secret with the GPG private key.
+$ gpg --export-secret-keys --armor "${KEY_FP}" | kubectl create secret generic sops-gpg --namespace=flux-system --from-file=sops.asc=/dev/stdin  # Creates a Kubernetes secret with the PGP private key.
 secret/sops-gpg created
 
-$ gpg --edit-key "${KEY_FP}"  # Protect the private key by a strong password:
+$ gpg --edit-key "${KEY_FP}"  # Protect the private key with a strong password:
 gpg (GnuPG) 2.2.40; Copyright (C) 2022 g10 Code GmbH
 This is free software: you are free to change and redistribute it.
 There is NO WARRANTY, to the extent permitted by law.
@@ -182,7 +182,7 @@ $ <Store the "sops.private.asc" file somewhere safe.>
 $ shred -z secret-files/ssh_host_rsa_key  # Thoroughly deletes the file.
 
 $ gpg --export --armor "${KEY_FP}" > $CLUSTER_DIR/.sops.pub.asc
-$ git add $CLUSTER_DIR/.sops.pub.asc  # Stores the GPG public key in the repo.
+$ git add $CLUSTER_DIR/.sops.pub.asc  # Stores the PGP public key in the repo.
 
 $ cat <<EOF > $CLUSTER_DIR/.sops.yaml
 creation_rules:
@@ -193,8 +193,8 @@ creation_rules:
 EOF
 $ git add $CLUSTER_DIR/.sops.yaml  # Stores an example SOPS configuration file in the repo.
 
-$ git commit -am 'Share GPG public key for secrets generation'
-[master 1c50aeb] Share GPG public key for secrets generation
+$ git commit -am 'Share PGP public key for secrets generation'
+[master 1c50aeb] Share PGP public key for secrets generation
  2 files changed, 63 insertions(+)
  create mode 100644 clusters/dev/.sops.pub.asc
  create mode 100644 clusters/dev/.sops.yaml
@@ -212,7 +212,7 @@ To github.com:epandurski/swpt-k8s-config.git
 ```
 
 Now, once team members have pulled the GitOps repository, they can
-import the public GPG key, and configure SOPS:
+import the public PGP key, and configure SOPS:
 
 ``` console
 $ gpg --import clusters/dev/.sops.pub.asc
