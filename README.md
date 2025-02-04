@@ -173,11 +173,23 @@ ssb  rsa4096/D9F38D9F0A76BB81
 [ultimate] (1). clusters/dev (flux secrets)
 
 gpg> passwd
-<Enter and confirm a new password for "sec" (the primary key)>
-<Enter and confirm a new password for "sbb" (the subkey)>
+<Enter and confirm a password for "sec" (the primary key)>
+<Enter and confirm a password for "sbb" (the subkey)>
 gpg> quit
 
-$ gpg --export-secret-key --armor "${KEY_FP}" > /mnt/backup/sops.private.asc  # Creates a backup-copy of the PGP private key.
+$ gpg --export-secret-key --armor "${KEY_FP}" > /mnt/backup/sops.private.asc
+$ cat /mnt/backup/sops.private.asc  # a password-protected backup copy of the PGP private key
+-----BEGIN PGP PRIVATE KEY BLOCK-----
+
+lQdGBGeiOpcBEAC5BY0+BAsdEgAvnoFcf26mpAVdHJMJJndg7sZazL43ubt19Mrp
+gb4erMOVTi8lGYLLJ2/kvOFClo4K6qKQUBT6uvQR3GW4ZMQy8lKq1cePeIDpQytm
+...
+...
+at0elqM15f4A24DhqAPT2BsHlxa55yliv7GTvRC1isT6iZ8Kj4IE1caAdHopgBpu
+nHlB9rEGqlTEhDYLc3igwmVrPPtqf3F2vBOpIEDWbwvxQbjvhcO6pGZ5pZNn9W89
+QbIgaiHj7aTsupibdTde
+=o9oQ
+-----END PGP PRIVATE KEY BLOCK-----
 
 $ gpg --export --armor "${KEY_FP}" > $CLUSTER_DIR/.sops.pub.asc
 $ git add $CLUSTER_DIR/.sops.pub.asc  # Stores the PGP public key in the repo.
