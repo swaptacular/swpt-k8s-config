@@ -233,7 +233,7 @@ gpg:              unchanged: 1
 $ cp clusters/dev/.sops.yaml .  # Creates a SOPS configuration file.
 ```
 
-If you do not plan to use SOPS **to decrypt secrets** on this machine,
+If you do not plan to use SOPS **to decrypt secrets on this machine**,
 consider deleting the secret decryption key from it:
 
 ``` console
@@ -249,8 +249,8 @@ Delete this key from the keyring? (y/N)
 This is a secret key! - really delete? (y/N) y
 ```
 
-You can always import the secret decryption key again, **from your
-backup copy**:
+You can always **import the secret decryption key, from your backup
+copy**:
 
 ``` console
 $ gpg --import /mnt/backup/sops.private.asc
