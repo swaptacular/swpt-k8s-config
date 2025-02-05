@@ -67,6 +67,9 @@ id_rsa  id_rsa.pub  known_hosts
 $ ssh-keygen -s "$ROOT_CA_PRIVATE_KEY_FILE" -I johndoe -n git ~/.ssh/id_rsa.pub  # Issues a certificate for the "id_rsa.pub" key.
 Enter passphrase:
 Signed user key /home/johndoe/.ssh/id_rsa-cert.pub: id "johndoe" serial 0 for git valid forever
+
+$ ls ~/.ssh
+id_rsa  id_rsa.pub  id_rsa-cert.pub  known_hosts
 ```
 
 Then you need to connect to the Git server, create a new

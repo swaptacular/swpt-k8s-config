@@ -4,7 +4,7 @@ metadata:
   name: git-repositories
 spec:
   accessModes:
-    - ReadWriteOnce  # Should be "ReadWriteOncePod", but this is not supported everywhere yet!
+    - ReadWriteOncePod
   resources:
     requests:
       storage: 1Gi
