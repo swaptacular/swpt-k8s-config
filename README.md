@@ -13,6 +13,8 @@ $ cd simple-git-server/
 $ pwd
 /home/johndoe/swpt-k8s-config/simple-git-server
 
+$ sed -i -E '/^([^#].*)?$/d' trusted_user_ca_keys  # Removes old trusted CA keys.
+
 $ export ROOT_CA_CRT_FILE=~/swpt_ca_scripts/root-ca.crt  # the path to your Swaptacular node's self-signed root-CA certificate
 $ openssl x509 -in "$ROOT_CA_CRT_FILE" -pubkey -noout > CERT.tmp
 $ ssh-keygen -f CERT.tmp -i -m PKCS8 >> trusted_user_ca_keys
@@ -258,7 +260,7 @@ sec  rsa4096/6225432F3481C8E0 2025-02-05 Swaptacular clusters/dev (flux secrets)
 Delete this key from the keyring? (y/N)
 This is a secret key! - really delete? (y/N) y
 
-$ gpg --import /mnt/backup/sops.private.asc  # Import the private key from you backup copy.
+$ gpg --import /mnt/backup/sops.private.asc  # Import the private key from your backup copy.
 gpg: key 6225432F3481C8E0: "Swaptacular clusters/dev (flux secrets)" not changed
 gpg: key 6225432F3481C8E0: secret key imported
 gpg: Total number processed: 1
