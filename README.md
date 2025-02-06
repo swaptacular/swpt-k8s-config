@@ -159,7 +159,7 @@ $ export KEY_FP=2ED21ED3DBBF5A37898D9D316225432F3481C8E0  # the PGP key fingerpr
 $ gpg --export-secret-keys --armor "${KEY_FP}" | kubectl create secret generic sops-gpg --namespace=flux-system --from-file=sops.asc=/dev/stdin  # Creates a Kubernetes secret with the PGP private key.
 secret/sops-gpg created
 
-$ gpg --edit-key "${KEY_FP}"  # Protect the PGP private key with a strong password:
+$ gpg --edit-key "${KEY_FP}"  # Protect the PGP private key with strong password(s):
 gpg (GnuPG) 2.2.40; Copyright (C) 2022 g10 Code GmbH
 This is free software: you are free to change and redistribute it.
 There is NO WARRANTY, to the extent permitted by law.
@@ -221,8 +221,8 @@ $ cp clusters/dev/.sops.yaml .  # Creates a SOPS configuration file.
 ```
 
 It is **highly recommended** that you create a backup copy of the PGP
-private key. Make sure you do not forget the password(s) which
-protects the PGP private key:
+private key. Make sure you do not forget the password(s) which you
+chose to protect the PGP private key:
 
 ``` console
 $ gpg --export-secret-key --armor "${KEY_FP}" > /mnt/backup/sops.private.asc
@@ -241,8 +241,9 @@ QbIgaiHj7aTsupibdTde
 -----END PGP PRIVATE KEY BLOCK-----
 ```
 
-If you do not plan to use SOPS **to decrypt secrets** on this machine,
-consider deleting the PGP private key from this machine:
+If you do not plan to use SOPS to decrypt secrets on this machine,
+consider deleting the PGP private key from the machine. You can always
+import the secret decryption key from your backup copy:
 
 ``` console
 $ gpg --delete-secret-keys "${KEY_FP}"
@@ -255,13 +256,8 @@ sec  rsa4096/6225432F3481C8E0 2025-02-05 Swaptacular clusters/dev (flux secrets)
 
 Delete this key from the keyring? (y/N)
 This is a secret key! - really delete? (y/N) y
-```
 
-You can always **import the secret decryption key from your backup
-copy**:
-
-``` console
-$ gpg --import /mnt/backup/sops.private.asc
+$ gpg --import /mnt/backup/sops.private.asc  # import from you backup copy
 gpg: key 6225432F3481C8E0: "Swaptacular clusters/dev (flux secrets)" not changed
 gpg: key 6225432F3481C8E0: secret key imported
 gpg: Total number processed: 1
