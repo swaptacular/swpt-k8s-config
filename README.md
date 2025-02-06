@@ -242,12 +242,12 @@ QbIgaiHj7aTsupibdTde
 ```
 
 If you do not plan to use SOPS to decrypt secrets on this machine,
-consider deleting the PGP private key from the machine. You can always
-import the secret decryption key from your backup copy, if you need
-it:
+consider deleting the PGP private key from the machine. If you need
+it, you can always import the secret decryption key from your backup
+copy:
 
 ``` console
-$ gpg --delete-secret-keys "${KEY_FP}"  # delete the PGP private key
+$ gpg --delete-secret-keys "${KEY_FP}"  # Delete the private key.
 gpg (GnuPG) 2.2.40; Copyright (C) 2022 g10 Code GmbH
 This is free software: you are free to change and redistribute it.
 There is NO WARRANTY, to the extent permitted by law.
@@ -258,7 +258,7 @@ sec  rsa4096/6225432F3481C8E0 2025-02-05 Swaptacular clusters/dev (flux secrets)
 Delete this key from the keyring? (y/N)
 This is a secret key! - really delete? (y/N) y
 
-$ gpg --import /mnt/backup/sops.private.asc  # import from you backup copy
+$ gpg --import /mnt/backup/sops.private.asc  # Import the private key from you backup copy.
 gpg: key 6225432F3481C8E0: "Swaptacular clusters/dev (flux secrets)" not changed
 gpg: key 6225432F3481C8E0: secret key imported
 gpg: Total number processed: 1
