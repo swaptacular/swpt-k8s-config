@@ -243,10 +243,11 @@ QbIgaiHj7aTsupibdTde
 
 If you do not plan to use SOPS to decrypt secrets on this machine,
 consider deleting the PGP private key from the machine. You can always
-import the secret decryption key from your backup copy:
+import the secret decryption key from your backup copy, if you need
+it:
 
 ``` console
-$ gpg --delete-secret-keys "${KEY_FP}"
+$ gpg --delete-secret-keys "${KEY_FP}"  # delete the PGP private key
 gpg (GnuPG) 2.2.40; Copyright (C) 2022 g10 Code GmbH
 This is free software: you are free to change and redistribute it.
 There is NO WARRANTY, to the extent permitted by law.
