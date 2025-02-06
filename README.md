@@ -207,7 +207,7 @@ creation_rules:
 EOF
 $ git add $CLUSTER_DIR/.sops.yaml  # Stores an example SOPS configuration file in the repo.
 
-$ git commit -am 'Share PGP public key for secrets generation'
+$ git commit -m 'Share PGP public key for secrets generation'
 [master 1c50aeb] Share PGP public key for secrets generation
  2 files changed, 63 insertions(+)
  create mode 100644 clusters/dev/.sops.pub.asc
