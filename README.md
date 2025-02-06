@@ -83,7 +83,6 @@ Then you need to connect to the Git server, create a new
 GitOps repo into it:
 
 ``` console
-$ export CLUSTER_DIR=clusters/dev  # one of the subdirectories in the "./clusters" directory
 $ export CLUSTER_EXTERNAL_IP=127.0.0.1  # the public IP of your Kubernetes cluster
 
 $ ssh git@$CLUSTER_EXTERNAL_IP -p 2222  # Create an empty repository:
@@ -101,6 +100,8 @@ git> git-init --bare -b master /srv/git/fluxcd.git
 Initialized empty Git repository in /srv/git/fluxcd.git/
 git> exit
 Connection to 127.0.0.1 closed.
+
+$ export CLUSTER_DIR=clusters/dev  # one of the subdirectories in the "./clusters" directory
 
 $ git remote add $CLUSTER_DIR ssh://git@$CLUSTER_EXTERNAL_IP:2222/srv/git/fluxcd.git
 
