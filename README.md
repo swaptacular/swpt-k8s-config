@@ -26,13 +26,20 @@ $ cat trusted_user_ca_keys  # Shows trusted CA keys, one key per line.
 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCJfDWvw+LxOW1ECcpoHdFw+ygG4XSeVrB9JFVdIcrrVHqIXDPjvJKXrQ2TadeaTA2i1XUv+XwJr2ZN3OZ6dGLxddPQD4ZG6ciT4iK4TOjAiauE8gQPHR1uzShoK2TGfuYXma2lOnB4s/w5Tif+an5NzHRuDzAwXHPVfVeb9kgIO4A761CztwdTPyEM0jocpoz03Ch4DgYvwf2r+P+1x2Hm5htipNigkhdwtdw5yjUuTR3ylFIeokwcIZomYcGGO66i7EWGYzhr811uApgLJH5YtqeFnD054ia+AbOdCXEr1ZXvpol1Vqo6p/R015zBjMQ8wcdzd+PMSzHvXMLMjG6POhRvQ2yy3cmDpPPIzMHOcNxXhdarVLKDt8/SJlo4O+buAbHdib0pRXpqbPS6rjFwArB93H7TOcY+xl3EGAsjz+1wRPlbi1TN9XNRyQKxLK21QpYql4iYoD8Wac6iWQDDKNaTr88YFUu+MMUfZuQ+0MmXQ1yA/wfqyC9pjm4tkc0=
 
 $ git add trusted_user_ca_keys
-$ git commit -am 'Update trusted_user_ca_keys'
+$ git commit -m 'Update trusted_user_ca_keys'
 [master 1c50aeb] Share PGP public key for secrets generation
- 2 files changed, 63 insertions(+)
- create mode 100644 clusters/dev/.sops.pub.asc
- create mode 100644 clusters/dev/.sops.yaml
+ 1 files changed, 2 insertions(+)
+ create mode 100644 simple-git-server/trusted_user_ca_keys
 $ git push origin master  # Pushes the changes to the GitOps repository.
-
+Enumerating objects: 8, done.
+Counting objects: 100% (8/8), done.
+Delta compression using up to 4 threads
+Compressing objects: 100% (4/4), done.
+Writing objects: 100% (5/5), 3.93 KiB | 1.31 MiB/s, done.
+Total 5 (delta 2), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
+To github.com:epandurski/swpt-k8s-config.git
+   c46b496..1c50aeb  master -> master
 
 $ ./generate-secret-files.sh  # Generates an SSH private/public key pair.
 Generating public/private rsa key pair.
