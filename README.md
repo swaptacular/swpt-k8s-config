@@ -117,6 +117,7 @@ To ssh://127.0.0.1:2222/srv/git/fluxcd.git
 To bootstraps FluxCD from the Git server on your Kubernetes cluster:
 
 ``` console
+$ sudo sh -c "sed -i '/git-server.simple-git-server.svc.cluster.local/d' /etc/hosts"
 $ sudo sh -c "echo $CLUSTER_EXTERNAL_IP git-server.simple-git-server.svc.cluster.local >> /etc/hosts"
 $ cat /etc/hosts  # The internal name of the Git-server has been added to your hosts file.
 ...
