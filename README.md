@@ -20,6 +20,14 @@ $ openssl x509 -in "$ROOT_CA_CRT_FILE" -pubkey -noout > CERT.tmp
 $ ssh-keygen -f CERT.tmp -i -m PKCS8 >> trusted_user_ca_keys
 $ rm CERT.tmp  # Execute these 4 lines for each Swaptacular node that you will run on your Kubernetes cluster.
 
+$ cat trusted_user_ca_keys  # Shows the trusted CA keys.
+# In this file, keys are listed one per line. Empty lines and comments
+# starting with ‘#’ are allowed.
+...
+...
+#
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCJfDWvw+LxOW1ECcpoHdFw+ygG4XSeVrB9JFVdIcrrVHqIXDPjvJKXrQ2TadeaTA2i1XUv+XwJr2ZN3OZ6dGLxddPQD4ZG6ciT4iK4TOjAiauE8gQPHR1uzShoK2TGfuYXma2lOnB4s/w5Tif+an5NzHRuDzAwXHPVfVeb9kgIO4A761CztwdTPyEM0jocpoz03Ch4DgYvwf2r+P+1x2Hm5htipNigkhdwtdw5yjUuTR3ylFIeokwcIZomYcGGO66i7EWGYzhr811uApgLJH5YtqeFnD054ia+AbOdCXEr1ZXvpol1Vqo6p/R015zBjMQ8wcdzd+PMSzHvXMLMjG6POhRvQ2yy3cmDpPPIzMHOcNxXhdarVLKDt8/SJlo4O+buAbHdib0pRXpqbPS6rjFwArB93H7TOcY+xl3EGAsjz+1wRPlbi1TN9XNRyQKxLK21QpYql4iYoD8Wac6iWQDDKNaTr88YFUu+MMUfZuQ+0MmXQ1yA/wfqyC9pjm4tkc0=
+
 $ ./generate-secret-files.sh  # Generates an SSH private/public key pair.
 Generating public/private rsa key pair.
 Your identification has been saved in secret-files/ssh_host_rsa_key
