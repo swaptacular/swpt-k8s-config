@@ -27,20 +27,19 @@ ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCJfDWvw+LxOW1ECcpoHdFw+ygG4XSeVrB9JFVdIcrr
 
 $ git add trusted_user_ca_keys
 $ git commit -m 'Update simple-git-server/trusted_user_ca_keys'
-[master 1c50aeb] Share PGP public key for secrets generation
- 1 files changed, 2 insertions(+)
- create mode 100644 simple-git-server/trusted_user_ca_keys
+[master 2f1bd3c] Update simple-git-server/trusted_user_ca_keys
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 $ git push origin master  # Pushes the changes to the GitOps repository.
-Enumerating objects: 8, done.
-Counting objects: 100% (8/8), done.
+Enumerating objects: 11, done.
+Counting objects: 100% (11/11), done.
 Delta compression using up to 4 threads
-Compressing objects: 100% (4/4), done.
-Writing objects: 100% (5/5), 3.93 KiB | 1.31 MiB/s, done.
-Total 5 (delta 2), reused 0 (delta 0), pack-reused 0
-remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
+Compressing objects: 100% (7/7), done.
+Writing objects: 100% (7/7), 1.94 KiB | 662.00 KiB/s, done.
+Total 7 (delta 5), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (5/5), completed with 4 local objects.
 To github.com:epandurski/swpt-k8s-config.git
-   c46b496..1c50aeb  master -> master
+   dca1e7a..175b62a  master -> master
 
 $ ./generate-secret-files.sh  # Generates an SSH private/public key pair.
 Generating public/private rsa key pair.
