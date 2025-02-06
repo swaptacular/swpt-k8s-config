@@ -13,7 +13,7 @@ $ cd simple-git-server/
 $ pwd
 /home/johndoe/swpt-k8s-config/simple-git-server
 
-$ sed -i -E '/^([^#].*)?$/d' trusted_user_ca_keys  # Removes old trusted CA keys.
+$ sed -i -E '/^([^#].*)?$/d' trusted_user_ca_keys  # Removes old trusted CA keys, preserves comments.
 
 $ export ROOT_CA_CRT_FILE=~/swpt_ca_scripts/root-ca.crt  # the path to your Swaptacular node's self-signed root-CA certificate
 $ openssl x509 -in "$ROOT_CA_CRT_FILE" -pubkey -noout > CERT.tmp
