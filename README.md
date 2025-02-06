@@ -178,20 +178,6 @@ gpg> passwd
 <Choose and confirm a strong password for "sbb" (the subkey)>
 gpg> quit
 
-$ gpg --export-secret-key --armor "${KEY_FP}" > /mnt/backup/sops.private.asc
-$ cat /mnt/backup/sops.private.asc  # a password-protected backup copy of the PGP private key
------BEGIN PGP PRIVATE KEY BLOCK-----
-
-lQdGBGeiOpcBEAC5BY0+BAsdEgAvnoFcf26mpAVdHJMJJndg7sZazL43ubt19Mrp
-gb4erMOVTi8lGYLLJ2/kvOFClo4K6qKQUBT6uvQR3GW4ZMQy8lKq1cePeIDpQytm
-...
-...
-at0elqM15f4A24DhqAPT2BsHlxa55yliv7GTvRC1isT6iZ8Kj4IE1caAdHopgBpu
-nHlB9rEGqlTEhDYLc3igwmVrPPtqf3F2vBOpIEDWbwvxQbjvhcO6pGZ5pZNn9W89
-QbIgaiHj7aTsupibdTde
-=o9oQ
------END PGP PRIVATE KEY BLOCK-----
-
 $ gpg --export --armor "${KEY_FP}" > $CLUSTER_DIR/.sops.pub.asc
 $ git add $CLUSTER_DIR/.sops.pub.asc  # Stores the PGP public key in the repo.
 
@@ -234,6 +220,27 @@ gpg:              unchanged: 1
 $ cp clusters/dev/.sops.yaml .  # Creates a SOPS configuration file.
 ```
 
+It is **highly recommended** that you create a backup copy of the PGP
+private key. Make sure you do not forget the password(s) which
+protects the PGP private key:
+
+``` console
+$ gpg --export-secret-key --armor "${KEY_FP}" > /mnt/backup/sops.private.asc
+
+$ cat /mnt/backup/sops.private.asc  # a password-protected backup copy of the PGP private key
+-----BEGIN PGP PRIVATE KEY BLOCK-----
+
+lQdGBGeiOpcBEAC5BY0+BAsdEgAvnoFcf26mpAVdHJMJJndg7sZazL43ubt19Mrp
+gb4erMOVTi8lGYLLJ2/kvOFClo4K6qKQUBT6uvQR3GW4ZMQy8lKq1cePeIDpQytm
+...
+...
+at0elqM15f4A24DhqAPT2BsHlxa55yliv7GTvRC1isT6iZ8Kj4IE1caAdHopgBpu
+nHlB9rEGqlTEhDYLc3igwmVrPPtqf3F2vBOpIEDWbwvxQbjvhcO6pGZ5pZNn9W89
+QbIgaiHj7aTsupibdTde
+=o9oQ
+-----END PGP PRIVATE KEY BLOCK-----
+```
+
 If you do not plan to use SOPS **to decrypt secrets** on this machine,
 consider deleting the PGP private key from this machine:
 
@@ -251,8 +258,7 @@ This is a secret key! - really delete? (y/N) y
 ```
 
 You can always **import the secret decryption key from your backup
-copy**. Make sure you do not forget the passwords which you chose to
-protects the PGP private key:
+copy**:
 
 ``` console
 $ gpg --import /mnt/backup/sops.private.asc
