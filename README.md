@@ -73,7 +73,7 @@ id_rsa  id_rsa.pub  id_rsa-cert.pub  known_hosts
 
 Then you need to connect to the Git server, create a new
 `/srv/git/fluxcd.git` repository, and copy the whole content of the
-GitOps repo to it:
+GitOps repo into it:
 
 ``` console
 $ export CLUSTER_EXTERNAL_IP=127.0.0.1  # the public IP of your Kubernetes cluster
@@ -149,15 +149,12 @@ Name-Real: Swaptacular ${CLUSTER_DIR}
 EOF
 
 $ gpg --list-secret-keys $CLUSTER_DIR
-gpg: checking the trustdb
-gpg: marginals needed: 3  completes needed: 1  trust model: pgp
-gpg: depth: 0  valid:   3  signed:   0  trust: 0-, 0q, 0n, 0m, 0f, 3u
-sec   rsa4096 2025-02-03 [SCEA]
-      46B3059077BEFD9D1BD3B1488C6B09689C8A214A
-uid           [ultimate] cluster.yourdomain.com (flux secrets)
-ssb   rsa4096 2025-02-03 [SEA]
+sec   rsa4096 2025-02-05 [SCEA]
+      2ED21ED3DBBF5A37898D9D316225432F3481C8E0
+uid           [ultimate] Swaptacular clusters/dev (flux secrets)
+ssb   rsa4096 2025-02-05 [SEA]
 
-$ export KEY_FP=46B3059077BEFD9D1BD3B1488C6B09689C8A214A  # the PGP key fingerprint
+$ export KEY_FP=2ED21ED3DBBF5A37898D9D316225432F3481C8E0  # the PGP key fingerprint
 
 $ gpg --export-secret-keys --armor "${KEY_FP}" | kubectl create secret generic sops-gpg --namespace=flux-system --from-file=sops.asc=/dev/stdin  # Creates a Kubernetes secret with the PGP private key.
 secret/sops-gpg created
@@ -169,12 +166,12 @@ There is NO WARRANTY, to the extent permitted by law.
 
 Secret key is available.
 
-sec  rsa4096/C4E5794D9438823E
-     created: 2025-02-04  expires: never       usage: SCEA
+sec  rsa4096/6225432F3481C8E0
+     created: 2025-02-05  expires: never       usage: SCEA
      trust: ultimate      validity: ultimate
-ssb  rsa4096/D9F38D9F0A76BB81
-     created: 2025-02-04  expires: never       usage: SEA
-[ultimate] (1). clusters/dev (flux secrets)
+ssb  rsa4096/8D9D22305D43BA1B
+     created: 2025-02-05  expires: never       usage: SEA
+[ultimate] (1). Swaptacular clusters/dev (flux secrets)
 
 gpg> passwd
 <Choose and confirm a strong password for "sec" (the primary key)>
@@ -226,10 +223,10 @@ To github.com:epandurski/swpt-k8s-config.git
 ```
 
 Now, when team members clone the GitOps repository, they will be able
-to import the public PGP key, and configure SOPS:
+to import the public PGP key, and create a SOPS configuration file:
 
 ``` console
-$ gpg --import clusters/dev/.sops.pub.asc
+$ gpg --import clusters/dev/.sops.pub.asc  # Imports the public PGP key.
 gpg: key 9F85AF312DC6F642: "clusters/dev (flux secrets)" not changed
 gpg: Total number processed: 1
 gpg:              unchanged: 1
@@ -237,8 +234,8 @@ gpg:              unchanged: 1
 $ cp clusters/dev/.sops.yaml .  # Creates a SOPS configuration file.
 ```
 
-If you do not plan to use SOPS to decrypt secrets on this machine,
-consider deleting the PGP private key from it:
+If you do not plan to use SOPS **to decrypt secrets** on this machine,
+consider deleting the PGP private key from this machine:
 
 ``` console
 $ gpg --delete-secret-keys "${KEY_FP}"
@@ -247,7 +244,7 @@ This is free software: you are free to change and redistribute it.
 There is NO WARRANTY, to the extent permitted by law.
 
 
-sec  rsa4096/9F85AF312DC6F642 2025-02-03 clusters/dev (flux secrets)
+sec  rsa4096/6225432F3481C8E0 2025-02-05 Swaptacular clusters/dev (flux secrets)
 
 Delete this key from the keyring? (y/N)
 This is a secret key! - really delete? (y/N) y
@@ -259,11 +256,11 @@ protects the PGP private key:
 
 ``` console
 $ gpg --import /mnt/backup/sops.private.asc
-gpg: key C4E5794D9438823E: "clusters/dev (flux secrets)" not changed
-gpg: key C4E5794D9438823E: secret key imported
+gpg: key 6225432F3481C8E0: "Swaptacular clusters/dev (flux secrets)" not changed
+gpg: key 6225432F3481C8E0: secret key imported
 gpg: Total number processed: 1
 gpg:              unchanged: 1
 gpg:       secret keys read: 1
-gpg:   secret keys imported: 1
+gpg:  secret keys unchanged: 1
 ```
 
