@@ -96,5 +96,8 @@ resources:
   - ../base/
   - minimal-postgres-manifest.yaml
   # - standby-cluster-manifest.yaml
-  - minimal-rabbitmq-manifest.yaml
+  # - minimal-rabbitmq-manifest.yaml
   - test-secret.yaml
+
+patches:
+  - path: patches/broker.yaml

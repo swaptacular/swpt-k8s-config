@@ -1,0 +1,15 @@
+apiVersion: rabbitmq.com/v1beta1
+kind: RabbitmqCluster
+metadata:
+  name: broker
+spec:
+  replicas: 1
+  persistence:
+    storage: 1Gi
+  resources:
+    requests:
+      cpu: 100m
+      memory: 700Mi
+    limits:
+      cpu: 1000m
+      memory: 700Mi
