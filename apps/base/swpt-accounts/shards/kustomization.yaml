@@ -42,6 +42,7 @@ secretGenerator:
 
 resources:
   - postgres-cluster.yaml
+  - shard-config.yaml
   - shard-main.yaml
 
 patches:
