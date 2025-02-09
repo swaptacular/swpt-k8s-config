@@ -1,12 +1,13 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
+namespace: swpt-accounts
 
 secretGenerator:
   - name: postgres.accounts-db.credentials.postgresql.acid.zalan.do
     literals:
       - username=postgres
     files:
-      - password=postgres-password.encrypted
+      - password=postgres-cluster-password.encrypted
     type: Opaque
     options:
       disableNameSuffixHash: true
@@ -18,7 +19,7 @@ secretGenerator:
     literals:
       - username=standby
     files:
-      - password=postgres-password.encrypted
+      - password=postgres-cluster-password.encrypted
     type: Opaque
     options:
       disableNameSuffixHash: true
@@ -30,7 +31,7 @@ secretGenerator:
     literals:
       - username=db_owner
     files:
-      - password=postgres-password.encrypted
+      - password=postgres-cluster-password.encrypted
     type: Opaque
     options:
       disableNameSuffixHash: true
@@ -39,13 +40,13 @@ secretGenerator:
         cluster-name: accounts-db
         team: swpt
 
-# resources:
-#   - postgres-cluster.yaml
+resources:
+  - postgres-cluster.yaml
 
-# patches:
-#   - target:
-#       group: acid.zalan.do
-#       version: v1
-#       kind: postgresql
-#       name: accounts-db
-#     path: postgres-cluster-plumbing.yaml
+patches:
+  - target:
+      group: acid.zalan.do
+      version: v1
+      kind: postgresql
+      name: accounts-db
+    path: postgres-cluster-plumbing.yaml
