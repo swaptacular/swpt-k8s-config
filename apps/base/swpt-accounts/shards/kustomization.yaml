@@ -49,4 +49,4 @@ patches:
       version: v1
       kind: postgresql
       name: accounts-db
-    path: postgres-cluster-plumbing.yaml
+    path: postgres-cluster-patch.yaml
