@@ -5,23 +5,23 @@ generatorOptions:
   disableNameSuffixHash: true
   labels:
     application: spilo
-    cluster-name: accounts-db
+    cluster-name: accounts-db101
     team: swpt
 
 secretGenerator:
-  - name: postgres.accounts-db.credentials.postgresql.acid.zalan.do
+  - name: postgres.accounts-db101.credentials.postgresql.acid.zalan.do
     literals:
       - username=postgres
     files:
       - password=postgres-cluster-password.encrypted
     type: Opaque
-  - name: standby.accounts-db.credentials.postgresql.acid.zalan.do
+  - name: standby.accounts-db101.credentials.postgresql.acid.zalan.do
     literals:
       - username=standby
     files:
       - password=postgres-cluster-password.encrypted
     type: Opaque
-  - name: db-owner.accounts-db.credentials.postgresql.acid.zalan.do
+  - name: db-owner.accounts-db101.credentials.postgresql.acid.zalan.do
     literals:
       - username=db_owner
     files:
