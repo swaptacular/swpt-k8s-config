@@ -1,0 +1,142 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: accounts-main
+  labels:
+    app: accounts-main
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: accounts-main
+  template:
+    metadata:
+      labels:
+        app: accounts-main
+    spec:
+      containers:
+        - name: accounts-main
+          image: ghcr.io/swaptacular/swpt_accounts:2.3.1
+          command: ['all']
+          env:
+            - name: PGHOST
+              value: accounts-db.swpt-accounts.svc
+            - name: PGPORT
+              value: "5432"
+            - name: PGUSER
+              valueFrom:
+                secretKeyRef:
+                  name: db-owner.accounts-db.credentials.postgresql.acid.zalan.do
+                  key: username
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-owner.accounts-db.credentials.postgresql.acid.zalan.do
+                  key: password
+            - name: PGDATABASE
+              value: db
+            - name: RABBITMQ_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: broker-default-user
+                  key: host
+            - name: RABBITMQ_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: broker-default-user
+                  key: port
+            - name: RABBITMQ_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: broker-default-user
+                  key: username
+            - name: RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: broker-default-user
+                  key: password
+            - name: FETCH_API_URL
+              value: "http://accounts-cache.swpt-accounts.svc:80"
+            - name: POSTGRES_URL
+              value: "postgresql+psycopg://$(PGUSER):$(PGPASSWORD)@$(PGHOST):$(PGPORT)/$(PGDATABASE)"
+            - name: PROTOCOL_BROKER_URL
+              value: "amqp://$(RABBITMQ_USERNAME):$(RABBITMQ_PASSWORD)@$(RABBITMQ_HOST):$(RABBITMQ_PORT)"
+            - name: PROTOCOL_BROKER_QUEUE
+              value: "swpt_accounts"
+            - name: PROTOCOL_BROKER_QUEUE_ROUTING_KEY
+              value: "#"
+            - name: PROTOCOL_BROKER_PROCESSES
+              value: "0"
+            - name: CHORES_BROKER_URL
+              value: "amqp://$(RABBITMQ_USERNAME):$(RABBITMQ_PASSWORD)@$(RABBITMQ_HOST):$(RABBITMQ_PORT)"
+            - name: CHORES_BROKER_QUEUE
+              value: "swpt_accounts_chores"
+            - name: CHORES_BROKER_PROCESSES
+              value: "0"
+            - name: FLUSH_PROCESSES
+              value: "0"
+            - name: DELETE_PARENT_SHARD_RECORDS
+              value: "false"
+            - name: APP_LOG_LEVEL
+              value: "warning"
+            - name: APP_LOG_FORMAT
+              value: "json"
+      initContainers:
+        - name: init-accounts-main
+          image: ghcr.io/swaptacular/swpt_accounts:2.3.1
+          command: ['configure']
+          env:
+            - name: PGHOST
+              value: accounts-db.swpt-accounts.svc
+            - name: PGPORT
+              value: "5432"
+            - name: PGUSER
+              valueFrom:
+                secretKeyRef:
+                  name: db-owner.accounts-db.credentials.postgresql.acid.zalan.do
+                  key: username
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-owner.accounts-db.credentials.postgresql.acid.zalan.do
+                  key: password
+            - name: PGDATABASE
+              value: db
+            - name: RABBITMQ_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: broker-default-user
+                  key: host
+            - name: RABBITMQ_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: broker-default-user
+                  key: port
+            - name: RABBITMQ_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: broker-default-user
+                  key: username
+            - name: RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: broker-default-user
+                  key: password
+            - name: POSTGRES_URL
+              value: "postgresql+psycopg://$(PGUSER):$(PGPASSWORD)@$(PGHOST):$(PGPORT)/$(PGDATABASE)"
+            - name: PROTOCOL_BROKER_URL
+              value: "amqp://$(RABBITMQ_USERNAME):$(RABBITMQ_PASSWORD)@$(RABBITMQ_HOST):$(RABBITMQ_PORT)"
+            - name: PROTOCOL_BROKER_QUEUE
+              value: "swpt_accounts"
+            - name: PROTOCOL_BROKER_QUEUE_ROUTING_KEY
+              value: "#"
+            - name: CHORES_BROKER_URL
+              value: "amqp://$(RABBITMQ_USERNAME):$(RABBITMQ_PASSWORD)@$(RABBITMQ_HOST):$(RABBITMQ_PORT)"
+            - name: CHORES_BROKER_QUEUE
+              value: "swpt_accounts_chores"
+            - name: APP_LOG_LEVEL
+              value: "warning"
+            - name: APP_LOG_FORMAT
+              value: "json"
+            - name: SETUP_RABBITMQ_BINDINGS
+              value: "yes"
