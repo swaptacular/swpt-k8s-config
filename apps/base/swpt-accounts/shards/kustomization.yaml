@@ -1,14 +1,51 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-resources:
-  - postgres-credentials.yaml
-  - postgres-cluster.yaml
+secretGenerator:
+  - name: postgres.accounts-db.credentials.postgresql.acid.zalan.do
+    literals:
+      - username=postgres
+    files:
+      - password=postgres-password.encrypted
+    type: Opaque
+    options:
+      disableNameSuffixHash: true
+      labels:
+        application: spilo
+        cluster-name: accounts-db
+        team: swpt
+  - name: standby.accounts-db.credentials.postgresql.acid.zalan.do
+    literals:
+      - username=standby
+    files:
+      - password=postgres-password.encrypted
+    type: Opaque
+    options:
+      disableNameSuffixHash: true
+      labels:
+        application: spilo
+        cluster-name: accounts-db
+        team: swpt
+  - name: db-owner.accounts-db.credentials.postgresql.acid.zalan.do
+    literals:
+      - username=db_owner
+    files:
+      - password=postgres-password.encrypted
+    type: Opaque
+    options:
+      disableNameSuffixHash: true
+      labels:
+        application: spilo
+        cluster-name: accounts-db
+        team: swpt
 
-patches:
-  - target:
-      group: acid.zalan.do
-      version: v1
-      kind: postgresql
-      name: accounts-db
-    path: postgres-cluster-plumbing.yaml
+# resources:
+#   - postgres-cluster.yaml
+
+# patches:
+#   - target:
+#       group: acid.zalan.do
+#       version: v1
+#       kind: postgresql
+#       name: accounts-db
+#     path: postgres-cluster-plumbing.yaml
