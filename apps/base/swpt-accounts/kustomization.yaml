@@ -3,20 +3,28 @@ kind: Kustomization
 namespace: swpt-accounts
 
 secretGenerator:
-- name: spilo-env-secret
-  literals:
-    - "AWS_ACCESS_KEY_ID=console"  # The "username" for the S3 service.
-    # - "AWS_REGION=us-east-1"  # When Amazon S3 is used, specifies the region (optional).
-    - "AWS_ENDPOINT=https://minio.minio-tenant.svc.cluster.local:443"  # Use a local MinIO S3 server (optional).
-    - "WALG_S3_CA_CERT_FILE=/certs/minio/ca.crt"  # The trusted CA for the local MinIO S3 server (optional).
-  files:
-    - WALG_LIBSODIUM_KEY=spilo-walg-libsodium-key.encrypted  # Run `openssl rand -base64 32` to generate a key.
-    - AWS_SECRET_ACCESS_KEY=spilo-aws-secret-access-key.encrypted  # The "password" for the S3 service.
-  options:
-    disableNameSuffixHash: true
-    labels:
-      application: spilo
-      team: swpt
+  - name: spilo-env-secret
+    literals:
+      - "AWS_ACCESS_KEY_ID=console"  # The "username" for the S3 service.
+      # - "AWS_REGION=us-east-1"  # When Amazon S3 is used, specifies the region (optional).
+      - "AWS_ENDPOINT=https://minio.minio-tenant.svc.cluster.local:443"  # Use a local MinIO S3 server (optional).
+      - "WALG_S3_CA_CERT_FILE=/certs/minio/ca.crt"  # The trusted CA for the local MinIO S3 server (optional).
+    files:
+      - WALG_LIBSODIUM_KEY=spilo-walg-libsodium-key.encrypted  # Run `openssl rand -base64 32` to generate a key.
+      - AWS_SECRET_ACCESS_KEY=spilo-aws-secret-access-key.encrypted  # The "password" for the S3 service.
+    options:
+      disableNameSuffixHash: true
+      labels:
+        application: spilo
+        team: swpt
+  - name: db-owner-credentials
+    literals:
+      - username=db_owner
+    files:
+      - password=postgres-cluster-password.encrypted
+    type: Opaque
+    options:
+      disableNameSuffixHash: true
 
 resources:
   - namespace.yaml
