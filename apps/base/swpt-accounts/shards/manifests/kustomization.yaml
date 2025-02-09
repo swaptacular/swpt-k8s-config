@@ -1,5 +1,8 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
+
+# This must be either an empty string, or a string of 0s or 1s. "101"
+# for example.
 nameSuffix: "101"
 
 commonLabels:
@@ -8,9 +11,7 @@ commonLabels:
 configMapGenerator:
   - name: configuration
     literals:
-      # Must be either an empty string, or a string of 0s or 1s. "101" for
-      # example.
-      - "shard_suffix=101"
+      - "shard_suffix=101"  # The value must be the same as the `nameSuffix`.
 
       # The value of `PROTOCOL_BROKER_QUEUE_ROUTING_KEY` must correspond
       # to the `shard_suffix` value. For example, if `shard_suffix` is
