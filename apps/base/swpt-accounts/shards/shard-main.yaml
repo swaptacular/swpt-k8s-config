@@ -17,7 +17,7 @@ spec:
       containers:
         - name: accounts-main
           image: ghcr.io/swaptacular/swpt_accounts:2.3.1
-          command: ['all']
+          args: ['all']
           env:
             - name: PGHOST
               value: accounts-db.swpt-accounts.svc
@@ -84,7 +84,7 @@ spec:
       initContainers:
         - name: init-accounts-main
           image: ghcr.io/swaptacular/swpt_accounts:2.3.1
-          command: ['configure']
+          args: ['configure']
           env:
             - name: PGHOST
               value: accounts-db.swpt-accounts.svc
