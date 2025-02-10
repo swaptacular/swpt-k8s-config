@@ -26,7 +26,7 @@ spec:
                 name: broker-default-user
               prefix: rmq_
             - configMapRef:
-                name: configuration
+                name: shardconfig
           env:
             - name: WEBSERVER_PROCESSES
               value: "1"
@@ -60,7 +60,7 @@ spec:
                 name: broker-default-user
               prefix: rmq_
             - configMapRef:
-                name: configuration
+                name: shardconfig
           env:
             - name: POSTGRES_URL
               value: "postgresql+psycopg://$(pg_username):$(pg_password)@accounts-db$(shard_suffix).swpt-accounts.svc:5432/db"
