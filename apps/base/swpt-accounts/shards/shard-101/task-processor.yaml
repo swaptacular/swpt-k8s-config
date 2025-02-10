@@ -33,17 +33,17 @@ spec:
             - name: WEBSERVER_THREADS
               value: "3"
             - name: POSTGRES_URL
-              value: "postgresql+psycopg://$(pg_username):$(pg_password)@accounts-db$(shard_suffix).swpt-accounts.svc:5432/db"
+              value: "postgresql+psycopg://$(pg_username):$(pg_password)@$(pg_cluster_name).swpt-accounts.svc:5432/db"
             - name: PROTOCOL_BROKER_URL
               value: "$(rmq_connection_string)"
             - name: PROTOCOL_BROKER_QUEUE
-              value: "accounts_shard$(shard_suffix)"
+              value: "$(pg_cluster_name)"
             - name: PROTOCOL_BROKER_PROCESSES
               value: "0"
             - name: CHORES_BROKER_URL
               value: "$(rmq_connection_string)"
             - name: CHORES_BROKER_QUEUE
-              value: "accounts_chores_shard$(shard_suffix)"
+              value: "$(pg_cluster_name)-chores"
             - name: CHORES_BROKER_PROCESSES
               value: "0"
             - name: FLUSH_PROCESSES
@@ -63,14 +63,14 @@ spec:
                 name: shardconfig
           env:
             - name: POSTGRES_URL
-              value: "postgresql+psycopg://$(pg_username):$(pg_password)@accounts-db$(shard_suffix).swpt-accounts.svc:5432/db"
+              value: "postgresql+psycopg://$(pg_username):$(pg_password)@$(pg_cluster_name).swpt-accounts.svc:5432/db"
             - name: PROTOCOL_BROKER_URL
               value: "$(rmq_connection_string)"
             - name: PROTOCOL_BROKER_QUEUE
-              value: "accounts_shard$(shard_suffix)"
+              value: "$(pg_cluster_name)"
             - name: CHORES_BROKER_URL
               value: "$(rmq_connection_string)"
             - name: CHORES_BROKER_QUEUE
-              value: "accounts_chores_shard$(shard_suffix)"
+              value: "$(pg_cluster_name)-chores"
             - name: SETUP_RABBITMQ_BINDINGS
               value: "yes"

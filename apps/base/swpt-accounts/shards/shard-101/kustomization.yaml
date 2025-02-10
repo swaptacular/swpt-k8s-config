@@ -1,26 +1,32 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-# This must be either an empty string, or a string of 0s or 1s. "101"
-# for example.
-nameSuffix: "101"
+# This must be either an empty string, or a string starting with '-',
+# and followed by 0s or 1s. "-101" for example.
+nameSuffix: "-101"
+
+# IMPORTANT NOTES:
+#
+# 1. The value of the `app.kubernetes.io/instance` common label (see
+#    below) must correspond to the `nameSuffix` value. For example, if
+#    `nameSuffix` is "-101", the value for the common label must be
+#    "shard-101". If `nameSuffix` is "", the value for the common
+#    label must be "shard".
+#
+# 2. The value of the `PROTOCOL_BROKER_QUEUE_ROUTING_KEY` configmap
+#    key (see bellow) must correspond to the `nameSuffix` value. For
+#    example, if `nameSuffix` is "-101", the value for the configmap
+#    key must be "1.0.1.#". If `nameSuffix` is "", the value for the
+#    configmap key must be "#".
 
 labels:
 - includeSelectors: true
   pairs:
-    app.kubernetes.io/instance: shard101
-
-# IMPORTANT NOTES:
-#
-# 1. The value of `shard_suffix` must be the same as the `nameSuffix`.
-#
-# 2. The value of `PROTOCOL_BROKER_QUEUE_ROUTING_KEY` must correspond
-#    to the `shard_suffix` value. For example, if `shard_suffix` is
-#    "101", this value must be "1.0.1.#".
+    app.kubernetes.io/instance: shard-101
 
 configMapGenerator:
-- literals:
-  - shard_suffix=101
+- name: shardconfig
+  literals:
   - PROTOCOL_BROKER_QUEUE_ROUTING_KEY=1.0.1.#
   - PROTOCOL_BROKER_PROCESSES=1
   - PROTOCOL_BROKER_THREADS=3
@@ -37,10 +43,13 @@ configMapGenerator:
   - FETCH_API_URL=http://accounts-cache.swpt-accounts.svc:80
   - APP_LOG_LEVEL=warning
   - APP_LOG_FORMAT=json
-  name: shardconfig
   options:
     annotations:
       unmodifiedSuffix: do
+
+resources:
+- postgres-cluster.yaml
+- task-processor.yaml
 
 secretGenerator:
 - name: postgres.cluster-name.credentials.postgresql.acid.zalan.do
@@ -80,10 +89,6 @@ secretGenerator:
       team: swpt
   type: Opaque
 
-resources:
-- postgres-cluster.yaml
-- task-processor.yaml
-
 patches:
 - path: postgres-cluster-patch.yaml
   target:
@@ -95,3 +100,4 @@ patches:
 replacements:
 - path: secrets-clustername-replacement.yaml
 - path: secrets-namesuffix-replacement.yaml
+- path: shardconfig-replacement.yaml

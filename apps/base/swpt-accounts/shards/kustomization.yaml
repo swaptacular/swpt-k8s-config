@@ -8,4 +8,4 @@ labels:
     app.kubernetes.io/part-of: swpt-accounts
 
 resources:
-- shard101/
+- shard-101/
