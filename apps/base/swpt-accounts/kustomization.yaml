@@ -2,7 +2,6 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: swpt-accounts
 
-      # - "AWS_REGION=us-east-1"  # When Amazon S3 is used, specifies the region (optional).
 # IMPORTANT NOTES:
 #
 # - To generate a random `WALG_LIBSODIUM_KEY`, run `openssl rand -base64 32`.
@@ -18,6 +17,7 @@ namespace: swpt-accounts
 # - `WALG_S3_CA_CERT_FILE` specifies the trusted CA for the local
 #   MinIO S3 server. This should not be necessary for "proper" S3
 #   providers.
+
 secretGenerator:
 - name: spilo-env-secret
   files:

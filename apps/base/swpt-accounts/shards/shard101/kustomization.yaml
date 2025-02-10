@@ -17,6 +17,7 @@ labels:
 # 2. The value of `PROTOCOL_BROKER_QUEUE_ROUTING_KEY` must correspond
 #    to the `shard_suffix` value. For example, if `shard_suffix` is
 #    "101", this value must be "1.0.1.#".
+
 configMapGenerator:
 - literals:
   - shard_suffix=101
@@ -81,7 +82,7 @@ secretGenerator:
 
 resources:
 - postgres-cluster.yaml
-- task-processor.yaml
+# - task-processor.yaml
 
 patches:
 - path: postgres-cluster-patch.yaml
