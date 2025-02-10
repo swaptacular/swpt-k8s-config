@@ -2,6 +2,9 @@ apiVersion: rabbitmq.com/v1beta1
 kind: RabbitmqCluster
 metadata:
   name: broker
+  labels:
+    app.kubernetes.io/name: swpt-accounts
+    app.kubernetes.io/component: message-broker
 spec:
   rabbitmq:
     additionalPlugins:

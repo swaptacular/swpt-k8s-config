@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: main
+  name: task-processor
   labels:
-    app: main
+    app.kubernetes.io/component: task-processor
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: main
+      app.kubernetes.io/component: task-processor
   template:
     metadata:
       labels:
-        app: main
+        app.kubernetes.io/component: task-processor
     spec:
       containers:
-        - name: main
+        - name: task-processor
           image: ghcr.io/swaptacular/swpt_accounts:2.3.1
           args: ['all']
           envFrom:
@@ -49,7 +49,7 @@ spec:
             - name: FLUSH_PROCESSES
               value: "0"
       initContainers:
-        - name: init-main
+        - name: init
           image: ghcr.io/swaptacular/swpt_accounts:2.3.1
           args: ['configure']
           envFrom:

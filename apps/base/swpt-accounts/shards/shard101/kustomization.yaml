@@ -1,0 +1,92 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# This must be either an empty string, or a string of 0s or 1s. "101"
+# for example.
+nameSuffix: "101"
+
+commonLabels:
+  app.kubernetes.io/instance: shard101
+
+configMapGenerator:
+  - name: shardconfig
+    literals:
+      - "shard_suffix=101"  # The value must be the same as the `nameSuffix`.
+
+      # The value of `PROTOCOL_BROKER_QUEUE_ROUTING_KEY` must correspond
+      # to the `shard_suffix` value. For example, if `shard_suffix` is
+      # "101", this value must be "1.0.1.#".
+      - "PROTOCOL_BROKER_QUEUE_ROUTING_KEY=1.0.1.#"
+
+      - "PROTOCOL_BROKER_PROCESSES=1"
+      - "PROTOCOL_BROKER_THREADS=3"
+      - "PROTOCOL_BROKER_PREFETCH_COUNT=10"
+      - "CHORES_BROKER_PROCESSES=1"
+      - "CHORES_BROKER_THREADS=3"
+      - "CHORES_BROKER_PREFETCH_COUNT=10"
+      - "WEBSERVER_PROCESSES=1"
+      - "WEBSERVER_THREADS=3"
+      - "WEBSERVER_PORT=8080"
+      - "FLUSH_PROCESSES=1"
+      - "FLUSH_PERIOD=1.5"
+      - "DELETE_PARENT_SHARD_RECORDS=false"
+      - "FETCH_API_URL=http://accounts-cache.swpt-accounts.svc:80"
+      - "APP_LOG_LEVEL=warning"
+      - "APP_LOG_FORMAT=json"
+    options:
+      annotations:
+        unmodifiedSuffix: do  # the top-level domain of "acid.zalan.do"
+
+secretGenerator:
+  - name: postgres.cluster-name.credentials.postgresql.acid.zalan.do
+    literals:
+      - username=postgres
+    files:
+      - password=postgres-cluster-password.encrypted
+    type: Opaque
+    options:
+      disableNameSuffixHash: true
+      labels:
+        application: spilo
+        cluster-name: cluster-name
+        team: swpt
+  - name: standby.cluster-name.credentials.postgresql.acid.zalan.do
+    literals:
+      - username=standby
+    files:
+      - password=postgres-cluster-password.encrypted
+    type: Opaque
+    options:
+      disableNameSuffixHash: true
+      labels:
+        application: spilo
+        cluster-name: cluster-name
+        team: swpt
+  - name: db-owner.cluster-name.credentials.postgresql.acid.zalan.do
+    literals:
+      - username=db_owner
+    files:
+      - password=postgres-cluster-password.encrypted
+    type: Opaque
+    options:
+      disableNameSuffixHash: true
+      labels:
+        application: spilo
+        cluster-name: cluster-name
+        team: swpt
+
+resources:
+  - postgres-cluster.yaml
+  - task-processor.yaml
+
+patches:
+  - target:
+      group: acid.zalan.do
+      version: v1
+      kind: postgresql
+      name: accounts-db
+    path: postgres-cluster-patch.yaml
+
+replacements:
+  - path: secrets-clustername-replacement.yaml
+  - path: secrets-namesuffix-replacement.yaml

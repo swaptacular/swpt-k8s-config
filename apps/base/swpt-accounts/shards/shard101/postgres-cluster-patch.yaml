@@ -1,4 +1,8 @@
 - op: add
+  path: /metadata/labels
+  value:
+    app.kubernetes.io/component: database
+- op: add
   path: /spec/teamId
   value: "swpt"
 - op: add
