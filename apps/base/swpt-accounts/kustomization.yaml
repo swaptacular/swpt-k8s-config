@@ -2,35 +2,50 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: swpt-accounts
 
-secretGenerator:
-  - name: spilo-env-secret
-    literals:
-      - "AWS_ACCESS_KEY_ID=console"  # The "username" for the S3 service.
       # - "AWS_REGION=us-east-1"  # When Amazon S3 is used, specifies the region (optional).
-      - "AWS_ENDPOINT=https://minio.minio-tenant.svc.cluster.local:443"  # Use a local MinIO S3 server (optional).
-      - "WALG_S3_CA_CERT_FILE=/certs/minio/ca.crt"  # The trusted CA for the local MinIO S3 server (optional).
-    files:
-      - WALG_LIBSODIUM_KEY=spilo-walg-libsodium-key.encrypted  # Run `openssl rand -base64 32` to generate a key.
-      - AWS_SECRET_ACCESS_KEY=spilo-aws-secret-access-key.encrypted  # The "password" for the S3 service.
-    options:
-      disableNameSuffixHash: true
-      labels:
-        app.kubernetes.io/name: swpt-accounts
-        application: spilo
-        team: swpt
-  - name: db-owner-credentials
-    literals:
-      - username=db_owner
-    files:
-      - password=postgres-cluster-password.encrypted
-    type: Opaque
-    options:
-      disableNameSuffixHash: true
-      labels:
-        app.kubernetes.io/name: swpt-accounts
+# IMPORTANT NOTES:
+#
+# - To generate a random `WALG_LIBSODIUM_KEY`, run `openssl rand -base64 32`.
+#
+# - `AWS_SECRET_ACCESS_KEY` is the "password" for the S3 service.
+#
+# - `AWS_ACCESS_KEY_ID` is the "username" for the S3 service.
+#
+# - When Amazon S3 is used, add `- AWS_REGION=your-aws-region` to
+#   specify the AWS region ("us-east-1" for example). In this case,
+#   specifying `AWS_ENDPOINT` should not be necessary.
+#
+# - `WALG_S3_CA_CERT_FILE` specifies the trusted CA for the local
+#   MinIO S3 server. This should not be necessary for "proper" S3
+#   providers.
+secretGenerator:
+- name: spilo-env-secret
+  files:
+  - WALG_LIBSODIUM_KEY=spilo-walg-libsodium-key.encrypted
+  - AWS_SECRET_ACCESS_KEY=spilo-aws-secret-access-key.encrypted
+  literals:
+  - AWS_ACCESS_KEY_ID=console
+  - AWS_ENDPOINT=https://minio.minio-tenant.svc.cluster.local:443
+  - WALG_S3_CA_CERT_FILE=/certs/minio/ca.crt
+  options:
+    disableNameSuffixHash: true
+    labels:
+      app.kubernetes.io/name: swpt-accounts
+      application: spilo
+      team: swpt
+- name: db-owner-credentials
+  files:
+  - password=postgres-cluster-password.encrypted
+  literals:
+  - username=db_owner
+  options:
+    disableNameSuffixHash: true
+    labels:
+      app.kubernetes.io/name: swpt-accounts
+  type: Opaque
 
 resources:
-  - namespace.yaml
-  - broker.yaml
-  - broker-pdb.yaml
-  - shards/
+- namespace.yaml
+- broker.yaml
+- broker-pdb.yaml
+- shards/
