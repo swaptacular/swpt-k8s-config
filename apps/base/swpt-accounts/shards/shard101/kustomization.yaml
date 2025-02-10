@@ -82,7 +82,7 @@ secretGenerator:
 
 resources:
 - postgres-cluster.yaml
-# - task-processor.yaml
+- task-processor.yaml
 
 patches:
 - path: postgres-cluster-patch.yaml
