@@ -3,6 +3,7 @@ kind: Kustomization
 
 commonLabels:
   app.kubernetes.io/name: swpt-accounts-shard
+  app.kubernetes.io/part-of: swpt-accounts
 
 resources:
   - shard101/

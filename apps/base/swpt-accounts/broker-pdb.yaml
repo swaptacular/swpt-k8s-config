@@ -4,7 +4,6 @@ metadata:
   name: broker-pdb
   labels:
     app.kubernetes.io/name: swpt-accounts
-
 spec:
   maxUnavailable: 1
   selector:
