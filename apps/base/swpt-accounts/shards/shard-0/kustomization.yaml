@@ -3,7 +3,7 @@ kind: Kustomization
 
 # This must be either an empty string, or a string starting with '-',
 # and followed by 0s or 1s. "-101" for example.
-nameSuffix: "-101"
+nameSuffix: "-0"
 
 # IMPORTANT NOTES:
 #
@@ -22,12 +22,12 @@ nameSuffix: "-101"
 labels:
 - includeSelectors: true
   pairs:
-    app.kubernetes.io/instance: shard-101
+    app.kubernetes.io/instance: shard-0
 
 configMapGenerator:
 - name: shardconfig
   literals:
-  - PROTOCOL_BROKER_QUEUE_ROUTING_KEY=1.0.1.#
+  - PROTOCOL_BROKER_QUEUE_ROUTING_KEY=0.#
   - PROTOCOL_BROKER_PROCESSES=1
   - PROTOCOL_BROKER_THREADS=3
   - PROTOCOL_BROKER_PREFETCH_COUNT=10
