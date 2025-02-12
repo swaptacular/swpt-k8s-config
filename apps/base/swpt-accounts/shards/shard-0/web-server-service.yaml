@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-server
+spec:
+  selector:
+    app.kubernetes.io/component: web-server
+  ports:
+    - name: http
+      port: 8080
+      protocol: TCP
+      appProtocol: http
+      targetPort: 8080

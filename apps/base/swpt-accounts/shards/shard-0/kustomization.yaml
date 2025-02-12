@@ -54,6 +54,7 @@ resources:
 - chores-consumer.yaml
 - web-server.yaml
 - web-server-pdb.yaml
+- web-server-service.yaml
 
 secretGenerator:
 - name: postgres.cluster-name.credentials.postgresql.acid.zalan.do
