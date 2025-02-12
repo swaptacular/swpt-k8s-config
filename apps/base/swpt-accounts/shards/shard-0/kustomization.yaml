@@ -51,6 +51,8 @@ resources:
 - postgres-cluster.yaml
 - task-processor.yaml
 - message-flusher.yaml
+- message-consumer.yaml
+- chores-consumer.yaml
 
 secretGenerator:
 - name: postgres.cluster-name.credentials.postgresql.acid.zalan.do
