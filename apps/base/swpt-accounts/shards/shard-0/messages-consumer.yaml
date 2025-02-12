@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: message-consumer
+  name: messages-consumer
   labels:
-    app.kubernetes.io/component: message-consumer
+    app.kubernetes.io/component: messages-consumer
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app.kubernetes.io/component: message-consumer
+      app.kubernetes.io/component: messages-consumer
   template:
     metadata:
       labels:
-        app.kubernetes.io/component: message-consumer
+        app.kubernetes.io/component: messages-consumer
     spec:
       containers:
-        - name: message-consumer
-          image: ghcr.io/swaptacular/swpt_accounts:2.3.1
+        - name: messages-consumer
+          image: swpt-accounts
           args: ['consume_messages']
           envFrom:
             - secretRef:

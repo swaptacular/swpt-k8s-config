@@ -48,9 +48,9 @@ configMapGenerator:
 
 resources:
 - postgres-cluster.yaml
-- task-processor.yaml
-- message-flusher.yaml
-- message-consumer.yaml
+- tasks-processor.yaml
+- messages-flusher.yaml
+- messages-consumer.yaml
 - chores-consumer.yaml
 - web-server.yaml
 - web-server-pdb.yaml
@@ -95,7 +95,7 @@ secretGenerator:
   type: Opaque
 
 patches:
-- path: postgres-cluster-patch.yaml
+- path: patches/postgres-cluster.yaml
   target:
     group: acid.zalan.do
     kind: postgresql
@@ -103,6 +103,6 @@ patches:
     version: v1
 
 replacements:
-- path: secrets-clustername-replacement.yaml
-- path: secrets-namesuffix-replacement.yaml
-- path: shardconfig-replacement.yaml
+- path: replacements/secrets-clustername.yaml
+- path: replacements/secrets-namesuffix.yaml
+- path: replacements/shardconfig.yaml

@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: message-flusher
+  name: messages-flusher
   labels:
-    app.kubernetes.io/component: message-flusher
+    app.kubernetes.io/component: messages-flusher
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app.kubernetes.io/component: message-flusher
+      app.kubernetes.io/component: messages-flusher
   template:
     metadata:
       labels:
-        app.kubernetes.io/component: message-flusher
+        app.kubernetes.io/component: messages-flusher
     spec:
       containers:
-        - name: message-flusher
-          image: ghcr.io/swaptacular/swpt_accounts:2.3.1
+        - name: messages-flusher
+          image: swpt-accounts
           args: ['flush_all']
           envFrom:
             - secretRef:

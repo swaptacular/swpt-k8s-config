@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: chores-consumer
-          image: ghcr.io/swaptacular/swpt_accounts:2.3.1
+          image: swpt-accounts
           args: ['consume_chore_messages']
           envFrom:
             - secretRef:
