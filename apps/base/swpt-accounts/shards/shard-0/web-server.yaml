@@ -28,7 +28,7 @@ spec:
           image: ghcr.io/swaptacular/swpt_accounts:2.3.1
           args: ['webserver']
           ports:
-            - containerPort: 8080
+            - containerPort: 80
           envFrom:
             - secretRef:
                 name: db-owner-credentials
@@ -50,4 +50,4 @@ spec:
             - name: CHORES_BROKER_QUEUE
               value: "$(pg_cluster_name)-chores"
             - name: WEBSERVER_PORT
-              value: "8080"
+              value: "80"
