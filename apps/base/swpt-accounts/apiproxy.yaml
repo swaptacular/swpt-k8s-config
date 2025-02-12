@@ -35,7 +35,7 @@ spec:
               containerPort: 8080
           volumeMounts:
             - name: config-volume
-              mountPath: /etc
+              mountPath: /etc/apiproxy.conf
               subPath: apiproxy.conf
           env:
             - name: APIPROXY_PORT
