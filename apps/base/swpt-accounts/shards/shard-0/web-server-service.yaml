@@ -10,5 +10,5 @@ spec:
       port: 80
       protocol: TCP
       appProtocol: http
-      targetPort: 80
+      targetPort: 8080
   type: LoadBalancer
