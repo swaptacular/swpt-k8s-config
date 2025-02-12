@@ -1,0 +1,13 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: apiproxy-pdb
+  labels:
+    app.kubernetes.io/name: swpt-accounts
+    app.kubernetes.io/component: apiproxy
+spec:
+  maxUnavailable: 30%
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: swpt-accounts
+      app.kubernetes.io/component: apiproxy

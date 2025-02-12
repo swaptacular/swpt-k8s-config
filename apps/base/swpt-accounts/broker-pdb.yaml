@@ -4,6 +4,7 @@ metadata:
   name: broker-pdb
   labels:
     app.kubernetes.io/name: swpt-accounts
+    app.kubernetes.io/component: message-broker
 spec:
   maxUnavailable: 20%
   selector:

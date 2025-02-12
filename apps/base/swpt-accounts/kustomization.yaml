@@ -48,8 +48,13 @@ images:
 - name: swpt-accounts
   newName: ghcr.io/swaptacular/swpt_accounts
   newTag: 2.3.1
+- name: swpt-apiproxy
+  newName: ghcr.io/swaptacular/swpt_apiproxy
+  newTag: 1.2.1
 
 replicas:
+- name: apiproxy
+  count: 2
 - name: web-server
   count: 2
 - name: messages-flusher
@@ -63,4 +68,7 @@ resources:
 - namespace.yaml
 - broker.yaml
 - broker-pdb.yaml
+- apiproxy.yaml
+- apiproxy-pdb.yaml
+- apiproxy-service.yaml
 - shards/
