@@ -11,8 +11,17 @@ configuration:
     enable_owner_references: true
     enable_persistent_volume_claim_deletion: false
     watched_namespace: "*"
+    enable_pod_antiaffinity: true
+    pod_antiaffinity_topology_key: kubernetes.io/hostname
+    pod_antiaffinity_preferred_during_scheduling: true
+    pdb_master_label_selector: false
     pod_environment_configmap: "postgres-operator/spilo-env-config"
     pod_environment_secret: "spilo-env-secret"
+    inherited_labels:
+    - app.kubernetes.io/name
+    - app.kubernetes.io/instance
+    - app.kubernetes.io/component
+    - app.kubernetes.io/part-of
   postgres_pod_resources:
     default_cpu_limit: "1"
     default_cpu_request: 100m
