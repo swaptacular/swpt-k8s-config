@@ -5,7 +5,7 @@ metadata:
   labels:
     app.kubernetes.io/name: swpt-accounts
 spec:
-  maxUnavailable: 1
+  maxUnavailable: 12%
   selector:
     matchLabels:
       app.kubernetes.io/name: broker
