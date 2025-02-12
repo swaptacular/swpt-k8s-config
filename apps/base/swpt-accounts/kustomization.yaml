@@ -2,21 +2,21 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: swpt-accounts
 
-# IMPORTANT NOTES:
+# IMPORTANT NOTE:
 #
-# - To generate a random `WALG_LIBSODIUM_KEY`, run `openssl rand -base64 32`.
+# 1. To generate a random `WALG_LIBSODIUM_KEY`, run `openssl rand -base64 32`.
 #
-# - `AWS_SECRET_ACCESS_KEY` is the "password" for the S3 service.
+# 2. `AWS_SECRET_ACCESS_KEY` is the "password" for the S3 service.
 #
-# - `AWS_ACCESS_KEY_ID` is the "username" for the S3 service.
+# 3. `AWS_ACCESS_KEY_ID` is the "username" for the S3 service.
 #
-# - When Amazon S3 is used, add `- AWS_REGION=your-aws-region` to
-#   specify the AWS region ("us-east-1" for example). In this case,
-#   specifying `AWS_ENDPOINT` should not be necessary.
+# 4. When Amazon S3 is used, add `- AWS_REGION=your-aws-region` to
+#    specify the AWS region ("us-east-1" for example). In this case,
+#    specifying `AWS_ENDPOINT` should not be necessary.
 #
-# - `WALG_S3_CA_CERT_FILE` specifies the trusted CA for the local
-#   MinIO S3 server. This should not be necessary for "proper" S3
-#   providers.
+# 5. `WALG_S3_CA_CERT_FILE` specifies the trusted CA for the local
+#    MinIO S3 server. This should not be necessary for "proper" S3
+#    providers.
 
 secretGenerator:
 - name: spilo-env-secret
@@ -48,6 +48,16 @@ images:
 - name: swpt-accounts
   newName: ghcr.io/swaptacular/swpt_accounts
   newTag: 2.3.1
+
+replicas:
+- name: web-server
+  count: 2
+- name: messages-flusher
+  count: 1
+- name: messages-consumer
+  count: 1
+- name: chores-consumer
+  count: 1
 
 resources:
 - namespace.yaml

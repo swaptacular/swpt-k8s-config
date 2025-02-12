@@ -5,7 +5,7 @@ kind: Kustomization
 # and followed by 0s or 1s. "-101" for example.
 nameSuffix: "-0"
 
-# IMPORTANT NOTES:
+# IMPORTANT NOTE:
 #
 # 1. The value of the `app.kubernetes.io/instance` common label (see
 #    below) must correspond to the `nameSuffix` value. For example, if
