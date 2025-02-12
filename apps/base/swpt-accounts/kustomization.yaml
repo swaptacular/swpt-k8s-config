@@ -43,14 +43,14 @@ secretGenerator:
     labels:
       app.kubernetes.io/name: swpt-accounts
   type: Opaque
+
+configMapGenerator:
 - name: apiproxy-config
   files:
-  - apiproxy.conf
+  - apiproxy.conf=apiproxy.conf
   options:
-    disableNameSuffixHash: true
     labels:
       app.kubernetes.io/name: swpt-accounts
-  type: Opaque
 
 images:
 - name: swpt-accounts
