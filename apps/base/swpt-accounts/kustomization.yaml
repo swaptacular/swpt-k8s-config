@@ -76,7 +76,7 @@ resources:
 - namespace.yaml
 - broker.yaml
 - broker-pdb.yaml
-- apiproxy.yaml
-- apiproxy-pdb.yaml
-- apiproxy-service.yaml
+# - apiproxy.yaml
+# - apiproxy-pdb.yaml
+# - apiproxy-service.yaml
 - shards/
