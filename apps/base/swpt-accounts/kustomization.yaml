@@ -43,6 +43,13 @@ secretGenerator:
     labels:
       app.kubernetes.io/name: swpt-accounts
   type: Opaque
+- name: apiproxy-config
+  files:
+  - apiproxy.conf
+  options:
+    labels:
+      app.kubernetes.io/name: swpt-accounts
+  type: Opaque
 
 images:
 - name: swpt-accounts
