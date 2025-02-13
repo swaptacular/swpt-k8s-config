@@ -25,6 +25,8 @@ spec:
                 app.kubernetes.io/name: swpt-accounts
                 app.kubernetes.io/component: apiproxy
             topologyKey: kubernetes.io/hostname
+            matchLabelKeys:
+            - pod-template-hash
       containers:
         - name: apiproxy
           image: swpt-apiproxy
