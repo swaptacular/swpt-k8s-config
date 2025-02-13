@@ -63,14 +63,14 @@ images:
 replicas:
 - name: apiproxy
   count: 2
-# - name: web-server
-#   count: 2
-# - name: messages-flusher
-#   count: 1
-# - name: messages-consumer
-#   count: 1
-# - name: chores-consumer
-#   count: 1
+- name: web-server
+  count: 2
+- name: messages-flusher
+  count: 1
+- name: messages-consumer
+  count: 1
+- name: chores-consumer
+  count: 1
 
 resources:
 - namespace.yaml
