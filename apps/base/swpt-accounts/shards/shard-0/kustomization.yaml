@@ -63,7 +63,7 @@ resources:
 
 replicas:
 - name: web-server
-  count: 2
+  count: 1
 - name: messages-flusher
   count: 1
 - name: messages-consumer

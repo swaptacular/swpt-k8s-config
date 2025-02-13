@@ -5,7 +5,7 @@ metadata:
   labels:
     app.kubernetes.io/component: web-server
 spec:
-  maxUnavailable: 50%
+  maxUnavailable: 30%
   selector:
     matchLabels:
       app.kubernetes.io/component: web-server

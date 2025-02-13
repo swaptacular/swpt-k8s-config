@@ -14,15 +14,13 @@ spec:
       labels:
         app.kubernetes.io/component: web-server
     spec:
-      topologySpreadConstraints:
-        - maxSkew: 1
-          topologyKey: kubernetes.io/hostname
-          whenUnsatisfiable: DoNotSchedule
-          labelSelector:
-            matchLabels:
-              app.kubernetes.io/component: web-server
-          matchLabelKeys:
-            - pod-template-hash
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                app.kubernetes.io/component: web-server
+            topologyKey: kubernetes.io/hostname
       containers:
         - name: web-server
           image: swpt-accounts

@@ -62,7 +62,7 @@ images:
 
 replicas:
 - name: apiproxy
-  count: 2
+  count: 1
 
 resources:
 - namespace.yaml
