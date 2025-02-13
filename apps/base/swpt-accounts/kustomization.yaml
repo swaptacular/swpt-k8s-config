@@ -60,11 +60,20 @@ images:
   newName: ghcr.io/swaptacular/swpt_apiproxy
   newTag: 1.2.1
 
+# IMPORTANT NOTE:
+#
+# 1. In production, the number of replicas for `apiproxy` and
+#    `web-server` must be at least 2, and the number of Kubernetes
+#    nodes must be at least 2.
+#
+# 2. When there is only one Kubernetes node, the number of replicas
+#    for `apiproxy` and `web-server` should be exactly 1.
+
 replicas:
 - name: apiproxy
-  count: 2
+  count: 1
 - name: web-server
-  count: 2
+  count: 1
 - name: messages-flusher
   count: 1
 - name: messages-consumer
