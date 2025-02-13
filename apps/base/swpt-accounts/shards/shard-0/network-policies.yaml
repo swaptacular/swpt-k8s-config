@@ -12,16 +12,16 @@ spec:
     - podSelector:
         matchLabels: {}
 
-# ---
-# apiVersion: networking.k8s.io/v1
-# kind: NetworkPolicy
-# metadata:
-#   name: allow-http-shard
-# spec:
-#   podSelector:
-#     matchLabels:
-#       app.kubernetes.io/component: web-server
-#   policyTypes:
-#   - Ingress
-#   ingress:
-#   - port: http
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-http-shard
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/component: web-server
+  policyTypes:
+  - Ingress
+  ingress:
+  - port: http
