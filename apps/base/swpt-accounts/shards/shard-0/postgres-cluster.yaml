@@ -7,7 +7,7 @@ spec:
     version: "17"
   volume:
     size: 1Gi
-  numberOfInstances: 2
+  numberOfInstances: 1
   resources:
     requests:
       cpu: 10m
