@@ -55,7 +55,7 @@ resources:
 - web-server.yaml
 - web-server-pdb.yaml
 - web-server-service.yaml
-- network-policies.yaml
+# - network-policies.yaml
 
 secretGenerator:
 - name: postgres.cluster-name.credentials.postgresql.acid.zalan.do
