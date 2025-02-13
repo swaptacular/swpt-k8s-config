@@ -17,16 +17,15 @@ spec:
         app.kubernetes.io/name: swpt-accounts
         app.kubernetes.io/component: apiproxy
     spec:
-      affinity:
-        podAntiAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - podAffinityTerm:
-                labelSelector:
-                  matchLabels:
-                    app.kubernetes.io/name: swpt-accounts
-                    app.kubernetes.io/component: apiproxy
-                topologyKey: kubernetes.io/hostname
-              weight: 1
+      topologySpreadConstraints:
+        - maxSkew: 1
+          minDomains: 2
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: DoNotSchedule
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: swpt-accounts
+              app.kubernetes.io/component: apiproxy
       containers:
         - name: apiproxy
           image: swpt-apiproxy
