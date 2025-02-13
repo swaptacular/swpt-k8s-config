@@ -25,6 +25,8 @@ spec:
             matchLabels:
               app.kubernetes.io/name: swpt-accounts
               app.kubernetes.io/component: apiproxy
+          matchLabelKeys:
+            - pod-template-hash
       containers:
         - name: apiproxy
           image: swpt-apiproxy
