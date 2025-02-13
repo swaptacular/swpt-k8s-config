@@ -24,5 +24,6 @@ spec:
   policyTypes:
   - Ingress
   ingress:
-  - port: 8080
-    protocol: TCP
+  - ports:
+    - port: http
+
