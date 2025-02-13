@@ -55,6 +55,10 @@ resources:
 - web-server.yaml
 - web-server-pdb.yaml
 - web-server-service.yaml
+
+# TODO: It seems that network policies still do no work correctly in KinD
+# (https://github.com/kubernetes-sigs/kind/issues/3713#issuecomment-2308412210)
+# due to kernel bugs or something.
 # - network-policies.yaml
 
 secretGenerator:
