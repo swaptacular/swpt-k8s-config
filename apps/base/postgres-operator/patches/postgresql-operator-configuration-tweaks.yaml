@@ -13,7 +13,6 @@ configuration:
     watched_namespace: "*"
     enable_pod_antiaffinity: true
     pod_antiaffinity_topology_key: kubernetes.io/hostname
-    pod_antiaffinity_preferred_during_scheduling: true
     pdb_master_label_selector: false
     pod_environment_configmap: "postgres-operator/spilo-env-config"
     pod_environment_secret: "spilo-env-secret"
