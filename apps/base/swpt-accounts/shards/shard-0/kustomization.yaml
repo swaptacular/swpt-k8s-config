@@ -61,6 +61,16 @@ resources:
 # due to kernel bugs or something.
 # - network-policies.yaml
 
+replicas:
+- name: web-server
+  count: 2
+- name: messages-flusher
+  count: 1
+- name: messages-consumer
+  count: 1
+- name: chores-consumer
+  count: 1
+
 secretGenerator:
 - name: postgres.cluster-name.credentials.postgresql.acid.zalan.do
   files:
