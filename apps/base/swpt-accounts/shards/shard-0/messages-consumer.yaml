@@ -14,6 +14,15 @@ spec:
       labels:
         app.kubernetes.io/component: messages-consumer
     spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                app.kubernetes.io/component: messages-consumer
+            topologyKey: kubernetes.io/hostname
+            matchLabelKeys:
+            - pod-template-hash
       containers:
         - name: messages-consumer
           image: swpt-accounts
@@ -38,3 +47,16 @@ spec:
               value: "$(rmq_connection_string)"
             - name: CHORES_BROKER_QUEUE
               value: "$(pg_cluster_name)-chores"
+
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: messages-consumer
+  labels:
+    app.kubernetes.io/component: messages-consumer
+spec:
+  maxUnavailable: 30%
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: messages-consumer

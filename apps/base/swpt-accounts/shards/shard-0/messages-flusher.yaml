@@ -14,6 +14,15 @@ spec:
       labels:
         app.kubernetes.io/component: messages-flusher
     spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                app.kubernetes.io/component: messages-flusher
+            topologyKey: kubernetes.io/hostname
+            matchLabelKeys:
+            - pod-template-hash
       containers:
         - name: messages-flusher
           image: swpt-accounts
@@ -38,3 +47,16 @@ spec:
               value: "$(rmq_connection_string)"
             - name: CHORES_BROKER_QUEUE
               value: "$(pg_cluster_name)-chores"
+
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: messages-flusher
+  labels:
+    app.kubernetes.io/component: messages-flusher
+spec:
+  maxUnavailable: 30%
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: messages-flusher
