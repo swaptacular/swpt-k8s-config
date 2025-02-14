@@ -1,0 +1,20 @@
+apiVersion: "acid.zalan.do/v1"
+kind: postgresql
+metadata:
+  namespace: swpt-accounts
+  name: accounts-db-0
+spec:
+  volume:
+    size: 1Gi
+  numberOfInstances: 1
+
+---
+apiVersion: "acid.zalan.do/v1"
+kind: postgresql
+metadata:
+  namespace: swpt-accounts
+  name: accounts-db-1
+spec:
+  volume:
+    size: 1Gi
+  numberOfInstances: 1

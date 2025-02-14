@@ -1,0 +1,97 @@
+- op: add
+  path: /metadata/labels
+  value:
+    app.kubernetes.io/component: database
+- op: add
+  path: /spec/teamId
+  value: "swpt"
+- op: add
+  path: /spec/users
+  value:
+    db_owner: []
+- op: add
+  path: /spec/databases
+  value:
+    db: db_owner
+- op: add
+  path: /spec/patroni
+  value:
+    synchronous_mode: true
+- op: add
+  path: /spec/additionalVolumes
+  value:
+    - name: minio-ca-certificate
+      mountPath: /certs/minio
+      targetContainers: []
+      volumeSource:
+        configMap:
+          name: kube-root-ca.crt
+- op: add
+  path: /spec/env
+  value:
+    - name: CLONE_WALG_LIBSODIUM_KEY
+      valueFrom:
+        secretKeyRef:
+          name: spilo-env-secret
+          key: WALG_LIBSODIUM_KEY
+    - name: CLONE_AWS_ACCESS_KEY_ID
+      valueFrom:
+        secretKeyRef:
+          name: spilo-env-secret
+          key: AWS_ACCESS_KEY_ID
+    - name: CLONE_AWS_SECRET_ACCESS_KEY
+      valueFrom:
+        secretKeyRef:
+          name: spilo-env-secret
+          key: AWS_SECRET_ACCESS_KEY
+    - name: CLONE_AWS_REGION
+      valueFrom:
+        secretKeyRef:
+          name: spilo-env-secret
+          key: AWS_REGION
+          optional: true
+    - name: CLONE_AWS_ENDPOINT
+      valueFrom:
+        secretKeyRef:
+          name: spilo-env-secret
+          key: AWS_ENDPOINT
+          optional: true
+    - name: CLONE_WALG_S3_CA_CERT_FILE
+      valueFrom:
+        secretKeyRef:
+          name: spilo-env-secret
+          key: WALG_S3_CA_CERT_FILE
+          optional: true
+    - name: STANDBY_WALG_LIBSODIUM_KEY
+      valueFrom:
+        secretKeyRef:
+          name: spilo-env-secret
+          key: WALG_LIBSODIUM_KEY
+    - name: STANDBY_AWS_ACCESS_KEY_ID
+      valueFrom:
+        secretKeyRef:
+          name: spilo-env-secret
+          key: AWS_ACCESS_KEY_ID
+    - name: STANDBY_AWS_SECRET_ACCESS_KEY
+      valueFrom:
+        secretKeyRef:
+          name: spilo-env-secret
+          key: AWS_SECRET_ACCESS_KEY
+    - name: STANDBY_AWS_REGION
+      valueFrom:
+        secretKeyRef:
+          name: spilo-env-secret
+          key: AWS_REGION
+          optional: true
+    - name: STANDBY_AWS_ENDPOINT
+      valueFrom:
+        secretKeyRef:
+          name: spilo-env-secret
+          key: AWS_ENDPOINT
+          optional: true
+    - name: STANDBY_WALG_S3_CA_CERT_FILE
+      valueFrom:
+        secretKeyRef:
+          name: spilo-env-secret
+          key: WALG_S3_CA_CERT_FILE
+          optional: true

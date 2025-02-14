@@ -60,10 +60,6 @@ images:
   newName: ghcr.io/swaptacular/swpt_apiproxy
   newTag: 1.2.1
 
-replicas:
-- name: apiproxy
-  count: 1
-
 resources:
 - namespace.yaml
 - broker.yaml

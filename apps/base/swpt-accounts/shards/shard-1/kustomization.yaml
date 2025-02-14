@@ -1,0 +1,121 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# This must be either an empty string, or a string starting with '-',
+# and followed by 0s or 1s. "-101" for example.
+nameSuffix: "-1"
+
+# IMPORTANT NOTE:
+#
+# 1. The value of the `app.kubernetes.io/instance` common label (see
+#    below) must correspond to the `nameSuffix` value. For example, if
+#    `nameSuffix` is "-101", the value for the common label must be
+#    "shard-101". If `nameSuffix` is "", the value for the common
+#    label must be "shard".
+#
+# 2. The value of the `PROTOCOL_BROKER_QUEUE_ROUTING_KEY` configmap
+#    key (see bellow) must correspond to the `nameSuffix` value. For
+#    example, if `nameSuffix` is "-101", the value for the configmap
+#    key must be "1.0.1.#". If `nameSuffix` is "", the value for the
+#    configmap key must be "#".
+
+labels:
+- includeSelectors: true
+  pairs:
+    app.kubernetes.io/instance: shard-1
+
+configMapGenerator:
+- name: shardconfig
+  literals:
+  - PROTOCOL_BROKER_QUEUE_ROUTING_KEY=1.#
+  - PROTOCOL_BROKER_PROCESSES=1
+  - PROTOCOL_BROKER_THREADS=3
+  - PROTOCOL_BROKER_PREFETCH_COUNT=10
+  - CHORES_BROKER_PROCESSES=1
+  - CHORES_BROKER_THREADS=3
+  - CHORES_BROKER_PREFETCH_COUNT=10
+  - WEBSERVER_PROCESSES=1
+  - WEBSERVER_THREADS=3
+  - FLUSH_PROCESSES=1
+  - FLUSH_PERIOD=1.5
+  - DELETE_PARENT_SHARD_RECORDS=false
+  - FETCH_API_URL=http://accounts-cache.swpt-accounts.svc:80
+  - APP_LOG_LEVEL=warning
+  - APP_LOG_FORMAT=json
+  options:
+    annotations:
+      unmodifiedSuffix: do
+
+resources:
+- postgres-cluster.yaml
+- tasks-processor.yaml
+- messages-flusher.yaml
+- messages-consumer.yaml
+- chores-consumer.yaml
+- web-server.yaml
+
+# TODO: It seems that network policies still do no work correctly in KinD
+# (https://github.com/kubernetes-sigs/kind/issues/3713#issuecomment-2308412210)
+# due to kernel bugs or something.
+# - network-policies.yaml
+
+replicas:
+- name: web-server
+  count: 1
+- name: messages-flusher
+  count: 1
+- name: messages-consumer
+  count: 1
+- name: chores-consumer
+  count: 1
+
+secretGenerator:
+- name: postgres.cluster-name.credentials.postgresql.acid.zalan.do
+  files:
+  - password=postgres-cluster-password.encrypted
+  literals:
+  - username=postgres
+  options:
+    disableNameSuffixHash: true
+    labels:
+      application: spilo
+      cluster-name: cluster-name
+      team: swpt
+  type: Opaque
+- name: standby.cluster-name.credentials.postgresql.acid.zalan.do
+  files:
+  - password=postgres-cluster-password.encrypted
+  literals:
+  - username=standby
+  options:
+    disableNameSuffixHash: true
+    labels:
+      application: spilo
+      cluster-name: cluster-name
+      team: swpt
+  type: Opaque
+- name: db-owner.cluster-name.credentials.postgresql.acid.zalan.do
+  files:
+  - password=postgres-cluster-password.encrypted
+  literals:
+  - username=db_owner
+  options:
+    disableNameSuffixHash: true
+    labels:
+      application: spilo
+      cluster-name: cluster-name
+      team: swpt
+  type: Opaque
+
+patches:
+- path: patches/postgres-cluster.yaml
+  target:
+    group: acid.zalan.do
+    kind: postgresql
+    name: accounts-db
+    version: v1
+
+replacements:
+- path: replacements/secrets-clustername.yaml
+- path: replacements/secrets-namesuffix.yaml
+- path: replacements/shardconfig.yaml

@@ -6,6 +6,7 @@ metadata:
     app.kubernetes.io/name: swpt-accounts
     app.kubernetes.io/component: message-broker
 spec:
+  replicas: 3
   rabbitmq:
     additionalPlugins:
       - rabbitmq_management

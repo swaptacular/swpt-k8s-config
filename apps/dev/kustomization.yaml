@@ -1,97 +1,6 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-# generatorOptions:
-#   disableNameSuffixHash: true
-
-# secretGenerator:
-# - name: spilo-env-secret
-#   namespace: default
-#   literals:
-#     - "WALG_LIBSODIUM_KEY=bU13L4VxsEQlyjvPQ65SLsVcDokBkvZ4FuV1sD7CWGE="  # Run `openssl rand -base64 32` to generate a key.
-#     - "AWS_ACCESS_KEY_ID=console"  # The "username" for the S3 service.
-#     - "AWS_SECRET_ACCESS_KEY=console123"  # The "password" for the S3 service.
-#     # - "AWS_REGION=us-east-1"  # When Amazon S3 is used, specifies the region (optional).
-#     - "AWS_ENDPOINT=https://minio.minio-tenant.svc.cluster.local:443"  # Use a local MinIO S3 server (optional).
-#     - "WALG_S3_CA_CERT_FILE=/certs/minio/ca.crt"  # The trusted CA for the local MinIO S3 server (optional).
-#   options:
-#     labels:
-#       application: spilo
-#       team: swpt
-# - name: postgres.test-cluster.credentials.postgresql.acid.zalan.do
-#   namespace: default
-#   literals:
-#     - username=postgres
-#     - password=gMF2r5GpFIEoLx2AJWDbunRd61TLIRaQrj5OKHQrM20jTBJnCOTpWNt4HrpmLlW2
-#   type: Opaque
-#   options:
-#     labels:
-#       application: spilo
-#       cluster-name: test-cluster
-#       team: swpt
-# - name: standby.test-cluster.credentials.postgresql.acid.zalan.do
-#   namespace: default
-#   literals:
-#     - username=standby
-#     - password=5n1LczUVX4abuJjtWUWERlxjWR0G1lyOMN34b4yT3Yv4l07Ctm841CK2doxiP2xo
-#   type: Opaque
-#   options:
-#     labels:
-#       application: spilo
-#       cluster-name: test-cluster
-#       team: swpt
-# - name: test-owner.test-cluster.credentials.postgresql.acid.zalan.do
-#   namespace: default
-#   literals:
-#     - username=test_owner
-#     - password=NRvDlAID3vbwGsCZqRt8WGIoaRuMFGko9x9rahyHQrsemnMPcUzxaHTJMMBOFUbs
-#   type: Opaque
-#   options:
-#     labels:
-#       application: spilo
-#       cluster-name: test-cluster
-#       team: swpt
-# - name: postgres.standby-cluster.credentials.postgresql.acid.zalan.do
-#   namespace: default
-#   literals:
-#     - username=postgres
-#     - password=gMF2r5GpFIEoLx2AJWDbunRd61TLIRaQrj5OKHQrM20jTBJnCOTpWNt4HrpmLlW2
-#   type: Opaque
-#   options:
-#     labels:
-#       application: spilo
-#       cluster-name: standby-cluster
-#       team: swpt
-# - name: standby.standby-cluster.credentials.postgresql.acid.zalan.do
-#   namespace: default
-#   literals:
-#     - username=standby
-#     - password=5n1LczUVX4abuJjtWUWERlxjWR0G1lyOMN34b4yT3Yv4l07Ctm841CK2doxiP2xo
-#   type: Opaque
-#   options:
-#     labels:
-#       application: spilo
-#       cluster-name: standby-cluster
-#       team: swpt
-# - name: test-owner.standby-cluster.credentials.postgresql.acid.zalan.do
-#   namespace: default
-#   literals:
-#     - username=test_owner
-#     - password=NRvDlAID3vbwGsCZqRt8WGIoaRuMFGko9x9rahyHQrsemnMPcUzxaHTJMMBOFUbs
-#   type: Opaque
-#   options:
-#     labels:
-#       application: spilo
-#       cluster-name: standby-cluster
-#       team: swpt
-# - name: test-encrypted-generator
-#   namespace: default
-#   type: Opaque
-#   files:
-#     - test=test.encrypted
-#   options:
-#     disableNameSuffixHash: true
-
 resources:
   - ../base/
   # - minimal-postgres-manifest.yaml
@@ -100,4 +9,6 @@ resources:
   # - test-secret.yaml
 
 patches:
-  - path: patches/broker.yaml
+  - path: patches/swpt-accounts-broker.yaml
+  - path: patches/swpt-accounts-db.yaml
+  - path: patches/swpt-accounts-apiproxy.yaml
