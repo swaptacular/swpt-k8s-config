@@ -46,3 +46,36 @@ spec:
         - name: config-volume
           configMap:
             name: apiproxy-config
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: apiproxy
+  labels:
+    app.kubernetes.io/name: swpt-accounts
+    app.kubernetes.io/component: apiproxy
+spec:
+  selector:
+    app.kubernetes.io/name: swpt-accounts
+    app.kubernetes.io/component: apiproxy
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: http
+
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: apiproxy
+  labels:
+    app.kubernetes.io/name: swpt-accounts
+    app.kubernetes.io/component: apiproxy
+spec:
+  maxUnavailable: 30%
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: swpt-accounts
+      app.kubernetes.io/component: apiproxy
