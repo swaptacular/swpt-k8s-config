@@ -1,0 +1,104 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# The name of the namespace could be changed. In this case, the
+# "namespace.yaml" file should be changed as well.
+namespace: swpt-accounts
+
+secretGenerator:
+- name: spilo-env-secret
+  files:
+  # Run `openssl rand -base64 32` to generate a random encryption key.
+  - WALG_LIBSODIUM_KEY=spilo-walg-libsodium-key.encrypted
+
+  # The "password" for the S3 service.
+  - AWS_SECRET_ACCESS_KEY=spilo-aws-secret-access-key.encrypted
+
+  literals:
+  # The "username" for the S3 service.
+  - AWS_ACCESS_KEY_ID=console
+
+  # When Amazon S3 is used, this specifies the AWS region. In this
+  # case, specifying `AWS_ENDPOINT` should not be necessary.
+  - AWS_REGION=us-east-1
+
+  # The endpoint for the S3 service.
+  - AWS_ENDPOINT=https://minio.minio-tenant.svc.cluster.local:443
+
+  # This specifies the trusted CA for the local MinIO S3 server. This
+  # should not be necessary for "proper" S3 providers.
+  - WALG_S3_CA_CERT_FILE=/certs/minio/ca.crt
+
+  options:
+    disableNameSuffixHash: true
+    labels:
+      app.kubernetes.io/name: swpt-accounts
+      application: spilo
+      team: swpt
+
+- name: db-owner-credentials
+  files:
+  # A SOPS-encrypted file containing the password for the "db_owner"
+  # user on all Postgres clusters which this application will create.
+  # Once created, the password must not be changed.
+  - password=postgres-cluster-password.encrypted
+
+  literals:
+  - username=db_owner
+  options:
+    disableNameSuffixHash: true
+    labels:
+      app.kubernetes.io/name: swpt-accounts
+  type: Opaque
+
+configMapGenerator:
+- name: apiproxy-config
+  files:
+  # The configuration file for the "apiproxy".
+  #
+  # Each line in the configuration file should start with a route
+  # specifier, followed by at least one space, followed by a web
+  # server URL (only "http://" server URLs are supported). Route
+  # specifiers consist of zero or more 0s or 1s, separated by dots,
+  # ending with a hash symbol ("#"). An example configuration file:
+  #
+  # 0.# http://first-server:8001
+  # 1.# http://second-server:8001
+  #
+  # or, for a sigle server:
+  #
+  # # http://the-only-server
+  #
+  # Note that the route specifiers in the configuration file must
+  # cover all possible bit masks. For example, the following
+  # configuration file is invalid:
+  #
+  # 0.# http://some-server
+  #
+  # because it does not cover sharding keys starting with a
+  # binary "1".
+  - apiproxy.conf=apiproxy.conf
+
+  options:
+    labels:
+      app.kubernetes.io/name: swpt-accounts
+
+replicas:
+- name: apiproxy
+  count: 1
+
+images:
+- name: swpt-accounts
+  newName: ghcr.io/swaptacular/swpt_accounts
+  newTag: 2.3.1
+- name: swpt-apiproxy
+  newName: ghcr.io/swaptacular/swpt_apiproxy
+  newTag: 1.2.1
+
+resources:
+- ../../base/swpt-accounts/
+- namespace.yaml
+- shards/
+
+patches:
+- path: patches/broker.yaml

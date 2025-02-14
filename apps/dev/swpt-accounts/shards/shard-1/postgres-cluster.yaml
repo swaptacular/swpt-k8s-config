@@ -6,8 +6,8 @@ spec:
   postgresql:
     version: "17"
   volume:
-    size: 10Gi
-  numberOfInstances: 2
+    size: 1Gi
+  numberOfInstances: 1
   resources:
     requests:
       cpu: 10m

@@ -2,13 +2,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-  - ../base/
-  # - minimal-postgres-manifest.yaml
-  # - standby-cluster-manifest.yaml
-  # - minimal-rabbitmq-manifest.yaml
-  # - test-secret.yaml
-
-patches:
-  - path: patches/swpt-accounts-broker.yaml
-  - path: patches/swpt-accounts-db.yaml
-  - path: patches/swpt-accounts-apiproxy.yaml
+- ../base/foo-bar/
+- ../base/postgres-operator/
+- ../base/rabbitmq-system/
+- swpt-accounts/

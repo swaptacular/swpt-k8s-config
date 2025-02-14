@@ -1,7 +1,0 @@
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  namespace: swpt-accounts
-  name: apiproxy
-spec:
-  replicas: 1

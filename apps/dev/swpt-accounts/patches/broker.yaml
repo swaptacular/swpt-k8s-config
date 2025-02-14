@@ -1,7 +1,6 @@
 apiVersion: rabbitmq.com/v1beta1
 kind: RabbitmqCluster
 metadata:
-  namespace: swpt-accounts
   name: broker
 spec:
   replicas: 1
