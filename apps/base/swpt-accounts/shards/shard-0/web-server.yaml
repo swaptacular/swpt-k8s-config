@@ -43,7 +43,7 @@ spec:
             - name: WEBSERVER_PORT
               value: "8080"
             - name: POSTGRES_URL
-              value: "postgresql+psycopg://$(pg_username):$(pg_password)@$(pg_cluster_name).swpt-accounts.svc:5432/db"
+              value: "postgresql+psycopg://$(pg_username):$(pg_password)@$(pg_cluster_name):5432/db"
             - name: PROTOCOL_BROKER_URL
               value: "$(rmq_connection_string)"
             - name: PROTOCOL_BROKER_QUEUE

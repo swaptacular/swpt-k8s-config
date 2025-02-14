@@ -39,7 +39,7 @@ configMapGenerator:
   - FLUSH_PROCESSES=1
   - FLUSH_PERIOD=1.5
   - DELETE_PARENT_SHARD_RECORDS=false
-  - FETCH_API_URL=http://accounts-cache.swpt-accounts.svc:80
+  - FETCH_API_URL=http://accounts-cache:80
   - APP_LOG_LEVEL=warning
   - APP_LOG_FORMAT=json
   options:
