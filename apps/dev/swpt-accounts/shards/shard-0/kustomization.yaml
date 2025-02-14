@@ -43,7 +43,8 @@ configMapGenerator:
 
   options:
     annotations:
-      unmodifiedSuffix: do
+      zalandoTopLevelDomain: do
+      zalandoCloneTimestamp: "2199-01-01T00:00:00.000+00:00"
 
 replicas:
 - name: web-server
@@ -113,3 +114,20 @@ replacements:
 - path: static/secrets-clustername-replacement.yaml
 - path: static/secrets-namesuffix-replacement.yaml
 - path: static/shardconfig-replacement.yaml
+
+# # Uncomment the these lines to recover from the S3 backup. Once the
+# # data has been recovered successfully, the lines can be commented
+# # again. Uncommenting these lines will add a clone section in the
+# # shard's Postgres cluster manifest. Like this:
+# # ---
+# # apiVersion: "acid.zalan.do/v1"
+# # kind: postgresql
+# # metadata:
+# #   name: <cluster-name>
+# # spec:
+# #   clone:
+# #     cluster: <cluster-name>
+# #     timestamp: "2199-01-01T00:00:00.000+00:00"
+# #
+# - path: static/clone-clustername-replacement.yaml
+# - path: static/clone-timestamp-replacement.yaml

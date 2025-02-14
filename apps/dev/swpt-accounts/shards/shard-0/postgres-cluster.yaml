@@ -18,14 +18,9 @@ spec:
   - name: pg_cluster_restart_attempt
     value: attempt-1
 
-  # # Uncomment the next lines to recover from the S3 backup. Once the
-  # # data has been recovered successfully, the lines can be commented again.
-  # clone:
-  #   cluster: "accounts-db"  # the same as the name of this cluster!
-  #   timestamp: "2199-01-01T00:00:00.000+00:00"  # far away in the future
-
-  # # Uncomment the next lines to create a standby cluster from the S3 backup.
-  # # Once the standby cluster has been sycnronized, comment the lines again
-  # # to detach the standby cluster from the primary cluster.
+  # # Uncomment the next lines to create a standby cluster from the S3
+  # # backup. Change the path accordingly. Once the standby cluster has
+  # # been sycnronized, comment the lines again to detach the standby
+  # # cluster from the primary cluster.
   # standby:
-  #   s3_wal_path: "s3://swpt/spilo/accounts-db/wal/17"
+  #   s3_wal_path: "s3://swpt/spilo/accounts-db-01/wal/17"
