@@ -9,7 +9,6 @@ spec:
   replicas: 3
   rabbitmq:
     additionalPlugins:
-      - rabbitmq_management
       - rabbitmq_random_exchange
   affinity:
     podAntiAffinity:
