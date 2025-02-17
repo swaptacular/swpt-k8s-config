@@ -32,6 +32,10 @@ spec:
             - configMapRef:
                 name: shardconfig
           env:
+            - name: ORDINAL_NUMBER
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.labels['apps.kubernetes.io/pod-index']
             - name: PORT
               value: "80"
             - name: ACCOUNTS_SERVER_URL
