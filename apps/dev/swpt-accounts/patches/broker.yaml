@@ -9,7 +9,7 @@ spec:
       - rabbitmq_random_exchange
       - rabbitmq_management
   persistence:
-    storage: 1300Mi
+    storage: 1Gi
   resources:
     requests:
       cpu: 100m
