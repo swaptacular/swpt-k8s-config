@@ -1,0 +1,14 @@
+source:
+  version: v1
+  kind: Service
+  name: web-server
+  fieldPath: metadata.name
+targets:
+  - select:
+      name: http-cache
+      kind: StatefulSet
+    fieldPaths:
+      - spec.template.spec.containers.[name=http-cache].env.[name=ACCOUNTS_SERVER_URL].value
+    options:
+      delimiter: "//"
+      index: 1

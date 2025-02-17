@@ -37,14 +37,21 @@ configMapGenerator:
   - FLUSH_PERIOD=1.5
 
   - DELETE_PARENT_SHARD_RECORDS=false
-  - FETCH_API_URL=http://accounts-cache:80
+  - FETCH_API_URL=http://apiproxy
   - APP_LOG_LEVEL=warning
   - APP_LOG_FORMAT=json
 
+  - CACHE_KEYS_ZONE=10m
+  - CACHE_MAX_SIZE=1g
   options:
     annotations:
       zalandoTopLevelDomain: do
       zalandoCloneTimestamp: "2199-01-01T00:00:00.000+00:00"
+
+- name: http-cache-nginx-config
+  files:
+  - nginx.conf=static/nginx.conf
+  - default.conf.template=static/default.conf.template
 
 replicas:
 - name: web-server
@@ -54,6 +61,8 @@ replicas:
 - name: messages-consumer
   count: 1
 - name: chores-consumer
+  count: 1
+- name: http-cache
   count: 1
 
 # The file "postgres-cluster-password.encrypted" referenced here, must
@@ -114,6 +123,7 @@ replacements:
 - path: static/secrets-clustername-replacement.yaml
 - path: static/secrets-namesuffix-replacement.yaml
 - path: static/shardconfig-replacement.yaml
+- path: static/webserver-replacement.yaml
 
 # # Uncomment the these lines to recover from the S3 backup. Once the
 # # data has been recovered successfully, the lines can be commented

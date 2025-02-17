@@ -64,6 +64,7 @@ spec:
       port: 80
       protocol: TCP
       targetPort: http
+  type: LoadBalancer
 
 ---
 apiVersion: policy/v1

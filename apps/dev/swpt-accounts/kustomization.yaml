@@ -94,6 +94,9 @@ images:
 - name: swpt-apiproxy
   newName: ghcr.io/swaptacular/swpt_apiproxy
   newTag: 1.2.1
+- name: nginx
+  newName: docker.io/nginx
+  newTag: 1.19.4
 
 resources:
 - ../../base/swpt-accounts/
