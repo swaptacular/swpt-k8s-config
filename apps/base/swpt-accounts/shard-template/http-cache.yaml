@@ -58,6 +58,10 @@ spec:
       resources:
         requests:
           storage: 1Gi
+  persistentVolumeClaimRetentionPolicy:
+    whenDeleted: Delete
+    whenScaled: Delete
+
 ---
 apiVersion: v1
 kind: Service

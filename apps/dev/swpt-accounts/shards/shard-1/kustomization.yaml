@@ -58,7 +58,9 @@ configMapGenerator:
 
   # The size of the persistent volume mounted on each "http-cache" pod
   # to store the cached data. It must be slightly greater than the
-  # value specified by "CACHE_MAX_SIZE".
+  # value specified by "CACHE_MAX_SIZE". Note however, that once the
+  # persistent volume claims have been created, increasing this value
+  # will not automatically expand the volumes.
   - CACHE_VOLUME_SIZE=1.1Gi
   options:
     annotations:
