@@ -96,7 +96,7 @@ images:
   newTag: 1.2.1
 - name: nginx
   newName: docker.io/nginx
-  newTag: 1.19.4
+  newTag: 1.26.3-alpine3.20
 
 resources:
 - ../../base/swpt-accounts/

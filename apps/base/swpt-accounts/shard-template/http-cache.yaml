@@ -35,8 +35,8 @@ spec:
               value: "80"
             - name: ACCOUNTS_SERVER_URL
               value: "http://web-server"
-            # - name: NGINX_ENTRYPOINT_QUIET_LOGS
-            #   value: "1"
+            - name: NGINX_ENTRYPOINT_QUIET_LOGS
+              value: "1"
           volumeMounts:
             - name: data
               mountPath: /var/lib/nginx/data
