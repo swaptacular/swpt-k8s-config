@@ -1,0 +1,10 @@
+source:
+  kind: ConfigMap
+  name: shardconfig
+  fieldPath: data.CACHE_VOLUME_SIZE
+targets:
+  - select:
+      name: http-cache
+      kind: StatefulSet
+    fieldPaths:
+      - spec.volumeClaimTemplates.0.spec.resources.requests.storage

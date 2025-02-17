@@ -41,8 +41,25 @@ configMapGenerator:
   - APP_LOG_LEVEL=warning
   - APP_LOG_FORMAT=json
 
+  # The size of the shared memory zone, used by each "http-cache" pod,
+  # for storing the cache keys and metadata such as usage timers.
+  # Having a copy of the keys in memory enables NGINX to quickly
+  # determine if a request is a HIT or a MISS without having to go to
+  # disk, greatly speeding up the check. A 1‑MB zone can store data
+  # for about 8,000 keys, so a 10‑MB zone can store data for about
+  # 80,000 keys.
   - CACHE_KEYS_ZONE=10m
+
+  # The upper limit of the size of the on-disk cache, maintained by
+  # each "http-cache" pod. When the cache size reaches the limit, a
+  # process called the "cache manager" removes the files that were
+  # least recently used to bring the cache size back under the limit.
   - CACHE_MAX_SIZE=1g
+
+  # The size of the persistent volume mounted on each "http-cache" pod
+  # to store the cached data. It must be slightly greater than the
+  # value specified by "CACHE_MAX_SIZE".
+  - CACHE_VOLUME_SIZE=1.1Gi
   options:
     annotations:
       zalandoTopLevelDomain: do
@@ -124,6 +141,7 @@ replacements:
 - path: static/secrets-namesuffix-replacement.yaml
 - path: static/shardconfig-replacement.yaml
 - path: static/webserver-replacement.yaml
+- path: static/http-cache-size-replacement.yaml
 
 # # Uncomment the these lines to recover from the S3 backup. Once the
 # # data has been recovered successfully, the lines can be commented
