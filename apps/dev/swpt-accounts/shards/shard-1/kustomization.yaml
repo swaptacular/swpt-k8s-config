@@ -63,7 +63,7 @@ replicas:
 - name: chores-consumer
   count: 1
 - name: http-cache
-  count: 1
+  count: 2
 
 # The file "postgres-cluster-password.encrypted" referenced here, must
 # be an exact copy of the "../../postgres-cluster-password.encrypted"
