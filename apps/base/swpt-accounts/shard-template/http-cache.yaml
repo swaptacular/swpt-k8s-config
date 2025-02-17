@@ -5,6 +5,7 @@ metadata:
   labels:
     app.kubernetes.io/component: http-cache
 spec:
+  serviceName: http-cache
   podManagementPolicy: Parallel
   replicas: 2
   selector:
