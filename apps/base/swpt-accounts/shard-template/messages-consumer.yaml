@@ -47,6 +47,8 @@ spec:
               value: "$(rmq_connection_string)"
             - name: CHORES_BROKER_QUEUE
               value: "$(pg_cluster_name)-chores"
+            - name: FETCH_API_URL
+              value: "http://apiproxy"
 
 ---
 apiVersion: policy/v1

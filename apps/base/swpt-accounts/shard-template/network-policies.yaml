@@ -20,7 +20,7 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      app.kubernetes.io/component: web-server
+      app.kubernetes.io/component: http-cache
   policyTypes:
   - Ingress
   ingress:
