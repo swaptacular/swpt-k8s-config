@@ -64,16 +64,51 @@ description: "Used for receiving SMP messages from peer nodes."
 apiVersion: scheduling.k8s.io/v1
 kind: PriorityClass
 metadata:
-  name: web-auth-database
+  name: oauth2-database
 value: 82000
 globalDefault: false
-description: "Used for the databases that sustain users' login and OAuth2 flows."
+description: "Used for the OAuth2 server database."
 
 ---
 apiVersion: scheduling.k8s.io/v1
 kind: PriorityClass
 metadata:
-  name: web-server
+  name: oauth2-server
 value: 81000
 globalDefault: false
-description: "Used for login, OAuth2, apiproxy, and shards' Web servers."
+description: "Used for the OAuth2 servers."
+
+---
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: webapi-apiproxy
+value: 80000
+globalDefault: false
+description: "Used for the global apiproxy server."
+
+---
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: webapi-shard
+value: 79000
+globalDefault: false
+description: "Used for shards' WebAPI servers."
+
+---
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: login-database
+value: 78000
+globalDefault: false
+description: "Used for the login database."
+---
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: login-webserver
+value: 77000
+globalDefault: false
+description: "Used for the login Web servers."
