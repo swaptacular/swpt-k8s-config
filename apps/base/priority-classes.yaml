@@ -1,0 +1,79 @@
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: critical-operator
+value: 890000
+globalDefault: false
+description: "Used for critical controller (operator) pods only."
+
+---
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: critical-database
+value: 88000
+globalDefault: false
+description: "Used for critical global databases, like the message broker and the peers' registry."
+
+---
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: critical-smp-sender
+value: 87000
+globalDefault: false
+description: "Used for sending SMP messages to peer nodes."
+
+---
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: shard-database
+value: 86000
+globalDefault: false
+description: "Used for shards' database pods."
+
+---
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: shard-smp-consumer
+value: 85000
+globalDefault: false
+description: "Used for shard pods which process (consume) SMP messages."
+
+---
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: shard-background-worker
+value: 84000
+globalDefault: false
+description: "Used for shards' background worker pods. This does not include SMP message consumers, and Web servers."
+
+---
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: smp-receiver
+value: 83000
+globalDefault: false
+description: "Used for receiving SMP messages from peer nodes."
+
+---
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: web-auth-database
+value: 82000
+globalDefault: false
+description: "Used for the databases that sustain users' login and OAuth2 flows."
+
+---
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: web-server
+value: 81000
+globalDefault: false
+description: "Used for login, OAuth2, apiproxy, and shards' Web servers."
