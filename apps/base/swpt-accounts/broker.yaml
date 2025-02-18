@@ -23,6 +23,8 @@ spec:
         template:
           spec:
             priorityClassName: critical-database
+            containers:
+            - name: rabbitmq
 
 ---
 apiVersion: policy/v1
