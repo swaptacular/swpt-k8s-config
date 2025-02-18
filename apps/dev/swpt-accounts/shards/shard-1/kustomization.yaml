@@ -79,6 +79,9 @@ configMapGenerator:
   - nginx.conf=static/nginx.conf
   - default.conf.template=static/default.conf.template
 
+# The number of replicas for each component. One replica works fine,
+# but to have high-availability, should be at least 2.
+#
 replicas:
 - name: web-server
   count: 1
