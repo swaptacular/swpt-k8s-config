@@ -11,7 +11,7 @@ configuration:
     enable_owner_references: true
     enable_persistent_volume_claim_deletion: false
     watched_namespace: "*"
-    enable_pod_antiaffinity: true
+    enable_pod_antiaffinity: false  # must be 'true' in production!!!
     pod_antiaffinity_topology_key: kubernetes.io/hostname
     pdb_master_label_selector: false
     pod_environment_configmap: "postgres-operator/spilo-env-config"
