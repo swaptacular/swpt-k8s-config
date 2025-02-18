@@ -2,7 +2,7 @@ apiVersion: scheduling.k8s.io/v1
 kind: PriorityClass
 metadata:
   name: critical-operator
-value: 890000
+value: 89000
 globalDefault: false
 description: "Used for critical controller (operator) pods only."
 
