@@ -17,6 +17,12 @@ spec:
           matchLabels:
             app.kubernetes.io/name: broker
         topologyKey: kubernetes.io/hostname
+  override:
+    statefulSet:
+      spec:
+        template:
+          spec:
+            priorityClassName: critical-database
 
 ---
 apiVersion: policy/v1

@@ -18,4 +18,4 @@ resources:
 
 patches:
 - path: patches/postgresql-operator-configuration-tweaks.yaml
-- path: patches/postgres-operator.yaml
+- path: patches/postgres-operator-deployment.yaml
