@@ -3,6 +3,9 @@
   value:
     app.kubernetes.io/component: database
 - op: add
+  path: /spec/pod_priority_class_name
+  value: shard-database
+- op: add
   path: /spec/teamId
   value: "swpt"
 - op: add

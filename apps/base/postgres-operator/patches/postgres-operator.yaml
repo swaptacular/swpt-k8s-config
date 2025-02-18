@@ -1,0 +1,8 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-operator
+spec:
+  template:
+    spec:
+      priorityClassName: critical-operator
