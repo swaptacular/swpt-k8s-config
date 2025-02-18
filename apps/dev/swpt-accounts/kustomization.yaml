@@ -101,7 +101,7 @@ images:
 resources:
 - ../../base/swpt-accounts/
 - namespace.yaml
-# - shards/
+- shards/
 
 patches:
 - path: patches/broker.yaml
