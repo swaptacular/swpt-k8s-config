@@ -14,6 +14,7 @@ spec:
       labels:
         app: simple-git-server
     spec:
+      priorityClassName: system-cluster-critical
       containers:
         - image: docker.io/rockstorm/git-server:2.47
           name: git-server
