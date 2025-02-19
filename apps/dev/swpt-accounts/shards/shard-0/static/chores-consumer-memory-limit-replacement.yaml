@@ -1,0 +1,13 @@
+source:
+  kind: ConfigMap
+  name: shardconfig
+  fieldPath: data.kustomize_chores_consumer_memory_limit
+targets:
+  - select:
+      kind: Deployment
+      name: chores-consumer
+    fieldPaths:
+      - spec.template.spec.resources.limits.memory
+    options:
+      create: true
+

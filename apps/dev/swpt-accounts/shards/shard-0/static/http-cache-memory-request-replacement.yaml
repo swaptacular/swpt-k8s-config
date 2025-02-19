@@ -1,0 +1,13 @@
+source:
+  kind: ConfigMap
+  name: shardconfig
+  fieldPath: data.kustomize_http_cache_memory_request
+targets:
+  - select:
+      kind: StatefulSet
+      name: http-cache
+    fieldPaths:
+      - spec.template.spec.resources.requests.memory
+    options:
+      create: true
+

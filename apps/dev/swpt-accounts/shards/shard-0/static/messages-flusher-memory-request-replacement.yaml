@@ -1,0 +1,13 @@
+source:
+  kind: ConfigMap
+  name: shardconfig
+  fieldPath: data.kustomize_messages_flusher_memory_request
+targets:
+  - select:
+      kind: Deployment
+      name: messages-flusher
+    fieldPaths:
+      - spec.template.spec.resources.requests.memory
+    options:
+      create: true
+

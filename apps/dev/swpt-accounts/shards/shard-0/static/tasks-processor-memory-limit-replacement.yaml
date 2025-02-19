@@ -1,0 +1,13 @@
+source:
+  kind: ConfigMap
+  name: shardconfig
+  fieldPath: data.kustomize_tasks_processor_memory_limit
+targets:
+  - select:
+      kind: Deployment
+      name: tasks-processor
+    fieldPaths:
+      - spec.template.spec.resources.limits.memory
+    options:
+      create: true
+

@@ -1,0 +1,13 @@
+source:
+  kind: ConfigMap
+  name: shardconfig
+  fieldPath: data.kustomize_tasks_processor_cpu_limit
+targets:
+  - select:
+      kind: Deployment
+      name: tasks-processor
+    fieldPaths:
+      - spec.template.spec.resources.limits.cpu
+    options:
+      create: true
+

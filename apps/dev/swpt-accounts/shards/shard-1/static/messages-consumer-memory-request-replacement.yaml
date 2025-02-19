@@ -1,0 +1,13 @@
+source:
+  kind: ConfigMap
+  name: shardconfig
+  fieldPath: data.kustomize_messages_consumer_memory_request
+targets:
+  - select:
+      kind: Deployment
+      name: messages-consumer
+    fieldPaths:
+      - spec.template.spec.resources.requests.memory
+    options:
+      create: true
+

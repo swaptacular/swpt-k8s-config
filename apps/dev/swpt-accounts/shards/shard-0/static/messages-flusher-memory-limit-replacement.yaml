@@ -1,0 +1,13 @@
+source:
+  kind: ConfigMap
+  name: shardconfig
+  fieldPath: data.kustomize_messages_flusher_memory_limit
+targets:
+  - select:
+      kind: Deployment
+      name: messages-flusher
+    fieldPaths:
+      - spec.template.spec.resources.limits.memory
+    options:
+      create: true
+

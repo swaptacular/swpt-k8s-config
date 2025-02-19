@@ -1,0 +1,12 @@
+source:
+  kind: ConfigMap
+  name: shardconfig
+  fieldPath: data.kustomize_http_cache_cpu_request
+targets:
+  - select:
+      kind: StatefulSet
+      name: http-cache
+    fieldPaths:
+      - spec.template.spec.resources.requests.cpu
+    options:
+      create: true

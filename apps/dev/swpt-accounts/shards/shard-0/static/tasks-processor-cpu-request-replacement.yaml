@@ -1,0 +1,12 @@
+source:
+  kind: ConfigMap
+  name: shardconfig
+  fieldPath: data.kustomize_tasks_processor_cpu_request
+targets:
+  - select:
+      kind: Deployment
+      name: tasks-processor
+    fieldPaths:
+      - spec.template.spec.resources.requests.cpu
+    options:
+      create: true

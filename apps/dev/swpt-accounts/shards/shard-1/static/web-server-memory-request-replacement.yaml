@@ -1,0 +1,13 @@
+source:
+  kind: ConfigMap
+  name: shardconfig
+  fieldPath: data.kustomize_web_server_memory_request
+targets:
+  - select:
+      kind: Deployment
+      name: web-server
+    fieldPaths:
+      - spec.template.spec.resources.requests.memory
+    options:
+      create: true
+

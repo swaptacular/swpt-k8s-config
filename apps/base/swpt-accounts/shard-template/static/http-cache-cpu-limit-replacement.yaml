@@ -1,0 +1,13 @@
+source:
+  kind: ConfigMap
+  name: shardconfig
+  fieldPath: data.kustomize_http_cache_cpu_limit
+targets:
+  - select:
+      kind: StatefulSet
+      name: http-cache
+    fieldPaths:
+      - spec.template.spec.resources.limits.cpu
+    options:
+      create: true
+

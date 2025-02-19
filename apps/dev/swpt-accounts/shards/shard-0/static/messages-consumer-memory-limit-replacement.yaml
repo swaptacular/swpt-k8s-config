@@ -1,0 +1,13 @@
+source:
+  kind: ConfigMap
+  name: shardconfig
+  fieldPath: data.kustomize_messages_consumer_memory_limit
+targets:
+  - select:
+      kind: Deployment
+      name: messages-consumer
+    fieldPaths:
+      - spec.template.spec.resources.limits.memory
+    options:
+      create: true
+

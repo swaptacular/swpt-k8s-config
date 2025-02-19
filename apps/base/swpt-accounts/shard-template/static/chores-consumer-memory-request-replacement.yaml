@@ -1,0 +1,13 @@
+source:
+  kind: ConfigMap
+  name: shardconfig
+  fieldPath: data.kustomize_chores_consumer_memory_request
+targets:
+  - select:
+      kind: Deployment
+      name: chores-consumer
+    fieldPaths:
+      - spec.template.spec.resources.requests.memory
+    options:
+      create: true
+

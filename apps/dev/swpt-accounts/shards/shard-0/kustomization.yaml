@@ -69,6 +69,40 @@ configMapGenerator:
   # will not automatically expand the volumes. The unit "Mi" means
   # "MiB", and "Gi" means "GiB".
   - CACHE_VOLUME_SIZE=1Gi
+
+  # The following settings do not affect the containers directly.
+  # Instead, they are used as sources for Kustomize replacements which
+  # declare resource requests and limits for the corresponding pods:
+  #
+  - kustomize_chores_consumer_cpu_request=10m
+  - kustomize_chores_consumer_cpu_limit=2000m
+  - kustomize_chores_consumer_memory_request=128Mi
+  - kustomize_chores_consumer_memory_limit=1Gi
+
+  - kustomize_http_cache_cpu_request=10m
+  - kustomize_http_cache_cpu_limit=2000m
+  - kustomize_http_cache_memory_request=32Mi
+  - kustomize_http_cache_memory_limit=1Gi
+
+  - kustomize_messages_consumer_cpu_request=10m
+  - kustomize_messages_consumer_cpu_limit=2000m
+  - kustomize_messages_consumer_memory_request=128Mi
+  - kustomize_messages_consumer_memory_limit=1Gi
+
+  - kustomize_messages_flusher_cpu_request=50m
+  - kustomize_messages_flusher_cpu_limit=2000m
+  - kustomize_messages_flusher_memory_request=128Mi
+  - kustomize_messages_flusher_memory_limit=1Gi
+
+  - kustomize_tasks_processor_cpu_request=50m
+  - kustomize_tasks_processor_cpu_limit=2000m
+  - kustomize_tasks_processor_memory_request=1Gi
+  - kustomize_tasks_processor_memory_limit=2Gi
+
+  - kustomize_web_server_cpu_request=10m
+  - kustomize_web_server_cpu_limit=2000m
+  - kustomize_web_server_memory_request=128Mi
+  - kustomize_web_server_memory_limit=1Gi
   options:
     annotations:
       zalandoTopLevelDomain: do
@@ -154,6 +188,30 @@ replacements:
 - path: static/shardconfig-replacement.yaml
 - path: static/webserver-replacement.yaml
 - path: static/http-cache-size-replacement.yaml
+- path: static/chores-consumer-cpu-request-replacement.yaml
+- path: static/chores-consumer-cpu-limit-replacement.yaml
+- path: static/chores-consumer-memory-request-replacement.yaml
+- path: static/chores-consumer-memory-limit-replacement.yaml
+- path: static/http-cache-cpu-request-replacement.yaml
+- path: static/http-cache-cpu-limit-replacement.yaml
+- path: static/http-cache-memory-request-replacement.yaml
+- path: static/http-cache-memory-limit-replacement.yaml
+- path: static/messages-consumer-cpu-request-replacement.yaml
+- path: static/messages-consumer-cpu-limit-replacement.yaml
+- path: static/messages-consumer-memory-request-replacement.yaml
+- path: static/messages-consumer-memory-limit-replacement.yaml
+- path: static/messages-flusher-cpu-request-replacement.yaml
+- path: static/messages-flusher-cpu-limit-replacement.yaml
+- path: static/messages-flusher-memory-request-replacement.yaml
+- path: static/messages-flusher-memory-limit-replacement.yaml
+- path: static/tasks-processor-cpu-request-replacement.yaml
+- path: static/tasks-processor-cpu-limit-replacement.yaml
+- path: static/tasks-processor-memory-request-replacement.yaml
+- path: static/tasks-processor-memory-limit-replacement.yaml
+- path: static/web-server-cpu-request-replacement.yaml
+- path: static/web-server-cpu-limit-replacement.yaml
+- path: static/web-server-memory-request-replacement.yaml
+- path: static/web-server-memory-limit-replacement.yaml
 
 # # Uncomment the these lines to recover from the S3 backup. Once the
 # # data has been recovered successfully, the lines can be commented
