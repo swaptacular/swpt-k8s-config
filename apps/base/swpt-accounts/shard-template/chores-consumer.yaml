@@ -23,6 +23,7 @@ spec:
             topologyKey: kubernetes.io/hostname
             matchLabelKeys:
             - pod-template-hash
+      priorityClassName: shard-background-worker
       containers:
         - name: chores-consumer
           image: swpt-accounts

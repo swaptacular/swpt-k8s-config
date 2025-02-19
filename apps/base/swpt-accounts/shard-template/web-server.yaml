@@ -23,6 +23,7 @@ spec:
             topologyKey: kubernetes.io/hostname
             matchLabelKeys:
             - pod-template-hash
+      priorityClassName: webapi-shard
       containers:
         - name: web-server
           image: swpt-accounts

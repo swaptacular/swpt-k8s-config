@@ -23,6 +23,7 @@ spec:
             topologyKey: kubernetes.io/hostname
             matchLabelKeys:
             - pod-template-hash
+      priorityClassName: shard-smp-consumer
       containers:
         - name: messages-consumer
           image: swpt-accounts

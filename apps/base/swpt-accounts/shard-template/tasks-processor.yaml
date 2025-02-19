@@ -14,6 +14,7 @@ spec:
       labels:
         app.kubernetes.io/component: tasks-processor
     spec:
+      priorityClassName: shard-background-worker
       containers:
         - name: tasks-processor
           image: swpt-accounts
