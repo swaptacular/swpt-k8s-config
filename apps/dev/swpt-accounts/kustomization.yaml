@@ -106,3 +106,8 @@ resources:
 patches:
 - path: patches/broker.yaml
 - path: patches/apiproxy-deployment.yaml
+  target:
+    group: apps
+    kind: Deployment
+    name: apiproxy
+    version: v1

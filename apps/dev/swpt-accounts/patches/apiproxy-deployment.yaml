@@ -1,14 +1,9 @@
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: apiproxy
-spec:
-  template:
-    spec:
-      resources:
-        limits:
-          cpu: "1"
-          memory: 1Gi
-        requests:
-          cpu: 100m
-          memory: 128Mi
+- op: replace
+  path: /spec/template/spec/containers/0/resources
+  value:
+    limits:
+      cpu: "1"
+      memory: 1Gi
+    requests:
+      cpu: 100m
+      memory: 128Mi

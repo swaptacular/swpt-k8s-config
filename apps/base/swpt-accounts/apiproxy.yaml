@@ -28,13 +28,6 @@ spec:
             matchLabelKeys:
             - pod-template-hash
       priorityClassName: webapi-apiproxy
-      resources:
-        limits:
-          cpu: "1"
-          memory: 1Gi
-        requests:
-          cpu: 100m
-          memory: 128Mi
       containers:
         - name: apiproxy
           image: swpt-apiproxy
@@ -50,6 +43,13 @@ spec:
               value: "8080"
             - name: APIPROXY_CONFIG_FILE
               value: "/etc/apiproxy.conf"
+          resources:
+            limits:
+              cpu: "1"
+              memory: 1Gi
+            requests:
+              cpu: 100m
+              memory: 128Mi
       volumes:
         - name: config-volume
           configMap:
