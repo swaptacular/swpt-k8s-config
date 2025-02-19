@@ -7,6 +7,6 @@ targets:
       kind: Deployment
       name: chores-consumer
     fieldPaths:
-      - spec.template.spec.resources.requests.cpu
+      - spec.template.spec.containers.[name=chores-consumer].resources.requests.cpu
     options:
       create: true

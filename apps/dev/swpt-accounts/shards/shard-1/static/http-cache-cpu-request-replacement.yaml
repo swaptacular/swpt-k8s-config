@@ -7,6 +7,6 @@ targets:
       kind: StatefulSet
       name: http-cache
     fieldPaths:
-      - spec.template.spec.resources.requests.cpu
+      - spec.template.spec.containers.[name=http-cache].resources.requests.cpu
     options:
       create: true

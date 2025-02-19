@@ -7,7 +7,7 @@ targets:
       kind: StatefulSet
       name: http-cache
     fieldPaths:
-      - spec.template.spec.resources.limits.memory
+      - spec.template.spec.containers.[name=http-cache].resources.limits.memory
     options:
       create: true
 

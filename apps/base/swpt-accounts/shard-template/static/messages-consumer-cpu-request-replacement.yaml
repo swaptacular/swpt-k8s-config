@@ -7,6 +7,6 @@ targets:
       kind: Deployment
       name: messages-consumer
     fieldPaths:
-      - spec.template.spec.resources.requests.cpu
+      - spec.template.spec.containers.[name=messages-consumer].resources.requests.cpu
     options:
       create: true

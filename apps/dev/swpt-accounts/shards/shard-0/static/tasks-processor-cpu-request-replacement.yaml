@@ -7,6 +7,7 @@ targets:
       kind: Deployment
       name: tasks-processor
     fieldPaths:
-      - spec.template.spec.resources.requests.cpu
+      - spec.template.spec.containers.[name=tasks-processor].resources.requests.cpu
+      - spec.template.spec.initContainers.[name=init].resources.requests.cpu
     options:
       create: true

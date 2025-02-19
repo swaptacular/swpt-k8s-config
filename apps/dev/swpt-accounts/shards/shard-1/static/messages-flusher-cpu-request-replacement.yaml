@@ -7,6 +7,6 @@ targets:
       kind: Deployment
       name: messages-flusher
     fieldPaths:
-      - spec.template.spec.resources.requests.cpu
+      - spec.template.spec.containers.[name=messages-flusher].resources.requests.cpu
     options:
       create: true

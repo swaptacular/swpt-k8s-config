@@ -7,7 +7,7 @@ targets:
       kind: Deployment
       name: web-server
     fieldPaths:
-      - spec.template.spec.resources.limits.cpu
+      - spec.template.spec.containers.[name=web-server].resources.limits.cpu
     options:
       create: true
 
