@@ -105,3 +105,4 @@ resources:
 
 patches:
 - path: patches/broker.yaml
+- path: patches/apiproxy-deployment.yaml

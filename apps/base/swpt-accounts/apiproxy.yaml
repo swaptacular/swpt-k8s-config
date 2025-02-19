@@ -28,6 +28,13 @@ spec:
             matchLabelKeys:
             - pod-template-hash
       priorityClassName: webapi-apiproxy
+      resources:
+        limits:
+          cpu: "1"
+          memory: 1Gi
+        requests:
+          cpu: 100m
+          memory: 128Mi
       containers:
         - name: apiproxy
           image: swpt-apiproxy
