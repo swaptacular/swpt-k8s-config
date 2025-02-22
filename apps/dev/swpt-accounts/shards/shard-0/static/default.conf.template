@@ -21,6 +21,9 @@ http {
     server {
         listen ${PORT};
         server_name $hostname;
+        location /healthz {
+            root /usr/share/nginx/html;
+        }
         location /accounts/ {
             proxy_pass ${ACCOUNTS_SERVER_URL}/accounts/;
             proxy_set_header Host $host;
