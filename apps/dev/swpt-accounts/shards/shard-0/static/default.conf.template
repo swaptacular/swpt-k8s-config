@@ -21,7 +21,7 @@ http {
     server {
         listen ${PORT};
         server_name $hostname;
-        location /healthz {
+        location /healthz/ {
             root /usr/share/nginx/html;
         }
         location /accounts/ {
