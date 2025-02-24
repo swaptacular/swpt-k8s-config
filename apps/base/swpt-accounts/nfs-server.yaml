@@ -50,21 +50,9 @@ spec:
             - mountPath: "/mnt/nfs-share/"
               name: git-repo-working-copy
               readOnly: false
-            - name: git-pull-ssh-ids
-              mountPath: "/etc/ssh/id_rsa"
-              subPath: id_rsa
-            - name: git-pull-ssh-ids
-              mountPath: "/etc/ssh/id_rsa.pub"
-              subPath: id_rsa.pub
-            - name: git-pull-ssh-ids
-              mountPath: "/etc/ssh/id_rsa-cert.pub"
-              subPath: id_rsa-cert.pub
-            - name: git-pull-ssh-ids
-              mountPath: "/etc/ssh/ssh_known_hosts"
-              subPath: ssh_known_hosts
         - name: git-pull
           image: swpt-nfs-server
-          args: ['git-pull']  # ['cat', '/etc/ssh/id_rsa', '/etc/ssh/id_rsa.pub', '/etc/ssh/id_rsa-cert.pub', '/etc/ssh/known_hosts']
+          args: ['git-pull']
           env:
             - name: SHARED_DIRECTORY
               value: "/mnt/nfs-share"

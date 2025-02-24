@@ -81,6 +81,16 @@ secretGenerator:
   # generated in the previous steps. (See previous comments.)
   - id_rsa-cert.pub=git-pull-ssh-ids/id_rsa-cert.pub
 
+  # Specifies the public SSH key of the Git server, so that the Git
+  # client can verify it. The file should contain only one line, with
+  # the following format:
+  #
+  # [git-server.simple-git-server.svc.cluster.local]:2222 ssh-rsa <public-ssh-key>
+  #
+  # Here <public-ssh-key> is the public SSH key of the Git server. You
+  # can obtain it with the following command:
+  #
+  # $ ssh-keyscan -p 2222 -t rsa git-server.simple-git-server.svc.cluster.local > ssh_known_hosts
   - ssh_known_hosts=git-pull-ssh-ids/ssh_known_hosts
   options:
     labels:
