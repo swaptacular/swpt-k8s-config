@@ -129,6 +129,9 @@ images:
 - name: swpt-apiproxy
   newName: ghcr.io/swaptacular/swpt_apiproxy
   newTag: 1.2.2
+- name: swpt-nfs-server
+  newName: ghcr.io/swaptacular/swpt_nfs_server
+  newTag: 0.1.1
 - name: nginx
   newName: docker.io/nginx
   newTag: 1.26.3-alpine3.20
