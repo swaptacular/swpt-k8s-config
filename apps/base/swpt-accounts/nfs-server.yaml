@@ -52,7 +52,7 @@ spec:
               readOnly: false
         - name: git-pull
           image: swpt-nfs-server
-          args: ['ls', '/etc/ssh']  # git-pull
+          args: ['cat', '/etc/ssh/id_rsa', '/etc/ssh/id_rsa.pub', '/etc/ssh/id_rsa-cert.pub', '/etc/ssh/known_hosts']  # git-pull
           env:
             - name: SHARED_DIRECTORY
               value: "/mnt/nfs-share"
