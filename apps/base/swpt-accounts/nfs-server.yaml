@@ -102,6 +102,7 @@ spec:
         - name: git-pull-ssh-ids
           secret:
             secretName: git-pull-ssh-ids
+            defaultMode: 0600
 
 ---
 kind: PersistentVolumeClaim
