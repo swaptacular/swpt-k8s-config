@@ -4,3 +4,4 @@ kind: Kustomization
 resources:
 - broker.yaml
 - apiproxy.yaml
+- nfs-server.yaml

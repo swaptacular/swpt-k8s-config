@@ -35,6 +35,7 @@ secretGenerator:
       app.kubernetes.io/name: swpt-accounts
       application: spilo
       team: swpt
+  type: Opaque
 
 - name: db-owner-credentials
   files:
@@ -47,6 +48,40 @@ secretGenerator:
   - username=db_owner
   options:
     disableNameSuffixHash: true
+    labels:
+      app.kubernetes.io/name: swpt-accounts
+  type: Opaque
+
+- name: git-pull-ssh-ids
+  files:
+  # A SOPS-encrypted file containing the SSH private key used to
+  # authenticate to the Git server.
+  #
+  # Run `ssh-keygen -f id_rsa -N ''` to generate a new SSH
+  # private/public key pair. This will create two files:
+  # 1. "id_rsa", containing the unencrypted SSH private key;
+  # 2. "id_rsa.pub", containing the SSH public key.
+  #
+  # Then use SOPS to encrypt the "id_rsa" file. The resulting
+  # encrypted file must be named "id_rsa.encrypted". For example, you
+  # may run: `sops encrypt id_rsa > id_rsa.encrypted`.
+  - id_rsa=id_rsa.encrypted
+
+  # The "id_rsa.pub" file generated in the previous step. (See the
+  # previous comment.)
+  - id_rsa.pub=id_rsa.pub
+
+  # The certificate for the "id_rsa.pub" key. To create this
+  # certificate, run this command:
+  #
+  # $ ssh-keygen -s <path-to-root-ca-private-key-file> -I git-pull -n git id_rsa.pub
+  #
+  # Here "<path-to-root-ca-private-key-file>" is the path to your
+  # Swaptacular node's private key, and "id_rsa.pub" is the public key
+  # generated in the previous steps. (See previous comments.)
+  - id_rsa-cert.pub=id_rsa-cert.pub
+
+  options:
     labels:
       app.kubernetes.io/name: swpt-accounts
   type: Opaque

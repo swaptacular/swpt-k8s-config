@@ -1,0 +1,112 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nfs-server
+  labels:
+    app.kubernetes.io/name: swpt-accounts
+    app.kubernetes.io/component: nfs-server
+spec:
+  replicas: 1  # must be exactly 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: swpt-accounts
+      app.kubernetes.io/component: nfs-server
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: swpt-accounts
+        app.kubernetes.io/component: nfs-server
+    spec:
+      priorityClassName: critical-database
+      containers:
+        - name: nfs-server
+          image: swpt-nfs-server
+          args: ['nfsd']
+          securityContext:
+            capabilities:
+              add: ["SYS_ADMIN", "SETPCAP"]
+          ports:
+            - name: nfs
+            - containerPort: 2049
+          readinessProbe:
+            tcpSocket:
+              port: nfs
+            initialDelaySeconds: 5
+          env:
+            - name: SHARED_DIRECTORY
+              value: "/mnt/nfs-share"
+            - name: SYNC
+              value: "true"
+          resources:
+            limits:
+              cpu: "1"
+              memory: 1Gi
+            requests:
+              cpu: 10m
+              memory: 64Mi
+          volumeMounts:
+            - mountPath: "/mnt/nfs-share/"
+              name: git-repo-working-copy
+              readOnly: false
+        - name: git-pull
+          image: swpt-nfs-server
+          args: ['git-pull']
+          env:
+            - name: SHARED_DIRECTORY
+              value: "/mnt/nfs-share"
+            - name: GIT_REPOSITORY
+              value: "ssh://git@git-server.simple-git-server.svc.cluster.local:2222/srv/git/fluxcd.git"
+            - name: GIT_PULL_SECONDS
+              value: "60"
+          resources:
+            limits:
+              cpu: "1"
+              memory: 1Gi
+            requests:
+              cpu: 10m
+              memory: 64Mi
+          volumeMounts:
+            - mountPath: "/mnt/nfs-share/"
+              name: git-repo-working-copy
+              readOnly: false
+            - name: git-pull-ssh-ids
+              mountPath: "/etc/ssh/"
+      volumes:
+        - name: git-repo-working-copy
+          persistentVolumeClaim:
+            claimName: git-repo-working-copy
+        - name: git-pull-ssh-ids
+          secret:
+            secretName: git-pull-ssh-ids
+
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: git-repo-working-copy
+spec:
+  accessModes:
+    - ReadWriteOncePod
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nfs-server
+  labels:
+    app.kubernetes.io/name: swpt-accounts
+    app.kubernetes.io/component: nfs-server
+spec:
+  selector:
+    app.kubernetes.io/name: swpt-accounts
+    app.kubernetes.io/component: nfs-server
+  ports:
+    - name: nfs
+      port: 2049
+      protocol: TCP
+      targetPort: nfs
