@@ -81,7 +81,7 @@ secretGenerator:
   # generated in the previous steps. (See previous comments.)
   - id_rsa-cert.pub=git-pull-ssh-ids/id_rsa-cert.pub
 
-  - known_hosts=git-pull-ssh-ids/known_hosts
+  - ssh_known_hosts=git-pull-ssh-ids/ssh_known_hosts
   options:
     labels:
       app.kubernetes.io/name: swpt-accounts
