@@ -51,16 +51,16 @@ spec:
               name: git-repo-working-copy
               readOnly: false
             - name: git-pull-ssh-ids
-              mountPath: "/etc/ssh/"
+              mountPath: "/etc/ssh/id_rsa"
               subPath: id_rsa
             - name: git-pull-ssh-ids
-              mountPath: "/etc/ssh/"
+              mountPath: "/etc/ssh/id_rsa.pub"
               subPath: id_rsa.pub
             - name: git-pull-ssh-ids
-              mountPath: "/etc/ssh/"
+              mountPath: "/etc/ssh/id_rsa-cert.pub"
               subPath: id_rsa-cert.pub
             - name: git-pull-ssh-ids
-              mountPath: "/etc/ssh/"
+              mountPath: "/etc/ssh/ssh_known_hosts"
               subPath: ssh_known_hosts
         - name: git-pull
           image: swpt-nfs-server
@@ -84,16 +84,16 @@ spec:
               name: git-repo-working-copy
               readOnly: false
             - name: git-pull-ssh-ids
-              mountPath: "/etc/ssh/"
+              mountPath: "/etc/ssh/id_rsa"
               subPath: id_rsa
             - name: git-pull-ssh-ids
-              mountPath: "/etc/ssh/"
+              mountPath: "/etc/ssh/id_rsa.pub"
               subPath: id_rsa.pub
             - name: git-pull-ssh-ids
-              mountPath: "/etc/ssh/"
+              mountPath: "/etc/ssh/id_rsa-cert.pub"
               subPath: id_rsa-cert.pub
             - name: git-pull-ssh-ids
-              mountPath: "/etc/ssh/"
+              mountPath: "/etc/ssh/ssh_known_hosts"
               subPath: ssh_known_hosts
       volumes:
         - name: git-repo-working-copy
