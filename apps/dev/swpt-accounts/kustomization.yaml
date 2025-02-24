@@ -65,11 +65,11 @@ secretGenerator:
   # Then use SOPS to encrypt the "id_rsa" file. The resulting
   # encrypted file must be named "id_rsa.encrypted". For example, you
   # may run: `sops encrypt id_rsa > id_rsa.encrypted`.
-  - id_rsa=id_rsa.encrypted
+  - id_rsa=git-pull-ssh-ids/id_rsa.encrypted
 
   # The "id_rsa.pub" file generated in the previous step. (See the
   # previous comment.)
-  - id_rsa.pub=id_rsa.pub
+  - id_rsa.pub=git-pull-ssh-ids/id_rsa.pub
 
   # The certificate for the "id_rsa.pub" key. To create this
   # certificate, run this command:
@@ -79,8 +79,9 @@ secretGenerator:
   # Here "<path-to-root-ca-private-key-file>" is the path to your
   # Swaptacular node's private key, and "id_rsa.pub" is the public key
   # generated in the previous steps. (See previous comments.)
-  - id_rsa-cert.pub=id_rsa-cert.pub
+  - id_rsa-cert.pub=git-pull-ssh-ids/id_rsa-cert.pub
 
+  - known_hosts=git-pull-ssh-ids/known_hosts
   options:
     labels:
       app.kubernetes.io/name: swpt-accounts
