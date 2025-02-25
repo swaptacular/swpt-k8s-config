@@ -26,5 +26,6 @@ spec:
   nfs:
     server: 10.96.0.2  # nfs-server.swpt-accounts.svc.cluster.local
     path: "/"
+
   # mountOptions:
   #   - nfsvers=4.2
