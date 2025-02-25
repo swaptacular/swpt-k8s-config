@@ -185,3 +185,8 @@ patches:
     kind: Deployment
     name: stomp-server
     version: v1
+- path: patches/stomp-server-service.yaml
+  target:
+    kind: Service
+    name: stomp-server
+    version: v1

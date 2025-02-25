@@ -40,7 +40,7 @@ spec:
               port: stomp
             initialDelaySeconds: 5
           volumeMounts:
-            - name: nfs
+            - name: node-data
               mountPath: "/var/lib/swpt"
             - name: server-certificate
               mountPath: "/etc/swpt"
@@ -71,7 +71,7 @@ spec:
               cpu: 10m
               memory: 64Mi
       volumes:
-        - name: nfs
+        - name: node-data
           persistentVolumeClaim:
             claimName: node-data
         - name: server-certificate

@@ -1,0 +1,7 @@
+- op: replace
+  path: /spec/ports/0/port
+
+  # NOTE: If there are several public STOMP servers running on the
+  # Kubernetes cluster, their "LoadBalancer" services should listen on
+  # different ports.
+  value: 1234
