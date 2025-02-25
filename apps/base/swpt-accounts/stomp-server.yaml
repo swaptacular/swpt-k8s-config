@@ -77,7 +77,7 @@ spec:
       volumes:
         - name: nfs
           nfs:
-            server: 10.96.0.1
+            server: 10.96.0.2
             path: /mnt/nfs-share
             readOnly: true
         - name: config-volume
