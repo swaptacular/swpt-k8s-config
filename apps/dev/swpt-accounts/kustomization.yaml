@@ -132,6 +132,8 @@ configMapGenerator:
 replicas:
 - name: apiproxy
   count: 1
+- name: stomp-server
+  count: 1
 
 images:
 - name: swpt-accounts
