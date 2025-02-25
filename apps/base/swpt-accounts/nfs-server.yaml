@@ -121,3 +121,7 @@ spec:
       port: 2049
       protocol: TCP
       targetPort: nfs
+
+  # Unfortunately Kubernetes doesn't look at KubeDNS when setting up
+  # NFS volumes so we have to specify it here.
+  clusterIP: 10.96.0.1
