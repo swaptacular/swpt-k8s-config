@@ -152,7 +152,7 @@ images:
   newTag: 1.2.2
 - name: swpt-nfs-server
   newName: ghcr.io/swaptacular/swpt_nfs_server
-  newTag: 0.1.3
+  newTag: 0.1.4
 - name: swpt-stomp
   newName: ghcr.io/swaptacular/swpt_stomp
   newTag: 2.3.0
