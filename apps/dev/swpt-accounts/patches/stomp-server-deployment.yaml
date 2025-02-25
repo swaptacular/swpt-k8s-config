@@ -1,12 +1,4 @@
 - op: replace
-  path: /spec/template/spec/containers/0/volumeMounts/0/subPath
-
-  # This must be the path to the "../node-data" directory, starting
-  # from the root directory. "apps/dev/swpt-accounts/node-data", for
-  # example.
-  value: "apps/dev/swpt-accounts/node-data"
-
-- op: replace
   path: /spec/template/spec/containers/0/resources
   value:
     limits:
@@ -15,12 +7,6 @@
     requests:
       cpu: 10m
       memory: 64Mi
-
-- op: add
-  path: /spec/template/spec/containers/0/env/-
-  value:
-    name: SWPT_SERVER_PORT
-    value: "1234"
 
 - op: add
   path: /spec/template/spec/containers/0/env/-

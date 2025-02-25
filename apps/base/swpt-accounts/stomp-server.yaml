@@ -41,8 +41,7 @@ spec:
             initialDelaySeconds: 5
           volumeMounts:
             - name: nfs
-              mountPath: "/var/lib/swpt-nodedata"
-              subPath: "apps/[deployment]/[namespace]/node-data"
+              mountPath: "/var/lib/swpt"
             - name: server-certificate
               mountPath: "/etc/swpt"
           envFrom:
@@ -50,12 +49,14 @@ spec:
                 name: broker-default-user
               prefix: rmq_
           env:
+            - name: SWPT_SERVER_PORT
+              value: "1234"
             - name: SWPT_SERVER_CERT
               value: /etc/swpt/server.crt
             - name: SWPT_SERVER_KEY
               value: /etc/swpt/server.key
             - name: SWPT_NODEDATA_URL
-              value: "file:///var/lib/swpt-nodedata"
+              value: "file:///var/lib/swpt/.node-data"
             - name: PROTOCOL_BROKER_URL
               value: "$(rmq_connection_string)"
             - name: APP_LOG_LEVEL
@@ -73,11 +74,6 @@ spec:
         - name: nfs
           persistentVolumeClaim:
             claimName: node-data
-        # - name: nfs
-        #   nfs:
-        #     server: 10.96.0.2
-        #     path: /
-        #     readOnly: true
         - name: server-certificate
           secret:
             secretName: server-certificate
