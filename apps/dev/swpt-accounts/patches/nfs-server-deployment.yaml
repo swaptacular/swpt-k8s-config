@@ -1,0 +1,21 @@
+- op: replace
+  path: /spec/template/spec/containers/0/resources
+  # This is for the "nfs-server" container
+  value:
+    limits:
+      cpu: "1"
+      memory: 1Gi
+    requests:
+      cpu: 10m
+      memory: 64Mi
+
+- op: replace
+  path: /spec/template/spec/containers/1/resources
+  # This is for the "git-pull" container
+  value:
+    limits:
+      cpu: "1"
+      memory: 1Gi
+    requests:
+      cpu: 10m
+      memory: 64Mi

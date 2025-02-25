@@ -185,3 +185,15 @@ patches:
     kind: Deployment
     name: apiproxy
     version: v1
+- path: patches/nfs-server-deployment.yaml
+  target:
+    group: apps
+    kind: Deployment
+    name: nfs-server
+    version: v1
+- path: patches/stomp-server-deployment.yaml
+  target:
+    group: apps
+    kind: Deployment
+    name: stomp-server
+    version: v1
