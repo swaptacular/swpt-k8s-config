@@ -74,7 +74,7 @@ spec:
       volumes:
         - name: nfs
           nfs:
-            server: nfs-server
+            server: nfs-server.swpt-accounts.svc.cluster.local
             path: /mnt/nfs-share
             readOnly: true
         - name: config-volume
