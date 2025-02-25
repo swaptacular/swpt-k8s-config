@@ -97,6 +97,26 @@ secretGenerator:
       app.kubernetes.io/name: swpt-accounts
   type: Opaque
 
+- name: server-certificate
+  files:
+  # The server certificate PEM file. This certificate will be used to
+  # authenticate before peer nodes. On how to generate a server
+  # certificate, check https://github.com/swaptacular/swpt_ca_scripts
+  - server.crt=server.crt
+
+  # A SOPS-encrypted file containing the private key for the server
+  # certificate. This private key will be used to authenticate before
+  # peer nodes. (See the previous comment.)
+  #
+  # To SOPS-encrypt the private key, you may use this command:
+  #
+  # $ sops encrypt server.key > server.key.encrypted
+  - server.key=server.key.encrypted
+  options:
+    labels:
+      app.kubernetes.io/name: swpt-accounts
+  type: Opaque
+
 configMapGenerator:
 - name: apiproxy-config
   files:

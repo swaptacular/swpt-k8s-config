@@ -46,6 +46,8 @@ spec:
             - name: nfs
               mountPath: "/var/lib/swpt-nodedata"
               # subPath: apiproxy.conf
+            - name: server-certificate
+              mountPath: "/etc/swpt"
           envFrom:
             - secretRef:
                 name: broker-default-user
@@ -80,9 +82,9 @@ spec:
             server: 10.96.0.2
             path: /
             readOnly: true
-        - name: config-volume
-          configMap:
-            name: apiproxy-config
+        - name: server-certificate
+          secret:
+            secretName: server-certificate
 
 ---
 apiVersion: v1
