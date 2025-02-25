@@ -56,10 +56,16 @@ spec:
           env:
             - name: SHARED_DIRECTORY
               value: "/mnt/nfs-share"
+            - name: GIT_SERVER
+              value: git-server.simple-git-server.svc.cluster.local
+            - name: GIT_PORT
+              value: "2222"
             - name: GIT_REPOSITORY
-              value: "ssh://git@git-server.simple-git-server.svc.cluster.local:2222/srv/git/fluxcd.git"
+              value: "ssh://git@$(GIT_SERVER):$(GIT_PORT)/srv/git/fluxcd.git"
             - name: GIT_PULL_SECONDS
               value: "60"
+            - name: NODE_DATA_SUBDIR
+              value: "apps/dev/swpt-accounts/node-data"
           resources:
             limits:
               cpu: "1"
@@ -80,9 +86,6 @@ spec:
             - name: git-pull-ssh-ids
               mountPath: "/etc/ssh/id_rsa-cert.pub"
               subPath: id_rsa-cert.pub
-            - name: git-pull-ssh-ids
-              mountPath: "/etc/ssh/ssh_known_hosts"
-              subPath: ssh_known_hosts
       volumes:
         - name: git-repo-working-copy
           persistentVolumeClaim:

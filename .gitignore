@@ -10,3 +10,7 @@ TAGS
 # Do not commit SOPS configuration files
 .sops.yaml
 !/clusters/**/.sops.yaml
+
+# Files created by the git-pull container
+.node-data
+.ssh_known_hosts
