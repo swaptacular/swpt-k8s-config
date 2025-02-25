@@ -32,9 +32,9 @@ spec:
         - name: stomp-server
           image: swpt-stomp
           args: ['swpt-server']
-          securityContext:
-            capabilities:
-              add: ["SYS_ADMIN"]
+          # securityContext:
+          #   capabilities:
+          #     add: ["SYS_ADMIN"]
           ports:
             - name: stomp
               containerPort: 1234
