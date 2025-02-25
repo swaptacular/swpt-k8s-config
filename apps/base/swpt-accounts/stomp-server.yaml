@@ -45,7 +45,7 @@ spec:
           volumeMounts:
             - name: nfs
               mountPath: "/var/lib/swpt-nodedata"
-              # subPath: apiproxy.conf
+              subPath: "apps/dev/swpt-accounts/node-data"
             - name: server-certificate
               mountPath: "/etc/swpt"
           envFrom:
@@ -62,7 +62,7 @@ spec:
             - name: SWPT_SERVER_BUFFER
               value: "100"
             - name: SWPT_NODEDATA_URL
-              value: "file:///var/lib/swpt-nodedata/apps/dev/swpt-accounts/node-data"
+              value: "file:///var/lib/swpt-nodedata"
             - name: PROTOCOL_BROKER_URL
               value: "$(rmq_connection_string)"
             - name: APP_LOG_LEVEL
