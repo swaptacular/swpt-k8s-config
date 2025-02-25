@@ -5,4 +5,5 @@ resources:
 - broker.yaml
 - apiproxy.yaml
 - nfs-server.yaml
+- nfs-pvc.yaml
 - stomp-server.yaml
