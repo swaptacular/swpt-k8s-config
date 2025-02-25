@@ -62,10 +62,6 @@ spec:
               value: "2222"
             - name: GIT_REPOSITORY
               value: "ssh://git@$(GIT_SERVER):$(GIT_PORT)/srv/git/fluxcd.git"
-            - name: GIT_PULL_SECONDS
-              value: "60"
-            - name: NODE_DATA_SUBDIR
-              value: "apps/dev/swpt-accounts/node-data"
           resources:
             limits:
               cpu: "1"

@@ -1,6 +1,12 @@
+#
+# Patches for the "nfs-server" container:
+#
+- op: test
+  path: /spec/template/spec/containers/0/name
+  value: nfs-server
+
 - op: replace
   path: /spec/template/spec/containers/0/resources
-  # This is for the "nfs-server" container
   value:
     limits:
       cpu: "1"
@@ -9,9 +15,16 @@
       cpu: 10m
       memory: 64Mi
 
+
+#
+# Patches for the "git-pull" container:
+#
+- op: test
+  path: /spec/template/spec/containers/1/name
+  value: git-pull
+
 - op: replace
   path: /spec/template/spec/containers/1/resources
-  # This is for the "git-pull" container
   value:
     limits:
       cpu: "1"
@@ -19,3 +32,15 @@
     requests:
       cpu: 10m
       memory: 64Mi
+
+- op: add
+  path: /spec/template/spec/containers/1/env/-
+  value:
+    name: GIT_PULL_SECONDS
+    value: "60"
+
+- op: add
+  path: /spec/template/spec/containers/1/env/-
+  value:
+    name: NODE_DATA_SUBDIR
+    value: "apps/dev/swpt-accounts/node-data"
