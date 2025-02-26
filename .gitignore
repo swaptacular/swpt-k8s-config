@@ -14,3 +14,6 @@ TAGS
 # Files created by the git-pull container
 .node-data
 .ssh_known_hosts
+
+# Automatically created peer status files
+**/peers/*/ACTIVE
