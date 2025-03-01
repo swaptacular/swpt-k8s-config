@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: restrict-nfs
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: swpt-accounts
+      app.kubernetes.io/component: nfs-server
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app.kubernetes.io/name: swpt-accounts
+          app.kubernetes.io/component: stomp-server
+  - from:
+    - podSelector:
+        matchLabels:
+          app.kubernetes.io/name: swpt-accounts
+          app.kubernetes.io/component: stomp-client
