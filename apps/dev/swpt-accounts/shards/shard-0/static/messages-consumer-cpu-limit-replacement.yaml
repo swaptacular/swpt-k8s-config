@@ -1,7 +1,7 @@
 source:
   kind: ConfigMap
   name: shardconfig
-  fieldPath: data.kustomize_messages_consumer_cpu_limit
+  fieldPath: metadata.annotations.kustomize_messages_consumer_cpu_limit
 targets:
   - select:
       kind: Deployment

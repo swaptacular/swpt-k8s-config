@@ -1,7 +1,7 @@
 source:
   kind: ConfigMap
   name: shardconfig
-  fieldPath: data.kustomize_web_server_memory_limit
+  fieldPath: metadata.annotations.kustomize_web_server_memory_limit
 targets:
   - select:
       kind: Deployment

@@ -1,7 +1,7 @@
 source:
   kind: ConfigMap
   name: shardconfig
-  fieldPath: data.kustomize_http_cache_memory_limit
+  fieldPath: metadata.annotations.kustomize_http_cache_memory_limit
 targets:
   - select:
       kind: StatefulSet

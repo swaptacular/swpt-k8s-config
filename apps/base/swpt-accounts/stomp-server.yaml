@@ -48,6 +48,8 @@ spec:
             - secretRef:
                 name: broker-default-user
               prefix: rmq_
+            - configMapRef:
+                name: stomp-config
           env:
             - name: SWPT_SERVER_PORT
               value: "1234"

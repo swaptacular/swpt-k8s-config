@@ -53,15 +53,12 @@ spec:
         - name: git-pull
           image: swpt-nfs-server
           args: ['git-pull']
+          envFrom:
+            - configMapRef:
+                name: nfs-server-config
           env:
             - name: SHARED_DIRECTORY
               value: "/mnt/nfs-share"
-            - name: GIT_SERVER
-              value: git-server.simple-git-server.svc.cluster.local
-            - name: GIT_PORT
-              value: "2222"
-            - name: GIT_REPOSITORY_PATH
-              value: "/srv/git/fluxcd.git"
           resources:
             limits:
               cpu: "1"

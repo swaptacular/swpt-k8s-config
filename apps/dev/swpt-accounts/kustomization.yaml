@@ -1,7 +1,7 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-# The name of the namespace could be changed. In this case, the
+# NOTE: The name of the namespace could be changed. In this case, the
 # "namespace.yaml" file should be changed as well.
 namespace: swpt-accounts
 
@@ -18,12 +18,12 @@ secretGenerator:
   # The "username" for the S3 service.
   - AWS_ACCESS_KEY_ID=console
 
-  # When Amazon S3 is used, this specifies the AWS region. In this
-  # case, specifying `AWS_ENDPOINT` should not be necessary.
-  - AWS_REGION=us-east-1
-
   # The endpoint for the S3 service.
   - AWS_ENDPOINT=https://minio.minio-tenant.svc.cluster.local:443
+
+  # When Amazon S3 is used, this specifies the AWS region. In that
+  # case, specifying `AWS_ENDPOINT` should not be necessary.
+  - AWS_REGION=us-east-1
 
   # This specifies the trusted CA for the local MinIO S3 server. This
   # should not be necessary for "proper" S3 providers.
@@ -46,6 +46,7 @@ secretGenerator:
 
   literals:
   - username=db_owner
+
   options:
     disableNameSuffixHash: true
     labels:
@@ -55,7 +56,7 @@ secretGenerator:
 - name: git-pull-ssh-ids
   files:
   # A SOPS-encrypted file containing the SSH private key used to
-  # authenticate to the Git server.
+  # authenticate to the GitOps Git server.
   #
   # Run `ssh-keygen -f id_rsa -N ''` to generate a new SSH
   # private/public key pair. This will create two files:
@@ -80,6 +81,7 @@ secretGenerator:
   # Swaptacular node's private key, and "id_rsa.pub" is the public key
   # generated in the previous steps. (See previous comments.)
   - id_rsa-cert.pub=git-pull-ssh-ids/id_rsa-cert.pub
+
   options:
     labels:
       app.kubernetes.io/name: swpt-accounts
@@ -100,12 +102,60 @@ secretGenerator:
   #
   # $ sops encrypt server.key > server.key.encrypted
   - server.key=server.key.encrypted
+
   options:
     labels:
       app.kubernetes.io/name: swpt-accounts
   type: Opaque
 
 configMapGenerator:
+- name: nfs-server-config
+  literals:
+  # These variables specify how to connect to the GitOps Git
+  # repository, and how often to check (pull) for changes:
+  #
+  - GIT_SERVER=git-server.simple-git-server.svc.cluster.local
+  - GIT_PORT=2222
+  - GIT_REPOSITORY_PATH=/srv/git/fluxcd.git
+  - GIT_PULL_SECONDS=60
+
+  # The relative path in the GitOps Git repository, to the
+  # sub-directory containing the Swaptacular node's data.
+  - NODE_DATA_SUBDIR=apps/dev/swpt-accounts/node-data
+
+  options:
+    # These annotations are used as sources for convenient Kustomize
+    # replacements:
+    #
+    annotations:
+      # When running more than one Swaptacular node on a single
+      # Kubernetes cluster, each Swaptacular node will create its own
+      # NFS service, which must be given an unique static cluster IP.
+      #
+      # Depending on the Kubernetes cluster, the safe range for static
+      # cluster IPs will be different, but according to the Kubernetes
+      # documentation, is seems that the range from 10.96.0.2 to
+      # 10.96.0.15 should always be safe.
+      kustomize_nfs_service_cluster_ip: 10.96.0.2
+
+- name: stomp-config
+  literals:
+  # The number of SMP messages that STOMP servers and STOMP clients
+  # will buffer in memory.
+  - SWPT_SERVER_BUFFER=100
+  - SWPT_CLIENT_BUFFER=100
+
+  options:
+    # These annotations are used as sources for convenient Kustomize
+    # replacements:
+    #
+    annotations:
+      # Each Swaptacular node runs its own STOMP server. When running
+      # more than one Swaptacular node on a single Kubernetes cluster,
+      # you should make sure that the STOMP servers of different
+      # Swaptacular nodes listen of different TCP ports.
+      kustomize_stomp_server_port: "1234"
+
 - name: apiproxy-config
   files:
   # The configuration file for the "apiproxy".
@@ -116,18 +166,18 @@ configMapGenerator:
   # specifiers consist of zero or more 0s or 1s, separated by dots,
   # ending with a hash symbol ("#"). An example configuration file:
   #
-  # 0.# http://first-server:8001
-  # 1.# http://second-server:8001
+  # 0.# http://http-cache-0
+  # 1.# http://http-cache-1
   #
   # or, for a sigle server:
   #
-  # # http://the-only-server
+  # # http://http-cache
   #
   # Note that the route specifiers in the configuration file must
   # cover all possible bit masks. For example, the following
   # configuration file is invalid:
   #
-  # 0.# http://some-server
+  # 0.# http://http-cache-0
   #
   # because it does not cover sharding keys starting with a
   # binary "1".
@@ -137,6 +187,9 @@ configMapGenerator:
     labels:
       app.kubernetes.io/name: swpt-accounts
 
+# The number of replicas for each component. One replica works fine,
+# but to have high-availability, should be at least 2.
+#
 replicas:
 - name: apiproxy
   count: 1
@@ -185,8 +238,7 @@ patches:
     kind: Deployment
     name: stomp-server
     version: v1
-- path: patches/stomp-server-service.yaml
-  target:
-    kind: Service
-    name: stomp-server
-    version: v1
+
+replacements:
+- path: static/nfs-cluster-ip-replacement.yaml
+- path: static/stomp-server-port-replacement.yaml

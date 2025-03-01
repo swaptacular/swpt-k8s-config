@@ -7,9 +7,3 @@
     requests:
       cpu: 10m
       memory: 64Mi
-
-- op: add
-  path: /spec/template/spec/containers/0/env/-
-  value:
-    name: SWPT_SERVER_BUFFER
-    value: "100"

@@ -1,7 +1,7 @@
 source:
   kind: ConfigMap
   name: shardconfig
-  fieldPath: metadata.annotations.zalandoCloneTimestamp
+  fieldPath: metadata.annotations.kustomize_zalando_clone_timestamp
 targets:
   - select:
       name: accounts-db

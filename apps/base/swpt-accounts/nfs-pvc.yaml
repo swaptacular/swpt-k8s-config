@@ -11,13 +11,13 @@ spec:
   resources:
     requests:
       storage: 1Mi
-  volumeName: nfs
+  volumeName: swpt-nfs
 
 ---
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: nfs
+  name: swpt-nfs
 spec:
   capacity:
     storage: 1Mi

@@ -1,7 +1,7 @@
 source:
   kind: ConfigMap
   name: shardconfig
-  fieldPath: data.kustomize_http_cache_cpu_request
+  fieldPath: metadata.annotations.kustomize_http_cache_cpu_request
 targets:
   - select:
       kind: StatefulSet

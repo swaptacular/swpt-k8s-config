@@ -1,7 +1,7 @@
 source:
   kind: ConfigMap
   name: shardconfig
-  fieldPath: data.kustomize_tasks_processor_memory_limit
+  fieldPath: metadata.annotations.kustomize_tasks_processor_memory_limit
 targets:
   - select:
       kind: Deployment
