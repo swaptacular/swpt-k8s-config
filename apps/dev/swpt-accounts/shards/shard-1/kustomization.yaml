@@ -110,8 +110,8 @@ configMapGenerator:
 
 - name: http-cache-nginx-config
   files:
-  - nginx.conf=../../base/shard/static/nginx.conf
-  - default.conf.template=../../base/shard/static/default.conf.template
+  - nginx.conf=../../../../base/swpt-accounts/shard/static/nginx.conf
+  - default.conf.template=../../../../base/swpt-accounts/shard/static/default.conf.template
 
 # The number of replicas for each component. One replica works fine,
 # but to have high-availability, should be at least 2.
@@ -167,11 +167,11 @@ secretGenerator:
   type: Opaque
 
 resources:
-- ../../base/shard/
+- ../../../../base/swpt-accounts/shard/
 - postgres-cluster.yaml
 
 patches:
-- path: ../../base/shard/static/postgres-cluster-patch.yaml
+- path: ../../../../base/swpt-accounts/shard/static/postgres-cluster-patch.yaml
   target:
     group: acid.zalan.do
     kind: postgresql
@@ -179,35 +179,35 @@ patches:
     version: v1
 
 replacements:
-- path: ../../base/shard/static/secrets-clustername-replacement.yaml
-- path: ../../base/shard/static/secrets-namesuffix-replacement.yaml
-- path: ../../base/shard/static/shardconfig-replacement.yaml
-- path: ../../base/shard/static/webserver-replacement.yaml
-- path: ../../base/shard/static/http-cache-size-replacement.yaml
-- path: ../../base/shard/static/chores-consumer-cpu-request-replacement.yaml
-- path: ../../base/shard/static/chores-consumer-cpu-limit-replacement.yaml
-- path: ../../base/shard/static/chores-consumer-memory-request-replacement.yaml
-- path: ../../base/shard/static/chores-consumer-memory-limit-replacement.yaml
-- path: ../../base/shard/static/http-cache-cpu-request-replacement.yaml
-- path: ../../base/shard/static/http-cache-cpu-limit-replacement.yaml
-- path: ../../base/shard/static/http-cache-memory-request-replacement.yaml
-- path: ../../base/shard/static/http-cache-memory-limit-replacement.yaml
-- path: ../../base/shard/static/messages-consumer-cpu-request-replacement.yaml
-- path: ../../base/shard/static/messages-consumer-cpu-limit-replacement.yaml
-- path: ../../base/shard/static/messages-consumer-memory-request-replacement.yaml
-- path: ../../base/shard/static/messages-consumer-memory-limit-replacement.yaml
-- path: ../../base/shard/static/messages-flusher-cpu-request-replacement.yaml
-- path: ../../base/shard/static/messages-flusher-cpu-limit-replacement.yaml
-- path: ../../base/shard/static/messages-flusher-memory-request-replacement.yaml
-- path: ../../base/shard/static/messages-flusher-memory-limit-replacement.yaml
-- path: ../../base/shard/static/tasks-processor-cpu-request-replacement.yaml
-- path: ../../base/shard/static/tasks-processor-cpu-limit-replacement.yaml
-- path: ../../base/shard/static/tasks-processor-memory-request-replacement.yaml
-- path: ../../base/shard/static/tasks-processor-memory-limit-replacement.yaml
-- path: ../../base/shard/static/web-server-cpu-request-replacement.yaml
-- path: ../../base/shard/static/web-server-cpu-limit-replacement.yaml
-- path: ../../base/shard/static/web-server-memory-request-replacement.yaml
-- path: ../../base/shard/static/web-server-memory-limit-replacement.yaml
+- path: ../../../../base/swpt-accounts/shard/static/secrets-clustername-replacement.yaml
+- path: ../../../../base/swpt-accounts/shard/static/secrets-namesuffix-replacement.yaml
+- path: ../../../../base/swpt-accounts/shard/static/shardconfig-replacement.yaml
+- path: ../../../../base/swpt-accounts/shard/static/webserver-replacement.yaml
+- path: ../../../../base/swpt-accounts/shard/static/http-cache-size-replacement.yaml
+- path: ../../../../base/swpt-accounts/shard/static/chores-consumer-cpu-request-replacement.yaml
+- path: ../../../../base/swpt-accounts/shard/static/chores-consumer-cpu-limit-replacement.yaml
+- path: ../../../../base/swpt-accounts/shard/static/chores-consumer-memory-request-replacement.yaml
+- path: ../../../../base/swpt-accounts/shard/static/chores-consumer-memory-limit-replacement.yaml
+- path: ../../../../base/swpt-accounts/shard/static/http-cache-cpu-request-replacement.yaml
+- path: ../../../../base/swpt-accounts/shard/static/http-cache-cpu-limit-replacement.yaml
+- path: ../../../../base/swpt-accounts/shard/static/http-cache-memory-request-replacement.yaml
+- path: ../../../../base/swpt-accounts/shard/static/http-cache-memory-limit-replacement.yaml
+- path: ../../../../base/swpt-accounts/shard/static/messages-consumer-cpu-request-replacement.yaml
+- path: ../../../../base/swpt-accounts/shard/static/messages-consumer-cpu-limit-replacement.yaml
+- path: ../../../../base/swpt-accounts/shard/static/messages-consumer-memory-request-replacement.yaml
+- path: ../../../../base/swpt-accounts/shard/static/messages-consumer-memory-limit-replacement.yaml
+- path: ../../../../base/swpt-accounts/shard/static/messages-flusher-cpu-request-replacement.yaml
+- path: ../../../../base/swpt-accounts/shard/static/messages-flusher-cpu-limit-replacement.yaml
+- path: ../../../../base/swpt-accounts/shard/static/messages-flusher-memory-request-replacement.yaml
+- path: ../../../../base/swpt-accounts/shard/static/messages-flusher-memory-limit-replacement.yaml
+- path: ../../../../base/swpt-accounts/shard/static/tasks-processor-cpu-request-replacement.yaml
+- path: ../../../../base/swpt-accounts/shard/static/tasks-processor-cpu-limit-replacement.yaml
+- path: ../../../../base/swpt-accounts/shard/static/tasks-processor-memory-request-replacement.yaml
+- path: ../../../../base/swpt-accounts/shard/static/tasks-processor-memory-limit-replacement.yaml
+- path: ../../../../base/swpt-accounts/shard/static/web-server-cpu-request-replacement.yaml
+- path: ../../../../base/swpt-accounts/shard/static/web-server-cpu-limit-replacement.yaml
+- path: ../../../../base/swpt-accounts/shard/static/web-server-memory-request-replacement.yaml
+- path: ../../../../base/swpt-accounts/shard/static/web-server-memory-limit-replacement.yaml
 
 # # Uncomment the these lines to recover from the S3 backup. Once the
 # # data has been recovered successfully, the lines can be commented
@@ -223,5 +223,5 @@ replacements:
 # #     cluster: <cluster-name>
 # #     timestamp: "2199-01-01T00:00:00.000+00:00"
 # #
-# - path: ../../base/shard/static/clone-clustername-replacement.yaml
-# - path: ../../base/shard/static/clone-timestamp-replacement.yaml
+# - path: ../../../../base/swpt-accounts/shard/static/clone-clustername-replacement.yaml
+# - path: ../../../../base/swpt-accounts/shard/static/clone-timestamp-replacement.yaml
