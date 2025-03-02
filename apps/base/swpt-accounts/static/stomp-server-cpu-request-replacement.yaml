@@ -1,0 +1,12 @@
+source:
+  kind: ConfigMap
+  name: stomp-config
+  fieldPath: metadata.annotations.kustomize_stomp_server_cpu_request
+targets:
+  - select:
+      kind: Deployment
+      name: stomp-server
+    fieldPaths:
+      - spec.template.spec.containers.[name=stomp-server].resources.requests.cpu
+    options:
+      create: true

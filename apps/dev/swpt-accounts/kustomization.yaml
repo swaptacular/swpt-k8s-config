@@ -137,6 +137,16 @@ configMapGenerator:
       # 10.96.0.15 should always be safe.
       kustomize_nfs_service_cluster_ip: 10.96.0.2
 
+      kustomize_nfs_server_cpu_request: 10m
+      kustomize_nfs_server_cpu_limit: 1000m
+      kustomize_nfs_server_memory_request: 64Mi
+      kustomize_nfs_server_memory_limit: 1Gi
+
+      kustomize_git_pull_cpu_request: 10m
+      kustomize_git_pull_cpu_limit: 1000m
+      kustomize_git_pull_memory_request: 64Mi
+      kustomize_git_pull_memory_limit: 1Gi
+
 - name: stomp-config
   literals:
   # The number of SMP messages that STOMP servers and STOMP clients
@@ -154,6 +164,11 @@ configMapGenerator:
       # you should make sure that the STOMP servers of different
       # Swaptacular nodes listen of different TCP ports.
       kustomize_stomp_server_port: "1234"
+
+      kustomize_stomp_server_cpu_request: 10m
+      kustomize_stomp_server_cpu_limit: 1000m
+      kustomize_stomp_server_memory_request: 64Mi
+      kustomize_stomp_server_memory_limit: 1Gi
 
 - name: apiproxy-config
   files:
@@ -185,6 +200,15 @@ configMapGenerator:
   options:
     labels:
       app.kubernetes.io/name: swpt-accounts
+
+    # These annotations are used as sources for convenient Kustomize
+    # replacements:
+    #
+    annotations:
+      kustomize_apiproxy_cpu_request: 100m
+      kustomize_apiproxy_cpu_limit: 1000m
+      kustomize_apiproxy_memory_request: 128Mi
+      kustomize_apiproxy_memory_limit: 1Gi
 
 # The number of replicas for each component. One replica works fine,
 # but to have high-availability, should be at least 2.
@@ -218,25 +242,23 @@ resources:
 
 patches:
 - path: patches/broker.yaml
-- path: patches/apiproxy-deployment.yaml
-  target:
-    group: apps
-    kind: Deployment
-    name: apiproxy
-    version: v1
-- path: patches/nfs-server-deployment.yaml
-  target:
-    group: apps
-    kind: Deployment
-    name: nfs-server
-    version: v1
-- path: patches/stomp-server-deployment.yaml
-  target:
-    group: apps
-    kind: Deployment
-    name: stomp-server
-    version: v1
 
 replacements:
 - path: ../../base/swpt-accounts/static/nfs-cluster-ip-replacement.yaml
 - path: ../../base/swpt-accounts/static/stomp-server-port-replacement.yaml
+- path: ../../base/swpt-accounts/static/apiproxy-cpu-limit-replacement.yaml
+- path: ../../base/swpt-accounts/static/apiproxy-cpu-request-replacement.yaml
+- path: ../../base/swpt-accounts/static/apiproxy-memory-limit-replacement.yaml
+- path: ../../base/swpt-accounts/static/apiproxy-memory-request-replacement.yaml
+- path: ../../base/swpt-accounts/static/stomp-server-cpu-limit-replacement.yaml
+- path: ../../base/swpt-accounts/static/stomp-server-cpu-request-replacement.yaml
+- path: ../../base/swpt-accounts/static/stomp-server-memory-limit-replacement.yaml
+- path: ../../base/swpt-accounts/static/stomp-server-memory-request-replacement.yaml
+- path: ../../base/swpt-accounts/static/nfs-server-cpu-limit-replacement.yaml
+- path: ../../base/swpt-accounts/static/nfs-server-cpu-request-replacement.yaml
+- path: ../../base/swpt-accounts/static/nfs-server-memory-limit-replacement.yaml
+- path: ../../base/swpt-accounts/static/nfs-server-memory-request-replacement.yaml
+- path: ../../base/swpt-accounts/static/git-pull-cpu-limit-replacement.yaml
+- path: ../../base/swpt-accounts/static/git-pull-cpu-request-replacement.yaml
+- path: ../../base/swpt-accounts/static/git-pull-memory-limit-replacement.yaml
+- path: ../../base/swpt-accounts/static/git-pull-memory-request-replacement.yaml
