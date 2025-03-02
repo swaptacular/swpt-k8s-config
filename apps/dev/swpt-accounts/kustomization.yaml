@@ -213,7 +213,7 @@ images:
   newTag: 1.26.3-alpine3.20
 
 resources:
-- ../../base/swpt-accounts/
+- base/
 - shards/
 
 patches:
@@ -238,5 +238,5 @@ patches:
     version: v1
 
 replacements:
-- path: static/nfs-cluster-ip-replacement.yaml
-- path: static/stomp-server-port-replacement.yaml
+- path: base/static/nfs-cluster-ip-replacement.yaml
+- path: base/static/stomp-server-port-replacement.yaml
