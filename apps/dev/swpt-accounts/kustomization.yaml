@@ -238,10 +238,16 @@ images:
 
 resources:
 - ../../base/swpt-accounts/
+- broker.yaml
 - shards/
 
 patches:
-- path: patches/broker.yaml
+- path: ../../base/swpt-accounts/static/broker-patch.yaml
+  target:
+    group: rabbitmq.com
+    kind: RabbitmqCluster
+    name: broker
+    version: v1beta1
 
 replacements:
 - path: ../../base/swpt-accounts/static/nfs-cluster-ip-replacement.yaml

@@ -3,8 +3,13 @@ kind: postgresql
 metadata:
   name: accounts-db
 spec:
+  teamId: swpt
   postgresql:
     version: "17"
+  users:
+    db_owner: []
+  databases:
+    db: db_owner
   volume:
     size: 1Gi
   numberOfInstances: 2

@@ -5,9 +5,7 @@ metadata:
 spec:
   replicas: 1
   rabbitmq:
-    additionalPlugins:
-      - rabbitmq_random_exchange
-      - rabbitmq_management
+    additionalPlugins: []
   persistence:
     storage: 1Gi
   resources:

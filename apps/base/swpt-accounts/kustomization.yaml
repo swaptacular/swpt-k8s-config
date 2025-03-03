@@ -3,7 +3,7 @@ kind: Kustomization
 
 resources:
 - namespace.yaml
-- broker.yaml
+- broker-pdb.yaml
 - apiproxy.yaml
 - nfs-server.yaml
 - nfs-pvc.yaml
