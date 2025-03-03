@@ -3,6 +3,7 @@ kind: postgresql
 metadata:
   name: accounts-db
 spec:
+  dockerImage: ghcr.io/zalando/spilo-17:4.0-p2
   teamId: swpt
   postgresql:
     version: "17"
