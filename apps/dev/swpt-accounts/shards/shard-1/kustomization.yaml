@@ -3,6 +3,7 @@ kind: Kustomization
 
 # This must be either an empty string, or a string starting with '-',
 # and followed by 0s or 1s. "-101" for example.
+#
 nameSuffix: "-1"
 
 labels:
