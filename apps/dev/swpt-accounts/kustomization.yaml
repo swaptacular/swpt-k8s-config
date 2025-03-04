@@ -244,7 +244,7 @@ resources:
 - shards/
 
 patches:
-- path: ../../base/swpt-accounts/static/broker-patch.yaml
+- path: ../../base/swpt-accounts/patches/broker.yaml
   target:
     group: rabbitmq.com
     kind: RabbitmqCluster
@@ -252,21 +252,21 @@ patches:
     version: v1beta1
 
 replacements:
-- path: ../../base/swpt-accounts/static/nfs-cluster-ip-replacement.yaml
-- path: ../../base/swpt-accounts/static/stomp-server-port-replacement.yaml
-- path: ../../base/swpt-accounts/static/apiproxy-cpu-limit-replacement.yaml
-- path: ../../base/swpt-accounts/static/apiproxy-cpu-request-replacement.yaml
-- path: ../../base/swpt-accounts/static/apiproxy-memory-limit-replacement.yaml
-- path: ../../base/swpt-accounts/static/apiproxy-memory-request-replacement.yaml
-- path: ../../base/swpt-accounts/static/stomp-server-cpu-limit-replacement.yaml
-- path: ../../base/swpt-accounts/static/stomp-server-cpu-request-replacement.yaml
-- path: ../../base/swpt-accounts/static/stomp-server-memory-limit-replacement.yaml
-- path: ../../base/swpt-accounts/static/stomp-server-memory-request-replacement.yaml
-- path: ../../base/swpt-accounts/static/nfs-server-cpu-limit-replacement.yaml
-- path: ../../base/swpt-accounts/static/nfs-server-cpu-request-replacement.yaml
-- path: ../../base/swpt-accounts/static/nfs-server-memory-limit-replacement.yaml
-- path: ../../base/swpt-accounts/static/nfs-server-memory-request-replacement.yaml
-- path: ../../base/swpt-accounts/static/git-pull-cpu-limit-replacement.yaml
-- path: ../../base/swpt-accounts/static/git-pull-cpu-request-replacement.yaml
-- path: ../../base/swpt-accounts/static/git-pull-memory-limit-replacement.yaml
-- path: ../../base/swpt-accounts/static/git-pull-memory-request-replacement.yaml
+- path: ../../base/swpt-accounts/replacements/nfs-cluster-ip.yaml
+- path: ../../base/swpt-accounts/replacements/stomp-server-port.yaml
+- path: ../../base/swpt-accounts/replacements/apiproxy-cpu-limit.yaml
+- path: ../../base/swpt-accounts/replacements/apiproxy-cpu-request.yaml
+- path: ../../base/swpt-accounts/replacements/apiproxy-memory-limit.yaml
+- path: ../../base/swpt-accounts/replacements/apiproxy-memory-request.yaml
+- path: ../../base/swpt-accounts/replacements/stomp-server-cpu-limit.yaml
+- path: ../../base/swpt-accounts/replacements/stomp-server-cpu-request.yaml
+- path: ../../base/swpt-accounts/replacements/stomp-server-memory-limit.yaml
+- path: ../../base/swpt-accounts/replacements/stomp-server-memory-request.yaml
+- path: ../../base/swpt-accounts/replacements/nfs-server-cpu-limit.yaml
+- path: ../../base/swpt-accounts/replacements/nfs-server-cpu-request.yaml
+- path: ../../base/swpt-accounts/replacements/nfs-server-memory-limit.yaml
+- path: ../../base/swpt-accounts/replacements/nfs-server-memory-request.yaml
+- path: ../../base/swpt-accounts/replacements/git-pull-cpu-limit.yaml
+- path: ../../base/swpt-accounts/replacements/git-pull-cpu-request.yaml
+- path: ../../base/swpt-accounts/replacements/git-pull-memory-limit.yaml
+- path: ../../base/swpt-accounts/replacements/git-pull-memory-request.yaml
