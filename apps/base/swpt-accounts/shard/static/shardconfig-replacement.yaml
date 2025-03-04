@@ -2,7 +2,7 @@ source:
   group: acid.zalan.do
   version: v1
   kind: postgresql
-  name: accounts-db
+  name: db
   fieldPath: metadata.name
 targets:
   - select:

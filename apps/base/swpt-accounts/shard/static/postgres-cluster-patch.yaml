@@ -1,4 +1,8 @@
 - op: test
+  path: /metadata/name
+  value: db
+
+- op: test
   path: /metadata/labels
   value: null
 - op: add

@@ -1,7 +1,7 @@
 apiVersion: "acid.zalan.do/v1"
 kind: postgresql
 metadata:
-  name: accounts-db
+  name: db
 spec:
   dockerImage: ghcr.io/zalando/spilo-17:4.0-p2
   teamId: swpt
@@ -29,4 +29,4 @@ spec:
   # # been sycnronized, comment the lines again to detach the standby
   # # cluster from the primary cluster.
   # standby:
-  #   s3_wal_path: "s3://swpt/spilo/accounts-db-01/wal/17"
+  #   s3_wal_path: "s3://swpt/spilo/swpt-accounts-db-01/wal/17"

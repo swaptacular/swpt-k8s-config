@@ -172,7 +172,7 @@ patches:
   target:
     group: acid.zalan.do
     kind: postgresql
-    name: accounts-db
+    name: db
     version: v1
 
 replacements:

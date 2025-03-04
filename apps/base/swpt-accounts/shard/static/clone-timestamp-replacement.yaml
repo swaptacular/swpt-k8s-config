@@ -4,7 +4,7 @@ source:
   fieldPath: metadata.annotations.kustomize_zalando_clone_timestamp
 targets:
   - select:
-      name: accounts-db
+      name: db
       kind: postgresql
       group: acid.zalan.do
       version: v1
