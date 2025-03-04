@@ -13,6 +13,7 @@ labels:
     # value. For example, if "nameSuffix" is "-101", the value for the
     # label must be "shard-101". If "nameSuffix" is "", the value for
     # the label must be "shard".
+    #
     app.kubernetes.io/instance: shard-1
 
 configMapGenerator:
@@ -21,9 +22,10 @@ configMapGenerator:
   # The routing key must correspond to the "nameSuffix" value. For
   # example, if "nameSuffix" is "-101", the routing key must be
   # "1.0.1.#". If "nameSuffix" is "", the routing key must be "#".
+  #
   - PROTOCOL_BROKER_QUEUE_ROUTING_KEY=1.#
 
-  # Other shard settings:
+  # Shard configuration settings which you may want to change:
   #
   - PROTOCOL_BROKER_PROCESSES=1
   - PROTOCOL_BROKER_THREADS=3
@@ -71,38 +73,35 @@ configMapGenerator:
   options:
     annotations:
       # These annotations are used as sources for convenient Kustomize
-      # replacements:
+      # replacements. They specify Kubernetes memory and CPU requests
+      # and limits, for different shard container types.
       #
       kustomize_chores_consumer_cpu_request: 10m
       kustomize_chores_consumer_cpu_limit: 2000m
       kustomize_chores_consumer_memory_request: 128Mi
       kustomize_chores_consumer_memory_limit: 1Gi
-
       kustomize_http_cache_cpu_request: 10m
       kustomize_http_cache_cpu_limit: 2000m
       kustomize_http_cache_memory_request: 32Mi
       kustomize_http_cache_memory_limit: 1Gi
-
       kustomize_messages_consumer_cpu_request: 10m
       kustomize_messages_consumer_cpu_limit: 2000m
       kustomize_messages_consumer_memory_request: 128Mi
       kustomize_messages_consumer_memory_limit: 1Gi
-
       kustomize_messages_flusher_cpu_request: 50m
       kustomize_messages_flusher_cpu_limit: 2000m
       kustomize_messages_flusher_memory_request: 128Mi
       kustomize_messages_flusher_memory_limit: 1Gi
-
       kustomize_tasks_processor_cpu_request: 50m
       kustomize_tasks_processor_cpu_limit: 2000m
       kustomize_tasks_processor_memory_request: 1Gi
       kustomize_tasks_processor_memory_limit: 2Gi
-
       kustomize_web_server_cpu_request: 10m
       kustomize_web_server_cpu_limit: 2000m
       kustomize_web_server_memory_request: 128Mi
       kustomize_web_server_memory_limit: 1Gi
 
+      # Do not change the next two lines!
       kustomize_zalando_top_level_domain: do
       kustomize_zalando_clone_timestamp: "2199-01-01T00:00:00.000+00:00"
 
