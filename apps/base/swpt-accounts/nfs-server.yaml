@@ -70,22 +70,22 @@ spec:
             - mountPath: "/mnt/nfs-share/"
               name: git-repo-working-copy
               readOnly: false
-            - name: git-pull-ssh-ids
+            - name: git-pull-ssh-id
               mountPath: "/etc/ssh/id_rsa"
               subPath: id_rsa
-            - name: git-pull-ssh-ids
+            - name: git-pull-ssh-id
               mountPath: "/etc/ssh/id_rsa.pub"
               subPath: id_rsa.pub
-            - name: git-pull-ssh-ids
+            - name: git-pull-ssh-id
               mountPath: "/etc/ssh/id_rsa-cert.pub"
               subPath: id_rsa-cert.pub
       volumes:
         - name: git-repo-working-copy
           persistentVolumeClaim:
             claimName: git-repo-working-copy
-        - name: git-pull-ssh-ids
+        - name: git-pull-ssh-id
           secret:
-            secretName: git-pull-ssh-ids
+            secretName: git-pull-ssh-id
             defaultMode: 0600
 
 ---
