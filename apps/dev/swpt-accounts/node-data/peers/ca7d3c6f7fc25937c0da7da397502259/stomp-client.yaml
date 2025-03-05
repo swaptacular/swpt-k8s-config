@@ -115,7 +115,7 @@ spec:
               cpu: 10m
               memory: 32Mi
         - name: activate-node
-          image: swpt-stomp
+          image: swpt-nfs-server
           args:
             - touch
             - "-a"
