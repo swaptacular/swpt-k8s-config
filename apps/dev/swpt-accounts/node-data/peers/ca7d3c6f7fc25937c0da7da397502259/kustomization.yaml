@@ -5,7 +5,13 @@ resources:
 - ../../../../../base/swpt-accounts/peers/stomp-client.yaml
 
 patches:
-- path: stomp-client-patch.yaml
+- patch: |-
+    - op: add
+      path: /metadata/annotations/swpt-node-id
+      value: ca7d3c6f7fc25937c0da7da397502259
+    - op: replace
+      path: /spec/replicas
+      value: 2
   target:
     group: apps
     kind: StatefulSet

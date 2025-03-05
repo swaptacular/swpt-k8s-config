@@ -10,7 +10,7 @@ metadata:
     app.kubernetes.io/instance: SWPT_NODE_ID
 spec:
   podManagementPolicy: Parallel
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app.kubernetes.io/name: swpt-accounts
