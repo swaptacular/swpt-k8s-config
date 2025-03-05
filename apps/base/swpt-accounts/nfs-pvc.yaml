@@ -34,7 +34,7 @@ spec:
     # made before an error gets raised. The respective re-connection
     # attempts will be made after pauses of 50s, 100s, 150s, and 200s.
     # Therefore, error will not be raised if the NFS server becomes
-    # available again within 8.3 minutes.
+    # available again within 500 seconds (~8.3 minutes).
     - soft
     - timeo=500 # 500 deciseconds
     - retrans=4
