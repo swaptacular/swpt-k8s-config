@@ -253,7 +253,6 @@ images:
 resources:
 - ../../base/swpt-accounts/
 - broker.yaml
-- stomp-clients.yaml
 - shards/
 
 patches:
