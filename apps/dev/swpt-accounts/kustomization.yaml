@@ -254,6 +254,7 @@ resources:
 - ../../base/swpt-accounts/
 - broker.yaml
 - shards/
+- node-data/peers/
 
 patches:
 - path: ../../base/swpt-accounts/patches/broker.yaml
