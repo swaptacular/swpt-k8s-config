@@ -137,11 +137,13 @@ configMapGenerator:
       # 10.96.0.15 should always be safe.
       kustomize_nfs_service_cluster_ip: 10.96.0.2
 
+      # Kubernetes memory and CPU requests and limits, for the NFS
+      # server containers.
+      #
       kustomize_nfs_server_cpu_request: 10m
       kustomize_nfs_server_cpu_limit: 1000m
       kustomize_nfs_server_memory_request: 64Mi
       kustomize_nfs_server_memory_limit: 1Gi
-
       kustomize_git_pull_cpu_request: 10m
       kustomize_git_pull_cpu_limit: 1000m
       kustomize_git_pull_memory_request: 64Mi
@@ -169,6 +171,9 @@ configMapGenerator:
       # Swaptacular nodes listen of different TCP ports.
       kustomize_stomp_server_port: "1234"
 
+      # Kubernetes memory and CPU requests and limits, for the STOMP
+      # server containers.
+      #
       kustomize_stomp_server_cpu_request: 10m
       kustomize_stomp_server_cpu_limit: 1000m
       kustomize_stomp_server_memory_request: 64Mi
@@ -209,6 +214,9 @@ configMapGenerator:
     # replacements:
     #
     annotations:
+      # Kubernetes memory and CPU requests and limits, for the
+      # apiproxy server containers.
+      #
       kustomize_apiproxy_cpu_request: 100m
       kustomize_apiproxy_cpu_limit: 1000m
       kustomize_apiproxy_memory_request: 128Mi
