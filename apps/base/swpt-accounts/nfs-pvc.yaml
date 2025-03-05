@@ -24,8 +24,11 @@ spec:
   accessModes:
     - ReadWriteMany
   nfs:
-    server: 10.96.0.2  # nfs-server.swpt-accounts.svc.cluster.local
+    # Here "0.0.0.0" will be automatically replaced by the IP address
+    # of "nfs-server.swpt-accounts.svc.cluster.local".
+    server: 0.0.0.0
     path: "/"
-
-  # mountOptions:
-  #   - nfsvers=4.2
+  mountOptions:
+    - soft
+    - timeo=500 # 50 seconds before the first retrans
+    - retrans=4 # get an error after the 4th failure
