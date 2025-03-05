@@ -12,6 +12,5 @@ spec:
     name: flux-system
   path: ./apps/dev/swpt-accounts/node-data/peers
   prune: true
-  wait: true
   timeout: 5m0s
   targetNamespace: swpt-accounts
