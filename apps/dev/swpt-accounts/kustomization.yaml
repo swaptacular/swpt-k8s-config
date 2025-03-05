@@ -154,6 +154,10 @@ configMapGenerator:
   - SWPT_SERVER_BUFFER=100
   - SWPT_CLIENT_BUFFER=100
 
+  # The number of worker threads that STOMP servers will use for file
+  # access to the NFS server.
+  - APP_FILE_READ_THREADS=10
+
   options:
     # These annotations are used as sources for convenient Kustomize
     # replacements:
