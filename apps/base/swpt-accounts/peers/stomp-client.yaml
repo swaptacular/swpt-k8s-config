@@ -1,11 +1,13 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: stomp-client-ca7d3c6f7fc25937c0da7da397502259
+  name: stomp-client
+  annotations:
+    swpt-node-id: SWPT_NODE_ID
   labels:
     app.kubernetes.io/name: swpt-accounts
     app.kubernetes.io/component: stomp-client
-    app.kubernetes.io/instance: ca7d3c6f7fc25937c0da7da397502259
+    app.kubernetes.io/instance: SWPT_NODE_ID
 spec:
   podManagementPolicy: Parallel
   replicas: 2
@@ -13,13 +15,13 @@ spec:
     matchLabels:
       app.kubernetes.io/name: swpt-accounts
       app.kubernetes.io/component: stomp-client
-      app.kubernetes.io/instance: ca7d3c6f7fc25937c0da7da397502259
+      app.kubernetes.io/instance: SWPT_NODE_ID
   template:
     metadata:
       labels:
         app.kubernetes.io/name: swpt-accounts
         app.kubernetes.io/component: stomp-client
-        app.kubernetes.io/instance: ca7d3c6f7fc25937c0da7da397502259
+        app.kubernetes.io/instance: SWPT_NODE_ID
     spec:
       priorityClassName: smp-receiver
       containers:
@@ -42,7 +44,7 @@ spec:
                 name: stomp-config
           env:
             - name: SWPT_NODE_ID
-              value: "ca7d3c6f7fc25937c0da7da397502259"
+              value: SWPT_NODE_ID
             - name: QUEUE_NAME_PREFIX
               value: aa
             - name: ORDINAL_NUMBER
@@ -88,7 +90,7 @@ spec:
                 name: stomp-config
           env:
             - name: SWPT_NODE_ID
-              value: "ca7d3c6f7fc25937c0da7da397502259"
+              value: SWPT_NODE_ID
             - name: QUEUE_NAME_PREFIX
               value: aa
             - name: ORDINAL_NUMBER
@@ -125,7 +127,7 @@ spec:
               mountPath: "/var/lib/swpt"
           env:
             - name: SWPT_NODE_ID
-              value: "ca7d3c6f7fc25937c0da7da397502259"
+              value: SWPT_NODE_ID
           resources:
             limits:
               cpu: 1000m

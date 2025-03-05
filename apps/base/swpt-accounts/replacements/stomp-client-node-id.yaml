@@ -1,0 +1,43 @@
+source:
+  kind: StatefulSet
+  name: stomp-client
+  fieldPath: metadata.annotations.swpt-node-id
+targets:
+  - select:
+      kind: StatefulSet
+      name: stomp-client
+    fieldPaths:
+      - spec.template.spec.containers.[name=stomp-client].env.[name=SWPT_NODE_ID].value
+  - select:
+      kind: StatefulSet
+      name: stomp-client
+    fieldPaths:
+      - spec.template.spec.initContainers.[name=configure-queue].env.[name=SWPT_NODE_ID].value
+  - select:
+      kind: StatefulSet
+      name: stomp-client
+    fieldPaths:
+      - spec.template.spec.initContainers.[name=activate-node].env.[name=SWPT_NODE_ID].value
+  - select:
+      kind: StatefulSet
+      name: stomp-client
+    fieldPaths:
+      - metadata.labels.[app.kubernetes.io/instance]
+  - select:
+      kind: StatefulSet
+      name: stomp-client
+    fieldPaths:
+      - spec.selector.matchLabels.[app.kubernetes.io/instance]
+  - select:
+      kind: StatefulSet
+      name: stomp-client
+    fieldPaths:
+      - spec.template.metadata.labels.[app.kubernetes.io/instance]
+  - select:
+      kind: StatefulSet
+      name: stomp-client
+    fieldPaths:
+      - metadata.name
+    options:
+      delimiter: "-"
+      index: 2

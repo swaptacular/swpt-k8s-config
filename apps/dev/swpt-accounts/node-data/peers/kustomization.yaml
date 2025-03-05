@@ -2,4 +2,4 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-- ca7d3c6f7fc25937c0da7da397502259/stomp-client.yaml
+- ca7d3c6f7fc25937c0da7da397502259/
