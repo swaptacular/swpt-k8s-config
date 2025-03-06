@@ -2,7 +2,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-- ../../../../../base/swpt-accounts/peers/stomp-client.yaml
+- ../../../../../base/swpt-accounts/peer/stomp-client.yaml
 
 patches:
 - patch: |-
@@ -12,6 +12,9 @@ patches:
     - op: replace
       path: /spec/replicas
       value: 2
+    - op: replace
+      path: /spec/template/spec/containers/0/args/0
+      value: swpt-drainer
   target:
     group: apps
     kind: StatefulSet
@@ -19,4 +22,4 @@ patches:
     version: v1
 
 replacements:
-- path: ../../../../../base/swpt-accounts/replacements/stomp-client-node-id.yaml
+- path: ../../../../../base/swpt-accounts/peer/replacements/stomp-client-node-id.yaml
