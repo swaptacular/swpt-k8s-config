@@ -1,6 +1,9 @@
 - op: replace
   path: /spec/template/spec/containers/0/resources
   value:
+    # NOTE: You can change these values to reflect the actual load
+    # coming from this peer, and the resource constraints in your
+    # Kubernetes cluster.
     limits:
       cpu: "1"
       memory: 1Gi
