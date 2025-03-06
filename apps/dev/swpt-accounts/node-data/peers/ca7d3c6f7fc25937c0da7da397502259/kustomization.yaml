@@ -20,6 +20,12 @@ patches:
     kind: StatefulSet
     name: stomp-client
     version: v1
+- path: resources-patch.yaml
+  target:
+    group: apps
+    kind: StatefulSet
+    name: stomp-client
+    version: v1
 
 replacements:
 - path: ../../../../../base/swpt-accounts/peer/replacements/stomp-client-node-id.yaml

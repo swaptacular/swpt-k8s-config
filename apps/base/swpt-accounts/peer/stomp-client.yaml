@@ -65,10 +65,10 @@ spec:
               value: json
           resources:
             limits:
-              cpu: 1000m
+              cpu: "1"
               memory: 1Gi
             requests:
-              cpu: 10m
+              cpu: 1m
               memory: 32Mi
       initContainers:
         - name: configure-queue
@@ -111,10 +111,10 @@ spec:
               value: json
           resources:
             limits:
-              cpu: 1000m
+              cpu: "1"
               memory: 1Gi
             requests:
-              cpu: 10m
+              cpu: 5m
               memory: 32Mi
         - name: activate-node
           image: swpt-nfs-server
@@ -130,10 +130,10 @@ spec:
               value: SWPT_NODE_ID
           resources:
             limits:
-              cpu: 1000m
+              cpu: "1"
               memory: 1Gi
             requests:
-              cpu: 10m
+              cpu: 5m
               memory: 32Mi
       volumes:
         - name: node-data
