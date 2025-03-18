@@ -17,3 +17,6 @@ TAGS
 
 # Automatically created peer status files
 **/peers/*/ACTIVE
+
+# Root-CA private keys
+**/node-data/private/
