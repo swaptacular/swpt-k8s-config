@@ -2,6 +2,18 @@
 set -e
 set -o pipefail
 
+if [[ "$#" != 1 || "$1" == "--help" ]]; then
+    echo 'Creates Kubernetes manifest files for a registered peer.'
+    echo
+    echo 'This script is not intended to be called directly. Instead,'
+    echo 'other scripts will call it automatically when needed. To'
+    echo 'function correctly, the current directory must be the'
+    echo 'directory containing the script.'
+    echo
+    echo 'Usage: create-peer-manifest PEER_NODE_ID'
+    exit 2
+fi
+
 peer_id="$1"
 number_of_queues="$(cat $peer_id/queues.txt)"
 
