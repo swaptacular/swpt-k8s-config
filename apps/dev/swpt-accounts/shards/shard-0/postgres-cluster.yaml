@@ -27,7 +27,7 @@ spec:
   # Specifies the number of PosgreSQL server instances in the cluster.
   # Must be between 1 and 3. It is recommended to be at least 2.
   #
-  numberOfInstances: 2
+  numberOfInstances: 1
 
   env:
   # You can change the value of this variable to trigger a restart of
