@@ -1,0 +1,83 @@
+#!/bin/bash
+set -e
+set -o pipefail
+
+if [[ "$#" != 2 || "$1" == "--help" ]]; then
+    echo 'Change configuration parameters for a registered peer.'
+    echo
+    echo 'Usage: reconfigure-peer PEER_NODE_ID NUMBER_OF_QUEUES'
+    echo '       reconfigure-peer PEER_NODE_ID --deactivate'
+    exit 2
+fi
+
+function find_script_dir {
+    SOURCE=${BASH_SOURCE[0]}
+    while [ -L "$SOURCE" ]; do # resolve $SOURCE until the file is not a symlink
+        DIR=$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )
+        SOURCE=$(readlink "$SOURCE")
+        # If $SOURCE was a relative symlink, we need to resolve it relative
+        # to the path where the symlink file was located.
+        [[ $SOURCE != /* ]] && SOURCE=$DIR/$SOURCE
+    done
+    DIR=$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )
+    export SWPT_CA_DIR="$DIR"
+}
+
+function invalid_node_type {
+    echo
+    echo "ERROR: The node type is invalid."
+    echo
+    exit 1
+}
+
+function update_peer_manifest {
+    if [ -x "$DIR/peers/create-peer-manifest" ]; then
+        echo "Updating peer manifest file..."
+        pushd "$DIR/peers" > /dev/null
+        ./create-peer-manifest "$DN_SERIAL_NUMBER"
+        popd > /dev/null
+    fi
+}
+
+find_script_dir || exit 3
+
+peer_dir="$DIR/peers/$1"
+peer_crt_file="$peer_dir/sub-ca.crt"
+new_value="$2"
+
+if [ -s "$peer_crt_file" ]; then
+    deactivation_marker="$peer_dir/DEACTIVATED"
+    if [[ "$new_value" == "--deactivate" ]]; then
+        if [ ! -e "$deactivation_marker" ]; then
+            echo "Deactivating peer $1..."
+            date -I > "$deactivation_marker"
+        fi
+    else
+        old_value="$(cat "$peer_dir/queues.txt")"
+        if [ "$old_value" -le "$new_value" -a "$new_value" -le 99 ]; then
+            echo "Setting the number of queues to $new_value..."
+            echo "$new_value" > "$peer_dir/queues.txt"
+        else
+            echo
+            echo "ERROR: Invalid number of queues ($new_value)."
+            echo "       The number of queues must be between $old_value and 99."
+            echo
+            exit 1
+        fi
+    fi
+    DN_SERIAL_NUMBER="$1"
+    update_peer_manifest
+else
+    echo
+    echo "ERROR: There is no registered peer with ID $1."
+    echo
+    exit 1
+fi
+
+echo
+echo '***********************************************************************'
+echo "* IMPORTANT: Peer's configuration files have been updated. Note       *"
+echo '*            that for the new configuration to take effect, it        *'
+echo '*            has to be applied to your servers.                       *'
+echo '***********************************************************************'
+echo "Peer directory: $peer_dir/"

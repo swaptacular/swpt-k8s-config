@@ -3,14 +3,14 @@ set -e
 set -o pipefail
 
 peer_id="$1"
-number_of_queues="$2"
+number_of_queues="$(cat $peer_id/queues.txt)"
 
-if [ -z "$3" ]; then
-    # The peer has not been deactivated yet.
-    container_arg0="swpt-client"
-else
+if [ -e "$peer_id/DEACTIVATED" ]; then
     # The peer has been deactivated.
     container_arg0="swpt-drainer"
+else
+    # The peer has not been deactivated yet.
+    container_arg0="swpt-client"
 fi
 
 pushd . > /dev/null
@@ -99,7 +99,6 @@ EOF
 if [ ! -e "$aggregator_file" ]; then
     generate_peers_aggregator_file
 fi
-
 if ! grep -q "^resources:$" "$aggregator_file"; then
     generate_peers_aggregator_file
 fi

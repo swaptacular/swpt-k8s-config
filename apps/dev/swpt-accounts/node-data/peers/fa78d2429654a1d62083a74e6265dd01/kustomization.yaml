@@ -10,13 +10,13 @@ patches:
 - patch: |-
     - op: add
       path: /metadata/annotations/swpt-node-id
-      value: ca7d3c6f7fc25937c0da7da397502259
+      value: fa78d2429654a1d62083a74e6265dd01
     - op: replace
       path: /spec/replicas
-      value: 2
+      value: 1
     - op: replace
       path: /spec/template/spec/containers/0/args/0
-      value: swpt-drainer
+      value: swpt-client
   target:
     group: apps
     kind: StatefulSet
