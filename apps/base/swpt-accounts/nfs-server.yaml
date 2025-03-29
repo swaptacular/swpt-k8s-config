@@ -23,7 +23,7 @@ spec:
       containers:
         - name: nfs-server
           image: swpt-nfs-server
-          args: ['ls']
+          args: ['nfsd']
           securityContext:
             capabilities:
               add: ["SYS_ADMIN", "SETPCAP"]
