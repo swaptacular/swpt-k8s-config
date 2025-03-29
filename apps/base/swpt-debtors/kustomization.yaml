@@ -7,7 +7,7 @@ resources:
 - apiproxy.yaml
 - nfs-server.yaml
 - nfs-pvc.yaml
-- stomp-server.yaml
+# - stomp-server.yaml
 - ory-hydra.yaml
 
 # TODO: It seems that network policies still do no work correctly in KinD
