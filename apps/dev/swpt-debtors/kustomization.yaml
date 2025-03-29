@@ -1,0 +1,282 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# The name of the namespace could be changed.
+namespace: swpt-debtors
+
+secretGenerator:
+- name: spilo-env-secret
+  files:
+  # Run `openssl rand -base64 32` to generate a random encryption key.
+  - WALG_LIBSODIUM_KEY=pg-secrets/spilo-walg-libsodium-key.encrypted
+
+  # The "password" for the S3 service.
+  - AWS_SECRET_ACCESS_KEY=pg-secrets/spilo-aws-secret-access-key.encrypted
+
+  literals:
+  # The "username" for the S3 service.
+  - AWS_ACCESS_KEY_ID=console
+
+  # The endpoint for the S3 service.
+  - AWS_ENDPOINT=https://minio.minio-tenant.svc.cluster.local:443
+
+  # When Amazon S3 is used, this specifies the AWS region. In that
+  # case, specifying `AWS_ENDPOINT` should not be necessary.
+  - AWS_REGION=us-east-1
+
+  # This specifies the trusted CA for the local MinIO S3 server. This
+  # should not be necessary for "proper" S3 providers.
+  - WALG_S3_CA_CERT_FILE=/certs/minio/ca.crt
+
+  options:
+    disableNameSuffixHash: true
+    labels:
+      app.kubernetes.io/name: swpt-debtors
+      application: spilo
+      team: swpt
+  type: Opaque
+
+- name: db-owner-credentials
+  files:
+  # A SOPS-encrypted file containing the password for the "db_owner"
+  # user on all Postgres clusters which this application will create.
+  # Once created, the password must not be changed.
+  - password=pg-secrets/postgres-cluster-password.encrypted
+
+  literals:
+  - username=db_owner
+
+  options:
+    disableNameSuffixHash: true
+    labels:
+      app.kubernetes.io/name: swpt-debtors
+  type: Opaque
+
+- name: git-pull-ssh-id
+  files:
+  # A SOPS-encrypted file containing the SSH private key used to
+  # authenticate to the GitOps Git server.
+  #
+  # Run `ssh-keygen -f id_rsa -N ''` to generate a new SSH
+  # private/public key pair. This will create two files:
+  # 1. "id_rsa", containing the unencrypted SSH private key;
+  # 2. "id_rsa.pub", containing the SSH public key.
+  #
+  # Then use SOPS to encrypt the "id_rsa" file. The resulting
+  # encrypted file must be named "id_rsa.encrypted". For example, you
+  # may run: `sops encrypt id_rsa > id_rsa.encrypted`.
+  - id_rsa=git-pull-ssh-id/id_rsa.encrypted
+
+  # The "id_rsa.pub" file generated in the previous step. (See the
+  # previous comment.)
+  - id_rsa.pub=git-pull-ssh-id/id_rsa.pub
+
+  # The certificate for the "id_rsa.pub" key. To create this
+  # certificate, run this command:
+  #
+  # $ ssh-keygen -s <path-to-root-ca-private-key-file> -I git-pull -n git id_rsa.pub
+  #
+  # Here "<path-to-root-ca-private-key-file>" is the path to your
+  # Swaptacular node's private key, and "id_rsa.pub" is the public key
+  # generated in the previous steps. (See previous comments.)
+  - id_rsa-cert.pub=git-pull-ssh-id/id_rsa-cert.pub
+
+  options:
+    labels:
+      app.kubernetes.io/name: swpt-debtors
+  type: Opaque
+
+- name: server-certificate
+  files:
+  # The server certificate PEM file. This certificate will be used to
+  # authenticate before peer nodes. On how to generate a server
+  # certificate, check https://github.com/swaptacular/swpt_ca_scripts
+  - server.crt=server.crt
+
+  # A SOPS-encrypted file containing the private key for the server
+  # certificate. This private key will be used to authenticate before
+  # peer nodes. (See the previous comment.)
+  #
+  # To SOPS-encrypt the private key, you may use this command:
+  #
+  # $ sops encrypt server.key > server.key.encrypted
+  - server.key=server.key.encrypted
+
+  options:
+    labels:
+      app.kubernetes.io/name: swpt-debtors
+  type: Opaque
+
+configMapGenerator:
+- name: nfs-server-config
+  literals:
+  # These variables specify how to connect to the GitOps Git
+  # repository, and how often to check (pull) for changes:
+  #
+  - GIT_SERVER=git-server.simple-git-server.svc.cluster.local
+  - GIT_PORT=2222
+  - GIT_REPOSITORY_PATH=/srv/git/fluxcd.git
+  - GIT_PULL_SECONDS=60
+
+  # The relative path in the GitOps Git repository, to the
+  # sub-directory containing the Swaptacular node's data.
+  - NODE_DATA_SUBDIR=apps/dev/swpt-debtors/node-data
+
+  options:
+    # These annotations are used as sources for convenient Kustomize
+    # replacements:
+    #
+    annotations:
+      # When running more than one Swaptacular node on a single
+      # Kubernetes cluster, each Swaptacular node will create its own
+      # NFS service, which must be given an unique static cluster IP.
+      #
+      # Depending on the Kubernetes cluster, the safe range for static
+      # cluster IPs will be different, but according to the Kubernetes
+      # documentation, is seems that the range from 10.96.0.2 to
+      # 10.96.0.15 should always be safe.
+      kustomize_nfs_service_cluster_ip: 10.96.0.3
+
+      # Kubernetes memory and CPU requests and limits, for the NFS
+      # server containers.
+      #
+      kustomize_nfs_server_cpu_request: 10m
+      kustomize_nfs_server_cpu_limit: 1000m
+      kustomize_nfs_server_memory_request: 64Mi
+      kustomize_nfs_server_memory_limit: 1Gi
+      kustomize_git_pull_cpu_request: 10m
+      kustomize_git_pull_cpu_limit: 1000m
+      kustomize_git_pull_memory_request: 64Mi
+      kustomize_git_pull_memory_limit: 1Gi
+
+- name: stomp-config
+  literals:
+  # The number of SMP messages that STOMP servers and STOMP clients
+  # will buffer in memory.
+  - SWPT_SERVER_BUFFER=100
+  - SWPT_CLIENT_BUFFER=100
+
+  # The number of worker threads that STOMP servers will use for file
+  # access to the NFS server.
+  - APP_FILE_READ_THREADS=10
+
+  options:
+    # These annotations are used as sources for convenient Kustomize
+    # replacements:
+    #
+    annotations:
+      # Each Swaptacular node runs its own STOMP server. When running
+      # more than one Swaptacular node on a single Kubernetes cluster,
+      # you should make sure that the STOMP servers of different
+      # Swaptacular nodes listen of different TCP ports.
+      kustomize_stomp_server_port: "1235"
+
+      # Kubernetes memory and CPU requests and limits, for the STOMP
+      # server containers.
+      #
+      kustomize_stomp_server_cpu_request: 10m
+      kustomize_stomp_server_cpu_limit: 1000m
+      kustomize_stomp_server_memory_request: 64Mi
+      kustomize_stomp_server_memory_limit: 1Gi
+
+- name: apiproxy-config
+  files:
+  # The configuration file for the "apiproxy".
+  #
+  # Each line in the configuration file should start with a route
+  # specifier, followed by at least one space, followed by a web
+  # server URL (only "http://" server URLs are supported). Route
+  # specifiers consist of zero or more 0s or 1s, separated by dots,
+  # ending with a hash symbol ("#"). An example configuration file:
+  #
+  # 0.# http://web-server-0
+  # 1.# http://web-server-1
+  #
+  # or, for a sigle server:
+  #
+  # # http://web-server
+  #
+  # Note that the route specifiers in the configuration file must
+  # cover all possible bit masks. For example, the following
+  # configuration file is invalid:
+  #
+  # 0.# http://web-server-0
+  #
+  # because it does not cover sharding keys starting with a
+  # binary "1".
+  - apiproxy.conf=apiproxy.conf
+
+  options:
+    labels:
+      app.kubernetes.io/name: swpt-debtors
+
+    # These annotations are used as sources for convenient Kustomize
+    # replacements:
+    #
+    annotations:
+      # Kubernetes memory and CPU requests and limits, for the
+      # apiproxy server containers.
+      #
+      kustomize_apiproxy_cpu_request: 100m
+      kustomize_apiproxy_cpu_limit: 1000m
+      kustomize_apiproxy_memory_request: 128Mi
+      kustomize_apiproxy_memory_limit: 1Gi
+
+# The number of replicas for each component. One replica works fine,
+# but to have high-availability, should be at least 2.
+#
+replicas:
+- name: apiproxy
+  count: 1
+- name: stomp-server
+  count: 1
+
+# OCI images to use for the different containers:
+#
+images:
+- name: swpt-debtors
+  newName: ghcr.io/swaptacular/swpt_accounts
+  newTag: 2.4.0
+- name: swpt-apiproxy
+  newName: ghcr.io/swaptacular/swpt_apiproxy
+  newTag: 1.2.2
+- name: swpt-nfs-server
+  newName: ghcr.io/swaptacular/swpt_nfs_server
+  newTag: 0.1.5
+- name: swpt-stomp
+  newName: ghcr.io/swaptacular/swpt_stomp
+  newTag: 2.3.0
+
+resources:
+- ../../base/swpt-debtors/
+- broker.yaml
+- shards/
+- node-data/peers/
+
+patches:
+- path: ../../base/swpt-debtors/patches/broker.yaml
+  target:
+    group: rabbitmq.com
+    kind: RabbitmqCluster
+    name: broker
+    version: v1beta1
+
+replacements:
+- path: ../../base/swpt-debtors/replacements/nfs-cluster-ip.yaml
+- path: ../../base/swpt-debtors/replacements/stomp-server-port.yaml
+- path: ../../base/swpt-debtors/replacements/apiproxy-cpu-limit.yaml
+- path: ../../base/swpt-debtors/replacements/apiproxy-cpu-request.yaml
+- path: ../../base/swpt-debtors/replacements/apiproxy-memory-limit.yaml
+- path: ../../base/swpt-debtors/replacements/apiproxy-memory-request.yaml
+- path: ../../base/swpt-debtors/replacements/stomp-server-cpu-limit.yaml
+- path: ../../base/swpt-debtors/replacements/stomp-server-cpu-request.yaml
+- path: ../../base/swpt-debtors/replacements/stomp-server-memory-limit.yaml
+- path: ../../base/swpt-debtors/replacements/stomp-server-memory-request.yaml
+- path: ../../base/swpt-debtors/replacements/nfs-server-cpu-limit.yaml
+- path: ../../base/swpt-debtors/replacements/nfs-server-cpu-request.yaml
+- path: ../../base/swpt-debtors/replacements/nfs-server-memory-limit.yaml
+- path: ../../base/swpt-debtors/replacements/nfs-server-memory-request.yaml
+- path: ../../base/swpt-debtors/replacements/git-pull-cpu-limit.yaml
+- path: ../../base/swpt-debtors/replacements/git-pull-cpu-request.yaml
+- path: ../../base/swpt-debtors/replacements/git-pull-memory-limit.yaml
+- path: ../../base/swpt-debtors/replacements/git-pull-memory-request.yaml

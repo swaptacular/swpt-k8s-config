@@ -1,0 +1,33 @@
+# This file is machine-generated. DO NOT EDIT IT!
+#
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- ../../../../../base/swpt-debtors/peer/stomp-client.yaml
+
+patches:
+- patch: |-
+    - op: add
+      path: /metadata/annotations/swpt-node-id
+      value: 0abcdef1
+    - op: replace
+      path: /spec/replicas
+      value: 1
+    - op: replace
+      path: /spec/template/spec/containers/0/args/0
+      value: swpt-client
+  target:
+    group: apps
+    kind: StatefulSet
+    name: stomp-client
+    version: v1
+- path: resources-patch.yaml
+  target:
+    group: apps
+    kind: StatefulSet
+    name: stomp-client
+    version: v1
+
+replacements:
+- path: ../../../../../base/swpt-debtors/peer/replacements/stomp-client-node-id.yaml

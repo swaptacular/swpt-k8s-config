@@ -1,0 +1,12 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: broker
+  labels:
+    app.kubernetes.io/name: swpt-debtors
+    app.kubernetes.io/component: message-broker
+spec:
+  maxUnavailable: 20%
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: broker

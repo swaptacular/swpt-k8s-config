@@ -1,0 +1,16 @@
+source:
+  group: acid.zalan.do
+  version: v1
+  kind: postgresql
+  name: db
+  fieldPath: metadata.name
+targets:
+  - select:
+      name: db
+      kind: postgresql
+      group: acid.zalan.do
+      version: v1
+    fieldPaths:
+      - spec.clone.cluster
+    options:
+      create: True

@@ -1,0 +1,13 @@
+source:
+  kind: ConfigMap
+  name: shardconfig
+  fieldPath: metadata.annotations.kustomize_tasks_processor_cpu_limit
+targets:
+  - select:
+      kind: Deployment
+      name: tasks-processor
+    fieldPaths:
+      - spec.template.spec.containers.[name=tasks-processor].resources.limits.cpu
+      - spec.template.spec.initContainers.[name=init].resources.limits.cpu
+    options:
+      create: true

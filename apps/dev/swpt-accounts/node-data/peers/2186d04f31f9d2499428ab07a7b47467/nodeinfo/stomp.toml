@@ -1,0 +1,3 @@
+servers = ["da.example.com:1234"]
+host = "/"
+destination = "/exchange/debtors_in"

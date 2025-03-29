@@ -1,0 +1,12 @@
+source:
+  kind: ConfigMap
+  name: shardconfig
+  fieldPath: metadata.annotations.kustomize_messages_flusher_cpu_request
+targets:
+  - select:
+      kind: Deployment
+      name: messages-flusher
+    fieldPaths:
+      - spec.template.spec.containers.[name=messages-flusher].resources.requests.cpu
+    options:
+      create: true

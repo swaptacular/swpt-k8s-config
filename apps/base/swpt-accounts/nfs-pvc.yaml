@@ -17,6 +17,9 @@ spec:
 apiVersion: v1
 kind: PersistentVolume
 metadata:
+  # The name will be automatically replaced to include the IP address
+  # of "nfs-server.swpt-accounts.svc.cluster.local"
+  # ("swpt-nfs-10.96.0.2" for example).
   name: swpt-nfs
 spec:
   capacity:
