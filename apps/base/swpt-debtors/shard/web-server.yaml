@@ -62,6 +62,8 @@ spec:
               value: "$(rmq_connection_string)"
             - name: PROTOCOL_BROKER_QUEUE
               value: "$(pg_cluster_name)"
+            - name: OAUTH2_INTROSPECT_URL
+              value: "http://ory-hydra-admin/oauth2/introspect"
 
 ---
 apiVersion: v1
