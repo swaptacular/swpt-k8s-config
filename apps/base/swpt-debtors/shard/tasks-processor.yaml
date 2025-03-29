@@ -28,6 +28,8 @@ spec:
               prefix: rmq_
             - configMapRef:
                 name: shardconfig
+            - configMapRef:
+                name: debtors-agent-config
           env:
             - name: WEBSERVER_PROCESSES
               value: "1"
@@ -56,6 +58,8 @@ spec:
               prefix: rmq_
             - configMapRef:
                 name: shardconfig
+            - configMapRef:
+                name: debtors-agent-config
           env:
             - name: POSTGRES_URL
               value: "postgresql+psycopg://$(pg_username):$(pg_password)@$(pg_cluster_name):5432/db"

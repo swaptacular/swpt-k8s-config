@@ -53,6 +53,8 @@ spec:
               prefix: rmq_
             - configMapRef:
                 name: shardconfig
+            - configMapRef:
+                name: debtors-agent-config
           env:
             - name: WEBSERVER_PORT
               value: "8080"

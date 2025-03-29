@@ -108,6 +108,24 @@ secretGenerator:
   type: Opaque
 
 configMapGenerator:
+- name: debtors-agent-config
+  literals:
+  # Debtor IDs are 64-bit integer numbers. The debtors agent is
+  # responsible only for debtor IDs which start with the hexadecimal
+  # prefix specified in the `./node-data/debtors-subnet.txt` file.
+  # Therefore, the values of the `MIN_DEBTOR_ID` and `MAX_DEBTOR_ID`
+  # variables must correspond to the content of this file.
+  #
+  # For example, if the `./node-data/debtors-subnet.txt` file contains
+  # the string "abcdef1234", then:
+  # 1) `MIN_DEBTOR_ID` must be set to "0xabcdef1234000000";
+  # 2) `MAX_DEBTOR_ID` must be set to "0xabcdef1234ffffff".
+  #
+  # NOTE: Both values are prefixed with "0x", and consist of exactly
+  # 16 hexadecimal symbols.
+  - MIN_DEBTOR_ID=0x0abcdef100000000
+  - MAX_DEBTOR_ID=0x0abcdef100ffffff
+
 - name: nfs-server-config
   literals:
   # These variables specify how to connect to the GitOps Git

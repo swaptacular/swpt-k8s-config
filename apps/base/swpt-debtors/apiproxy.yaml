@@ -43,6 +43,9 @@ spec:
             - name: config-volume
               mountPath: "/etc/apiproxy.conf"
               subPath: apiproxy.conf
+          envFrom:
+            - configMapRef:
+                name: debtors-agent-config
           env:
             - name: APIPROXY_PORT
               value: "8080"
