@@ -36,7 +36,7 @@ spec:
               containerPort: 8080
           readinessProbe:
             httpGet:
-              path: /debtors/health/check/public
+              path: /debtors/health/check/publicx
               port: http
             initialDelaySeconds: 5
           volumeMounts:
