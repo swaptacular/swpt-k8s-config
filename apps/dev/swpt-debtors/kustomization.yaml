@@ -228,8 +228,8 @@ configMapGenerator:
 replicas:
 - name: apiproxy
   count: 1
-# - name: stomp-server
-#   count: 1
+- name: stomp-server
+  count: 1
 
 # OCI images to use for the different containers:
 #
@@ -251,7 +251,7 @@ resources:
 - ../../base/swpt-debtors/
 - broker.yaml
 - shards/
-# - node-data/peers/
+- node-data/peers/
 
 patches:
 - path: ../../base/swpt-debtors/patches/broker.yaml
@@ -263,15 +263,15 @@ patches:
 
 replacements:
 - path: ../../base/swpt-debtors/replacements/nfs-cluster-ip.yaml
-# - path: ../../base/swpt-debtors/replacements/stomp-server-port.yaml
+- path: ../../base/swpt-debtors/replacements/stomp-server-port.yaml
 - path: ../../base/swpt-debtors/replacements/apiproxy-cpu-limit.yaml
 - path: ../../base/swpt-debtors/replacements/apiproxy-cpu-request.yaml
 - path: ../../base/swpt-debtors/replacements/apiproxy-memory-limit.yaml
 - path: ../../base/swpt-debtors/replacements/apiproxy-memory-request.yaml
-# - path: ../../base/swpt-debtors/replacements/stomp-server-cpu-limit.yaml
-# - path: ../../base/swpt-debtors/replacements/stomp-server-cpu-request.yaml
-# - path: ../../base/swpt-debtors/replacements/stomp-server-memory-limit.yaml
-# - path: ../../base/swpt-debtors/replacements/stomp-server-memory-request.yaml
+- path: ../../base/swpt-debtors/replacements/stomp-server-cpu-limit.yaml
+- path: ../../base/swpt-debtors/replacements/stomp-server-cpu-request.yaml
+- path: ../../base/swpt-debtors/replacements/stomp-server-memory-limit.yaml
+- path: ../../base/swpt-debtors/replacements/stomp-server-memory-request.yaml
 - path: ../../base/swpt-debtors/replacements/nfs-server-cpu-limit.yaml
 - path: ../../base/swpt-debtors/replacements/nfs-server-cpu-request.yaml
 - path: ../../base/swpt-debtors/replacements/nfs-server-memory-limit.yaml
