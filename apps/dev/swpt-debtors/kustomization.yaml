@@ -235,8 +235,8 @@ replicas:
 #
 images:
 - name: swpt-debtors
-  newName: ghcr.io/swaptacular/swpt_accounts
-  newTag: 2.4.0
+  newName: ghcr.io/swaptacular/swpt_debtors
+  newTag: 2.3.0
 - name: swpt-apiproxy
   newName: ghcr.io/swaptacular/swpt_apiproxy
   newTag: 1.2.2
