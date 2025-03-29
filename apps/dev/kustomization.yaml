@@ -3,4 +3,4 @@ kind: Kustomization
 
 resources:
 - swpt-accounts/
-# - swpt-debtors/
+- swpt-debtors/
