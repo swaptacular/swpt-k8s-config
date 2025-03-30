@@ -1,0 +1,21 @@
+source:
+  kind: ConfigMap
+  name: swpt-nfs-server
+  fieldPath: metadata.namespace
+targets:
+  - select:
+      kind: PersistentVolume
+      name: swpt-nfs
+    fieldPaths:
+      - metadata.name
+    options:
+      delimiter: "-"
+      index: 2
+  - select:
+      kind: PersistentVolumeClaim
+      name: node-data
+    fieldPaths:
+      - spec.volumeName
+    options:
+      delimiter: "-"
+      index: 2

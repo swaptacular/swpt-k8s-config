@@ -94,46 +94,11 @@ configMapGenerator:
   - MIN_DEBTOR_ID=0x0abcdef100000000
   - MAX_DEBTOR_ID=0x0abcdef100ffffff
 
-- name: nfs-server-config
+- name: swpt-nfs-server
   literals:
-  # These variables specify how to connect to the GitOps Git
-  # repository, and how often to check (pull) for changes:
-  #
-  - GIT_SERVER=git-server.simple-git-server.svc.cluster.local
-  - GIT_PORT=2222
-  - GIT_REPOSITORY_PATH=/srv/git/fluxcd.git
-  - GIT_PULL_SECONDS=60
-
-  # The relative path in the GitOps Git repository, to the
-  # sub-directory containing the Swaptacular node's data.
-  - NODE_DATA_SUBDIR=apps/dev/swpt-debtors/node-data
-
-  options:
-    # These annotations are used as sources for convenient Kustomize
-    # replacements:
-    #
-    annotations:
-      # When running more than one Swaptacular node on a single
-      # Kubernetes cluster, each Swaptacular node will create its own
-      # NFS service, which must be given an unique static cluster IP.
-      #
-      # Depending on the Kubernetes cluster, the safe range for static
-      # cluster IPs will be different, but according to the Kubernetes
-      # documentation, is seems that the range from 10.96.0.2 to
-      # 10.96.0.15 should always be safe.
-      kustomize_nfs_service_cluster_ip: 10.96.0.3
-
-      # Kubernetes memory and CPU requests and limits, for the NFS
-      # server containers.
-      #
-      kustomize_nfs_server_cpu_request: 10m
-      kustomize_nfs_server_cpu_limit: 1000m
-      kustomize_nfs_server_memory_request: 64Mi
-      kustomize_nfs_server_memory_limit: 1Gi
-      kustomize_git_pull_cpu_request: 10m
-      kustomize_git_pull_cpu_limit: 1000m
-      kustomize_git_pull_memory_request: 64Mi
-      kustomize_git_pull_memory_limit: 1Gi
+    # The static cluster IP address of the
+    # "nfs-server.swpt-nfs-server.svc.cluster.local" service.
+  - NFS_SERVICE_CLUSTER_IP=10.96.0.4
 
 - name: stomp-config
   literals:
@@ -248,6 +213,8 @@ patches:
     version: v1beta1
 
 replacements:
+- path: ../../base/swpt-debtors/replacements/nfs-cluster-ip.yaml
+- path: ../../base/swpt-debtors/replacements/nfs-pv-name.yaml
 - path: ../../base/swpt-debtors/replacements/stomp-server-port.yaml
 - path: ../../base/swpt-debtors/replacements/apiproxy-cpu-limit.yaml
 - path: ../../base/swpt-debtors/replacements/apiproxy-cpu-request.yaml

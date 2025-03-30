@@ -1,0 +1,10 @@
+source:
+  kind: ConfigMap
+  name: swpt-nfs-server
+  fieldPath: data.NFS_SERVICE_CLUSTER_IP
+targets:
+  - select:
+      kind: PersistentVolume
+      name: swpt-nfs
+    fieldPaths:
+      - spec.nfs.server

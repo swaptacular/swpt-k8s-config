@@ -8,8 +8,3 @@ targets:
       name: nfs-server
     fieldPaths:
       - spec.clusterIP
-  - select:
-      kind: PersistentVolume
-      name: swpt-nfs
-    fieldPaths:
-      - spec.nfs.server
