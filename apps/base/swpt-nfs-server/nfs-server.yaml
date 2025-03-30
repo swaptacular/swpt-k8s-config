@@ -129,6 +129,7 @@ kind: PersistentVolume
 metadata:
   name: swpt-nfs
 spec:
+  storageClassName: ""
   capacity:
     storage: 1Mi
   accessModes:
