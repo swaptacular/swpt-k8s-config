@@ -45,8 +45,9 @@ configMapGenerator:
   - GIT_PULL_SECONDS=60
 
   # The relative path in the GitOps Git repository, to the
-  # sub-directory containing the Swaptacular node's data.
-  - NODE_DATA_SUBDIR=apps/dev/swpt-accounts/node-data
+  # sub-directory containing the applications' Kustomize overlay that
+  # will be running in the Kubernetes cluster.
+  - OVERLAY_SUBDIR=apps/dev
 
   options:
     # These annotations are used as sources for convenient Kustomize
@@ -78,7 +79,7 @@ configMapGenerator:
 images:
 - name: swpt-nfs-server
   newName: ghcr.io/swaptacular/swpt_nfs_server
-  newTag: 0.1.5
+  newTag: 0.1.6
 
 namespace: swpt-nfs-server
 
