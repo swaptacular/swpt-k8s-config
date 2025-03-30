@@ -3,21 +3,21 @@ kind: Deployment
 metadata:
   name: nfs-server
   labels:
-    app.kubernetes.io/name: swpt-accounts
-    app.kubernetes.io/component: nfs-server
+    app.kubernetes.io/name: swpt-nfs-server
+    app.kubernetes.io/part-of: swpt-nodeset
 spec:
   replicas: 1  # must be exactly 1
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      app.kubernetes.io/name: swpt-accounts
-      app.kubernetes.io/component: nfs-server
+      app.kubernetes.io/name: swpt-nfs-server
+      app.kubernetes.io/part-of: swpt-nodeset
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: swpt-accounts
-        app.kubernetes.io/component: nfs-server
+        app.kubernetes.io/name: swpt-nfs-server
+        app.kubernetes.io/part-of: swpt-nodeset
     spec:
       priorityClassName: critical-database
       containers:
@@ -106,12 +106,12 @@ kind: Service
 metadata:
   name: nfs-server
   labels:
-    app.kubernetes.io/name: swpt-accounts
-    app.kubernetes.io/component: nfs-server
+    app.kubernetes.io/name: swpt-nfs-server
+    app.kubernetes.io/part-of: swpt-nodeset
 spec:
   selector:
-    app.kubernetes.io/name: swpt-accounts
-    app.kubernetes.io/component: nfs-server
+    app.kubernetes.io/name: swpt-nfs-server
+    app.kubernetes.io/part-of: swpt-nodeset
   ports:
     - name: nfs
       port: 2049
@@ -119,5 +119,32 @@ spec:
       targetPort: nfs
 
   # Unfortunately Kubernetes doesn't look at KubeDNS when setting up
-  # NFS volumes so we have to specify it here.
-  clusterIP: 10.96.0.2
+  # NFS volumes so we have to specify it here. Here "0.0.0.0" will be
+  # automatically replaced by the correct IP address
+  clusterIP: 0.0.0.0
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: swpt-nfs
+spec:
+  capacity:
+    storage: 1Mi
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    # Here "0.0.0.0" will be automatically replaced by the IP address
+    # of the "nfs-server" service.
+    server: 0.0.0.0
+    path: "/"
+  mountOptions:
+    # The effect of these mount options will be that when the NFS
+    # server becomes unavailable, 4 re-connection attempts will be
+    # made before an error gets raised. The respective re-connection
+    # attempts will be made after pauses of 50s, 100s, 150s, and 200s.
+    # Therefore, error will not be raised if the NFS server becomes
+    # available again within 500 seconds (~8.3 minutes).
+    - soft
+    - timeo=500 # 500 deciseconds
+    - retrans=4

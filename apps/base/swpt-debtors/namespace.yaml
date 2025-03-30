@@ -3,4 +3,5 @@ kind: Namespace
 metadata:
   labels:
     app.kubernetes.io/name: swpt-debtors
+    app.kubernetes.io/part-of: swpt-nodeset
   name: swpt-debtors

@@ -5,18 +5,22 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      app.kubernetes.io/name: swpt-debtors
-      app.kubernetes.io/component: nfs-server
+      app.kubernetes.io/name: swpt-nfs-server
+      app.kubernetes.io/part-of: swpt-nodeset
   policyTypes:
   - Ingress
   ingress:
   - from:
     - podSelector:
         matchLabels:
-          app.kubernetes.io/name: swpt-debtors
           app.kubernetes.io/component: stomp-server
+      namespaceSelector:
+        matchLabels:
+          app.kubernetes.io/part-of: swpt-nodeset
   - from:
     - podSelector:
         matchLabels:
-          app.kubernetes.io/name: swpt-debtors
           app.kubernetes.io/component: stomp-client
+      namespaceSelector:
+        matchLabels:
+          app.kubernetes.io/part-of: swpt-nodeset

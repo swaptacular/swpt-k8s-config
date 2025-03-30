@@ -10,4 +10,3 @@ targets:
       - spec.template.spec.containers.[name=nfs-server].resources.limits.cpu
     options:
       create: true
-

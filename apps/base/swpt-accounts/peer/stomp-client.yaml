@@ -43,20 +43,24 @@ spec:
             - configMapRef:
                 name: stomp-config
           env:
-            - name: SWPT_NODE_ID
-              value: SWPT_NODE_ID
-            - name: QUEUE_NAME_PREFIX
-              value: aa
+            - name: APP_K8S_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
             - name: ORDINAL_NUMBER
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.labels['apps.kubernetes.io/pod-index']            
+            - name: SWPT_NODE_ID
+              value: SWPT_NODE_ID
+            - name: QUEUE_NAME_PREFIX
+              value: aa
             - name: SWPT_SERVER_CERT
               value: /etc/swpt/server.crt
             - name: SWPT_SERVER_KEY
               value: /etc/swpt/server.key
             - name: SWPT_NODEDATA_URL
-              value: "file:///var/lib/swpt/.node-data"
+              value: "file:///var/lib/swpt/apps/dev/$(APP_K8S_NAMESPACE)/node-data"
             - name: PROTOCOL_BROKER_URL
               value: "$(rmq_connection_string)"
             - name: APP_LOG_LEVEL
@@ -89,20 +93,24 @@ spec:
             - configMapRef:
                 name: stomp-config
           env:
-            - name: SWPT_NODE_ID
-              value: SWPT_NODE_ID
-            - name: QUEUE_NAME_PREFIX
-              value: aa
+            - name: APP_K8S_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
             - name: ORDINAL_NUMBER
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.labels['apps.kubernetes.io/pod-index']            
+            - name: SWPT_NODE_ID
+              value: SWPT_NODE_ID
+            - name: QUEUE_NAME_PREFIX
+              value: aa
             - name: SWPT_SERVER_CERT
               value: /etc/swpt/server.crt
             - name: SWPT_SERVER_KEY
               value: /etc/swpt/server.key
             - name: SWPT_NODEDATA_URL
-              value: "file:///var/lib/swpt/.node-data"
+              value: "file:///var/lib/swpt/apps/dev/$(APP_K8S_NAMESPACE)/node-data"
             - name: PROTOCOL_BROKER_URL
               value: "$(rmq_connection_string)"
             - name: APP_LOG_LEVEL
@@ -117,15 +125,19 @@ spec:
               cpu: 5m
               memory: 32Mi
         - name: activate-node
-          image: swpt-nfs-server
+          image: swpt-stomp
           args:
             - touch
             - "-a"
-            - "/var/lib/swpt/.node-data/peers/$(SWPT_NODE_ID)/ACTIVE"
+            - "/var/lib/swpt/apps/dev/$(APP_K8S_NAMESPACE)/node-data/peers/$(SWPT_NODE_ID)/ACTIVE"
           volumeMounts:
             - name: node-data
               mountPath: "/var/lib/swpt"
           env:
+            - name: APP_K8S_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
             - name: SWPT_NODE_ID
               value: SWPT_NODE_ID
           resources:

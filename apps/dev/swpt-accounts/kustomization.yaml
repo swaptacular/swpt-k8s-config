@@ -1,7 +1,9 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-# The name of the namespace could be changed.
+# The name of the namespace could be changed. However, the name of the
+# namespace and the name of the directory that contains this
+# `kustomization.yaml` file MUST always be the same!
 namespace: swpt-accounts
 
 secretGenerator:
@@ -48,40 +50,6 @@ secretGenerator:
 
   options:
     disableNameSuffixHash: true
-    labels:
-      app.kubernetes.io/name: swpt-accounts
-  type: Opaque
-
-- name: git-pull-ssh-id
-  files:
-  # A SOPS-encrypted file containing the SSH private key used to
-  # authenticate to the GitOps Git server.
-  #
-  # Run `ssh-keygen -f id_rsa -N ''` to generate a new SSH
-  # private/public key pair. This will create two files:
-  # 1. "id_rsa", containing the unencrypted SSH private key;
-  # 2. "id_rsa.pub", containing the SSH public key.
-  #
-  # Then use SOPS to encrypt the "id_rsa" file. The resulting
-  # encrypted file must be named "id_rsa.encrypted". For example, you
-  # may run: `sops encrypt id_rsa > id_rsa.encrypted`.
-  - id_rsa=git-pull-ssh-id/id_rsa.encrypted
-
-  # The "id_rsa.pub" file generated in the previous step. (See the
-  # previous comment.)
-  - id_rsa.pub=git-pull-ssh-id/id_rsa.pub
-
-  # The certificate for the "id_rsa.pub" key. To create this
-  # certificate, run this command:
-  #
-  # $ ssh-keygen -s <path-to-root-ca-private-key-file> -I git-pull -n git id_rsa.pub
-  #
-  # Here "<path-to-root-ca-private-key-file>" is the path to your
-  # Swaptacular node's private key, and "id_rsa.pub" is the public key
-  # generated in the previous steps. (See previous comments.)
-  - id_rsa-cert.pub=git-pull-ssh-id/id_rsa-cert.pub
-
-  options:
     labels:
       app.kubernetes.io/name: swpt-accounts
   type: Opaque
@@ -240,9 +208,6 @@ images:
 - name: swpt-apiproxy
   newName: ghcr.io/swaptacular/swpt_apiproxy
   newTag: 1.2.2
-- name: swpt-nfs-server
-  newName: ghcr.io/swaptacular/swpt_nfs_server
-  newTag: 0.1.5
 - name: swpt-stomp
   newName: ghcr.io/swaptacular/swpt_stomp
   newTag: 2.3.0
@@ -265,7 +230,6 @@ patches:
     version: v1beta1
 
 replacements:
-- path: ../../base/swpt-accounts/replacements/nfs-cluster-ip.yaml
 - path: ../../base/swpt-accounts/replacements/stomp-server-port.yaml
 - path: ../../base/swpt-accounts/replacements/apiproxy-cpu-limit.yaml
 - path: ../../base/swpt-accounts/replacements/apiproxy-cpu-request.yaml
@@ -275,11 +239,3 @@ replacements:
 - path: ../../base/swpt-accounts/replacements/stomp-server-cpu-request.yaml
 - path: ../../base/swpt-accounts/replacements/stomp-server-memory-limit.yaml
 - path: ../../base/swpt-accounts/replacements/stomp-server-memory-request.yaml
-- path: ../../base/swpt-accounts/replacements/nfs-server-cpu-limit.yaml
-- path: ../../base/swpt-accounts/replacements/nfs-server-cpu-request.yaml
-- path: ../../base/swpt-accounts/replacements/nfs-server-memory-limit.yaml
-- path: ../../base/swpt-accounts/replacements/nfs-server-memory-request.yaml
-- path: ../../base/swpt-accounts/replacements/git-pull-cpu-limit.yaml
-- path: ../../base/swpt-accounts/replacements/git-pull-cpu-request.yaml
-- path: ../../base/swpt-accounts/replacements/git-pull-memory-limit.yaml
-- path: ../../base/swpt-accounts/replacements/git-pull-memory-request.yaml
