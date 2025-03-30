@@ -59,7 +59,7 @@ configMapGenerator:
       # cluster IPs will be different, but according to the Kubernetes
       # documentation, is seems that the range from 10.96.0.2 to
       # 10.96.0.15 should always be safe.
-      kustomize_nfs_service_cluster_ip: 10.96.0.2
+      kustomize_nfs_service_cluster_ip: 10.96.0.4
 
       # Kubernetes memory and CPU requests and limits, for the NFS
       # server containers.
