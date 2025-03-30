@@ -229,6 +229,9 @@ images:
 - name: swpt-stomp
   newName: ghcr.io/swaptacular/swpt_stomp
   newTag: 2.3.0
+- name: swpt-nfs-server
+  newName: ghcr.io/swaptacular/swpt_nfs_server
+  newTag: 0.1.5
 
 resources:
 - ../../base/swpt-debtors/

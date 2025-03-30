@@ -214,6 +214,9 @@ images:
 - name: nginx
   newName: docker.io/nginx
   newTag: 1.26.3-alpine3.20
+- name: swpt-nfs-server
+  newName: ghcr.io/swaptacular/swpt_nfs_server
+  newTag: 0.1.5
 
 resources:
 - ../../base/swpt-accounts/
