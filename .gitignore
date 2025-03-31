@@ -12,7 +12,7 @@ TAGS
 !/clusters/**/.sops.yaml
 
 # Files created by the git-pull container
-.node-data
+.overlay
 .ssh_known_hosts
 
 # Automatically created peer status files
