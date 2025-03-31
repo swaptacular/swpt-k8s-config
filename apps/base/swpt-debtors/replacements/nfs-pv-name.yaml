@@ -1,6 +1,6 @@
 source:
   kind: ConfigMap
-  name: swpt-nfs-server
+  name: stomp-config
   fieldPath: metadata.namespace
 targets:
   - select:

@@ -1,7 +1,7 @@
 source:
   kind: ConfigMap
-  name: swpt-nfs-server
-  fieldPath: data.NFS_SERVICE_CLUSTER_IP
+  name: stomp-config
+  fieldPath: metadata.annotations.kustomize_nfs_service_cluster_ip
 targets:
   - select:
       kind: PersistentVolume

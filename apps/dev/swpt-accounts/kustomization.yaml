@@ -76,12 +76,6 @@ secretGenerator:
   type: Opaque
 
 configMapGenerator:
-- name: swpt-nfs-server
-  literals:
-    # The static cluster IP address of the
-    # "nfs-server.swpt-nfs-server.svc.cluster.local" service.
-  - NFS_SERVICE_CLUSTER_IP=10.96.0.4
-
 - name: stomp-config
   literals:
   # The number of SMP messages that STOMP servers and STOMP clients
@@ -98,6 +92,10 @@ configMapGenerator:
     # replacements:
     #
     annotations:
+      # The static cluster IP address of the
+      # "nfs-server.swpt-nfs-server.svc.cluster.local" service.
+      kustomize_nfs_service_cluster_ip: 10.96.0.4
+
       # Each Swaptacular node runs its own STOMP server. When running
       # more than one Swaptacular node on a single Kubernetes cluster,
       # you should make sure that the STOMP servers of different
