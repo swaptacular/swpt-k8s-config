@@ -1,0 +1,56 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+labels:
+- includeSelectors: true
+  pairs:
+    app.kubernetes.io/name: swpt-debtors
+
+secretGenerator:
+- name: postgres.hydra-db.credentials.postgresql.acid.zalan.do
+  files:
+  - password=../pg-secrets/postgres-cluster-password.encrypted
+  literals:
+  - username=postgres
+  options:
+    disableNameSuffixHash: true
+    labels:
+      application: spilo
+      cluster-name: hydra-db
+      team: swpt
+  type: Opaque
+- name: standby.hydra-db.credentials.postgresql.acid.zalan.do
+  files:
+  - password=../pg-secrets/postgres-cluster-password.encrypted
+  literals:
+  - username=standby
+  options:
+    disableNameSuffixHash: true
+    labels:
+      application: spilo
+      cluster-name: hydra-db
+      team: swpt
+  type: Opaque
+- name: db-owner.hydra-db.credentials.postgresql.acid.zalan.do
+  files:
+  - password=../pg-secrets/postgres-cluster-password.encrypted
+  literals:
+  - username=db_owner
+  options:
+    disableNameSuffixHash: true
+    labels:
+      application: spilo
+      cluster-name: hydra-db
+      team: swpt
+  type: Opaque
+
+resources:
+- hydra-postgres-cluster.yaml
+
+patches:
+- path: ../../../base/swpt-debtors/patches/hydra-postgres-cluster.yaml
+  target:
+    group: acid.zalan.do
+    kind: postgresql
+    name: hydra-db
+    version: v1

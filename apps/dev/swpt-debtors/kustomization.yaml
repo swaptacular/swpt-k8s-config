@@ -75,6 +75,26 @@ secretGenerator:
       app.kubernetes.io/name: swpt-debtors
   type: Opaque
 
+- name: swpt-hydra
+  files:
+  # The "hydra-secret.encrypted" file must be a SOPS-encrypted file
+  # containing a cryptographic-grade secret. For example, to generate
+  # this file you may use the following commands:
+  #
+  # $ openssl rand -base64 32 > hydra-secret
+  # $ sops encrypt hydra-secret > hydra-secret.encrypted
+  # $ shred -z hydra-secret
+  # $ rm hydra-secret
+  - secretsSystem=hydra-secret.encrypted
+  - secretsCookie=hydra-secret.encrypted
+
+  options:
+    disableNameSuffixHash: true
+    labels:
+      app.kubernetes.io/name: hydra
+      app.kubernetes.io/instance: swpt
+  type: Opaque
+
 configMapGenerator:
 - name: debtors-agent-config
   literals:
@@ -199,6 +219,7 @@ images:
 resources:
 - ../../base/swpt-debtors/
 - broker.yaml
+- hydra-db/
 - shards/
 - node-data/peers/
 
@@ -222,3 +243,4 @@ replacements:
 - path: ../../base/swpt-debtors/replacements/stomp-server-cpu-request.yaml
 - path: ../../base/swpt-debtors/replacements/stomp-server-memory-limit.yaml
 - path: ../../base/swpt-debtors/replacements/stomp-server-memory-request.yaml
+- path: ../../base/swpt-debtors/replacements/hydra-cluster-role-name.yaml

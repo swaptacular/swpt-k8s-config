@@ -1,16 +1,453 @@
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: swpt-hydra
+  labels:
+    app.kubernetes.io/name: hydra
+    app.kubernetes.io/instance: swpt
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: hydra
+      app.kubernetes.io/instance: swpt
+  maxUnavailable: 30%
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: swpt-hydra-maester-account
+  labels:
+    app.kubernetes.io/name: hydra-maester
+    app.kubernetes.io/instance: swpt
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: swpt-hydra
+  labels:
+    app.kubernetes.io/name: hydra
+    app.kubernetes.io/instance: swpt
+automountServiceAccountToken: false
+
+---
+# Source: hydra/templates/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: swpt-hydra
+  labels:
+    app.kubernetes.io/name: hydra
+    app.kubernetes.io/instance: swpt
+data:
+  "hydra.yaml": |
+    serve:
+      admin:
+        port: 4445
+      public:
+        port: 4444
+      tls:
+        allow_termination_from:
+        - 10.0.0.0/8
+        - 172.16.0.0/12
+        - 192.168.0.0/16
+    urls:
+      consent: hydra.config.urls.consent
+      login: hydra.config.urls.login
+      self:
+        issuer: hydra.config.urls.self.issuer
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: swpt-hydra-maester-role
+rules:
+  - apiGroups: ["hydra.ory.sh"]
+    resources: ["oauth2clients", "oauth2clients/status"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["list", "watch", "create"]
+
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: swpt-hydra-maester-role-binding
+subjects:
+  - kind: ServiceAccount
+    name: swpt-hydra-maester-account
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: swpt-hydra-maester-role
+
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: swpt-hydra-maester-role
+rules:
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["get", "list", "watch", "create"]
+  - apiGroups: ["hydra.ory.sh"]
+    resources: ["oauth2clients", "oauth2clients/status"]
+    verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
+
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: swpt-hydra-maester-role-binding
+subjects:
+  - kind: ServiceAccount
+    name: swpt-hydra-maester-account
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: swpt-hydra-maester-role
+
+---
 apiVersion: v1
 kind: Service
 metadata:
-  name: ory-hydra-admin
+  name: swpt-hydra-admin
   labels:
-    app.kubernetes.io/name: swpt-debtors
-    app.kubernetes.io/component: ory-hydra
+    app.kubernetes.io/name: hydra
+    app.kubernetes.io/instance: swpt
+    app.kubernetes.io/component: admin
 spec:
-  selector:
-    app.kubernetes.io/name: swpt-debtors
-    app.kubernetes.io/component: ory-hydra
+  type: ClusterIP
   ports:
-    - name: admin
-      port: 80
+    - port: 4445
+      targetPort: http-admin
       protocol: TCP
-      targetPort: admin
+      name: http
+  selector:
+    app.kubernetes.io/name: hydra
+    app.kubernetes.io/instance: swpt
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: swpt-hydra-public
+  labels:
+    app.kubernetes.io/name: hydra
+    app.kubernetes.io/instance: swpt
+spec:
+  type: ClusterIP
+  ports:
+    - port: 4444
+      targetPort: http-public
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: hydra
+    app.kubernetes.io/instance: swpt
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: swpt-hydra-maester
+  labels:
+    app.kubernetes.io/name: hydra-maester
+    app.kubernetes.io/instance: swpt
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      control-plane: controller-manager
+      app.kubernetes.io/name: swpt-hydra-maester
+      app.kubernetes.io/instance: swpt
+  template:
+    metadata:
+      labels:
+        control-plane: controller-manager
+        app.kubernetes.io/name: swpt-hydra-maester
+        app.kubernetes.io/instance: swpt
+    spec:
+      volumes:
+      terminationGracePeriodSeconds: 60
+      priorityClassName: oauth2-server
+      containers:
+        - name: hydra-maester
+          image: "oryd/hydra-maester:v0.0.36"
+          command:
+            - /manager
+          args:
+            - --metrics-addr=127.0.0.1:8080
+            - --hydra-url=http://swpt-hydra-admin
+            - --hydra-port=4445
+            - --endpoint=/admin/clients
+          volumeMounts:
+          resources:
+            limits:
+              cpu: 100m
+              memory: 30Mi
+            requests:
+              cpu: 100m
+              memory: 20Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            privileged: false
+            readOnlyRootFilesystem: true
+            runAsGroup: 65534
+            runAsNonRoot: true
+            runAsUser: 65534
+            seLinuxOptions:
+              level: s0:c123,c456
+            seccompProfile:
+              type: RuntimeDefault
+      serviceAccountName: swpt-hydra-maester-account
+      automountServiceAccountToken: true
+      securityContext:
+        fsGroup: 65534
+        fsGroupChangePolicy: OnRootMismatch
+        runAsGroup: 65534
+        runAsNonRoot: true
+        runAsUser: 65534
+        seccompProfile:
+          type: RuntimeDefault
+
+---
+# Source: hydra/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: swpt-hydra
+  labels:
+    app.kubernetes.io/name: hydra
+    app.kubernetes.io/instance: swpt
+spec:
+  replicas: 2
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: hydra
+      app.kubernetes.io/instance: swpt
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: hydra
+        app.kubernetes.io/instance: swpt
+    spec:
+      volumes:
+        - name: hydra-config-volume
+          configMap:
+            name: swpt-hydra
+      serviceAccountName: swpt-hydra
+      automountServiceAccountToken: false
+      terminationGracePeriodSeconds: 60
+      containers:
+        - name: hydra
+          image: "oryd/hydra:v2.3.0"
+          command:
+            - hydra
+          args:
+            - serve
+            - all
+            - --config
+            - /etc/config/hydra.yaml
+          volumeMounts:
+            - name: hydra-config-volume
+              mountPath: /etc/config
+              readOnly: true
+          ports:
+            - name: http-public
+              containerPort: 4444
+              protocol: TCP
+            - name: http-admin
+              containerPort: 4445
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /health/alive
+              port: 4445
+              httpHeaders:
+                - name: Host
+                  value: '127.0.0.1'
+            failureThreshold: 5
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          startupProbe:
+            httpGet:
+              path: /health/ready
+              port: 4445
+              httpHeaders:
+                - name: Host
+                  value: '127.0.0.1'
+            failureThreshold: 5
+            initialDelaySeconds: 1
+            periodSeconds: 1
+            successThreshold: 1
+            timeoutSeconds: 2
+          envFrom:
+            - secretRef:
+                name: db-owner-credentials
+              prefix: pg_
+          env:
+            - name: URLS_SELF_ISSUER
+              value: "hydra.config.urls.self.issuer"
+            - name: DSN
+              value: "postgres://$(pg_username):$(pg_password)@hydra-db/db?sslmode=disable&max_conns=20&max_idle_conns=4"
+            - name: SECRETS_SYSTEM
+              valueFrom:
+                secretKeyRef:
+                  name: swpt-hydra
+                  key: secretsSystem
+            - name: SECRETS_COOKIE
+              valueFrom:
+                secretKeyRef:
+                  name: swpt-hydra
+                  key: secretsCookie
+          resources:
+            limits:
+              cpu: 100m
+              memory: 128Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            privileged: false
+            readOnlyRootFilesystem: true
+            runAsGroup: 65534
+            runAsNonRoot: true
+            runAsUser: 65534
+            seLinuxOptions:
+              level: s0:c123,c456
+            seccompProfile:
+              type: RuntimeDefault
+      priorityClassName: oauth2-server
+      securityContext:
+        fsGroup: 65534
+        fsGroupChangePolicy: OnRootMismatch
+        runAsGroup: 65534
+        runAsNonRoot: true
+        runAsUser: 65534
+        seccompProfile:
+          type: RuntimeDefault
+
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: swpt-hydra-janitor
+  labels:
+    app.kubernetes.io/name: hydra-janitor
+    app.kubernetes.io/instance: swpt
+    app.kubernetes.io/component: janitor
+spec:
+  concurrencyPolicy: Forbid
+  schedule: "0 */1 * * *"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app.kubernetes.io/name: hydra-janitor
+            app.kubernetes.io/instance: swpt
+            app.kubernetes.io/component: janitor
+        spec:
+          restartPolicy: OnFailure
+          serviceAccountName: swpt-hydra-cronjob-janitor
+          automountServiceAccountToken: true
+          volumes:
+            - name: hydra-config-volume
+              configMap:
+                name: swpt-hydra
+          containers:
+            - name: janitor
+              image: "oryd/hydra:v2.3.0"
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop:
+                  - ALL
+                privileged: false
+                readOnlyRootFilesystem: true
+                runAsNonRoot: true
+                runAsUser: 100
+              command: ["hydra"]
+              args:
+                - janitor
+                - --grants
+                - --requests
+                - --tokens
+                - --batch-size
+                - "100"
+                - --limit
+                - "10000"
+                - --config
+                - /etc/config/hydra.yaml
+              envFrom:
+                - secretRef:
+                    name: db-owner-credentials
+                  prefix: pg_
+              env:
+                - name: DSN
+                  value: "postgres://$(pg_username):$(pg_password)@hydra-db/db?sslmode=disable&max_conns=20&max_idle_conns=4"
+              resources:
+                limits:
+                  cpu: 100m
+                  memory: 128Mi
+                requests:
+                  cpu: 100m
+                  memory: 128Mi
+              volumeMounts:
+                - name: hydra-config-volume
+                  mountPath: /etc/config
+                  readOnly: true
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: swpt-hydra-cronjob-janitor
+  labels:
+    app.kubernetes.io/name: hydra
+    app.kubernetes.io/instance: swpt
+automountServiceAccountToken: false
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: swpt-hydra-job
+  labels:
+    app.kubernetes.io/name: hydra
+    app.kubernetes.io/instance": swpt
+automountServiceAccountToken: false
+
+---
+# Source: hydra/templates/tests/test-connection.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "swpt-hydra-test-connection"
+  labels:
+    app.kubernetes.io/name: hydra
+    app.kubernetes.io/instance: swpt
+spec:
+  containers:
+    - name: healthcheck-ready
+      image: "busybox:1"
+      command: ['wget']
+      args:  ['swpt-hydra-admin:4445/health/ready']
+  restartPolicy: Never
