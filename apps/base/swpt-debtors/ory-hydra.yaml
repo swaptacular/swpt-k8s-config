@@ -432,7 +432,7 @@ metadata:
   name: swpt-hydra-job
   labels:
     app.kubernetes.io/name: hydra
-    app.kubernetes.io/instance": swpt
+    app.kubernetes.io/instance: swpt
 automountServiceAccountToken: false
 
 ---
