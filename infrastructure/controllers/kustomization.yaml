@@ -3,5 +3,6 @@ kind: Kustomization
 resources:
 - ingress-nginx.yaml
 - priority-classes.yaml
+- crd-oauth2clients.yaml
 - postgres-operator/
 - rabbitmq-system/
