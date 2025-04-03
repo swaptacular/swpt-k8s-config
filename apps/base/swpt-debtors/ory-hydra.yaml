@@ -441,8 +441,8 @@ kind: Job
 metadata:
   name: swpt-hydra-automigrate
   labels:
-    "app.kubernetes.io/name": "hydra"
-    "app.kubernetes.io/instance": "swpt"
+    app.kubernetes.io/name: hydra
+    app.kubernetes.io/instance: swpt
 spec:
   template:
     metadata:
@@ -460,7 +460,7 @@ spec:
         envFrom:
           - secretRef:
               name: db-owner-credentials
-          prefix: pg_
+            prefix: pg_
         env:
           - name: DSN
             value: "postgres://$(pg_username):$(pg_password)@hydra-db/db?sslmode=disable&max_conns=20&max_idle_conns=4"
