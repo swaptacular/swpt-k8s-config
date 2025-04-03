@@ -319,7 +319,7 @@ spec:
           env:
             - name: PUBLIC_HOSTNAME
               valueFrom:
-                configMapRef:
+                configMapKeyRef:
                   name: debtors-agent-config
                   key: PUBLIC_HOSTNAME
             - name: URLS_SELF_ISSUER
