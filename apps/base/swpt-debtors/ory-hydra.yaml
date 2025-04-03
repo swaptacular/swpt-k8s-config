@@ -526,6 +526,7 @@ spec:
         - name: hydra-config-volume
           configMap:
             name: swpt-hydra-migrate
+  backoffLimit: 10
 
 ---
 # Source: hydra/templates/tests/test-connection.yaml
