@@ -58,6 +58,29 @@ data:
       login: hydra.config.urls.login
       self:
         issuer: hydra.config.urls.self.issuer
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: swpt-hydra-migrate
+  namespace: default
+  labels:
+    app.kubernetes.io/name: hydra
+    app.kubernetes.io/instance: swpt
+data:
+  "hydra.yaml": |
+    serve:
+      admin:
+        port: 4445
+      public:
+        port: 4444
+      tls:
+        allow_termination_from:
+        - 10.0.0.0/8
+        - 172.16.0.0/12
+        - 192.168.0.0/16
+
 ---
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
