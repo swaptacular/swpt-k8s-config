@@ -326,7 +326,7 @@ spec:
             - name: URLS_SELF_ISSUER
               value: "hydra.config.urls.self.issuer"
             - name: DSN
-              value: "postgres://$(pg_username):$(pg_password)@hydra-db/db?sslmode=disable&max_conns=20&max_idle_conns=4"
+              value: "postgres://$(pg_username):$(pg_password)@hydra-db/db?max_conns=20&max_idle_conns=4"
             - name: SECRETS_SYSTEM
               valueFrom:
                 secretKeyRef:
@@ -426,7 +426,7 @@ spec:
                   prefix: pg_
               env:
                 - name: DSN
-                  value: "postgres://$(pg_username):$(pg_password)@hydra-db/db?sslmode=disable&max_conns=20&max_idle_conns=4"
+                  value: "postgres://$(pg_username):$(pg_password)@hydra-db/db?max_conns=20&max_idle_conns=4"
               resources:
                 limits:
                   cpu: 100m
@@ -486,7 +486,7 @@ spec:
             prefix: pg_
         env:
           - name: DSN
-            value: "postgres://$(pg_username):$(pg_password)@hydra-db/db?sslmode=disable&max_conns=20&max_idle_conns=4"
+            value: "postgres://$(pg_username):$(pg_password)@hydra-db/db?max_conns=20&max_idle_conns=4"
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
@@ -503,10 +503,10 @@ spec:
             type: RuntimeDefault
         resources:
           limits:
-            cpu: 100m
-            memory: 128Mi
+            cpu: "1"
+            memory: 1Gi
           requests:
-            cpu: 100m
+            cpu: 10m
             memory: 128Mi
         volumeMounts:
           - name: hydra-config-volume
