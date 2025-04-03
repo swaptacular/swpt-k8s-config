@@ -530,20 +530,3 @@ spec:
           configMap:
             name: swpt-hydra-migrate
   backoffLimit: 10
-
----
-# Source: hydra/templates/tests/test-connection.yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: "swpt-hydra-test-connection"
-  labels:
-    app.kubernetes.io/name: hydra
-    app.kubernetes.io/instance: swpt
-spec:
-  containers:
-    - name: healthcheck-ready
-      image: "busybox:1"
-      command: ['wget']
-      args:  ['swpt-hydra-admin:4445/health/ready']
-  restartPolicy: Never
