@@ -53,11 +53,6 @@ data:
         - 10.0.0.0/8
         - 172.16.0.0/12
         - 192.168.0.0/16
-    urls:
-      consent: hydra.config.urls.consent
-      login: hydra.config.urls.login
-      self:
-        issuer: hydra.config.urls.self.issuer
 
 ---
 apiVersion: v1
@@ -243,7 +238,6 @@ spec:
           type: RuntimeDefault
 
 ---
-# Source: hydra/templates/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -323,8 +317,17 @@ spec:
                 name: db-owner-credentials
               prefix: pg_
           env:
+            - name: PUBLIC_HOSTNAME
+              valueFrom:
+                configMapRef:
+                  name: debtors-agent-config
+                  key: PUBLIC_HOSTNAME
             - name: URLS_SELF_ISSUER
-              value: "hydra.config.urls.self.issuer"
+              value: "https://$(PUBLIC_HOSTNAME)/debtors-hydra/"
+            - name: URLS_LOGIN
+              value: "https://$(PUBLIC_HOSTNAME)/debtors-login/"
+            - name: URLS_CONSENT
+              value: "https://$(PUBLIC_HOSTNAME)/debtors-consent/"
             - name: DSN
               value: "postgres://$(pg_username):$(pg_password)@hydra-db/db?max_conns=20&max_idle_conns=4"
             - name: SECRETS_SYSTEM
