@@ -128,6 +128,21 @@ configMapGenerator:
   # reasonably well.
   - hydra.yaml=../../base/swpt-debtors/static/hydra.yaml
 
+  literals:
+  # This string will be appended to the "data source name" (DSN)
+  # string (after the "?" character). It alters the behaviour of the
+  # database driver. For example: the maximum number of open
+  # connections, or the maximum number of idle connections.
+  - dsn_query_params=max_conns=20&max_idle_conns=4
+
+  # Configure how many records Hydra's janitor retrieves from the
+  # database for deletion.
+  - janitor_limit=10000
+
+  # Configure how many records Hydra's janitor deletes with each
+  # iteration.
+  - janitor_batch_size=100
+
   options:
     labels:
       app.kubernetes.io/name: hydra

@@ -301,6 +301,11 @@ spec:
                 name: db-owner-credentials
               prefix: pg_
           env:
+            - name: dsn_query_params
+              valueFrom:
+                configMapKeyRef:
+                  name: swpt-hydra
+                  key: dsn_query_params
             - name: PUBLIC_HOSTNAME
               valueFrom:
                 configMapKeyRef:
@@ -313,7 +318,7 @@ spec:
             - name: URLS_CONSENT
               value: "https://$(PUBLIC_HOSTNAME)/debtors-consent/"
             - name: DSN
-              value: "postgres://$(pg_username):$(pg_password)@hydra-db/db?max_conns=20&max_idle_conns=4"
+              value: "postgres://$(pg_username):$(pg_password)@hydra-db/db?$(dsn_query_params)"
             - name: SECRETS_SYSTEM
               valueFrom:
                 secretKeyRef:
@@ -402,9 +407,9 @@ spec:
                 - --requests
                 - --tokens
                 - --batch-size
-                - "100"
+                - "$(janitor_batch_size)"
                 - --limit
-                - "10000"
+                - "$(janitor_limit)"
                 - --config
                 - /etc/config/hydra.yaml
               envFrom:
@@ -412,8 +417,23 @@ spec:
                     name: db-owner-credentials
                   prefix: pg_
               env:
+                - name: dsn_query_params
+                  valueFrom:
+                    configMapKeyRef:
+                      name: swpt-hydra
+                      key: dsn_query_params
+                - name: janitor_batch_size
+                  valueFrom:
+                    configMapKeyRef:
+                      name: swpt-hydra
+                      key: janitor_batch_size
+                - name: janitor_limit
+                  valueFrom:
+                    configMapKeyRef:
+                      name: swpt-hydra
+                      key: janitor_limit
                 - name: DSN
-                  value: "postgres://$(pg_username):$(pg_password)@hydra-db/db?max_conns=20&max_idle_conns=4"
+                  value: "postgres://$(pg_username):$(pg_password)@hydra-db/db?$(dsn_query_params)"
               resources:
                 limits:
                   cpu: 100m
@@ -473,8 +493,13 @@ spec:
               name: db-owner-credentials
             prefix: pg_
         env:
+          - name: dsn_query_params
+            valueFrom:
+              configMapKeyRef:
+                name: swpt-hydra
+                key: dsn_query_params
           - name: DSN
-            value: "postgres://$(pg_username):$(pg_password)@hydra-db/db?max_conns=20&max_idle_conns=4"
+            value: "postgres://$(pg_username):$(pg_password)@hydra-db/db?$(dsn_query_params)"
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
