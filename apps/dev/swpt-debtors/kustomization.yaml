@@ -117,6 +117,22 @@ configMapGenerator:
   - MIN_DEBTOR_ID=0x0abcdef100000000
   - MAX_DEBTOR_ID=0x0abcdef100ffffff
 
+  options:
+    labels:
+      app.kubernetes.io/name: swpt-debtors
+
+- name: swpt-hydra
+  files:
+  # The configuration file for Ory-Hydra. Can reference a custom
+  # configuration file. Normally, the default one should be work
+  # reasonably well.
+  - hydra.yaml=../../base/swpt-debtors/static/hydra.yaml
+
+  options:
+    labels:
+      app.kubernetes.io/name: hydra
+      app.kubernetes.io/instance: swpt
+
 - name: stomp-config
   literals:
   # The number of SMP messages that STOMP servers and STOMP clients
@@ -129,6 +145,9 @@ configMapGenerator:
   - APP_FILE_READ_THREADS=10
 
   options:
+    labels:
+      app.kubernetes.io/name: swpt-debtors
+
     # These annotations are used as sources for convenient Kustomize
     # replacements:
     #

@@ -88,6 +88,9 @@ configMapGenerator:
   - APP_FILE_READ_THREADS=10
 
   options:
+    labels:
+      app.kubernetes.io/name: swpt-accounts
+
     # These annotations are used as sources for convenient Kustomize
     # replacements:
     #
