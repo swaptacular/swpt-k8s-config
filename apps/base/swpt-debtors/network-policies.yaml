@@ -18,12 +18,6 @@ spec:
           app.kubernetes.io/name: hydra-maester
     - podSelector:
         matchLabels:
-          app.kubernetes.io/name: hydra-automigrate
-    - podSelector:
-        matchLabels:
-          app.kubernetes.io/name: hydra-janitor
-    - podSelector:
-        matchLabels:
           app.kubernetes.io/name: swpt-debtors-shard
           app.kubernetes.io/component: web-server
           app.kubernetes.io/part-of: swpt-debtors
