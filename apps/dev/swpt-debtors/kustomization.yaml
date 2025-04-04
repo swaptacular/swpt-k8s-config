@@ -133,6 +133,18 @@ configMapGenerator:
       app.kubernetes.io/name: hydra
       app.kubernetes.io/instance: swpt
 
+    # These annotations are used as sources for convenient Kustomize
+    # replacements:
+    #
+    annotations:
+      # Kubernetes memory and CPU requests and limits, for the Ory
+      # Hydra server containers.
+      #
+      kustomize_hydra_cpu_request: 100m
+      kustomize_hydra_cpu_limit: 1000m
+      kustomize_hydra_memory_request: 128Mi
+      kustomize_hydra_memory_limit: 1Gi
+
 - name: stomp-config
   literals:
   # The number of SMP messages that STOMP servers and STOMP clients
@@ -221,6 +233,8 @@ replicas:
   count: 1
 - name: stomp-server
   count: 1
+- name: swpt-hydra
+  count: 1
 
 # OCI images to use for the different containers:
 #
@@ -237,6 +251,12 @@ images:
 - name: swpt-nfs-server
   newName: ghcr.io/swaptacular/swpt_nfs_server
   newTag: 0.1.6
+- name: oryd-hydra-maester
+  newName: docker.io/oryd/hydra-maester
+  newTag: v0.0.36
+- name: oryd-hydra
+  newName: docker.io/oryd/hydra
+  newTag: v2.3.0
 
 resources:
 - ../../base/swpt-debtors/
@@ -266,3 +286,7 @@ replacements:
 - path: ../../base/swpt-debtors/replacements/stomp-server-memory-limit.yaml
 - path: ../../base/swpt-debtors/replacements/stomp-server-memory-request.yaml
 - path: ../../base/swpt-debtors/replacements/hydra-cluster-role-name.yaml
+- path: ../../base/swpt-debtors/replacements/hydra-cpu-limit.yaml
+- path: ../../base/swpt-debtors/replacements/hydra-cpu-request.yaml
+- path: ../../base/swpt-debtors/replacements/hydra-memory-limit.yaml
+- path: ../../base/swpt-debtors/replacements/hydra-memory-request.yaml

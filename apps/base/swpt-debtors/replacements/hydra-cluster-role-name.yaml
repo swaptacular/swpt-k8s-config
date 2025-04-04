@@ -5,7 +5,7 @@ source:
 targets:
   - select:
       kind: ClusterRole
-      name: swpt-hydra-maester-role
+      name: namespace-hydra-maester-role
     fieldPaths:
       - metadata.name
     options:
@@ -13,7 +13,7 @@ targets:
       index: 0
   - select:
       kind: ClusterRoleBinding
-      name: swpt-hydra-maester-role-binding
+      name: namespace-hydra-maester-role-binding
     fieldPaths:
       - metadata.name
     options:

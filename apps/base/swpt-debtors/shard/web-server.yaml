@@ -65,7 +65,7 @@ spec:
             - name: PROTOCOL_BROKER_QUEUE
               value: "$(pg_cluster_name)"
             - name: OAUTH2_INTROSPECT_URL
-              value: "http://swpt-hydra-admin:4445/oauth2/introspect"
+              value: "http://swpt-hydra-admin:4445/admin/oauth2/introspect"
 
 ---
 apiVersion: v1

@@ -58,7 +58,9 @@ data:
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: swpt-hydra-maester-role
+  # Here "namespace" will be automatically replaced with the name of
+  # the current namespace.
+  name: namespace-hydra-maester-role
 rules:
   - apiGroups: ["hydra.ory.sh"]
     resources: ["oauth2clients", "oauth2clients/status"]
@@ -71,14 +73,16 @@ rules:
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: swpt-hydra-maester-role-binding
+  # Here "namespace" will be automatically replaced with the name of
+  # the current namespace.
+  name: namespace-hydra-maester-role-binding
 subjects:
   - kind: ServiceAccount
     name: swpt-hydra-maester-account
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: swpt-hydra-maester-role
+  name: namespace-hydra-maester-role
 
 ---
 kind: Role
@@ -167,12 +171,11 @@ spec:
         app.kubernetes.io/name: swpt-hydra-maester
         app.kubernetes.io/instance: swpt
     spec:
-      volumes:
       terminationGracePeriodSeconds: 60
       priorityClassName: oauth2-server
       containers:
         - name: hydra-maester
-          image: "oryd/hydra-maester:v0.0.36"
+          image: oryd-hydra-maester
           command:
             - /manager
           args:
@@ -184,9 +187,9 @@ spec:
           resources:
             limits:
               cpu: 100m
-              memory: 30Mi
+              memory: 128Mi
             requests:
-              cpu: 100m
+              cpu: 10m
               memory: 20Mi
           terminationMessagePath: /dev/termination-log
           terminationMessagePolicy: File
@@ -249,7 +252,7 @@ spec:
       terminationGracePeriodSeconds: 60
       containers:
         - name: hydra
-          image: "oryd/hydra:v2.3.0"
+          image: oryd-hydra
           command:
             - hydra
           args:
@@ -379,7 +382,7 @@ spec:
                 name: swpt-hydra
           containers:
             - name: janitor
-              image: "oryd/hydra:v2.3.0"
+              image: oryd-hydra
               securityContext:
                 allowPrivilegeEscalation: false
                 capabilities:
@@ -458,7 +461,7 @@ spec:
       automountServiceAccountToken: true
       containers:
       - name: hydra-automigrate
-        image: "oryd/hydra:v2.3.0"
+        image: oryd-hydra
         command: ["hydra"]
         args: ["migrate", "sql", "-e", "--yes", "--config", "/etc/config/hydra.yaml"]
         envFrom:
@@ -484,10 +487,10 @@ spec:
             type: RuntimeDefault
         resources:
           limits:
-            cpu: "1"
-            memory: 1Gi
+            cpu: 100m
+            memory: 128Mi
           requests:
-            cpu: 10m
+            cpu: 100m
             memory: 128Mi
         volumeMounts:
           - name: hydra-config-volume
