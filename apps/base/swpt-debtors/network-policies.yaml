@@ -1,0 +1,34 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: restrict-hydra-admin
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: hydra
+      app.kubernetes.io/instance: swpt
+  policyTypes:
+  - Ingress
+  ingress:
+  - ports:
+    - port: http-public
+  - from:
+    - podSelector:
+        matchLabels:
+          app.kubernetes.io/name: hydra-maester
+    - podSelector:
+        matchLabels:
+          app.kubernetes.io/name: hydra-automigrate
+    - podSelector:
+        matchLabels:
+          app.kubernetes.io/name: hydra-janitor
+    - podSelector:
+        matchLabels:
+          app.kubernetes.io/name: swpt-debtors-shard
+          app.kubernetes.io/component: web-server
+          app.kubernetes.io/part-of: swpt-debtors
+    - podSelector:
+        matchLabels:
+          app.kubernetes.io/name: swpt-login
+          app.kubernetes.io/component: web-server
+          app.kubernetes.io/part-of: swpt-debtors

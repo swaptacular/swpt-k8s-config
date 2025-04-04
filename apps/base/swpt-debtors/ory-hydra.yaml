@@ -475,7 +475,7 @@ automountServiceAccountToken: false
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: swpt-hydra-automigrate
+  name: hydra-automigrate
   labels:
     app.kubernetes.io/name: hydra
     app.kubernetes.io/instance: swpt
@@ -483,7 +483,7 @@ spec:
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: swpt-hydra-automigrate
+        app.kubernetes.io/name: hydra-automigrate
         app.kubernetes.io/instance: swpt
     spec:
       serviceAccountName: swpt-hydra-job
