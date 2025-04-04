@@ -143,6 +143,10 @@ configMapGenerator:
   # iteration.
   - janitor_batch_size=100
 
+  # An URL to which the user will be redirected when an error has
+  # occurred during the OAuth 2.0 workflow.
+  - urls_error=https://github.com/swaptacular/swpt_login
+
   options:
     labels:
       app.kubernetes.io/name: hydra

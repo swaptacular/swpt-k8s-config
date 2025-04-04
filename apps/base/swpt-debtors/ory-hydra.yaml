@@ -311,6 +311,11 @@ spec:
                 configMapKeyRef:
                   name: debtors-agent-config
                   key: PUBLIC_HOSTNAME
+            - name: URLS_ERROR
+              valueFrom:
+                configMapKeyRef:
+                  name: swpt-hydra
+                  key: urls_error
             - name: URLS_SELF_ISSUER
               value: "https://$(PUBLIC_HOSTNAME)/debtors-hydra/"
             - name: URLS_LOGIN
