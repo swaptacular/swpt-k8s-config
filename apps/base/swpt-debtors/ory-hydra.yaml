@@ -53,6 +53,8 @@ data:
         - 10.0.0.0/8
         - 172.16.0.0/12
         - 192.168.0.0/16
+    sqa:
+      opt_out: true
 
 ---
 kind: ClusterRole
@@ -262,7 +264,8 @@ spec:
             - /etc/config/hydra.yaml
           volumeMounts:
             - name: hydra-config-volume
-              mountPath: /etc/config
+              mountPath: /etc/config/hydra.yaml
+              subPath: hydra.yaml
               readOnly: true
           ports:
             - name: http-public
@@ -420,7 +423,8 @@ spec:
                   memory: 128Mi
               volumeMounts:
                 - name: hydra-config-volume
-                  mountPath: /etc/config
+                  mountPath: /etc/config/hydra.yaml
+                  subPath: hydra.yaml
                   readOnly: true
 ---
 apiVersion: v1
@@ -494,7 +498,8 @@ spec:
             memory: 128Mi
         volumeMounts:
           - name: hydra-config-volume
-            mountPath: /etc/config
+            mountPath: /etc/config/hydra.yaml
+            subPath: hydra.yaml
             readOnly: true
       restartPolicy: Never
       securityContext:
