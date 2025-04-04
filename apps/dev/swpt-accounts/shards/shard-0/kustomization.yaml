@@ -128,7 +128,7 @@ replicas:
 secretGenerator:
 - name: postgres.cluster-name.credentials.postgresql.acid.zalan.do
   files:
-  - password=../../pg-secrets/postgres-cluster-password.encrypted
+  - password=../../secrets/postgres-cluster-password.encrypted
   literals:
   - username=postgres
   options:
@@ -140,7 +140,7 @@ secretGenerator:
   type: Opaque
 - name: standby.cluster-name.credentials.postgresql.acid.zalan.do
   files:
-  - password=../../pg-secrets/postgres-cluster-password.encrypted
+  - password=../../secrets/postgres-cluster-password.encrypted
   literals:
   - username=standby
   options:
@@ -152,7 +152,7 @@ secretGenerator:
   type: Opaque
 - name: db-owner.cluster-name.credentials.postgresql.acid.zalan.do
   files:
-  - password=../../pg-secrets/postgres-cluster-password.encrypted
+  - password=../../secrets/postgres-cluster-password.encrypted
   literals:
   - username=db_owner
   options:

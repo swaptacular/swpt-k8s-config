@@ -10,10 +10,10 @@ secretGenerator:
 - name: spilo-env-secret
   files:
   # Run `openssl rand -base64 32` to generate a random encryption key.
-  - WALG_LIBSODIUM_KEY=pg-secrets/spilo-walg-libsodium-key.encrypted
+  - WALG_LIBSODIUM_KEY=secrets/spilo-walg-libsodium-key.encrypted
 
   # The "password" for the S3 service.
-  - AWS_SECRET_ACCESS_KEY=pg-secrets/spilo-aws-secret-access-key.encrypted
+  - AWS_SECRET_ACCESS_KEY=secrets/spilo-aws-secret-access-key.encrypted
 
   literals:
   # The "username" for the S3 service.
@@ -43,7 +43,7 @@ secretGenerator:
   # A SOPS-encrypted file containing the password for the "db_owner"
   # user on all Postgres clusters which this application will create.
   # Once created, the password must not be changed.
-  - password=pg-secrets/postgres-cluster-password.encrypted
+  - password=secrets/postgres-cluster-password.encrypted
 
   literals:
   - username=db_owner
