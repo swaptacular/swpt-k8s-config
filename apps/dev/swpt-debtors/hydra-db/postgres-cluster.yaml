@@ -34,7 +34,7 @@ spec:
   # the PosgreSQL cluster.
   #
   - name: pg_cluster_restart_attempt
-    value: attempt-0
+    value: attempt-1
 
   # # Uncomment the these lines to recover from the S3 backup. Once the
   # # data has been recovered successfully, the lines can be commented
