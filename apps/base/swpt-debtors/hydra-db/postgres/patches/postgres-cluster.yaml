@@ -8,7 +8,7 @@
 - op: add
   path: /metadata/labels
   value:
-    app.kubernetes.io/component: database
+    app.kubernetes.io/component: hydra-db
 
 - op: test
   path: /spec/pod_priority_class_name

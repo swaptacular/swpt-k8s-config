@@ -45,10 +45,11 @@ secretGenerator:
   type: Opaque
 
 resources:
-- hydra-postgres-cluster.yaml
+- postgres-cluster.yaml
+- ../../../base/swpt-debtors/hydra-db/postgres/network-policies.yaml
 
 patches:
-- path: ../../../base/swpt-debtors/patches/hydra-postgres-cluster.yaml
+- path: ../../../base/swpt-debtors/hydra-db/postgres/patches/postgres-cluster.yaml
   target:
     group: acid.zalan.do
     kind: postgresql

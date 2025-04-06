@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: isolate-hydra-db
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/component: hydra-db
+      app.kubernetes.io/name: swpt-debtors
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app.kubernetes.io/name: hydra
+          app.kubernetes.io/instance: swpt
+    - podSelector:
+        matchLabels:
+          app.kubernetes.io/name: hydra-janitor
+          app.kubernetes.io/instance: swpt
+          app.kubernetes.io/component: janitor
+    - podSelector:
+        matchLabels:
+          app.kubernetes.io/name: hydra-automigrate
+          app.kubernetes.io/instance: swpt
