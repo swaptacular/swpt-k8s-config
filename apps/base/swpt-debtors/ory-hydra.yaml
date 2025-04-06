@@ -612,7 +612,7 @@ spec:
       - name: hydra-automigrate
         image: oryd-hydra
         command: ["hydra"]
-        args: ["migrate", "sql", "up" "-e", "--yes", "--config", "/etc/config/hydra.yaml"]
+        args: ["migrate", "sql", "up", "-e", "--yes", "--config", "/etc/config/hydra.yaml"]
         envFrom:
           - secretRef:
               name: db-owner-credentials
