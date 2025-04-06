@@ -68,6 +68,8 @@ spec:
               value: "$(pg_cluster_name)-chores"
             - name: FETCH_API_URL
               value: "http://apiproxy"
+            - name: APP_LOG_FORMAT
+              value: json
       initContainers:
         - name: await-migrations
           image: swpt-accounts

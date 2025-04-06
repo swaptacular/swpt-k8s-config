@@ -47,6 +47,8 @@ spec:
               value: "0"
             - name: FLUSH_PROCESSES
               value: "0"
+            - name: APP_LOG_FORMAT
+              value: json
       initContainers:
         - name: init
           image: swpt-debtors
@@ -71,3 +73,5 @@ spec:
               value: "$(pg_cluster_name)"
             - name: SETUP_RABBITMQ_BINDINGS
               value: "yes"
+            - name: APP_LOG_FORMAT
+              value: json

@@ -66,6 +66,8 @@ spec:
               value: "$(pg_cluster_name)"
             - name: OAUTH2_INTROSPECT_URL
               value: "http://swpt-hydra-admin:4445/admin/oauth2/introspect"
+            - name: APP_LOG_FORMAT
+              value: json
       initContainers:
         - name: await-migrations
           image: swpt-debtors

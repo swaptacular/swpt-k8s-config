@@ -46,6 +46,8 @@ spec:
               value: "$(rmq_connection_string)"
             - name: PROTOCOL_BROKER_QUEUE
               value: "$(pg_cluster_name)"
+            - name: APP_LOG_FORMAT
+              value: json
       initContainers:
         - name: await-migrations
           image: swpt-debtors

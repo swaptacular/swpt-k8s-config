@@ -53,6 +53,8 @@ spec:
               value: "0"
             - name: FETCH_API_URL
               value: "http://apiproxy"
+            - name: APP_LOG_FORMAT
+              value: json
       initContainers:
         - name: init
           image: swpt-accounts
@@ -79,3 +81,5 @@ spec:
               value: "$(pg_cluster_name)-chores"
             - name: SETUP_RABBITMQ_BINDINGS
               value: "yes"
+            - name: APP_LOG_FORMAT
+              value: json
