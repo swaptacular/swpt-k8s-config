@@ -371,7 +371,7 @@ spec:
         - name: await-migrations
           image: oryd-hydra
           command: ["hydra"]
-          args: ["hydra", "migrate", "sql", "status", "-e", "--block"]
+          args: ["migrate", "sql", "status", "-e", "--block"]
           envFrom:
             - secretRef:
                 name: db-owner-credentials
