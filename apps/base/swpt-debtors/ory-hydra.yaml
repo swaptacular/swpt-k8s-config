@@ -245,6 +245,16 @@ spec:
         app.kubernetes.io/name: hydra
         app.kubernetes.io/instance: swpt
     spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                app.kubernetes.io/name: hydra
+                app.kubernetes.io/instance: swpt
+            topologyKey: kubernetes.io/hostname
+            matchLabelKeys:
+            - pod-template-hash
       volumes:
         - name: hydra-config-volume
           configMap:
