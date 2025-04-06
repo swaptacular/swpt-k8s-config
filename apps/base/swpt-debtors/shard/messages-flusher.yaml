@@ -46,6 +46,19 @@ spec:
               value: "$(rmq_connection_string)"
             - name: PROTOCOL_BROKER_QUEUE
               value: "$(pg_cluster_name)"
+      initContainers:
+        - name: await-migrations
+          image: swpt-debtors
+          args: ["sh", "-c", "while ! flask db current | grep \\(head\\); do sleep 10; done"]
+          envFrom:
+            - secretRef:
+                name: db-owner-credentials
+              prefix: pg_
+            - configMapRef:
+                name: shardconfig
+          env:
+            - name: POSTGRES_URL
+              value: "postgresql+psycopg://$(pg_username):$(pg_password)@$(pg_cluster_name):5432/db"
 
 ---
 apiVersion: policy/v1
