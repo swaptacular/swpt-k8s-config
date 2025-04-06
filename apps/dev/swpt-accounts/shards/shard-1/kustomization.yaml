@@ -107,8 +107,8 @@ configMapGenerator:
 
 - name: http-cache-nginx-config
   files:
-  - nginx.conf=../../../../base/swpt-accounts/shard/nginx/nginx.conf
-  - default.conf.template=../../../../base/swpt-accounts/shard/nginx/default.conf.template
+  - nginx.conf=../../../../base/swpt-accounts/shard/static/nginx.conf
+  - default.conf.template=../../../../base/swpt-accounts/shard/static/default.conf.template
 
 # The number of replicas for each component. One replica works fine,
 # but to have high-availability, should be at least 2.
