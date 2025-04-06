@@ -160,6 +160,8 @@ metadata:
     app.kubernetes.io/name: hydra-maester
     app.kubernetes.io/instance: swpt
 spec:
+  strategy:
+    type: Recreate
   replicas: 1
   selector:
     matchLabels:
