@@ -2,15 +2,37 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: isolate-hydra-db
+  labels:
+    app.kubernetes.io/component: hydra-db
 spec:
   podSelector:
     matchLabels:
       app.kubernetes.io/component: hydra-db
-      app.kubernetes.io/name: swpt-debtors
   policyTypes:
   - Ingress
   ingress:
   - from:
+    - podSelector:
+        matchLabels:
+          app.kubernetes.io/component: hydra-db
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-hydra-db-users
+  labels:
+    app.kubernetes.io/component: hydra-db
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/component: hydra-db
+  policyTypes:
+  - Ingress
+  ingress:
+  - ports:
+    - port: 5432
+    from:
     - podSelector:
         matchLabels:
           app.kubernetes.io/name: hydra
