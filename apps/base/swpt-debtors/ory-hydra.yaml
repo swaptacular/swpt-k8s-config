@@ -571,14 +571,22 @@ metadata:
 automountServiceAccountToken: false
 
 ---
-apiVersion: batch/v1
-kind: Job
+apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: swpt-hydra-automigrate
   labels:
     app.kubernetes.io/name: hydra
     app.kubernetes.io/instance: swpt
 spec:
+  replicas: 1  # must be exactly 1
+  strategy:
+    type: Recreate
+  restartPolicy: OnFailure
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: hydra-automigrate
+      app.kubernetes.io/instance: swpt
   template:
     metadata:
       labels:
@@ -639,9 +647,7 @@ spec:
         runAsUser: 65534
         seccompProfile:
           type: RuntimeDefault
-      shareProcessNamespace: false
       volumes:
         - name: hydra-config-volume
           configMap:
             name: swpt-hydra-migrate
-  backoffLimit: 10
