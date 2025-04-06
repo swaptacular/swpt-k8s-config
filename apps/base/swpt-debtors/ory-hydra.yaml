@@ -444,6 +444,7 @@ spec:
           restartPolicy: OnFailure
           serviceAccountName: swpt-hydra-cronjob-janitor
           automountServiceAccountToken: true
+          priorityClassName: oauth2-server
           volumes:
             - name: hydra-config-volume
               configMap:
@@ -594,6 +595,7 @@ spec:
     spec:
       serviceAccountName: swpt-hydra-job
       automountServiceAccountToken: true
+      priorityClassName: oauth2-server
       containers:
       - name: infinite-loop
         image: oryd-hydra
@@ -602,10 +604,10 @@ spec:
         resources:
           limits:
             cpu: 1m
-            memory: 16Mi
+            memory: 1Gi
           requests:
             cpu: 1m
-            memory: 16Mi
+            memory: 4Mi
       initContainers:
       - name: hydra-automigrate
         image: oryd-hydra
