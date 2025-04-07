@@ -11,7 +11,7 @@ spec:
   scopeArray:
     - access
     - access.readonly
-  secretName: oauth2-client-debtors-webapp
+  secretName: oauth2-clients.debtors-webapp
   redirectUris:
     # Here "hostname" will be automatically replaced with the public
     # hostname of the Swaptacular node.
@@ -32,7 +32,7 @@ spec:
   scopeArray:
     - access
     - access.readonly
-  secretName: oauth2-client-swagger-ui
+  secretName: oauth2-clients.swagger-ui
   redirectUris:
     # Here "hostname" will be automatically replaced with the public
     # hostname of the Swaptacular node.
@@ -54,7 +54,7 @@ spec:
   scopeArray:
     - access.readonly
     - activate
-  secretName: oauth2-client-debtors-supervisor
+  secretName: oauth2-clients.debtors-supervisor
   tokenEndpointAuthMethod: client_secret_basic
 
 ---
@@ -75,5 +75,5 @@ spec:
     - activate
     - deactivate
     - restrict
-  secretName: oauth2-client-debtors-superuser
+  secretName: oauth2-clients.debtors-superuser
   tokenEndpointAuthMethod: client_secret_basic
