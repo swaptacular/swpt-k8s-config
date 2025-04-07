@@ -15,6 +15,10 @@ spec:
   - from:
     - podSelector:
         matchLabels:
+          app.kubernetes.io/name: hydra
+          app.kubernetes.io/instance: swpt
+    - podSelector:
+        matchLabels:
           app.kubernetes.io/name: swpt-hydra-maester
     - podSelector:
         matchLabels:
