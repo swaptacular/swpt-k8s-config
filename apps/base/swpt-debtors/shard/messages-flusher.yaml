@@ -51,7 +51,7 @@ spec:
       initContainers:
         - name: await-migrations
           image: swpt-debtors
-          args: ["sh", "-c", "while ! flask db current | grep \\(head\\); do sleep 10; done"]
+          args: ["await_migrations"]
           envFrom:
             - secretRef:
                 name: db-owner-credentials
