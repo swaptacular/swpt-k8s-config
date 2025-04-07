@@ -15,7 +15,7 @@ spec:
   - from:
     - podSelector:
         matchLabels:
-          app.kubernetes.io/name: hydra-maester
+          app.kubernetes.io/name: swpt-hydra-maester
     - podSelector:
         matchLabels:
           app.kubernetes.io/name: swpt-debtors-shard
