@@ -15,3 +15,54 @@ spec:
     # hostname of the Swaptacular node.
     - https://hostname/debtors-webapp/
   tokenEndpointAuthMethod: none
+
+---
+apiVersion: hydra.ory.sh/v1alpha1
+kind: OAuth2Client
+metadata:
+  name: swagger-ui
+spec:
+  clientName: "Swagger UI"
+  grantTypes:
+    - authorization_code
+  responseTypes:
+    - code
+  scope: "access access.readonly"
+  secretName: oauth2-client-swagger-ui
+  redirectUris:
+    # Here "hostname" will be automatically replaced with the public
+    # hostname of the Swaptacular node.
+    - https://hostname/debtors-swagger-ui/oauth2-redirect.html
+  tokenEndpointAuthMethod: client_secret_post
+
+---
+apiVersion: hydra.ory.sh/v1alpha1
+kind: OAuth2Client
+metadata:
+  name: debtors-supervisor
+spec:
+  clientName: "This is the debtors supervisor."
+  grantTypes:
+    - client_credentials
+    - refresh_token
+  responseTypes:
+    - token
+  scope: "access.readonly activate"
+  secretName: oauth2-client-debtors-supervisor
+  tokenEndpointAuthMethod: client_secret_basic
+
+---
+apiVersion: hydra.ory.sh/v1alpha1
+kind: OAuth2Client
+metadata:
+  name: debtors-superuser
+spec:
+  clientName: "This is the debtors superuser."
+  grantTypes:
+    - client_credentials
+    - refresh_token
+  responseTypes:
+    - token
+  scope: "access access.readonly activate deactivate restrict"
+  secretName: oauth2-client-debtors-superuser
+  tokenEndpointAuthMethod: client_secret_basic
