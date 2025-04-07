@@ -1,0 +1,15 @@
+source:
+  kind: ConfigMap
+  name: debtors-agent-config
+  fieldPath: data.PUBLIC_HOSTNAME
+targets:
+  - select:
+      group: hydra.ory.sh
+      version: v1alpha1
+      kind: OAuth2Client
+      name: debtors-webapp
+    fieldPaths:
+      - spec.redirectUris.0
+    options:
+      delimiter: "/"
+      index: 2

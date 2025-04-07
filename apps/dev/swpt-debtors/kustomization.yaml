@@ -309,3 +309,4 @@ replacements:
 - path: ../../base/swpt-debtors/replacements/hydra-cpu-request.yaml
 - path: ../../base/swpt-debtors/replacements/hydra-memory-limit.yaml
 - path: ../../base/swpt-debtors/replacements/hydra-memory-request.yaml
+- path: ../../base/swpt-debtors/replacements/oauth2-clients-redirect-uris.yaml

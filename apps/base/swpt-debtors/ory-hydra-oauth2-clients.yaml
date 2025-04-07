@@ -11,5 +11,7 @@ spec:
   scope: "access access.readonly"
   secretName: oauth2-client-debtors-webapp
   redirectUris:
-    - https://demo.swaptacular.org/debtors-webapp/
+    # Here "hostname" will be automatically replaced with the public
+    # hostname of the Swaptacular node.
+    - https://hostname/debtors-webapp/
   tokenEndpointAuthMethod: none
