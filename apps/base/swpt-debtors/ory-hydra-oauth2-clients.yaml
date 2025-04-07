@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: oauth2-client-debtors-webapp
+type: Opaque
+data:
+  CLIENT_ID: ZGVidG9ycy13ZWJhcHAK  # debtors-webapp
+  CLIENT_SECRET: dGhpcy1kb2VzLW5vdC1uZWVkLXRvLWJlLWEtc2VjcmV0Cg==  # This does not need to be a secret!
+
+---
+apiVersion: hydra.ory.sh/v1alpha1
+kind: OAuth2Client
+metadata:
+  name: debtors-webapp
+spec:
+  clientName: "Debtors Agent UI"
+  grantTypes:
+    - authorization_code
+  responseTypes:
+    - code
+  scope: "access access.readonly"
+  secretName: oauth2-client-debtors-webapp
+  redirectUris:
+    - https://demo.swaptacular.org/debtors-webapp/
+  tokenEndpointAuthMethod: none

@@ -8,4 +8,5 @@ resources:
 - nfs-pvc.yaml
 - stomp-server.yaml
 - ory-hydra.yaml
+- ory-hydra-oauth2-clients.yaml
 - network-policies.yaml
