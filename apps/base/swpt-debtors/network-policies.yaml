@@ -65,6 +65,3 @@ spec:
     - ipBlock:
         # This value will be automatically replaced.
         cidr: 255.255.255.255/32
-    - ipBlock:
-        # TODO: just for testing, should be removed
-        cidr: 151.101.0.223/32
