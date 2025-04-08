@@ -36,6 +36,19 @@ secretGenerator:
       app.kubernetes.io/name: swpt-debtors
       application: spilo
       team: swpt
+
+    # These annotations are used as sources for convenient Kustomize
+    # replacements:
+    #
+    annotations:
+      # For security reasons, by default pods are not allowed egress
+      # traffic outside of the Kubernetes cluster. However, S3 backups
+      # require initiating connections to S3 servers that are usually
+      # not in the Kubernetes cluster. Here you must specify the range
+      # of IPs which the "spilo" pods will be allowed to connect to.
+      #
+      kustomize_s3_ip_block: 10.0.0.0/8
+
   type: Opaque
 
 - name: db-owner-credentials
@@ -310,3 +323,4 @@ replacements:
 - path: ../../base/swpt-debtors/replacements/hydra-memory-limit.yaml
 - path: ../../base/swpt-debtors/replacements/hydra-memory-request.yaml
 - path: ../../base/swpt-debtors/replacements/oauth2-clients-redirect-uris.yaml
+- path: ../../base/swpt-debtors/replacements/s3-ip-block.yaml

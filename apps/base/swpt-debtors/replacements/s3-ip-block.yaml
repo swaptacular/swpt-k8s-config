@@ -1,0 +1,10 @@
+source:
+  kind: Secret
+  name: spilo-env-secret
+  fieldPath: metadata.annotations.kustomize_s3_ip_block
+targets:
+  - select:
+      kind: NetworkPolicy
+      name: allow-spilo-s3-access
+    fieldPaths:
+      - spec.egress.0.to.0.ipBlock.cidr
