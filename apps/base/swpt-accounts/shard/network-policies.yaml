@@ -12,3 +12,7 @@ spec:
   - from:
     - podSelector:
         matchLabels: {}
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          app.kubernetes.io/name: postgres-operator

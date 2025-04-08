@@ -11,6 +11,7 @@ labels:
 
 resources:
 - cluster-operator.yaml
+- network-policies.yaml
 
 patches:
 - path: patches/cluster-operator-deployment.yaml
