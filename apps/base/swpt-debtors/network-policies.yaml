@@ -67,4 +67,4 @@ spec:
         cidr: 255.255.255.255/32
     - ipBlock:
         # TODO: just for testing, should be removed
-        cidr: 8.8.8.8/32
+        cidr: 151.101.0.223/32
