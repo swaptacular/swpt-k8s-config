@@ -15,6 +15,7 @@ resources:
 - postgres-operator.yaml
 - api-service.yaml
 - spilo-env-config.yaml
+- network-policies.yaml
 
 patches:
 - path: patches/postgresql-operator-configuration-tweaks.yaml
