@@ -7,3 +7,4 @@ resources:
 - apiproxy.yaml
 - nfs-pvc.yaml
 - stomp-server.yaml
+- network-policies.yaml
