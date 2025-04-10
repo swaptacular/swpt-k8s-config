@@ -267,6 +267,8 @@ replicas:
   count: 1
 - name: swpt-hydra
   count: 1
+- name: swagger-ui
+  count: 1
 
 # OCI images to use for the different containers:
 #
