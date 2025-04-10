@@ -104,6 +104,7 @@ metadata:
 value: 78000
 globalDefault: false
 description: "Used for the login database."
+
 ---
 apiVersion: scheduling.k8s.io/v1
 kind: PriorityClass
@@ -112,3 +113,12 @@ metadata:
 value: 77000
 globalDefault: false
 description: "Used for the login Web servers."
+
+---
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: user-ui-webserver
+value: 76000
+globalDefault: false
+description: "Used for the user UI Web servers."

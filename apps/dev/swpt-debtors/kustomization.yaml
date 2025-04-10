@@ -274,6 +274,9 @@ images:
 - name: swpt-debtors
   newName: ghcr.io/swaptacular/swpt_debtors
   newTag: 2.3.1
+- name: swpt-debtors-swagger-ui
+  newName: ghcr.io/swaptacular/swpt_debtors_swagger_ui
+  newTag: 2.3.1  # Must be the same as the tag for the "swpt-debtors" image.
 - name: swpt-apiproxy
   newName: ghcr.io/swaptacular/swpt_apiproxy
   newTag: 1.2.2

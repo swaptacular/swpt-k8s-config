@@ -10,3 +10,4 @@ resources:
 - ory-hydra.yaml
 - ory-hydra-oauth2-clients.yaml
 - network-policies.yaml
+- web-ui/
