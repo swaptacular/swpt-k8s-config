@@ -1,0 +1,13 @@
+source:
+  kind: ConfigMap
+  name: debtors-agent-config
+  fieldPath: metadata.annotations.kustomize_swpt_debtors_ui_memory_limit
+targets:
+  - select:
+      kind: Deployment
+      name: swpt-debtors-ui
+    fieldPaths:
+      - spec.template.spec.containers.[name=swpt-debtors-ui].resources.limits.memory
+    options:
+      create: true
+

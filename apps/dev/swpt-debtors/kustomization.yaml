@@ -146,6 +146,28 @@ configMapGenerator:
       kustomize_swagger_ui_memory_request: 12Mi
       kustomize_swagger_ui_memory_limit: 1Gi
 
+      kustomize_swpt_debtors_ui_cpu_request: 10m
+      kustomize_swpt_debtors_ui_cpu_limit: 1000m
+      kustomize_swpt_debtors_ui_memory_request: 12Mi
+      kustomize_swpt_debtors_ui_memory_limit: 1Gi
+
+- name: swpt-debtors-ui-config
+  literals:
+    # When the currency issuer wants to peg its currency to another
+    # currency, a default peg currency will be suggested. Its
+    # abbreviation will be the value of "DEFAULT_PEG_ABBR", and its
+    # digital coin will be the value of "DEFAULT_PEG_COIN" (that is,
+    # the textual content of the digital coin's QR code). When one of
+    # those variables are set to an empty string, no default peg
+    # currency will be suggested to the user.
+    #
+  - DEFAULT_PEG_ABBR=USD
+  - DEFAULT_PEG_COIN=https://debtors.swaptacular.org/840
+
+  options:
+    labels:
+      app.kubernetes.io/name: swpt-debtors
+
 - name: swpt-hydra
   files:
   # The configuration file for Ory-Hydra. Can reference a custom
@@ -281,6 +303,8 @@ replicas:
   count: 1
 - name: swagger-ui
   count: 1
+- name: swpt-debtors-ui
+  count: 1
 
 # OCI images to use for the different containers:
 #
@@ -291,6 +315,9 @@ images:
 - name: swpt-debtors-swagger-ui
   newName: ghcr.io/swaptacular/swpt_debtors_swagger_ui
   newTag: 2.3.1  # Must be the same as the tag for the "swpt-debtors" image.
+- name: swpt-debtors-ui
+  newName: ghcr.io/swaptacular/swpt_debtors_ui
+  newTag: 1.2.3
 - name: swpt-apiproxy
   newName: ghcr.io/swaptacular/swpt_apiproxy
   newTag: 1.2.2
@@ -343,5 +370,9 @@ replacements:
 - path: ../../base/swpt-debtors/replacements/swagger-ui-cpu-request.yaml
 - path: ../../base/swpt-debtors/replacements/swagger-ui-memory-limit.yaml
 - path: ../../base/swpt-debtors/replacements/swagger-ui-memory-request.yaml
+- path: ../../base/swpt-debtors/replacements/swpt-debtors-ui-cpu-limit.yaml
+- path: ../../base/swpt-debtors/replacements/swpt-debtors-ui-cpu-request.yaml
+- path: ../../base/swpt-debtors/replacements/swpt-debtors-ui-memory-limit.yaml
+- path: ../../base/swpt-debtors/replacements/swpt-debtors-ui-memory-request.yaml
 - path: ../../base/swpt-debtors/replacements/oauth2-clients-redirect-uris.yaml
 - path: ../../base/swpt-debtors/replacements/s3-ip-block.yaml

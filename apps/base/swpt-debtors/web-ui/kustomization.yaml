@@ -3,3 +3,4 @@ kind: Kustomization
 
 resources:
 - swagger-ui.yaml
+- swpt-debtors-ui.yaml

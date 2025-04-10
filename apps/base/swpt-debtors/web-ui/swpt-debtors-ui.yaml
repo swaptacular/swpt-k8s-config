@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: swagger-ui
+  name: swpt-debtors-ui
   labels:
     app.kubernetes.io/name: swpt-debtors
-    app.kubernetes.io/component: swagger-ui
+    app.kubernetes.io/component: swpt-debtors-ui
 spec:
   replicas: 2
   selector:
     matchLabels:
       app.kubernetes.io/name: swpt-debtors
-      app.kubernetes.io/component: swagger-ui
+      app.kubernetes.io/component: swpt-debtors-ui
   template:
     metadata:
       labels:
         app.kubernetes.io/name: swpt-debtors
-        app.kubernetes.io/component: swagger-ui
+        app.kubernetes.io/component: swpt-debtors-ui
     spec:
       affinity:
         podAntiAffinity:
@@ -23,40 +23,42 @@ spec:
           - labelSelector:
               matchLabels:
                 app.kubernetes.io/name: swpt-debtors
-                app.kubernetes.io/component: swagger-ui
+                app.kubernetes.io/component: swpt-debtors-ui
             topologyKey: kubernetes.io/hostname
             matchLabelKeys:
             - pod-template-hash
       priorityClassName: user-ui-webserver
       containers:
-        - name: swagger-ui
-          image: swpt-debtors-swagger-ui
+        - name: swpt-debtors-ui
+          image: swpt-debtors-ui
           ports:
             - name: http
-              containerPort: 8080
+              containerPort: 80
           readinessProbe:
             httpGet:
-              path: /debtors-swagger-ui/
+              path: /debtors-webapp/
               port: http
             initialDelaySeconds: 5
+          envFrom:
+            - configMapRef:
+                name: swpt-debtors-ui-config
           env:
             - name: PUBLIC_HOSTNAME
               valueFrom:
                 configMapKeyRef:
                   name: debtors-agent-config
                   key: PUBLIC_HOSTNAME
-            - name: BASE_URL
-              value: /debtors-swagger-ui
-            - name: API_ROOT
-              value: https://$(PUBLIC_HOSTNAME)/
-            - name: OAUTH2_AUTHORIZATION_URL
-              value: https://$(PUBLIC_HOSTNAME)/debtors-hydra/oauth2/auth
-            - name: OAUTH2_TOKEN_URL
+            - name: SERVER_API_ENTRYPOINT
+              value: https://$(PUBLIC_HOSTNAME)/debtors/.debtor
+            - name: AUTHORIZATION_URL
               value: https://$(PUBLIC_HOSTNAME)/debtors-hydra/oauth2/token
-            - name: OAUTH2_REFRESH_URL
-              value: https://$(PUBLIC_HOSTNAME)/debtors-hydra/oauth2/token
-            - name: OAUTH2_REDIRECT_URL
-              value: https://$(PUBLIC_HOSTNAME)/debtors-swagger-ui/oauth2-redirect.html
+            - name: CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: oauth2-clients.debtors-webapp
+                  key: CLIENT_ID
+            - name: REDIRECT_URL
+              value: https://$(PUBLIC_HOSTNAME)/debtors-webapp/
           resources:
             limits:
               cpu: "1"
@@ -69,14 +71,14 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: swagger-ui
+  name: swpt-debtors-ui
   labels:
     app.kubernetes.io/name: swpt-debtors
-    app.kubernetes.io/component: swagger-ui
+    app.kubernetes.io/component: swpt-debtors-ui
 spec:
   selector:
     app.kubernetes.io/name: swpt-debtors
-    app.kubernetes.io/component: swagger-ui
+    app.kubernetes.io/component: swpt-debtors-ui
   ports:
     - name: http
       port: 80
@@ -87,13 +89,13 @@ spec:
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: swagger-ui
+  name: swpt-debtors-ui
   labels:
     app.kubernetes.io/name: swpt-debtors
-    app.kubernetes.io/component: swagger-ui
+    app.kubernetes.io/component: swpt-debtors-ui
 spec:
   maxUnavailable: 30%
   selector:
     matchLabels:
       app.kubernetes.io/name: swpt-debtors
-      app.kubernetes.io/component: swagger-ui
+      app.kubernetes.io/component: swpt-debtors-ui
