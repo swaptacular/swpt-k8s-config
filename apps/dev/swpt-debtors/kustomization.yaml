@@ -134,6 +134,18 @@ configMapGenerator:
     labels:
       app.kubernetes.io/name: swpt-debtors
 
+    # These annotations are used as sources for convenient Kustomize
+    # replacements:
+    #
+    annotations:
+      # Kubernetes memory and CPU requests and limits, for the various
+      # Web-UI containers.
+      #
+      kustomize_swagger_ui_cpu_request: 10m
+      kustomize_swagger_ui_cpu_limit: 1000m
+      kustomize_swagger_ui_memory_request: 12Mi
+      kustomize_swagger_ui_memory_limit: 1Gi
+
 - name: swpt-hydra
   files:
   # The configuration file for Ory-Hydra. Can reference a custom
@@ -327,5 +339,9 @@ replacements:
 - path: ../../base/swpt-debtors/replacements/hydra-cpu-request.yaml
 - path: ../../base/swpt-debtors/replacements/hydra-memory-limit.yaml
 - path: ../../base/swpt-debtors/replacements/hydra-memory-request.yaml
+- path: ../../base/swpt-debtors/replacements/swagger-ui-cpu-limit.yaml
+- path: ../../base/swpt-debtors/replacements/swagger-ui-cpu-request.yaml
+- path: ../../base/swpt-debtors/replacements/swagger-ui-memory-limit.yaml
+- path: ../../base/swpt-debtors/replacements/swagger-ui-memory-request.yaml
 - path: ../../base/swpt-debtors/replacements/oauth2-clients-redirect-uris.yaml
 - path: ../../base/swpt-debtors/replacements/s3-ip-block.yaml
