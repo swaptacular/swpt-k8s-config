@@ -12,3 +12,4 @@ spec:
       appProtocol: ssh
       targetPort: 22
   type: LoadBalancer
+  externalTrafficPolicy: Local

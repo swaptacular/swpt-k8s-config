@@ -100,6 +100,7 @@ spec:
       protocol: TCP
       targetPort: stomp
   type: LoadBalancer
+  externalTrafficPolicy: Local
 
 ---
 apiVersion: policy/v1
