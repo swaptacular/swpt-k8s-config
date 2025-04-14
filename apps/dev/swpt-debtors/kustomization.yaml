@@ -247,7 +247,7 @@ configMapGenerator:
 
       # Each Swaptacular node runs its own STOMP server. This is the
       # port at which the node's STOMP server will be running.
-      kustomize_stomp_server_port: "1235"
+      kustomize_stomp_server_port: "1234"
 
       # Kubernetes memory and CPU requests and limits, for the STOMP
       # server containers.

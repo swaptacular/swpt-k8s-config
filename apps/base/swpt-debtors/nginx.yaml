@@ -34,11 +34,12 @@ spec:
           ports:
             - name: https
               containerPort: 443
-          # readinessProbe:
-          #   httpGet:
-          #     path: /healthz
-          #     port: http
-          #   initialDelaySeconds: 5
+            - name: stomp
+              containerPort: 1234
+          readinessProbe:
+            tcpSocket:
+              port: stomp
+            initialDelaySeconds: 5
           env:
             - name: DEBTORS_HYDRA_URL
               value: http://swpt-hydra-public:4444
@@ -92,6 +93,10 @@ spec:
       port: 443
       protocol: TCP
       targetPort: https
+    - name: stomp
+      port: 1234
+      protocol: TCP
+      targetPort: stomp
   type: LoadBalancer
 
   # When "externalTrafficPolicy" is "Cluster", the client IPs will be
