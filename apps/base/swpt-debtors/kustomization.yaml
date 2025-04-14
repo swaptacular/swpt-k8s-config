@@ -1,6 +1,16 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
+configMapGenerator:
+- name: nginx-gateway-config
+  files:
+  - nginx.conf=static/nginx.conf
+  - default.conf.template=static/default.conf.template
+
+  options:
+    labels:
+      app.kubernetes.io/name: swpt-debtors
+
 resources:
 - namespace.yaml
 - broker-pdb.yaml
@@ -10,4 +20,5 @@ resources:
 - ory-hydra.yaml
 - ory-hydra-oauth2-clients.yaml
 - network-policies.yaml
+- nginx.yaml
 - web-ui/

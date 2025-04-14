@@ -88,6 +88,17 @@ secretGenerator:
       app.kubernetes.io/name: swpt-debtors
   type: Opaque
 
+- name: ssl-certificate
+  files:
+  - cert=ssl.crt
+  - key=ssl.key.encrypted
+
+  options:
+    disableNameSuffixHash: true
+    labels:
+      app.kubernetes.io/name: swpt-debtors
+  type: Opaque
+
 - name: swpt-hydra
   files:
   # The "secrets/hydra-secret.encrypted" file must be a SOPS-encrypted
@@ -303,6 +314,8 @@ replicas:
   count: 1
 - name: swpt-debtors-ui
   count: 1
+- name: app-gateway
+  count: 1
 
 # OCI images to use for the different containers:
 #
@@ -331,6 +344,9 @@ images:
 - name: oryd-hydra
   newName: docker.io/oryd/hydra
   newTag: v2.3.0
+- name: nginx
+  newName: docker.io/nginx
+  newTag: 1.26.3-alpine3.20
 
 resources:
 - ../../base/swpt-debtors/
