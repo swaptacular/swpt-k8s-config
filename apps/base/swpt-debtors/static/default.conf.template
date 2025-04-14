@@ -3,6 +3,10 @@ server {
     # listen ${PORT} ssl proxy_protocol;
 
     server_name $hostname;
+
+    location / {
+       return 404;
+    }
     location /debtors-hydra/oauth2/ {
         proxy_pass ${DEBTORS_HYDRA_URL}/oauth2/;
         proxy_redirect default;
