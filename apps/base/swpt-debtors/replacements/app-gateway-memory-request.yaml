@@ -1,0 +1,13 @@
+source:
+  kind: ConfigMap
+  name: debtors-agent-config
+  fieldPath: metadata.annotations.kustomize_app_gateway_memory_request
+targets:
+  - select:
+      kind: Deployment
+      name: app-gateway
+    fieldPaths:
+      - spec.template.spec.containers.[name=app-gateway].resources.requests.memory
+    options:
+      create: true
+

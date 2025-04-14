@@ -150,8 +150,13 @@ configMapGenerator:
     #
     annotations:
       # Kubernetes memory and CPU requests and limits, for the various
-      # Web-UI containers.
+      # containers.
       #
+      kustomize_app_gateway_cpu_request: 10m
+      kustomize_app_gateway_cpu_limit: 4000m
+      kustomize_app_gateway_memory_request: 32Mi
+      kustomize_app_gateway_memory_limit: 1Gi
+
       kustomize_swagger_ui_cpu_request: 10m
       kustomize_swagger_ui_cpu_limit: 1000m
       kustomize_swagger_ui_memory_request: 12Mi
@@ -388,5 +393,9 @@ replacements:
 - path: ../../base/swpt-debtors/replacements/swpt-debtors-ui-cpu-request.yaml
 - path: ../../base/swpt-debtors/replacements/swpt-debtors-ui-memory-limit.yaml
 - path: ../../base/swpt-debtors/replacements/swpt-debtors-ui-memory-request.yaml
+- path: ../../base/swpt-debtors/replacements/app-gateway-cpu-limit.yaml
+- path: ../../base/swpt-debtors/replacements/app-gateway-cpu-request.yaml
+- path: ../../base/swpt-debtors/replacements/app-gateway-memory-limit.yaml
+- path: ../../base/swpt-debtors/replacements/app-gateway-memory-request.yaml
 - path: ../../base/swpt-debtors/replacements/oauth2-clients-redirect-uris.yaml
 - path: ../../base/swpt-debtors/replacements/s3-ip-block.yaml
