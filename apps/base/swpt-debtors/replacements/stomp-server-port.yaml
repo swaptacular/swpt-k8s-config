@@ -5,6 +5,6 @@ source:
 targets:
   - select:
       kind: Service
-      name: stomp-server
+      name: app-gateway
     fieldPaths:
       - spec.ports.[name=stomp].port
