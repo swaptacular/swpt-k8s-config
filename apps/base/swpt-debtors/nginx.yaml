@@ -43,13 +43,13 @@ spec:
             - name: DEBTORS_HYDRA_URL
               value: http://swpt-hydra-public:4444
             - name: DEBTORS_LOGIN_URL
-              value: http://apiproxy:8080  # TODO: Change to "http://swpt-login:8080".
+              value: http://apiproxy  # TODO: Change to "http://swpt-login".
             - name: DEBTORS_SERVER_URL
-              value: http://apiproxy:8080
+              value: http://apiproxy
             - name: DEBTORS_SWAGGER_UI_URL
-              value: http://swagger-ui:8080
+              value: http://swagger-ui
             - name: DEBTORS_WEBAPP_URL
-              value: http://swpt-debtors-ui:80
+              value: http://swpt-debtors-ui
             - name: PORT
               value: "443"
             - name: NGINX_ENTRYPOINT_QUIET_LOGS
