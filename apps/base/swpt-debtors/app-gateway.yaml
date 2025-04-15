@@ -67,6 +67,9 @@ spec:
             - name: ssl-certificate
               mountPath: /etc/nginx/ssl/key.pem
               subPath: key
+            - name: ssl-session-ticket-key
+              mountPath: /etc/nginx/ssl/ssl_session_ticket.key
+              subPath: key
             - name: nginx-config
               mountPath: /etc/nginx/nginx.conf
               subPath: nginx.conf
@@ -80,6 +83,9 @@ spec:
         - name: ssl-certificate
           secret:
             secretName: ssl-certificate
+        - name: ssl-session-ticket-key
+          secret:
+            secretName: ssl-session-ticket-key
 
 ---
 apiVersion: v1
