@@ -1,6 +1,6 @@
 source:
   kind: ConfigMap
-  name: debtors-agent-config
+  name: nginx-gateway-config
   fieldPath: metadata.annotations.kustomize_app_gateway_memory_request
 targets:
   - select:

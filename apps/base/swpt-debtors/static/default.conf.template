@@ -7,7 +7,7 @@ server {
     server_name  _;
 
     location / {
-        deny all;
+       return 403;
     }
 }
 
