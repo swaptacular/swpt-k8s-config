@@ -41,6 +41,11 @@ spec:
               port: stomp
             initialDelaySeconds: 5
           env:
+            - name: PUBLIC_HOSTNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: debtors-agent-config
+                  key: PUBLIC_HOSTNAME
             - name: DEBTORS_HYDRA_URL
               value: http://swpt-hydra-public:4444
             - name: DEBTORS_LOGIN_URL

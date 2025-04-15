@@ -1,8 +1,8 @@
 server {
     listen ${PORT} ssl;
-    #listen ${PORT} ssl proxy_protocol;
+    #listen ${PORT} ssl proxy_protocol
 
-    server_name $hostname;
+    server_name ${PUBLIC_HOSTNAME};
 
     location / {
        return 404;
