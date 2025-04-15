@@ -123,7 +123,7 @@ configMapGenerator:
 - name: debtors-agent-config
   literals:
   # The publicly known domain name of this Swaptacular node.
-  - PUBLIC_HOSTNAME=demo.swaptacular.org
+  - PUBLIC_HOSTNAME=swpt-tests
 
   # Debtor IDs are 64-bit integer numbers. The debtors agent is
   # responsible only for debtor IDs which start with the hexadecimal
