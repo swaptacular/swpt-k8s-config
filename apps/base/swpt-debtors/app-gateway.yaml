@@ -132,5 +132,5 @@ spec:
   maxUnavailable: 30%
   selector:
     matchLabels:
-    app.kubernetes.io/name: swpt-debtors
-    app.kubernetes.io/component: app-gateway
+      app.kubernetes.io/name: swpt-debtors
+      app.kubernetes.io/component: app-gateway
