@@ -11,4 +11,5 @@ resources:
 - ory-hydra-oauth2-clients.yaml
 - app-gateway.yaml
 - network-policies.yaml
+- ingress-nginx.yaml
 - web-ui/

@@ -1,0 +1,61 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: ingress-nginx
+spec:
+  interval: 10m
+  chart:
+    spec:
+      chart: ingress-nginx
+      version: "4.12.1"
+      sourceRef:
+        kind: HelmRepository
+        name: ingress-nginx
+        namespace: flux-system
+      interval: 10m
+  releaseName: namespace
+  values:
+    global:
+      image:
+        registry: registry.k8s.io  # registry host to pull images from
+    namespaceOverride: namespace
+    tcp:
+      "1234": "namespace/stomp-server:stomp"
+    controller:
+      replicaCount: 2
+      maxUnavailable: 30%
+      service:
+        externalTrafficPolicy: "Local"
+        ipFamilyPolicy: PreferDualStack
+        ipFamilies:
+        - IPv4
+        - IPv6
+      scope:
+        enabled: true
+      priorityClassName: smp-receiver
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app.kubernetes.io/name
+                operator: In
+                values:
+                - '{{ include "ingress-nginx.name" . }}'
+              - key: app.kubernetes.io/instance
+                operator: In
+                values:
+                - '{{ .Release.Name }}'
+              - key: app.kubernetes.io/component
+                operator: In
+                values:
+                - controller
+            topologyKey: kubernetes.io/hostname
+            matchLabelKeys:
+            - pod-template-hash
+      ingressClass: namespace.nginx
+      ingressClassByName: true
+      ingressClassResource:
+        name: namespace.nginx
+        enabled: true
+        controllerValue: k8s.io/ingress-nginx/namespace
