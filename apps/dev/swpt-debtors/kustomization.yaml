@@ -390,20 +390,34 @@ images:
   newName: docker.io/nginx
   newTag: 1.26.3-alpine3.20
 
-resources:
-- ../../base/swpt-debtors/
-- broker.yaml
-- hydra-db/
-- shards/
-- node-data/peers/
-
 patches:
+# This patch changes the number of Nginx servers' replicas. One
+# replica works fine, but to have high-availability, should be at
+# least 2.
+#
+- patch: |
+    - op: replace
+      path: /spec/values/controller/replicaCount
+      value: 1
+  target:
+    group: helm.toolkit.fluxcd.io
+    version: v2
+    kind: HelmRelease
+    name: ingress-nginx
+
 - path: ../../base/swpt-debtors/patches/broker.yaml
   target:
     group: rabbitmq.com
     kind: RabbitmqCluster
     name: broker
     version: v1beta1
+
+resources:
+- ../../base/swpt-debtors/
+- broker.yaml
+- hydra-db/
+- shards/
+- node-data/peers/
 
 replacements:
 - path: ../../base/swpt-debtors/replacements/nfs-cluster-ip.yaml
