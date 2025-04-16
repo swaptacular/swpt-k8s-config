@@ -28,7 +28,6 @@ targets:
       kind: HelmRelease
       name: ingress-nginx
     fieldPaths:
-      - spec.values.controller.ingressClass
       - spec.values.controller.ingressClassResource.controllerValue
     options:
       delimiter: "/"

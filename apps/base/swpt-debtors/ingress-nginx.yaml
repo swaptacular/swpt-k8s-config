@@ -20,7 +20,7 @@ spec:
         registry: registry.k8s.io  # registry host to pull images from
     namespaceOverride: namespace
     tcp:
-      "1234": "stomp-server:stomp"
+      "1234": "namespace/stomp-server:stomp"
     controller:
       replicaCount: 2
       maxUnavailable: 30%
