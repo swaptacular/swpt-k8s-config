@@ -26,10 +26,10 @@ spec:
       maxUnavailable: 30%
       service:
         externalTrafficPolicy: "Local"
-        ipFamilyPolicy: PreferDualStack
-        ipFamilies:
-        - IPv4
-        - IPv6
+        # ipFamilyPolicy: PreferDualStack
+        # ipFamilies:
+        # - IPv4
+        # - IPv6
       scope:
         enabled: true
       priorityClassName: smp-receiver
