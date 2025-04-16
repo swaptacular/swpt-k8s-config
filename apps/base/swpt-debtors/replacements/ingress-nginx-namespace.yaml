@@ -1,0 +1,45 @@
+source:
+  kind: ConfigMap
+  name: stomp-config
+  fieldPath: metadata.namespace
+targets:
+  - select:
+      group: helm.toolkit.fluxcd.io
+      version: v2
+      kind: HelmRelease
+      name: ingress-nginx
+    fieldPaths:
+      - spec.releaseName
+      - spec.values.namespaceOverride
+  - select:
+      group: helm.toolkit.fluxcd.io
+      version: v2
+      kind: HelmRelease
+      name: ingress-nginx
+    fieldPaths:
+      - spec.values.controller.ingressClass
+      - spec.values.controller.ingressClassResource.name
+    options:
+      delimiter: "."
+      index: 0
+  - select:
+      group: helm.toolkit.fluxcd.io
+      version: v2
+      kind: HelmRelease
+      name: ingress-nginx
+    fieldPaths:
+      - spec.values.controller.ingressClass
+      - spec.values.controller.ingressClassResource.controllerValue
+    options:
+      delimiter: "/"
+      index: 2
+  # - select:
+  #     group: helm.toolkit.fluxcd.io
+  #     version: v2
+  #     kind: HelmRelease
+  #     name: ingress-nginx
+  #   fieldPaths:
+  #     - spec.values.tcp.1234
+  #   options:
+  #     delimiter: "/"
+  #     index: 0
