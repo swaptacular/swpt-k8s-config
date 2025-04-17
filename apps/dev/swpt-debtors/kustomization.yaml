@@ -421,7 +421,8 @@ patches:
 # * "service-name" must be "stomp-server"; "port" must be "stomp";
 #
 # * If the optional ":PROXY" is appended to the value, this means that
-#   the "PROXY protocol" is applied to the incoming connections.
+#   PROXY protocol parsing will be applied to the incoming STOMP
+#   connections.
 #
 - patch: |
     - op: replace
