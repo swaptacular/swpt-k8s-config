@@ -44,6 +44,7 @@ spec:
         configMapName: ingress-nginx-tmpl
         configMapKey: nginx.tmpl
       config:
+        use-proxy-protocol: "false"
         client-header-timeout: "5"
         client-body-timeout: "5"
         keep-alive: "6"

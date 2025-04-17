@@ -433,6 +433,21 @@ patches:
     kind: HelmRelease
     name: ingress-nginx
 
+# This patch enables or disables the PROXY protocol parsing for the
+# incoming HTTP and HTTPS connections. To enable PROXY protocol
+# parsing, set the value to "true". To disable PROXY protocol parsing,
+# set the value to "false".
+#
+- patch: |
+    - op: replace
+      path: /spec/values/controller/config/use-proxy-protocol
+      value: "false"
+  target:
+    group: helm.toolkit.fluxcd.io
+    version: v2
+    kind: HelmRelease
+    name: ingress-nginx
+
 - path: ../../base/swpt-debtors/patches/broker.yaml
   target:
     group: rabbitmq.com
