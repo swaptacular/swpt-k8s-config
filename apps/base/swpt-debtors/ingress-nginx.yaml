@@ -28,11 +28,20 @@ spec:
     controller:
       replicaCount: 2
       maxUnavailable: 30%
+      unhealthyPodEvictionPolicy: AlwaysAllow
+      ingressClass: namespace.nginx
+      ingressClassByName: true
+      ingressClassResource:
+        name: namespace.nginx
+        enabled: true
+        controllerValue: k8s.io/ingress-nginx/namespace
+      scope:
+        enabled: true
       service:
         externalTrafficPolicy: "Local"
         annotations: {}
-      scope:
-        enabled: true
+      config: {}
+      proxySetHeaders: {}
       priorityClassName: smp-receiver
       affinity:
         podAntiAffinity:
@@ -54,9 +63,12 @@ spec:
             topologyKey: kubernetes.io/hostname
             matchLabelKeys:
             - pod-template-hash
-      ingressClass: namespace.nginx
-      ingressClassByName: true
-      ingressClassResource:
-        name: namespace.nginx
-        enabled: true
-        controllerValue: k8s.io/ingress-nginx/namespace
+      resources:
+        limits:
+          cpu: 4000m
+          memory: 1Gi
+        requests:
+          cpu: 100m
+          memory: 90Mi
+      metrics:
+        enabled: false
