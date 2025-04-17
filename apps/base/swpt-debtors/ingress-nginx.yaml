@@ -56,8 +56,16 @@ spec:
         gzip-min-length: "5000"
         ssl-session-cache: "false"
         ssl-session-tickets: "true"
-        ssl-session-ticket-key: R+34jc5Qy0Hf5LnIXcHjCpvIR/MYH875Sal8LXhcyd6+F1Nm3eFPbHIY838nKAUiHLRrBIYspZa8EiTtx/8Z2uGSGYIbOe2E5MRVIBCE3QI=
+        # ssl-session-ticket-key: R+34jc5Qy0Hf5LnIXcHjCpvIR/MYH875Sal8LXhcyd6+F1Nm3eFPbHIY838nKAUiHLRrBIYspZa8EiTtx/8Z2uGSGYIbOe2E5MRVIBCE3QI=
       priorityClassName: smp-receiver
+      extraVolumeMounts:
+      - name: ssl-session-ticket-key
+        mountPath: /etc/ingress-controller/tickets.key
+        subPath: key
+      extraVolumes:
+      - name: ssl-session-ticket-key
+        secret:
+          secretName: ssl-session-ticket-key
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
