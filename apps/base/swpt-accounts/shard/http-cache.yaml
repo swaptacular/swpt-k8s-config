@@ -94,6 +94,7 @@ metadata:
     app.kubernetes.io/component: http-cache
 spec:
   maxUnavailable: 30%
+  unhealthyPodEvictionPolicy: AlwaysAllow
   selector:
     matchLabels:
       app.kubernetes.io/component: http-cache

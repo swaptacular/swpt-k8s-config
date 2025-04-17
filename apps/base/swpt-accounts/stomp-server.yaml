@@ -122,6 +122,7 @@ metadata:
     app.kubernetes.io/component: stomp-server
 spec:
   maxUnavailable: 30%
+  unhealthyPodEvictionPolicy: AlwaysAllow
   selector:
     matchLabels:
       app.kubernetes.io/name: swpt-accounts

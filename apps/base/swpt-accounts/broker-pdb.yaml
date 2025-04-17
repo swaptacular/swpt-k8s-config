@@ -7,6 +7,7 @@ metadata:
     app.kubernetes.io/component: message-broker
 spec:
   maxUnavailable: 20%
+  unhealthyPodEvictionPolicy: AlwaysAllow
   selector:
     matchLabels:
       app.kubernetes.io/name: broker

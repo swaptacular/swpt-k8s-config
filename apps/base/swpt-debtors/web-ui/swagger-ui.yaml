@@ -93,6 +93,7 @@ metadata:
     app.kubernetes.io/component: swagger-ui
 spec:
   maxUnavailable: 30%
+  unhealthyPodEvictionPolicy: AlwaysAllow
   selector:
     matchLabels:
       app.kubernetes.io/name: swpt-debtors

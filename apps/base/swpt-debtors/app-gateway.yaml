@@ -130,6 +130,7 @@ metadata:
     app.kubernetes.io/component: app-gateway
 spec:
   maxUnavailable: 30%
+  unhealthyPodEvictionPolicy: AlwaysAllow
   selector:
     matchLabels:
       app.kubernetes.io/name: swpt-debtors

@@ -12,6 +12,7 @@ spec:
       app.kubernetes.io/name: hydra
       app.kubernetes.io/instance: swpt
   maxUnavailable: 30%
+  unhealthyPodEvictionPolicy: AlwaysAllow
 
 ---
 apiVersion: v1

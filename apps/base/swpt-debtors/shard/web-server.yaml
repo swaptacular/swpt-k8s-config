@@ -117,6 +117,7 @@ metadata:
     app.kubernetes.io/component: web-server
 spec:
   maxUnavailable: 30%
+  unhealthyPodEvictionPolicy: AlwaysAllow
   selector:
     matchLabels:
       app.kubernetes.io/component: web-server

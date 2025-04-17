@@ -71,6 +71,7 @@ metadata:
     app.kubernetes.io/component: messages-flusher
 spec:
   maxUnavailable: 30%
+  unhealthyPodEvictionPolicy: AlwaysAllow
   selector:
     matchLabels:
       app.kubernetes.io/component: messages-flusher
