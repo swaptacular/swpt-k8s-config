@@ -405,6 +405,28 @@ patches:
     kind: HelmRelease
     name: ingress-nginx
 
+# This patch sets the correct reference to the stomp-server service.
+# The format is "namespace/service-name:port[:PROXY]". Where:
+#
+# * "namespace" must be the same as the current namespace. That is:
+#   the name of the directory that contains this `kustomization.yaml`
+#   file;
+#
+# * "service-name" must be "stomp-server"; "port" must be "stomp";
+#
+# * If the optional ":PROXY" is appended to the value, this means that
+#   the "PROXY protocol" is applied to the incoming connections.
+#
+- patch: |
+    - op: replace
+      path: /spec/values/tcp/1234
+      value: swpt-debtors/stomp-server:stomp
+  target:
+    group: helm.toolkit.fluxcd.io
+    version: v2
+    kind: HelmRelease
+    name: ingress-nginx
+
 - path: ../../base/swpt-debtors/patches/broker.yaml
   target:
     group: rabbitmq.com
