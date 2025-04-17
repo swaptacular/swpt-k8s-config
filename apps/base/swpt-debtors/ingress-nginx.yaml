@@ -56,6 +56,7 @@ spec:
         gzip-min-length: "5000"
         ssl-session-cache: "false"
         ssl-session-tickets: "true"
+        ssl-session-ticket-key: ifeofeijfie
       priorityClassName: smp-receiver
       affinity:
         podAntiAffinity:
