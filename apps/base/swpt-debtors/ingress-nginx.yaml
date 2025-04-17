@@ -62,6 +62,7 @@ spec:
       - name: ssl-session-ticket-key
         mountPath: /etc/ingress-controller/tickets.key
         subPath: key
+        readOnly: false
       extraVolumes:
       - name: ssl-session-ticket-key
         secret:
