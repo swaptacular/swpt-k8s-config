@@ -18,11 +18,6 @@ spec:
   # name of the current namespace.
   #
   releaseName: namespace
-  # valuesFrom:
-  #   - kind: Secret
-  #     name: ssl-session-ticket-key
-  #     valuesKey: key
-  #     targetPath: controller.config.ssl-session-ticket-key
   values:
     global:
       image:
@@ -45,6 +40,9 @@ spec:
       service:
         externalTrafficPolicy: "Local"
         annotations: {}
+      customTemplate:
+        configMapName: ingress-nginx-tmpl
+        configMapKey: nginx.tmpl
       config:
         client-header-timeout: "5"
         client-body-timeout: "5"
@@ -56,18 +54,15 @@ spec:
         gzip-min-length: "5000"
         ssl-session-cache: "false"
         ssl-session-tickets: "true"
-        ssl-session-ticket-key: R+34jc5Qy0Hf5LnIXcHjCpvIR/MYH875Sal8LXhcyd6+F1Nm3eFPbHIY838nKAUiHLRrBIYspZa8EiTtx/8Z2uGSGYIbOe2E5MRVIBCE3QI=
       priorityClassName: smp-receiver
       extraVolumeMounts:
       - name: ssl-session-ticket-key
         mountPath: /etc/ingress-controller/tickets.key
         subPath: key
-        readOnly: false
       extraVolumes:
       - name: ssl-session-ticket-key
         secret:
           secretName: ssl-session-ticket-key
-          defaultMode: 0666
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
