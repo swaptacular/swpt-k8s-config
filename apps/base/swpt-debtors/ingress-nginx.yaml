@@ -67,6 +67,7 @@ spec:
       - name: ssl-session-ticket-key
         secret:
           secretName: ssl-session-ticket-key
+          defaultMode: 0666
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
