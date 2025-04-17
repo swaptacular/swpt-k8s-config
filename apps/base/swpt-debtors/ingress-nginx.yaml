@@ -18,11 +18,11 @@ spec:
   # name of the current namespace.
   #
   releaseName: namespace
-  valuesFrom:
-    - kind: Secret
-      name: ssl-session-ticket-key
-      valuesKey: key
-      targetPath: controller.config.ssl-session-ticket-key
+  # valuesFrom:
+  #   - kind: Secret
+  #     name: ssl-session-ticket-key
+  #     valuesKey: key
+  #     targetPath: controller.config.ssl-session-ticket-key
   values:
     global:
       image:
