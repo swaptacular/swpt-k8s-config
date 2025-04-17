@@ -293,6 +293,10 @@ configMapGenerator:
       # "nfs-server.swpt-nfs-server.svc.cluster.local" service.
       kustomize_nfs_service_cluster_ip: 10.96.0.4
 
+      # Each Swaptacular node runs its own STOMP server. This is the
+      # port at which the node's STOMP server will be running.
+      kustomize_stomp_server_port: "1234"
+
       # Kubernetes memory and CPU requests and limits, for the STOMP
       # server containers.
       #
@@ -358,8 +362,8 @@ replicas:
   count: 1
 - name: swpt-debtors-ui
   count: 1
-# - name: app-gateway
-#   count: 1
+- name: app-gateway
+  count: 1
 
 # OCI images to use for the different containers:
 #
@@ -446,7 +450,7 @@ resources:
 replacements:
 - path: ../../base/swpt-debtors/replacements/nfs-cluster-ip.yaml
 - path: ../../base/swpt-debtors/replacements/nfs-pv-name.yaml
-# - path: ../../base/swpt-debtors/replacements/stomp-server-port.yaml
+- path: ../../base/swpt-debtors/replacements/stomp-server-port.yaml
 - path: ../../base/swpt-debtors/replacements/apiproxy-cpu-limit.yaml
 - path: ../../base/swpt-debtors/replacements/apiproxy-cpu-request.yaml
 - path: ../../base/swpt-debtors/replacements/apiproxy-memory-limit.yaml
@@ -468,10 +472,10 @@ replacements:
 - path: ../../base/swpt-debtors/replacements/swpt-debtors-ui-cpu-request.yaml
 - path: ../../base/swpt-debtors/replacements/swpt-debtors-ui-memory-limit.yaml
 - path: ../../base/swpt-debtors/replacements/swpt-debtors-ui-memory-request.yaml
-# - path: ../../base/swpt-debtors/replacements/app-gateway-cpu-limit.yaml
-# - path: ../../base/swpt-debtors/replacements/app-gateway-cpu-request.yaml
-# - path: ../../base/swpt-debtors/replacements/app-gateway-memory-limit.yaml
-# - path: ../../base/swpt-debtors/replacements/app-gateway-memory-request.yaml
+- path: ../../base/swpt-debtors/replacements/app-gateway-cpu-limit.yaml
+- path: ../../base/swpt-debtors/replacements/app-gateway-cpu-request.yaml
+- path: ../../base/swpt-debtors/replacements/app-gateway-memory-limit.yaml
+- path: ../../base/swpt-debtors/replacements/app-gateway-memory-request.yaml
 - path: ../../base/swpt-debtors/replacements/ingress-nginx-cpu-limit.yaml
 - path: ../../base/swpt-debtors/replacements/ingress-nginx-cpu-request.yaml
 - path: ../../base/swpt-debtors/replacements/ingress-nginx-memory-limit.yaml
