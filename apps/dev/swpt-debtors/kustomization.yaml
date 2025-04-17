@@ -112,6 +112,7 @@ secretGenerator:
   - key=secrets/ssl-session-ticket-key.encrypted
 
   options:
+    disableNameSuffixHash: true
     labels:
       app.kubernetes.io/name: swpt-debtors
   type: Opaque

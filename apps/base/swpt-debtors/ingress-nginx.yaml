@@ -14,10 +14,15 @@ spec:
         namespace: flux-system
       interval: 10m
 
-  # NOTE: Bellow "namespace" will be automatically replaced with the
+  # NOTE: Bellow, "namespace" will be automatically replaced with the
   # name of the current namespace.
   #
   releaseName: namespace
+  valuesFrom:
+    - kind: Secret
+      name: ssl-session-ticket-key
+      valuesKey: key
+      targetPath: controller.config.ssl-session-ticket-key
   values:
     global:
       image:
@@ -51,8 +56,6 @@ spec:
         gzip-min-length: "5000"
         ssl-session-cache: "false"
         ssl-session-tickets: "true"
-        # ssl-session-ticket-key: "/ssl_session_ticket.key"
-      proxySetHeaders: {}
       priorityClassName: smp-receiver
       affinity:
         podAntiAffinity:
