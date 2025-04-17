@@ -41,17 +41,17 @@ spec:
         externalTrafficPolicy: "Local"
         annotations: {}
       config:
-        client-header-timeout: "5s"
-        client-body-timeout: "5s"
-        keep-alive: "6s"
+        client-header-timeout: "5"
+        client-body-timeout: "5"
+        keep-alive: "6"
         keep-alive-requests: "4"
         proxy-body-size: "20k"
         use-gzip: "true"
         gzip-types: "*"
         gzip-min-length: "5000"
-        ssl-session-cache: "none"
-        ssl-session-tickets: "on"
-        ssl-session-ticket-key: "/ssl_session_ticket.key"
+        ssl-session-cache: "false"
+        ssl-session-tickets: "true"
+        # ssl-session-ticket-key: "/ssl_session_ticket.key"
       proxySetHeaders: {}
       priorityClassName: smp-receiver
       affinity:
