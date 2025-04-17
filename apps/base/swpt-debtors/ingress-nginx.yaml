@@ -13,11 +13,15 @@ spec:
         name: ingress-nginx
         namespace: flux-system
       interval: 10m
+
+  # NOTE: Bellow "namespace" will be automatically replaced with the
+  # name of the current namespace.
+  #
   releaseName: namespace
   values:
     global:
       image:
-        registry: registry.k8s.io  # registry host to pull images from
+        registry: registry.k8s.io
     namespaceOverride: namespace
     tcp:
       "1234": "namespace/stomp-server:stomp"
@@ -26,10 +30,7 @@ spec:
       maxUnavailable: 30%
       service:
         externalTrafficPolicy: "Local"
-        # ipFamilyPolicy: PreferDualStack
-        # ipFamilies:
-        # - IPv4
-        # - IPv6
+        annotations: {}
       scope:
         enabled: true
       priorityClassName: smp-receiver
