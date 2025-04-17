@@ -100,16 +100,19 @@ secretGenerator:
   type: Opaque
 
 - name: ssl-session-ticket-key
-  files:
-  # A SOPS-encrypted file containing the secret key for encrypting
-  # SSL/TLS session tickets. To generate this file you may use the
-  # following commands:
-  #
-  # $ openssl rand 80 > ssl-session-ticket-key
-  # $ sops -e ssl-session-ticket-key > ssl-session-ticket-key.encrypted
-  # $ shred -z ssl-session-ticket-key
-  # $ rm ssl-session-ticket-key
-  - key=secrets/ssl-session-ticket-key.encrypted
+  # files:
+  # # A SOPS-encrypted file containing the secret key for encrypting
+  # # SSL/TLS session tickets. To generate this file you may use the
+  # # following commands:
+  # #
+  # # $ openssl rand 80 > ssl-session-ticket-key
+  # # $ sops -e ssl-session-ticket-key > ssl-session-ticket-key.encrypted
+  # # $ shred -z ssl-session-ticket-key
+  # # $ rm ssl-session-ticket-key
+  # - key=secrets/ssl-session-ticket-key.encrypted
+
+  literals:
+  - key=R+34jc5Qy0Hf5LnIXcHjCpvIR/MYH875Sal8LXhcyd6+F1Nm3eFPbHIY838nKAUiHLRrBIYspZa8EiTtx/8Z2uGSGYIbOe2E5MRVIBCE3QI="
 
   options:
     disableNameSuffixHash: true
