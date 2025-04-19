@@ -51,7 +51,7 @@ spec:
             - name: SERVER_API_ENTRYPOINT
               value: https://$(PUBLIC_HOSTNAME)/debtors/.debtor
             - name: AUTHORIZATION_URL
-              value: https://$(PUBLIC_HOSTNAME)/debtors-hydra/oauth2/token
+              value: https://$(PUBLIC_HOSTNAME)/oauth2/token
             - name: CLIENT_ID
               valueFrom:
                 secretKeyRef:

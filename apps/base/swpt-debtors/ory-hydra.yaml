@@ -330,7 +330,7 @@ spec:
                   name: swpt-hydra
                   key: urls_error
             - name: URLS_SELF_ISSUER
-              value: "https://$(PUBLIC_HOSTNAME)/debtors-hydra/"
+              value: "https://$(PUBLIC_HOSTNAME)/"
             - name: URLS_LOGIN
               value: "https://$(PUBLIC_HOSTNAME)/debtors-login/"
             - name: URLS_CONSENT

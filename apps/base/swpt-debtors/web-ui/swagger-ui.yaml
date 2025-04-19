@@ -50,11 +50,11 @@ spec:
             - name: API_ROOT
               value: https://$(PUBLIC_HOSTNAME)/
             - name: OAUTH2_AUTHORIZATION_URL
-              value: https://$(PUBLIC_HOSTNAME)/debtors-hydra/oauth2/auth
+              value: https://$(PUBLIC_HOSTNAME)/oauth2/auth
             - name: OAUTH2_TOKEN_URL
-              value: https://$(PUBLIC_HOSTNAME)/debtors-hydra/oauth2/token
+              value: https://$(PUBLIC_HOSTNAME)/oauth2/token
             - name: OAUTH2_REFRESH_URL
-              value: https://$(PUBLIC_HOSTNAME)/debtors-hydra/oauth2/token
+              value: https://$(PUBLIC_HOSTNAME)/oauth2/token
             - name: OAUTH2_REDIRECT_URL
               value: https://$(PUBLIC_HOSTNAME)/debtors-swagger-ui/oauth2-redirect.html
           resources:
