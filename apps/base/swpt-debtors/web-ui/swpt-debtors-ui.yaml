@@ -129,3 +129,33 @@ spec:
             name: swpt-debtors-ui
             port:
               name: http
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-swpt-debtors-ui-redirect
+  annotations:
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      rewrite ^(.*)$ $1/ redirect;
+spec:
+  # Here "namespace" will be automatically replaced with the name of
+  # the current namespace.
+  #
+  ingressClassName: namespace.nginx
+
+  rules:
+  # Here "public-hostname" will be automatically replaced with the
+  # real public hostname of the Swaptacular node.
+  #
+  - host: public-hostname
+    http:
+      paths:
+      - path: /debtors-webapp
+        pathType: Exact
+        backend:
+          service:
+            name: swpt-debtors-ui
+            port:
+              name: http
