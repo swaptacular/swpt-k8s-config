@@ -7,7 +7,7 @@ metadata:
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
 spec:
-  ingressClassName: namespace.ingress
+  ingressClassName: namespace.nginx
   rules:
   # Here "public-hostname" will be automatically replaced with the
   # real public hostname of the Swaptacular node.
