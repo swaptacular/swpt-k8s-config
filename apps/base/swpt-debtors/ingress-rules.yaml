@@ -15,7 +15,7 @@ spec:
   - host: public-hostname
     http:
       paths:
-      - path: (/debtors(/.*|$))
+      - path: /(debtors(/.*|$))
         pathType: ImplementationSpecific
         backend:
           service:
