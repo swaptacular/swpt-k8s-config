@@ -107,8 +107,9 @@ kind: Ingress
 metadata:
   name: ingress-swpt-debtors-ui
   annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: "/$2"
+    nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/rewrite-target: "/"
 spec:
   # Here "namespace" will be automatically replaced with the name of
   # the current namespace.
@@ -122,8 +123,8 @@ spec:
   - host: public-hostname
     http:
       paths:
-      - path: /debtors-webapp
-        pathType: Prefix
+      - path: /debtors-webapp(/|$)(.*)
+        pathType: ImplementationSpecific
         backend:
           service:
             name: swpt-debtors-ui
