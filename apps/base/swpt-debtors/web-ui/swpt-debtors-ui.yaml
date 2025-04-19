@@ -137,6 +137,7 @@ metadata:
   name: ingress-swpt-debtors-ui-redirect
   annotations:
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/configuration-snippet: |
       rewrite ^(/debtors-webapp)$ $1/ permanent;
 spec:
@@ -152,8 +153,8 @@ spec:
   - host: public-hostname
     http:
       paths:
-      - path: /debtors-webapp
-        pathType: Exact
+      - path: /debtors-webapp$
+        pathType: ImplementationSpecific
         backend:
           service:
             name: swpt-debtors-ui
