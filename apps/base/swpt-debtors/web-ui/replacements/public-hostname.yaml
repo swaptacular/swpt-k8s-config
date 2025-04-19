@@ -10,3 +10,10 @@ targets:
       name: ingress-swagger-ui
     fieldPaths:
       - spec.rules.*.host
+  - select:
+      group: networking.k8s.io
+      version: v1
+      kind: Ingress
+      name: ingress-swpt-debtors-ui
+    fieldPaths:
+      - spec.rules.*.host

@@ -33,10 +33,3 @@ spec:
             name: apiproxy
             port:
               name: http
-      - path: /debtors-webapp(/.*|$)
-        pathType: ImplementationSpecific
-        backend:
-          service:
-            name: swpt-debtors-ui
-            port:
-              name: http
