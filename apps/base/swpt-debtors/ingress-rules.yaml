@@ -15,10 +15,31 @@ spec:
   - host: public-hostname
     http:
       paths:
+      - path: /(oauth2(?:/.*|$))
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: swpt-hydra-public
+            port:
+              name: http
       - path: /(debtors(?:/.*|$))
         pathType: ImplementationSpecific
         backend:
           service:
             name: apiproxy
+            port:
+              name: http
+      - path: /(debtors-swagger-ui(?:/.*|$))
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: swagger-ui
+            port:
+              name: http
+      - path: /debtors-webapp(/.*|$)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: swpt-debtors-ui
             port:
               name: http
