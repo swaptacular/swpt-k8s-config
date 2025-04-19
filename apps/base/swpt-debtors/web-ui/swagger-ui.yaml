@@ -119,7 +119,7 @@ spec:
   - host: public-hostname
     http:
       paths:
-      - path: /debtors-swagger-ui
+      - path: /debtors-swagger-ui/
         pathType: Prefix
         backend:
           service:
