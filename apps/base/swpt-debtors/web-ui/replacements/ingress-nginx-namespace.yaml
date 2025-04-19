@@ -1,0 +1,15 @@
+source:
+  kind: ConfigMap
+  name: stomp-config
+  fieldPath: metadata.namespace
+targets:
+  - select:
+      group: networking.k8s.io
+      version: v1
+      kind: Ingress
+      name: ingress-swagger-ui
+    fieldPaths:
+      - spec.ingressClassName
+    options:
+      delimiter: "."
+      index: 0

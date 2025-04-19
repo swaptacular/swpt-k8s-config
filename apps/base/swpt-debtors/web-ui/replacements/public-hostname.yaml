@@ -1,0 +1,12 @@
+source:
+  kind: ConfigMap
+  name: debtors-agent-config
+  fieldPath: data.PUBLIC_HOSTNAME
+targets:
+  - select:
+      group: networking.k8s.io
+      version: v1
+      kind: Ingress
+      name: ingress-swagger-ui
+    fieldPaths:
+      - spec.rules.*.host

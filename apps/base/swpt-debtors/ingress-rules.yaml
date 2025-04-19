@@ -7,7 +7,11 @@ metadata:
     nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
 spec:
+  # Here "namespace" will be automatically replaced with the name of
+  # the current namespace.
+  #
   ingressClassName: namespace.nginx
+
   rules:
   # Here "public-hostname" will be automatically replaced with the
   # real public hostname of the Swaptacular node.
@@ -27,13 +31,6 @@ spec:
         backend:
           service:
             name: apiproxy
-            port:
-              name: http
-      - path: /(debtors-swagger-ui(?:/.*|$))
-        pathType: ImplementationSpecific
-        backend:
-          service:
-            name: swagger-ui
             port:
               name: http
       - path: /debtors-webapp(/.*|$)
