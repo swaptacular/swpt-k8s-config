@@ -17,14 +17,14 @@ spec:
   - host: public-hostname
     http:
       paths:
-      - path: /oauth2
+      - path: /oauth2/
         pathType: Prefix
         backend:
           service:
             name: swpt-hydra-public
             port:
               name: http
-      - path: /debtors
+      - path: /debtors/
         pathType: Prefix
         backend:
           service:
