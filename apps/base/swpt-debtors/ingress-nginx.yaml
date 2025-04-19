@@ -55,7 +55,7 @@ spec:
         gzip-min-length: "5000"
         ssl-session-cache: "false"
         ssl-session-tickets: "true"
-      allowSnippetAnnotations: true
+        allow-snippet-annotations: "true"
       priorityClassName: smp-receiver
       extraVolumeMounts:
       - name: ssl-session-ticket-key
