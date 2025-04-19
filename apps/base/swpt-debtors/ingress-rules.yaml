@@ -3,8 +3,6 @@ kind: Ingress
 metadata:
   name: ingress-rules
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: "/$1"
-    nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
 spec:
   # Here "namespace" will be automatically replaced with the name of
@@ -19,15 +17,15 @@ spec:
   - host: public-hostname
     http:
       paths:
-      - path: /(oauth2(?:/.*|$))
-        pathType: ImplementationSpecific
+      - path: /oauth2/
+        pathType: Prefix
         backend:
           service:
             name: swpt-hydra-public
             port:
               name: http
-      - path: /(debtors(?:/.*|$))
-        pathType: ImplementationSpecific
+      - path: /debtors/
+        pathType: Prefix
         backend:
           service:
             name: apiproxy
