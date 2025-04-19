@@ -496,6 +496,6 @@ replacements:
 - path: ../../base/swpt-debtors/replacements/ingress-nginx-cpu-request.yaml
 - path: ../../base/swpt-debtors/replacements/ingress-nginx-memory-limit.yaml
 - path: ../../base/swpt-debtors/replacements/ingress-nginx-memory-request.yaml
-- path: ../../base/swpt-debtors/replacements/oauth2-clients-redirect-uris.yaml
+- path: ../../base/swpt-debtors/replacements/public-hostname.yaml
 - path: ../../base/swpt-debtors/replacements/s3-ip-block.yaml
 - path: ../../base/swpt-debtors/replacements/ingress-nginx-namespace.yaml

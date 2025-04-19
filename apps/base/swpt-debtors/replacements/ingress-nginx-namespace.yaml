@@ -32,13 +32,13 @@ targets:
     options:
       delimiter: "/"
       index: 2
-  # - select:
-  #     group: helm.toolkit.fluxcd.io
-  #     version: v2
-  #     kind: HelmRelease
-  #     name: ingress-nginx
-  #   fieldPaths:
-  #     - spec.values.tcp.1234
-  #   options:
-  #     delimiter: "/"
-  #     index: 0
+  - select:
+      group: networking.k8s.io
+      version: v1
+      kind: Ingress
+      name: ingress-rules
+    fieldPaths:
+      - spec.ingressClassName
+    options:
+      delimiter: "."
+      index: 0
