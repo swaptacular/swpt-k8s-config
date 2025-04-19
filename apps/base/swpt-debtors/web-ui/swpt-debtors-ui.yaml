@@ -137,8 +137,7 @@ metadata:
   name: ingress-swpt-debtors-ui-redirect
   annotations:
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/configuration-snippet: |
-      rewrite ^(.*)$ $1/ redirect;
+    nginx.ingress.kubernetes.io/app-root: "/debtors-webapp/"
 spec:
   # Here "namespace" will be automatically replaced with the name of
   # the current namespace.
