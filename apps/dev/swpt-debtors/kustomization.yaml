@@ -88,17 +88,6 @@ secretGenerator:
       app.kubernetes.io/name: swpt-debtors
   type: Opaque
 
-- name: ssl-certificate
-  files:
-  - cert=ssl.crt
-  - key=ssl.key.encrypted
-
-  options:
-    disableNameSuffixHash: true
-    labels:
-      app.kubernetes.io/name: swpt-debtors
-  type: Opaque
-
 - name: ssl-session-ticket-key
   files:
   # A SOPS-encrypted file containing the secret key for encrypting
@@ -184,31 +173,6 @@ configMapGenerator:
       kustomize_swpt_debtors_ui_cpu_limit: 1000m
       kustomize_swpt_debtors_ui_memory_request: 12Mi
       kustomize_swpt_debtors_ui_memory_limit: 1Gi
-
-- name: nginx-gateway-config
-  files:
-  # Nginx's configuration files. Custom configuration files can be
-  # referenced. Normally, the default one should be work reasonably
-  # well. A notable exception is when "Proxy protocol" is being used.
-  #
-  - nginx.conf=../../base/swpt-debtors/static/nginx.conf
-  - default.conf.template=../../base/swpt-debtors/static/default.conf.template
-
-  options:
-    labels:
-      app.kubernetes.io/name: swpt-debtors
-
-    # These annotations are used as sources for convenient Kustomize
-    # replacements:
-    #
-    annotations:
-      # Kubernetes memory and CPU requests and limits, for the Nginx
-      # gateway server containers.
-      #
-      kustomize_app_gateway_cpu_request: 10m
-      kustomize_app_gateway_cpu_limit: 4000m
-      kustomize_app_gateway_memory_request: 32Mi
-      kustomize_app_gateway_memory_limit: 1Gi
 
 - name: swpt-debtors-ui-config
   literals:
