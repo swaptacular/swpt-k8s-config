@@ -6,7 +6,7 @@ spec:
   interval: 10m
   chart:
     spec:
-      chart: ingress-nginx
+      chart: charts/ingress-nginx
       sourceRef:
         kind: GitRepository
         name: flux-system
@@ -50,7 +50,7 @@ spec:
         proxy-body-size: "20k"
         use-gzip: "true"
         gzip-types: "*"
-        gzip-min-length: "4096"
+        gzip-min-length: "5000"
         ssl-session-cache: "false"
         ssl-session-tickets: "true"
         allow-snippet-annotations: "false"
