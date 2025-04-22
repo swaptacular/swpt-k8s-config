@@ -36,7 +36,7 @@ spec:
               containerPort: 80
           readinessProbe:
             httpGet:
-              path: /
+              path: /debtors-webapp/
               port: http
             initialDelaySeconds: 5
           envFrom:
