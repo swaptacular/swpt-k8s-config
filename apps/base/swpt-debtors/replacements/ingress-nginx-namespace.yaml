@@ -10,7 +10,7 @@ targets:
       name: ingress-nginx
     fieldPaths:
       - spec.releaseName
-      - spec.values.namespaceOverride
+      - spec.targetNamespace
   - select:
       group: helm.toolkit.fluxcd.io
       version: v2

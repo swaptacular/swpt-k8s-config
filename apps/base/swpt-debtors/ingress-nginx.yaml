@@ -15,12 +15,12 @@ spec:
   # NOTE: Bellow, "namespace" will be automatically replaced with the
   # name of the current namespace.
   #
+  targetNamespace: namespace
   releaseName: namespace
   values:
     global:
       image:
         registry: registry.k8s.io
-    namespaceOverride: namespace
     tcp:
       "1234": "namespace/stomp-server:stomp"
     controller:
