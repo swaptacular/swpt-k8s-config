@@ -6,7 +6,7 @@ spec:
   interval: 10m
   chart:
     spec:
-      chart: charts/ingress-nginx
+      chart: charts/ingress-nginx-4.12.1.tgz
       sourceRef:
         kind: GitRepository
         name: flux-system
