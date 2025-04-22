@@ -334,7 +334,7 @@ images:
   newTag: 2.3.1  # Must be the same as the tag for the "swpt-debtors" image.
 - name: swpt-debtors-ui
   newName: ghcr.io/swaptacular/swpt_debtors_ui
-  newTag: 1.2.4
+  newTag: 1.2.5
 - name: swpt-apiproxy
   newName: ghcr.io/swaptacular/swpt_apiproxy
   newTag: 1.2.2
