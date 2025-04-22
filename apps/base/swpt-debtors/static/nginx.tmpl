@@ -438,6 +438,7 @@ http {
     #
     # And the customized version is:
     ssl_session_ticket_key /etc/ingress-controller/tickets.key;
+    merge_slashes off;
 
     # slightly reduce the time-to-first-byte
     ssl_buffer_size {{ $cfg.SSLBufferSize }};
