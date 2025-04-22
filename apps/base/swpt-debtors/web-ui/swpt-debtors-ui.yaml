@@ -48,6 +48,8 @@ spec:
                 configMapKeyRef:
                   name: debtors-agent-config
                   key: PUBLIC_HOSTNAME
+            - name: BASE_URL
+              value: /debtors-webapp
             - name: SERVER_API_ENTRYPOINT
               value: https://$(PUBLIC_HOSTNAME)/debtors/.debtor
             - name: AUTHORIZATION_URL
@@ -123,38 +125,7 @@ spec:
   - host: public-hostname
     http:
       paths:
-      - path: /(debtors-webapp/.*)
-        pathType: ImplementationSpecific
-        backend:
-          service:
-            name: swpt-debtors-ui
-            port:
-              name: http
-
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: ingress-swpt-debtors-ui-redirect
-  annotations:
-    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/use-regex: "true"
-    nginx.ingress.kubernetes.io/configuration-snippet: |
-      rewrite ^(/debtors-webapp)$ $1/ permanent;
-spec:
-  # Here "namespace" will be automatically replaced with the name of
-  # the current namespace.
-  #
-  ingressClassName: namespace.nginx
-
-  rules:
-  # Here "public-hostname" will be automatically replaced with the
-  # real public hostname of the Swaptacular node.
-  #
-  - host: public-hostname
-    http:
-      paths:
-      - path: /debtors-webapp$
+      - path: /(debtors-webapp(?:/.*|$))
         pathType: ImplementationSpecific
         backend:
           service:

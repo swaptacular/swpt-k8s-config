@@ -23,13 +23,3 @@ targets:
     options:
       delimiter: "."
       index: 0
-  - select:
-      group: networking.k8s.io
-      version: v1
-      kind: Ingress
-      name: ingress-swpt-debtors-ui-redirect
-    fieldPaths:
-      - spec.ingressClassName
-    options:
-      delimiter: "."
-      index: 0
