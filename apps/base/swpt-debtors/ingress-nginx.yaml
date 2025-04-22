@@ -7,12 +7,10 @@ spec:
   chart:
     spec:
       chart: ingress-nginx
-      version: "4.12.1"
       sourceRef:
-        kind: HelmRepository
-        name: ingress-nginx
+        kind: GitRepository
+        name: flux-system
         namespace: flux-system
-      interval: 10m
 
   # NOTE: Bellow, "namespace" will be automatically replaced with the
   # name of the current namespace.
