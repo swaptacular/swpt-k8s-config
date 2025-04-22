@@ -50,7 +50,7 @@ spec:
         proxy-body-size: "20k"
         use-gzip: "true"
         gzip-types: "*"
-        gzip-min-length: "5000"
+        gzip-min-length: "4096"
         ssl-session-cache: "false"
         ssl-session-tickets: "true"
         allow-snippet-annotations: "false"
