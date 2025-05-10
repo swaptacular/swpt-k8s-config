@@ -19,5 +19,4 @@ resources:
 - network-policies.yaml
 - ingress-nginx.yaml
 - ingress-rules.yaml
-- dragonfly-db.yaml
 - web-ui/

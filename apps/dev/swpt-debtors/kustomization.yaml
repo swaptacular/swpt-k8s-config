@@ -414,9 +414,17 @@ patches:
     name: broker
     version: v1beta1
 
+- path: ../../base/swpt-debtors/patches/dragonfly-db.yaml
+  target:
+    group: dragonflydb.io
+    kind: Dragonfly
+    name: dragonfly-db
+    version: v1alpha1
+
 resources:
 - ../../base/swpt-debtors/
 - broker.yaml
+- dragonfly-db.yaml
 - hydra-db/
 - shards/
 - node-data/peers/

@@ -1,0 +1,38 @@
+apiVersion: dragonflydb.io/v1alpha1
+kind: Dragonfly
+metadata:
+  name: dragonfly-db
+spec:
+  # Specifies the "Dragonfly" OCI image to use.
+  #
+  image: docker.dragonflydb.io/dragonflydb/dragonfly:v1.21.2
+
+  # Specifies the number of Dragonfly server instances. It is
+  # recommended to be at least 2. If set to 1, only a primary server
+  # will run, with no replicas.
+  #
+  replicas: 1
+
+  # Specifies how often a snapshot should be made, and the size of the
+  # persistent volume on which the snapshot will be stored.
+  #
+  snapshot:
+    cron: "*/5 * * * *"
+    persistentVolumeClaimSpec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 1Gi
+
+  # Specifies Kubernetes memory and CPU requests and limits. It is
+  # highly recommended that the memory request is the same as the
+  # memory limit.
+  #
+  resources:
+    requests:
+      cpu: 100m
+      memory: 500Mi
+    limits:
+      cpu: 600m
+      memory: 500Mi

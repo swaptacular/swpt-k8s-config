@@ -1,0 +1,51 @@
+- op: test
+  path: /metadata/name
+  value: dragonfly-db
+
+- op: test
+  path: /metadata/labels
+  value: null
+- op: add
+  path: /metadata/labels
+  value:
+    app.kubernetes.io/name: swpt-debtors
+    app.kubernetes.io/component: dragonfly-database
+
+- op: test
+  path: /spec/affinity
+  value: null
+- op: add
+  path: /spec/affinity
+  value:
+    podAntiAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchLabels:
+            app.kubernetes.io/name: swpt-debtors
+            app.kubernetes.io/component: dragonfly-database
+        topologyKey: kubernetes.io/hostname
+
+- op: test
+  path: /spec/priorityClassName
+  value: null
+- op: add
+  path: /spec/priorityClassName
+  value: login-database
+
+- op: test
+  path: /spec/authentication
+  value: null
+- op: add
+  path: /spec/authentication
+  value:
+    passwordFromSecret:
+      name: db-owner-credentials
+      key: password
+
+- op: test
+  path: /spec/args
+  value: null
+- op: add
+  path: /spec/args
+  value:
+    - "--dbfilename=snapshot"
