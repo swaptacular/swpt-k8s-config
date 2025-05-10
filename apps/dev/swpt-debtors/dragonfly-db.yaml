@@ -59,10 +59,10 @@ spec:
   resources:
     requests:
       cpu: 100m
-      memory: 300Mi
+      memory: 350Mi
     limits:
       cpu: 1000m
-      memory: 300Mi
+      memory: 350Mi
 
   annotations:
     # The value can be changed to force pods restart.
