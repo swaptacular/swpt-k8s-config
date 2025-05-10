@@ -17,13 +17,13 @@ spec:
   # persistent volume on which the snapshot will be stored.
   #
   snapshot:
-    cron: "*/5 * * * *"
+    cron: "*/4 * * * *"
     persistentVolumeClaimSpec:
       accessModes:
       - ReadWriteOnce
       resources:
         requests:
-          storage: 1Gi
+          storage: 2Gi
 
   # Specifies Kubernetes memory and CPU requests and limits. It is
   # highly recommended that the memory request is the same as the
@@ -31,7 +31,7 @@ spec:
   #
   resources:
     requests:
-      cpu: 100m
+      cpu: 110m
       memory: 500Mi
     limits:
       cpu: 600m
