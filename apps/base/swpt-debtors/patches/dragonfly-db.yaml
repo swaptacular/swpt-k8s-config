@@ -8,8 +8,9 @@
 - op: add
   path: /metadata/labels
   value:
-    app.kubernetes.io/name: swpt-debtors
-    app.kubernetes.io/component: dragonfly-database
+    app.kubernetes.io/instance: dragonfly-db
+    app.kubernetes.io/name: dragonfly
+    app.kubernetes.io/part-of: swpt-debtors
 
 - op: test
   path: /spec/labels
@@ -25,8 +26,7 @@
       requiredDuringSchedulingIgnoredDuringExecution:
       - labelSelector:
           matchLabels:
-            app.kubernetes.io/name: swpt-debtors
-            app.kubernetes.io/component: dragonfly-database
+            app.kubernetes.io/name: dragonfly
         topologyKey: kubernetes.io/hostname
 
 - op: test
