@@ -14,7 +14,34 @@ spec:
   replicas: 1
 
   # Specifies how often a snapshot should be made, and the size of the
-  # persistent volume on which the snapshot will be stored.
+  # persistent volumes (PVs) on which the snapshots will be stored.
+  #
+  # IMPORTANT NOTE: Once the persistent volume claims have been
+  # created, increasing the storage size here will not automatically
+  # expand the PVs. To expand the PVs, after increasing the storage
+  # size here, and applying the changes to the cluster, follow this
+  # procedure:
+  #
+  # 1. For each PVC in the StatefulSet, run:
+  #
+  #    $ kubectl edit pvc <name>
+  #
+  #    and increase the capacity of each PVC.
+  #
+  # 2. Run:
+  #
+  #    $ kubectl delete sts --cascade=orphan dragonfly-db
+  #
+  #    to delete the StatefulSet and leave its pods.
+  #
+  # 3. Wait until the Dragonfly operator recreates the StatefulSet
+  #    automatically.
+  #
+  # 4. During the next pod rollout, pods' PVs will be resized. To
+  #    trigger a pod rollout, you may change the
+  #    "pods-restart-attempt" annotation (see bellow), or run:
+  #
+  #    $ kubectl rollout restart sts dragonfly-db
   #
   snapshot:
     cron: "*/5 * * * *"
@@ -40,4 +67,4 @@ spec:
   annotations:
     # The value can be changed to force pods restart.
     #
-    db-restart-attempt: attempt-0
+    pods-restart-attempt: attempt-0
