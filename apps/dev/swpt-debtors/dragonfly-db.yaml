@@ -17,7 +17,7 @@ spec:
   # persistent volume on which the snapshot will be stored.
   #
   snapshot:
-    cron: "*/4 * * * *"
+    cron: "*/5 * * * *"
     persistentVolumeClaimSpec:
       accessModes:
       - ReadWriteOnce
@@ -31,7 +31,7 @@ spec:
   #
   resources:
     requests:
-      cpu: 110m
+      cpu: 100m
       memory: 500Mi
     limits:
       cpu: 600m
