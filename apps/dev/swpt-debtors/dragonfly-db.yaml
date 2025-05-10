@@ -36,3 +36,8 @@ spec:
     limits:
       cpu: 600m
       memory: 550Mi
+
+  annotations:
+    # The value can be changed to force pods restart.
+    #
+    db-restart-attempt: attempt-0
