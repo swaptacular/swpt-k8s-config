@@ -40,4 +40,4 @@ spec:
   annotations:
     # The value can be changed to force pods restart.
     #
-    db-restart-attempt: attempt-1
+    db-restart-attempt: attempt-0
