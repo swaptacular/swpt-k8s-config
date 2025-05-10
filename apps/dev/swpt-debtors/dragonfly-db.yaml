@@ -23,7 +23,7 @@ spec:
       - ReadWriteOnce
       resources:
         requests:
-          storage: 1Gi
+          storage: 2Gi
 
   # Specifies Kubernetes memory and CPU requests and limits. It is
   # highly recommended that the memory request is the same as the
