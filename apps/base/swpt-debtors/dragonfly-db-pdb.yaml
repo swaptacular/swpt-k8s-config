@@ -10,5 +10,4 @@ spec:
   unhealthyPodEvictionPolicy: AlwaysAllow
   selector:
     matchLabels:
-      app.kubernetes.io/name: swpt-debtors
-      app.kubernetes.io/component: dragonfly-database
+      app.kubernetes.io/name: dragonfly
