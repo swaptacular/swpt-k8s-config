@@ -5,7 +5,7 @@ metadata:
 spec:
   # Specifies the "Dragonfly" OCI image to use.
   #
-  image: docker.dragonflydb.io/dragonflydb/dragonfly:v1.30.0
+  image: docker.dragonflydb.io/dragonflydb/dragonfly:v1.21.2
 
   # Specifies the number of Dragonfly server instances. It is
   # recommended to be at least 2. If set to 1, only a primary server
