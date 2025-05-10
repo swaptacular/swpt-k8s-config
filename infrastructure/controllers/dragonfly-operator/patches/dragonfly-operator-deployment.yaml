@@ -1,0 +1,9 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: dragonfly-operator-system
+  name: dragonfly-operator-controller-manager
+spec:
+  template:
+    spec:
+      priorityClassName: critical-operator

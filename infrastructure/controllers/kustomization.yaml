@@ -5,3 +5,4 @@ resources:
 - crd-oauth2clients.yaml
 - postgres-operator/
 - rabbitmq-system/
+- dragonfly-operator/
