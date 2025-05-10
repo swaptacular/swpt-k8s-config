@@ -1,0 +1,14 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: dragonfly-db
+  labels:
+    app.kubernetes.io/name: swpt-debtors
+    app.kubernetes.io/component: dragonfly-database
+spec:
+  maxUnavailable: 40%
+  unhealthyPodEvictionPolicy: AlwaysAllow
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: swpt-debtors
+      app.kubernetes.io/component: dragonfly-database

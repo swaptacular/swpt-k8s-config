@@ -12,6 +12,15 @@
     app.kubernetes.io/component: dragonfly-database
 
 - op: test
+  path: /spec/labels
+  value: null
+- op: add
+  path: /spec/labels
+  value:
+    app.kubernetes.io/name: swpt-debtors
+    app.kubernetes.io/component: dragonfly-database
+
+- op: test
   path: /spec/affinity
   value: null
 - op: add
