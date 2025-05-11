@@ -328,10 +328,10 @@ replicas:
 images:
 - name: swpt-debtors
   newName: ghcr.io/swaptacular/swpt_debtors
-  newTag: 2.3.1
+  newTag: 2.3.3
 - name: swpt-debtors-swagger-ui
   newName: ghcr.io/swaptacular/swpt_debtors_swagger_ui
-  newTag: 2.3.1  # Must be the same as the tag for the "swpt-debtors" image.
+  newTag: 2.3.3  # Must be the same as the tag for the "swpt-debtors" image.
 - name: swpt-debtors-ui
   newName: ghcr.io/swaptacular/swpt_debtors_ui
   newTag: 1.2.5
