@@ -3,10 +3,12 @@ kind: NetworkPolicy
 metadata:
   name: isolate-login-db
   labels:
+    app.kubernetes.io/name: swpt-debtors
     app.kubernetes.io/component: login-db
 spec:
   podSelector:
     matchLabels:
+      app.kubernetes.io/name: swpt-debtors
       app.kubernetes.io/component: login-db
   policyTypes:
   - Ingress
@@ -14,6 +16,7 @@ spec:
   - from:
     - podSelector:
         matchLabels:
+          app.kubernetes.io/name: swpt-debtors
           app.kubernetes.io/component: login-db
   - from:
     - namespaceSelector:
@@ -26,10 +29,12 @@ kind: NetworkPolicy
 metadata:
   name: allow-login-db-users
   labels:
+    app.kubernetes.io/name: swpt-debtors
     app.kubernetes.io/component: login-db
 spec:
   podSelector:
     matchLabels:
+      app.kubernetes.io/name: swpt-debtors
       app.kubernetes.io/component: login-db
   policyTypes:
   - Ingress
@@ -40,4 +45,4 @@ spec:
     - podSelector:
         matchLabels:
           app.kubernetes.io/name: swtp-debtors
-          app.kubernetes.io/component: swpt-login
+          app.kubernetes.io/component: login

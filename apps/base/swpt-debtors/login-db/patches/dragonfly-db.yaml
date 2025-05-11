@@ -10,7 +10,6 @@
   value:
     app.kubernetes.io/instance: dragonfly-db
     app.kubernetes.io/name: dragonfly
-    app.kubernetes.io/part-of: swpt-debtors
 
 - op: test
   path: /spec/labels

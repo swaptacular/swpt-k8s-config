@@ -11,7 +11,6 @@ configMapGenerator:
 resources:
 - namespace.yaml
 - broker-pdb.yaml
-- dragonfly-db-pdb.yaml
 - apiproxy.yaml
 - nfs-pvc.yaml
 - stomp-server.yaml

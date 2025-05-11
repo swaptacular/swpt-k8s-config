@@ -8,6 +8,7 @@
 - op: add
   path: /metadata/labels
   value:
+    app.kubernetes.io/name: swpt-debtors
     app.kubernetes.io/component: login-db
 
 - op: test
