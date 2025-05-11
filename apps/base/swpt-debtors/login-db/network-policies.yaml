@@ -1,0 +1,43 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: isolate-login-db
+  labels:
+    app.kubernetes.io/component: login-db
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/component: login-db
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app.kubernetes.io/component: login-db
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          app.kubernetes.io/name: postgres-operator
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-login-db-users
+  labels:
+    app.kubernetes.io/component: login-db
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/component: login-db
+  policyTypes:
+  - Ingress
+  ingress:
+  - ports:
+    - port: 5432
+    from:
+    - podSelector:
+        matchLabels:
+          app.kubernetes.io/name: swtp-debtors
+          app.kubernetes.io/component: swpt-login

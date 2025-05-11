@@ -426,6 +426,7 @@ resources:
 - broker.yaml
 - dragonfly-db.yaml
 - hydra-db/
+- login-db/
 - shards/
 - node-data/peers/
 
