@@ -418,7 +418,7 @@ resources:
 - ../../base/swpt-debtors/
 - broker.yaml
 - hydra-db/
-- login-db/
+- login/
 - shards/
 - node-data/peers/
 
