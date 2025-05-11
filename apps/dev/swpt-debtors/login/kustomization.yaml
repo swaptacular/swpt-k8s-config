@@ -48,6 +48,7 @@ secretGenerator:
 resources:
 - postgres-cluster.yaml
 - dragonfly-db.yaml
+- mailhog.yaml
 - ../../../base/swpt-debtors/swpt-login/
 
 patches:
