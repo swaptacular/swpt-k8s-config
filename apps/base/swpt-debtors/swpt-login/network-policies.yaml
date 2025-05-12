@@ -44,7 +44,7 @@ spec:
     from:
     - podSelector:
         matchLabels:
-          app.kubernetes.io/name: swtp-debtors
+          app.kubernetes.io/name: swpt-debtors
           app.kubernetes.io/component: login
 
 ---
@@ -93,5 +93,5 @@ spec:
     from:
     - podSelector:
         matchLabels:
-          app.kubernetes.io/name: swtp-debtors
+          app.kubernetes.io/name: swpt-debtors
           app.kubernetes.io/component: login
