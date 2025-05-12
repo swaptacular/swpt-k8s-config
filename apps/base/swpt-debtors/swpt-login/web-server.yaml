@@ -61,13 +61,11 @@ spec:
               prefix: "SUPERUSER_"
             - configMapRef:
                 name: debtors-agent-config
+            - configMapRef:
+                name: swpt-login-config
           env:
             - name: WEBSERVER_PORT
               value: "8080"
-            - name: WEBSERVER_PROCESSES
-              value: "1"
-            - name: WEBSERVER_THREADS
-              value: "3"
             - name: HYDRA_ADMIN_URL
               value: http://swpt-hydra-admin:4445/admin/
             - name: SUBJECT_PREFIX
@@ -76,22 +74,8 @@ spec:
               value: "postgresql+psycopg://$(pg_username):$(pg_password)@login-db:5432/db"
             - name: REDIS_URL
               value: "redis://default:$(pg_password)@dragonfly-db:6379/0"
-            - name: SITE_TITLE
-              value: Demo Debtors Agent
-            - name: ABOUT_URL
-              value: https://github.com/swaptacular/swpt_login
             - name: SIGNED_UP_REDIRECT_URL
               value: https://$(PUBLIC_HOSTNAME)/debtors-webapp/
-            - name: SUSPENDED_ACCOUNT_HELP_URL
-              value: https://github.com/swaptacular/swpt_login
-            - name: SHOW_CAPTCHA_ON_SIGNUP
-              value: "False"
-            - name: MAIL_SERVER
-              value: mailhog-service
-            - name: MAIL_PORT
-              value: "1025"
-            - name: MAIL_DEFAULT_SENDER
-              value: Swaptacular <no-reply@example.com>
             - name: API_AUTH2_TOKEN_URL
               value: http://swpt-hydra-public:4444/oauth2/token
             - name: API_RESOURCE_SERVER

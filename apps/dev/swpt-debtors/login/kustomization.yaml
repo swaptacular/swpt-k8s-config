@@ -1,6 +1,53 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
+configMapGenerator:
+- name: swpt-login-config
+  literals:
+  # Specifies the number of processes and threads that will be spawned
+  # to handle HTTP requests. Each process will run the specified
+  # number of threads.
+  - WEBSERVER_PROCESSES=1
+  - WEBSERVER_THREADS=3
+
+  # Set this to the name of your site, as it is known to your users.
+  - SITE_TITLE=Demo Debtors Agent
+
+  # Set this to an URL that tells more about your site.
+  - ABOUT_URL=https://github.com/swaptacular/swpt_login
+
+  # Optional URL for users to go to, to recover their wrongfully
+  # suspended accounts. This is not needed if no user accounts have
+  # ever been suspended.
+  - SUSPENDED_ACCOUNT_HELP_URL=https://github.com/swaptacular/swpt_login
+
+  # SMTP server connection parameters. You should set MAIL_SERVER to
+  # the name of your mail server, and MAIL_PORT to the SMTP port on
+  # that server. MAIL_DEFAULT_SENDER should be set to the email
+  # address from which outgoing emails will be sent to users.
+  - MAIL_SERVER=mailhog-service
+  - MAIL_PORT=1025
+  - MAIL_DEFAULT_SENDER=Swaptacular <no-reply@example.com>
+
+  - SHOW_CAPTCHA_ON_SIGNUP=False
+
+  options:
+    labels:
+      app.kubernetes.io/name: swpt-debtors
+      app.kubernetes.io/component: login
+
+    # These annotations are used as sources for convenient Kustomize
+    # replacements:
+    #
+    annotations:
+      # Kubernetes memory and CPU requests and limits, for various
+      # containers.
+      #
+      kustomize_swpt_login_webserver_cpu_request: 10m
+      kustomize_swpt_login_webserver_cpu_limit: 1000m
+      kustomize_swpt_login_webserver_memory_request: 12Mi
+      kustomize_swpt_login_webserver_memory_limit: 1Gi
+
 # The number of replicas for each component. One replica works fine,
 # but to have high-availability, should be at least 2.
 #
