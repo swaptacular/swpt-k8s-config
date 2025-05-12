@@ -31,3 +31,17 @@ spec:
             name: apiproxy
             port:
               name: http
+      - path: /debtors-login/
+        pathType: Prefix
+        backend:
+          service:
+            name: login-web-server
+            port:
+              name: http
+      - path: /debtors-consent/
+        pathType: Prefix
+        backend:
+          service:
+            name: login-web-server
+            port:
+              name: http
