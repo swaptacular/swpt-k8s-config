@@ -52,7 +52,7 @@ spec:
             - name: APP_LOG_FORMAT
               value: json
       initContainers:
-        - name: await-migrations
+        - name: configure
           image: swpt-login
           args: ["configure"]
           envFrom:
@@ -63,4 +63,4 @@ spec:
             - name: SUBJECT_PREFIX
               value: "debtors:"
             - name: POSTGRES_URL
-              value: "postgresql+psycopg://$(pg_username):$(pg_password)@$(pg_cluster_name):5432/db"
+              value: "postgresql+psycopg://$(pg_username):$(pg_password)@login-db:5432/db"
