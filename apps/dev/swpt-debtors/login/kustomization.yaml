@@ -29,6 +29,10 @@ configMapGenerator:
   - MAIL_PORT=1025
   - MAIL_DEFAULT_SENDER=Swaptacular <no-reply@example.com>
 
+  # Specifies the number of processes that will be spawned to process
+  # pending tasks. Normally, 1 should be enough.
+  - FLUSH_PROCESSES=1
+
   - SHOW_CAPTCHA_ON_SIGNUP=False
 
   options:

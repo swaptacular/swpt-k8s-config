@@ -82,6 +82,8 @@ spec:
               value: http://apiproxy
             - name: API_TIMEOUT_SECONDS
               value: "5"
+            - name: FLUSH_PERIOD
+              value: "5.0"
             - name: APP_LOG_LEVEL
               value: info
             - name: APP_LOG_FORMAT

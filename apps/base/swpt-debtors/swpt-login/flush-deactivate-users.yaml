@@ -32,7 +32,13 @@ spec:
             - secretRef:
                 name: oauth2-clients.debtors-superuser
               prefix: "SUPERUSER_"
+            - configMapRef:
+                name: debtors-agent-config
+            - configMapRef:
+                name: swpt-login-config
           env:
+            - name: WEBSERVER_PORT
+              value: "8080"
             - name: HYDRA_ADMIN_URL
               value: http://swpt-hydra-admin:4445/admin/
             - name: SUBJECT_PREFIX
@@ -41,14 +47,14 @@ spec:
               value: "postgresql+psycopg://$(pg_username):$(pg_password)@login-db:5432/db"
             - name: REDIS_URL
               value: "redis://default:$(pg_password)@dragonfly-db:6379/0"
+            - name: SIGNED_UP_REDIRECT_URL
+              value: https://$(PUBLIC_HOSTNAME)/debtors-webapp/
             - name: API_AUTH2_TOKEN_URL
               value: http://swpt-hydra-public:4444/oauth2/token
             - name: API_RESOURCE_SERVER
               value: http://apiproxy
             - name: API_TIMEOUT_SECONDS
               value: "5"
-            - name: FLUSH_PROCESSES
-              value: "1"
             - name: FLUSH_PERIOD
               value: "5.0"
             - name: APP_LOG_LEVEL
