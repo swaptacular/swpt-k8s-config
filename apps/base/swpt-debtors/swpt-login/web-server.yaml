@@ -89,7 +89,7 @@ spec:
             - name: MAIL_SERVER
               value: mailhog-service
             - name: MAIL_PORT
-              value: "25"
+              value: "1025"
             - name: MAIL_DEFAULT_SENDER
               value: Swaptacular <no-reply@example.com>
             - name: API_AUTH2_TOKEN_URL
