@@ -58,7 +58,7 @@ spec:
               prefix: pg_
             - secretRef:
                 name: oauth2-clients.debtors-superuser
-              prefix: SUPERUSER__
+              prefix: "SUPERUSER_"
             - configMapRef:
                 name: debtors-agent-config
           env:

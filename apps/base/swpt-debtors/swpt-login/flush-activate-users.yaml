@@ -31,7 +31,7 @@ spec:
               prefix: pg_
             - secretRef:
                 name: oauth2-clients.debtors-superuser
-              prefix: SUPERUSER__
+              prefix: "SUPERUSER_"
           env:
             - name: HYDRA_ADMIN_URL
               value: http://swpt-hydra-admin:4445/admin/
