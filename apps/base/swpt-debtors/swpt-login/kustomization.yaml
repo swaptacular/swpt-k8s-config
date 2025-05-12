@@ -5,5 +5,5 @@ resources:
 - dragonfly-pdb.yaml
 - network-policies.yaml
 # - web-server.yaml
-# - flush-activate-users.yaml
+- flush-activate-users.yaml
 # - flush-deactivate-users.yaml
