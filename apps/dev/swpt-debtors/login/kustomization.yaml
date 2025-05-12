@@ -43,10 +43,15 @@ configMapGenerator:
       # Kubernetes memory and CPU requests and limits, for various
       # containers.
       #
-      kustomize_swpt_login_webserver_cpu_request: 10m
-      kustomize_swpt_login_webserver_cpu_limit: 1000m
-      kustomize_swpt_login_webserver_memory_request: 12Mi
-      kustomize_swpt_login_webserver_memory_limit: 1Gi
+      kustomize_login_webserver_cpu_request: 10m
+      kustomize_login_webserver_cpu_limit: 1000m
+      kustomize_login_webserver_memory_request: 100Mi
+      kustomize_login_webserver_memory_limit: 1Gi
+
+      kustomize_login_flush_cpu_request: 10m
+      kustomize_login_flush_cpu_limit: 1000m
+      kustomize_login_flush_memory_request: 100Mi
+      kustomize_login_flush_memory_limit: 1Gi
 
 # The number of replicas for each component. One replica works fine,
 # but to have high-availability, should be at least 2.
@@ -126,3 +131,13 @@ patches:
     kind: Dragonfly
     name: dragonfly-db
     version: v1alpha1
+
+replacements:
+- path: ../../../base/swpt-debtors/swpt-login/replacements/login-webserver-cpu-limit.yaml
+- path: ../../../base/swpt-debtors/swpt-login/replacements/login-webserver-cpu-request.yaml
+- path: ../../../base/swpt-debtors/swpt-login/replacements/login-webserver-memory-limit.yaml
+- path: ../../../base/swpt-debtors/swpt-login/replacements/login-webserver-memory-request.yaml
+- path: ../../../base/swpt-debtors/swpt-login/replacements/login-flush-cpu-limit.yaml
+- path: ../../../base/swpt-debtors/swpt-login/replacements/login-flush-cpu-request.yaml
+- path: ../../../base/swpt-debtors/swpt-login/replacements/login-flush-memory-limit.yaml
+- path: ../../../base/swpt-debtors/swpt-login/replacements/login-flush-memory-request.yaml
