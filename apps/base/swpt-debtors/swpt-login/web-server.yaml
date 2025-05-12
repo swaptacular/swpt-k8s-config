@@ -93,7 +93,7 @@ spec:
             - name: MAIL_DEFAULT_SENDER
               value: Swaptacular <no-reply@example.com>
             - name: API_AUTH2_TOKEN_URL
-              value: http://swpt-hydra-public/oauth2/token
+              value: http://swpt-hydra-public:4444/oauth2/token
             - name: API_RESOURCE_SERVER
               value: https://apiproxy
             - name: API_TIMEOUT_SECONDS
