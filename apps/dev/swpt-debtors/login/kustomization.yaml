@@ -4,9 +4,9 @@ kind: Kustomization
 # The number of replicas for each component. One replica works fine,
 # but to have high-availability, should be at least 2.
 #
-# replicas:
-# - name: login-web-server
-#   count: 1
+replicas:
+- name: login-web-server
+  count: 1
 
 # OCI images to use for the different containers:
 #
