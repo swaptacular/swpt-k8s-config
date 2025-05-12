@@ -95,7 +95,7 @@ spec:
             - name: API_AUTH2_TOKEN_URL
               value: http://swpt-hydra-public:4444/oauth2/token
             - name: API_RESOURCE_SERVER
-              value: https://apiproxy
+              value: http://apiproxy
             - name: API_TIMEOUT_SECONDS
               value: "5"
             - name: APP_LOG_LEVEL
