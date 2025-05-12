@@ -4,3 +4,6 @@ kind: Kustomization
 resources:
 - dragonfly-pdb.yaml
 - network-policies.yaml
+- web-server.yaml
+- flush-activate-users.yaml
+- flush-deactivate-users.yaml
