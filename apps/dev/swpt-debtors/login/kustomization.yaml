@@ -54,11 +54,10 @@ configMapGenerator:
     annotations:
       # For security reasons, by default pods are not allowed egress
       # traffic outside of the Kubernetes cluster. However, verifying
-      # CAPTCHAs frequently require initiating connections servers
-      # that are usually not in the Kubernetes cluster. Here you must
-      # specify the range of IPs which the "login-web-server" pods
-      # will be allowed to connect to.
-      #
+      # CAPTCHAs require initiating connections to servers that are
+      # not in the Kubernetes cluster. Here you must specify the range
+      # of IPs which the "login-web-server" pods will be allowed to
+      # connect to.
       kustomize_captcha_ip_block: 0.0.0.0/0
 
       # Kubernetes memory and CPU requests and limits, for various
