@@ -59,6 +59,8 @@ spec:
             - secretRef:
                 name: oauth2-clients.debtors-superuser
               prefix: "SUPERUSER_"
+            - secretRef:
+                name: swpt-login-captcha-keys
             - configMapRef:
                 name: debtors-agent-config
             - configMapRef:

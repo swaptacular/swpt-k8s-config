@@ -35,13 +35,6 @@ configMapGenerator:
   - MAIL_PORT=1025
   - MAIL_DEFAULT_SENDER=Swaptacular <no-reply@example.com>
 
-  # Parameters for hCaptcha. You should obtain your own
-  # "sitekey"/"sitekey secret" pair from https://www.hcaptcha.com/,
-  # and put it here. Note that the "sitekey secret" should be kept
-  # secret.
-  - CAPTCHA_SITEKEY=10000000-ffff-ffff-ffff-000000000001
-  - CAPTCHA_SITEKEY_SECRET=0x0000000000000000000000000000000000000000
-
   # When set to `False`, does not show any CAPTCHAs. Normally, this
   # should be `True`.
   - SHOW_CAPTCHA_ON_SIGNUP=True
@@ -96,6 +89,32 @@ images:
   newTag: 0.16.0
 
 secretGenerator:
+- name: swpt-login-captcha-keys
+
+  # Parameters for hCaptcha. You should obtain your own
+  # "sitekey"/"sitekey secret" pair from https://www.hcaptcha.com/,
+  # and put it here. Note that the "sitekey secret" should be kept
+  # secret.
+
+  literals:
+  # The "sitekey". This is not a secret.
+  #
+  - CAPTCHA_SITEKEY=10000000-ffff-ffff-ffff-000000000001
+
+  files:
+  # A SOPS-encrypted file containing the sitekey secret. To
+  # SOPS-encrypt the sitekey secret, you may use this command:
+  #
+  # $ sops encrypt captcha-sitekey-secret > captcha-sitekey-secret.encrypted
+  #
+  - CAPTCHA_SITEKEY_SECRET=captcha-sitekey-secret.encrypted
+
+  options:
+    labels:
+      app.kubernetes.io/name: swpt-debtors
+      app.kubernetes.io/component: login
+  type: Opaque
+
 - name: postgres.login-db.credentials.postgresql.acid.zalan.do
   files:
   - password=../secrets/postgres-cluster-password.encrypted
@@ -110,6 +129,7 @@ secretGenerator:
       cluster-name: login-db
       team: swpt
   type: Opaque
+
 - name: standby.login-db.credentials.postgresql.acid.zalan.do
   files:
   - password=../secrets/postgres-cluster-password.encrypted
@@ -124,6 +144,7 @@ secretGenerator:
       cluster-name: login-db
       team: swpt
   type: Opaque
+
 - name: db-owner.login-db.credentials.postgresql.acid.zalan.do
   files:
   - password=../secrets/postgres-cluster-password.encrypted
