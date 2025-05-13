@@ -10,6 +10,12 @@ configMapGenerator:
   - WEBSERVER_PROCESSES=1
   - WEBSERVER_THREADS=3
 
+  # An upper limit on the number of PostgreSQL connections in the
+  # connection pool. If set to zero, there is no limit. Note that each
+  # spawned process maintains its own connection pool. The number of
+  # spawned process is determined by WEBSERVER_PROCESSES.
+  - POSTGRES_CONNECTION_POOL_SIZE=0
+
   # Set this to the name of your site, as it is known to your users.
   - SITE_TITLE=Demo Debtors Agent
 
@@ -52,6 +58,15 @@ configMapGenerator:
     # replacements:
     #
     annotations:
+      # For security reasons, by default pods are not allowed egress
+      # traffic outside of the Kubernetes cluster. However, verifying
+      # CAPTCHAs frequently require initiating connections servers
+      # that are usually not in the Kubernetes cluster. Here you must
+      # specify the range of IPs which the "login-web-server" pods
+      # will be allowed to connect to.
+      #
+      kustomize_captcha_ip_block: 0.0.0.0/0
+
       # Kubernetes memory and CPU requests and limits, for various
       # containers.
       #
@@ -153,3 +168,4 @@ replacements:
 - path: ../../../base/swpt-debtors/swpt-login/replacements/login-flush-cpu-request.yaml
 - path: ../../../base/swpt-debtors/swpt-login/replacements/login-flush-memory-limit.yaml
 - path: ../../../base/swpt-debtors/swpt-login/replacements/login-flush-memory-request.yaml
+- path: ../../../base/swpt-debtors/swpt-login/replacements/captcha-ip-block.yaml
