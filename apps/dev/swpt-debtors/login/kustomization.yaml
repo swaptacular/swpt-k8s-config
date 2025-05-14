@@ -58,7 +58,7 @@ configMapGenerator:
       # not in the Kubernetes cluster. Here you must specify the range
       # of IPs which the "login-web-server" pods will be allowed to
       # connect to.
-      kustomize_captcha_ip_block: 0.0.0.0/0
+      kustomize_captcha_ip_block: 0.0.0.0/32
 
       # Kubernetes memory and CPU requests and limits, for various
       # containers.
