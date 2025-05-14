@@ -37,7 +37,7 @@ configMapGenerator:
   # beginning, and MAIL_USE_TLS determines whether the STARTTLS
   # extension should be used after the connection to the mail server
   # has bee established.
-  - MAIL_SERVER=mailhog-service
+  - MAIL_SERVER=mailhog.mailhog.svc.cluster.local
   - MAIL_PORT=1025
   - MAIL_DEFAULT_SENDER=Demo Debtors Agent <no-reply@example.com>
   - MAIL_USERNAME=
