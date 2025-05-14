@@ -30,10 +30,20 @@ configMapGenerator:
   # SMTP server connection parameters. You should set MAIL_SERVER to
   # the name of your mail server, and MAIL_PORT to the SMTP port on
   # that server. MAIL_DEFAULT_SENDER should be set to the email
-  # address from which outgoing emails will be sent to users.
+  # address from which outgoing emails will be sent to users. Do not
+  # set MAIL_USERNAME and MAIL_PASSWORD if the SMPT server does not
+  # require username and password (you can also set them to empty
+  # strings). MAIL_USE_SSL detemines whether SSL is required from the
+  # beginning, and MAIL_USE_TLS determines whether the STARTTLS
+  # extension should be used after the connection to the mail server
+  # has bee established.
   - MAIL_SERVER=mailhog-service
   - MAIL_PORT=1025
-  - MAIL_DEFAULT_SENDER=Swaptacular <no-reply@example.com>
+  - MAIL_DEFAULT_SENDER=Demo Debtors Agent <no-reply@example.com>
+  - MAIL_USERNAME=
+  - MAIL_PASSWORD=
+  - MAIL_USE_SSL=False
+  - MAIL_USE_TLS=False
 
   # When set to `False`, does not show any CAPTCHAs. Normally, this
   # should be `True`.
@@ -85,7 +95,7 @@ replicas:
 images:
 - name: swpt-login
   newName: ghcr.io/swaptacular/swpt_login
-  newTag: 0.16.0
+  newTag: 0.16.1
 
 secretGenerator:
 - name: swpt-login-captcha-keys
