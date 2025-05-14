@@ -103,6 +103,8 @@ spec:
           env:
             - name: SUBJECT_PREFIX
               value: "debtors:"
+            - name: MAIL_DEFAULT_SENDER
+              value: no-reply@example.com
             - name: POSTGRES_URL
               value: "postgresql+psycopg://$(pg_username):$(pg_password)@login-db:5432/db"
           resources:
