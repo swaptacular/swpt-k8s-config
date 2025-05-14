@@ -106,7 +106,7 @@ secretGenerator:
   #
   # $ sops encrypt captcha-sitekey-secret > captcha-sitekey-secret.encrypted
   #
-  - CAPTCHA_SITEKEY_SECRET=captcha-sitekey-secret.encrypted
+  - CAPTCHA_SITEKEY_SECRET=../secrets/captcha-sitekey-secret.encrypted
 
   options:
     labels:
@@ -163,17 +163,17 @@ resources:
 - postgres-cluster.yaml
 - dragonfly-db.yaml
 - mailhog.yaml
-- ../../../base/swpt-debtors/swpt-login/
+- ../../../base/swpt-debtors/login/
 
 patches:
-- path: ../../../base/swpt-debtors/swpt-login/patches/postgres-cluster.yaml
+- path: ../../../base/swpt-debtors/login/patches/postgres-cluster.yaml
   target:
     group: acid.zalan.do
     kind: postgresql
     name: login-db
     version: v1
 
-- path: ../../../base/swpt-debtors/swpt-login/patches/dragonfly-db.yaml
+- path: ../../../base/swpt-debtors/login/patches/dragonfly-db.yaml
   target:
     group: dragonflydb.io
     kind: Dragonfly
@@ -181,12 +181,12 @@ patches:
     version: v1alpha1
 
 replacements:
-- path: ../../../base/swpt-debtors/swpt-login/replacements/login-webserver-cpu-limit.yaml
-- path: ../../../base/swpt-debtors/swpt-login/replacements/login-webserver-cpu-request.yaml
-- path: ../../../base/swpt-debtors/swpt-login/replacements/login-webserver-memory-limit.yaml
-- path: ../../../base/swpt-debtors/swpt-login/replacements/login-webserver-memory-request.yaml
-- path: ../../../base/swpt-debtors/swpt-login/replacements/login-flush-cpu-limit.yaml
-- path: ../../../base/swpt-debtors/swpt-login/replacements/login-flush-cpu-request.yaml
-- path: ../../../base/swpt-debtors/swpt-login/replacements/login-flush-memory-limit.yaml
-- path: ../../../base/swpt-debtors/swpt-login/replacements/login-flush-memory-request.yaml
-- path: ../../../base/swpt-debtors/swpt-login/replacements/captcha-ip-block.yaml
+- path: ../../../base/swpt-debtors/login/replacements/login-webserver-cpu-limit.yaml
+- path: ../../../base/swpt-debtors/login/replacements/login-webserver-cpu-request.yaml
+- path: ../../../base/swpt-debtors/login/replacements/login-webserver-memory-limit.yaml
+- path: ../../../base/swpt-debtors/login/replacements/login-webserver-memory-request.yaml
+- path: ../../../base/swpt-debtors/login/replacements/login-flush-cpu-limit.yaml
+- path: ../../../base/swpt-debtors/login/replacements/login-flush-cpu-request.yaml
+- path: ../../../base/swpt-debtors/login/replacements/login-flush-memory-limit.yaml
+- path: ../../../base/swpt-debtors/login/replacements/login-flush-memory-request.yaml
+- path: ../../../base/swpt-debtors/login/replacements/captcha-ip-block.yaml
