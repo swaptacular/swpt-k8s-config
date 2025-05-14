@@ -69,6 +69,8 @@ spec:
             - secretRef:
                 name: db-owner-credentials
               prefix: pg_
+            - configMapRef:
+                name: swpt-login-config
           env:
             - name: SUBJECT_PREFIX
               value: "debtors:"
