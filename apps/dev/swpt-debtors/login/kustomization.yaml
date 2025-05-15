@@ -64,11 +64,12 @@ configMapGenerator:
     annotations:
       # For security reasons, by default pods are not allowed egress
       # traffic outside of the Kubernetes cluster. However, verifying
-      # CAPTCHAs require initiating connections to servers that are
-      # not in the Kubernetes cluster. Here you must specify the range
-      # of IPs which the "login-web-server" pods will be allowed to
-      # connect to.
+      # CAPTCHAs and sending emails require initiating connections to
+      # servers that are not in the Kubernetes cluster. Here you must
+      # specify the range of IPs which the "login-web-server" pods
+      # will be allowed to connect to.
       kustomize_captcha_ip_block: 0.0.0.0/0
+      kustomize_email_ip_block: 0.0.0.0/0
 
       # Kubernetes memory and CPU requests and limits, for various
       # containers.
@@ -199,3 +200,4 @@ replacements:
 - path: ../../../base/swpt-debtors/login/replacements/login-flush-memory-limit.yaml
 - path: ../../../base/swpt-debtors/login/replacements/login-flush-memory-request.yaml
 - path: ../../../base/swpt-debtors/login/replacements/captcha-ip-block.yaml
+- path: ../../../base/swpt-debtors/login/replacements/email-ip-block.yaml
