@@ -76,6 +76,8 @@ spec:
               value: "postgresql+psycopg://$(pg_username):$(pg_password)@login-db:5432/db"
             - name: REDIS_URL
               value: "redis://default:$(pg_password)@dragonfly-db:6379/0"
+            - name: ALTCHA_SECRET_HMAC_KEY
+              value: "$(CAPTCHA_SITEKEY_SECRET)"
             - name: SIGNED_UP_REDIRECT_URL
               value: https://$(PUBLIC_HOSTNAME)/debtors-webapp/
             - name: API_AUTH2_TOKEN_URL

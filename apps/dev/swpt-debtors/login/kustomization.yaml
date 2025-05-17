@@ -49,6 +49,20 @@ configMapGenerator:
   # should be `True`.
   - SHOW_CAPTCHA_ON_SIGNUP=True
 
+  # When set to "False" (the default is "True"), does not show any
+  # ALTCHAs (see https://altcha.org/). Normally, this should be "True".
+  - SHOW_ALTCHA_ON_LOGIN=True
+
+  # Parameters for ALTCHA . Required if SHOW_ALTCHA_ON_LOGIN is
+  # "True". ALTCHA_MAX_NUMBER is proportional to the computational
+  # effort needed to solve the ALTCHA challenge (default 100000).
+  # ALTCHA_INFO_URL is an URL that tells the users what ALTCHA is
+  # (default "https://altcha.org/"). ALTCHA_EXPIRATION_SECONDS
+  # determines the expiration interval of each challenge.
+  - ALTCHA_MAX_NUMBER=100000
+  - ALTCHA_INFO_URL=https://altcha.org/
+  - ALTCHA_EXPIRATION_SECONDS=3600
+
   # Specifies the number of processes that will be spawned to process
   # pending tasks. Normally, 1 should be enough.
   - FLUSH_PROCESSES=1
@@ -96,7 +110,7 @@ replicas:
 images:
 - name: swpt-login
   newName: ghcr.io/swaptacular/swpt_login
-  newTag: 0.16.3
+  newTag: 0.16.4
 
 secretGenerator:
 - name: swpt-login-captcha-keys
