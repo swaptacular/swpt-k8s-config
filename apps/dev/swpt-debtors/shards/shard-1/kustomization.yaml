@@ -35,7 +35,7 @@ configMapGenerator:
   - FLUSH_PROCESSES=1
   - FLUSH_PERIOD=1.5
   - DELETE_PARENT_SHARD_RECORDS=false
-  - APP_LOG_LEVEL=warning
+  - APP_LOG_LEVEL=debug
   - APP_LOG_FORMAT=json
 
   options:
