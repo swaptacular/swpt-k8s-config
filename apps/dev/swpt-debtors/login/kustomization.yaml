@@ -110,7 +110,7 @@ replicas:
 images:
 - name: swpt-login
   newName: ghcr.io/swaptacular/swpt_login
-  newTag: 0.16.4
+  newTag: 0.16.5
 
 secretGenerator:
 - name: swpt-login-captcha-keys
