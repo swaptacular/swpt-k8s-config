@@ -185,7 +185,7 @@ configMapGenerator:
     # currency will be suggested to the user.
     #
   - DEFAULT_PEG_ABBR=USD
-  - DEFAULT_PEG_COIN=https://debtors.swaptacular.org/840
+  - DEFAULT_PEG_COIN=https://debtors.swaptacular.org/840#swpt:840
 
   options:
     labels:
