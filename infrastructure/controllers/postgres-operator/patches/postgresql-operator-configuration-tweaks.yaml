@@ -4,7 +4,7 @@ metadata:
   name: postgresql-operator-default-configuration
 configuration:
   docker_image: ghcr.io/zalando/spilo-17:4.0-p2
-  max_instances: 3
+  max_instances: 7
   set_memory_request_to_limit: true
   kubernetes:
     enable_finalizers: false
