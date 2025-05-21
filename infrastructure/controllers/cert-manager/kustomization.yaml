@@ -3,7 +3,6 @@ kind: Kustomization
 
 resources:
 - cert-manager.yaml
-- network-policies.yaml
 
 patches:
 - path: patches/cert-manager-cainjector-deployment.yaml
