@@ -416,7 +416,8 @@ patches:
 # This patch enables or disables the skipping of the verification of
 # the SSL/TLS certificate of the ACME certificates issuer. To skip the
 # verification, set the value to true (unquoted). This is useful for
-# testing. Normally the value must be false (unquoted).
+# testing. Normally the value must be false (unquoted). See
+# https://medium.com/@manabie/simulate-lets-encrypt-certificate-issuing-in-local-kubernetes-c3750fc07674
 #
 - patch: |
     - op: add
