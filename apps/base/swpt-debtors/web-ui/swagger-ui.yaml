@@ -106,8 +106,6 @@ metadata:
   name: ingress-swagger-ui
   annotations:
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/limit-connections: "25"
-    nginx.ingress.kubernetes.io/limit-rps: "5"
 spec:
   # Here "namespace" will be automatically replaced with the name of
   # the current namespace.

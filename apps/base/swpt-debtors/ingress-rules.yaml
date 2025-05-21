@@ -4,8 +4,18 @@ metadata:
   name: ingress-rules
   annotations:
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/limit-connections: "25"
-    nginx.ingress.kubernetes.io/limit-rps: "5"
+
+    # NOTE: Setting connections and requests-per-second limits here is
+    # not efficient, because there will be multiple ingrss-server
+    # instances, multiplying the limits set here. Also, here we can
+    # not set a limit on the number of new TCP connections per second,
+    # per IP address, which is what we really need. The solution to
+    # this problem is to configure a limit on the number of new TCP
+    # connections per IP address either on the load balancer, or even
+    # before the load balancer.
+    #
+    # nginx.ingress.kubernetes.io/limit-connections: "25"
+    # nginx.ingress.kubernetes.io/limit-rps: "5"
 spec:
   # Here "namespace" will be automatically replaced with the name of
   # the current namespace.
