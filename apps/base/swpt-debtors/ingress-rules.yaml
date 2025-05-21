@@ -3,6 +3,7 @@ kind: Ingress
 metadata:
   name: ingress-rules
   annotations:
+    cert-manager.io/issuer: acme-cert-issuer
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
 
     # NOTE: Setting connections and requests-per-second limits here is
@@ -21,6 +22,14 @@ spec:
   # the current namespace.
   #
   ingressClassName: namespace.nginx
+
+  # Here "public-hostname" will be automatically replaced with the
+  # real public hostname of the Swaptacular node.
+  #
+  tls:
+  - hosts:
+    - public-hostname
+    secretName: acme-cert-key
 
   rules:
   # Here "public-hostname" will be automatically replaced with the

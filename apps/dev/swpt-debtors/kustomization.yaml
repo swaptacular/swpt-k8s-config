@@ -156,7 +156,8 @@ configMapGenerator:
     # replacements:
     #
     annotations:
-      # Configurations for the ACME certificate issuer.
+      # Configurations for the ACME certificate issuer. See the
+      # "acme-cert-issuer" patch also.
       #
       kustomize_acme_cert_server: https://pebble.pebble.svc.cluster.local:14000/dir
       kustomize_acme_cert_email: epandurski@gmail.com
@@ -414,8 +415,8 @@ patches:
 
 # This patch enables or disables the skipping of the verification of
 # the SSL/TLS certificate of the ACME certificates issuer. To skip the
-# verification, set the value to true (unquoted!). This is useful for
-# testing.
+# verification, set the value to true (unquoted). This is useful for
+# testing. Normally the value must be false (unquoted).
 #
 - patch: |
     - op: add

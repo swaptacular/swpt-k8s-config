@@ -112,6 +112,14 @@ spec:
   #
   ingressClassName: namespace.nginx
 
+  # Here "public-hostname" will be automatically replaced with the
+  # real public hostname of the Swaptacular node.
+  #
+  tls:
+  - hosts:
+    - public-hostname
+    secretName: acme-cert-key
+
   rules:
   # Here "public-hostname" will be automatically replaced with the
   # real public hostname of the Swaptacular node.

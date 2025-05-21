@@ -30,3 +30,4 @@ targets:
       name: ingress-rules
     fieldPaths:
       - spec.rules.*.host
+      - spec.tls.*.hosts.*
