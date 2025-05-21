@@ -1,0 +1,9 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: cert-manager
+  name: cert-manager-webhook
+spec:
+  template:
+    spec:
+      priorityClassName: critical-operator

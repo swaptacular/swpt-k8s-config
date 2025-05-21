@@ -42,3 +42,14 @@ targets:
     options:
       delimiter: "."
       index: 0
+  - select:
+      group: cert-manager.io
+      version: v1
+      kind: Issuer
+      name: acme-cert-issuer
+    fieldPaths:
+      - spec.acme.solvers.0.http01.ingress.class
+    options:
+      delimiter: "."
+      index: 0
+

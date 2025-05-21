@@ -156,6 +156,11 @@ configMapGenerator:
     # replacements:
     #
     annotations:
+      # Configurations for the ACME certificate issuer.
+      #
+      kustomize_acme_cert_server: https://acme-staging-v02.api.letsencrypt.org/directory
+      kustomize_acme_cert_email: owner@example.com
+
       # Kubernetes memory and CPU requests and limits, for various
       # containers.
       #
@@ -407,6 +412,21 @@ patches:
     kind: HelmRelease
     name: ingress-nginx
 
+# This patch enables or disables the skipping of the verification of
+# the SSL/TLS certificate of the ACME certificates issuer. To skip the
+# verification, set the value to true (unquoted!). This is useful for
+# testing.
+#
+- patch: |
+    - op: add
+      path: /spec/acme/skipTLSVerify
+      value: false
+  target:
+    group: cert-manager.io
+    version: v1
+    kind: Issuer
+    name: acme-cert-issuer
+
 - path: ../../base/swpt-debtors/patches/broker.yaml
   target:
     group: rabbitmq.com
@@ -451,7 +471,9 @@ replacements:
 - path: ../../base/swpt-debtors/replacements/ingress-nginx-memory-limit.yaml
 - path: ../../base/swpt-debtors/replacements/ingress-nginx-memory-request.yaml
 - path: ../../base/swpt-debtors/replacements/public-hostname.yaml
-- path: ../../base/swpt-debtors/web-ui/replacements/public-hostname.yaml
+- path: ../../base/swpt-debtors/replacements/acme-cert-server.yaml
+- path: ../../base/swpt-debtors/replacements/acme-cert-email.yaml
 - path: ../../base/swpt-debtors/replacements/s3-ip-block.yaml
 - path: ../../base/swpt-debtors/replacements/ingress-nginx-namespace.yaml
+- path: ../../base/swpt-debtors/web-ui/replacements/public-hostname.yaml
 - path: ../../base/swpt-debtors/web-ui/replacements/ingress-nginx-namespace.yaml

@@ -1,0 +1,12 @@
+source:
+  kind: ConfigMap
+  name: debtors-agent-config
+  fieldPath: metadata.annotations.kustomize_acme_cert_server
+targets:
+  - select:
+      group: cert-manager.io
+      version: v1
+      kind: Issuer
+      name: acme-cert-issuer
+    fieldPaths:
+      - spec.acme.server
