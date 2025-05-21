@@ -158,7 +158,7 @@ configMapGenerator:
     annotations:
       # Configurations for the ACME certificate issuer.
       #
-      kustomize_acme_cert_server: https://acme-staging-v02.api.letsencrypt.org/directory
+      kustomize_acme_cert_server: https://pebble.pebble.svc.cluster.local:14000/dir
       kustomize_acme_cert_email: epandurski@gmail.com
 
       # Kubernetes memory and CPU requests and limits, for various
@@ -420,7 +420,7 @@ patches:
 - patch: |
     - op: add
       path: /spec/acme/skipTLSVerify
-      value: false
+      value: true
   target:
     group: cert-manager.io
     version: v1
