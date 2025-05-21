@@ -7,3 +7,12 @@ spec:
   template:
     spec:
       priorityClassName: critical-operator
+      containers:
+        - name: cert-manager-controller
+          resources:
+            limits:
+              cpu: 500m
+              memory: 128Mi
+            requests:
+              cpu: 5m
+              memory: 32Mi
