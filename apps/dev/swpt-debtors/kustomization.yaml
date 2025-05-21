@@ -159,7 +159,7 @@ configMapGenerator:
       # Configurations for the ACME certificate issuer.
       #
       kustomize_acme_cert_server: https://acme-staging-v02.api.letsencrypt.org/directory
-      kustomize_acme_cert_email: owner@example.com
+      kustomize_acme_cert_email: epandurski@gmail.com
 
       # Kubernetes memory and CPU requests and limits, for various
       # containers.
