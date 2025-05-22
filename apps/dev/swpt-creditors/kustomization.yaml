@@ -350,6 +350,7 @@ images:
 - name: swpt-nfs-server
   newName: ghcr.io/swaptacular/swpt_nfs_server
   newTag: 0.1.6
+
 - name: oryd-hydra-maester
   newName: docker.io/oryd/hydra-maester
   newTag: v0.0.36
