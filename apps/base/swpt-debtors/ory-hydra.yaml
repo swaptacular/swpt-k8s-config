@@ -187,6 +187,9 @@ spec:
           command:
             - /manager
           args:
+            # Here "namespace" will be automatically replaced.
+            - --namespace=namespace
+            - --leader-elector-namespace=namespace
             - --metrics-addr=127.0.0.1:8080
             - --hydra-url=http://swpt-hydra-admin
             - --hydra-port=4445
