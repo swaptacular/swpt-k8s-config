@@ -3,7 +3,7 @@ kind: Ingress
 metadata:
   name: ingress-rules
   annotations:
-    cert-manager.io/issuer: acme-cert-issuer
+    # cert-manager.io/issuer: acme-cert-issuer
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
 
     # NOTE: Setting connections and requests-per-second limits here is
