@@ -1,0 +1,481 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# The name of the namespace could be changed. However, the name of the
+# namespace and the name of the directory that contains this
+# `kustomization.yaml` file MUST always be the same!
+namespace: swpt-creditors
+
+secretGenerator:
+- name: spilo-env-secret
+  files:
+  # Run `openssl rand -base64 32` to generate a random encryption key.
+  - WALG_LIBSODIUM_KEY=secrets/spilo-walg-libsodium-key.encrypted
+
+  # The "password" for the S3 service.
+  - AWS_SECRET_ACCESS_KEY=secrets/spilo-aws-secret-access-key.encrypted
+
+  literals:
+  # The "username" for the S3 service.
+  - AWS_ACCESS_KEY_ID=console
+
+  # The endpoint for the S3 service.
+  - AWS_ENDPOINT=https://minio.minio-tenant.svc.cluster.local:443
+
+  # When Amazon S3 is used, this specifies the AWS region. In that
+  # case, specifying `AWS_ENDPOINT` should not be necessary.
+  - AWS_REGION=us-east-1
+
+  # This specifies the trusted CA for the local MinIO S3 server. This
+  # should not be necessary for "proper" S3 providers.
+  - WALG_S3_CA_CERT_FILE=/certs/minio/ca.crt
+
+  options:
+    disableNameSuffixHash: true
+    labels:
+      app.kubernetes.io/name: swpt-creditors
+      application: spilo
+      team: swpt
+
+    # These annotations are used as sources for convenient Kustomize
+    # replacements:
+    #
+    annotations:
+      # For security reasons, by default pods are not allowed egress
+      # traffic outside of the Kubernetes cluster. However, S3 backups
+      # require initiating connections to S3 servers that are usually
+      # not in the Kubernetes cluster. Here you must specify the range
+      # of IPs which the "spilo" pods will be allowed to connect to.
+      #
+      kustomize_s3_ip_block: 10.0.0.0/8
+
+  type: Opaque
+
+- name: db-owner-credentials
+  files:
+  # A SOPS-encrypted file containing the password for the "db_owner"
+  # user on all Postgres clusters which this application will create.
+  # Once created, the password must not be changed.
+  - password=secrets/postgres-cluster-password.encrypted
+
+  literals:
+  - username=db_owner
+
+  options:
+    disableNameSuffixHash: true
+    labels:
+      app.kubernetes.io/name: swpt-creditors
+  type: Opaque
+
+- name: server-certificate
+  files:
+  # The server certificate PEM file. This certificate will be used to
+  # authenticate before peer nodes. On how to generate a server
+  # certificate, check https://github.com/swaptacular/swpt_ca_scripts
+  - server.crt=server.crt
+
+  # A SOPS-encrypted file containing the private key for the server
+  # certificate. This private key will be used to authenticate before
+  # peer nodes. (See the previous comment.)
+  #
+  # To SOPS-encrypt the private key, you may use this command:
+  #
+  # $ sops encrypt server.key > server.key.encrypted
+  - server.key=server.key.encrypted
+
+  options:
+    labels:
+      app.kubernetes.io/name: swpt-creditors
+  type: Opaque
+
+- name: ssl-session-ticket-key
+  files:
+  # A SOPS-encrypted file containing the secret key for encrypting
+  # SSL/TLS session tickets. To generate this file you may use the
+  # following commands:
+  #
+  # $ openssl rand 80 > ssl-session-ticket-key
+  # $ sops -e ssl-session-ticket-key > ssl-session-ticket-key.encrypted
+  # $ shred -z ssl-session-ticket-key
+  # $ rm ssl-session-ticket-key
+  - key=secrets/ssl-session-ticket-key.encrypted
+
+  options:
+    disableNameSuffixHash: true
+    labels:
+      app.kubernetes.io/name: swpt-creditors
+  type: Opaque
+
+- name: swpt-hydra
+  files:
+  # The "secrets/hydra-secret.encrypted" file must be a SOPS-encrypted
+  # file containing a cryptographic-grade secret. For example, to
+  # generate this file you may use the following commands:
+  #
+  # $ openssl rand -base64 32 > hydra-secret
+  # $ sops encrypt hydra-secret > hydra-secret.encrypted
+  # $ shred -z hydra-secret
+  # $ rm hydra-secret
+  - secretsSystem=secrets/hydra-secret.encrypted
+  - secretsCookie=secrets/hydra-secret.encrypted
+
+  options:
+    disableNameSuffixHash: true
+    labels:
+      app.kubernetes.io/name: hydra
+      app.kubernetes.io/instance: swpt
+  type: Opaque
+
+configMapGenerator:
+- name: creditors-agent-config
+  literals:
+  # The publicly known domain name of this Swaptacular node.
+  - PUBLIC_HOSTNAME=swpt-tests-ca
+
+  # Creditor IDs are 64-bit integer numbers. The creditors agent is
+  # responsible only for creditor IDs which start with the hexadecimal
+  # prefix specified in the `./node-data/creditors-subnet.txt` file.
+  # Therefore, the values of the `MIN_CREDITOR_ID` and
+  # `MAX_CREDITOR_ID` variables must correspond to the content of this
+  # file.
+  #
+  # For example, if the `./node-data/creditors-subnet.txt` file
+  # contains the string "000001", then:
+  # 1) `MIN_CREDITOR_ID` must be set to "0x0000010100000000";
+  # 2) `MAX_CREDITOR_ID` must be set to "0x000001ffffffffff".
+  #
+  # Notice that the first 0xffffffff creditor IDs (that is: from
+  # 0x0000010000000000 to 0x00000100ffffffff) are reserved, and must
+  # be excluded from the specified interval.
+  #
+  # NOTE: Both values are prefixed with "0x", and consist of exactly
+  # 16 hexadecimal symbols.
+  - MIN_CREDITOR_ID=0x0000010100000000
+  - MAX_CREDITOR_ID=0x000001ffffffffff
+
+  options:
+    labels:
+      app.kubernetes.io/name: swpt-creditors
+
+    # These annotations are used as sources for convenient Kustomize
+    # replacements:
+    #
+    annotations:
+      # Configurations for the ACME certificate issuer. See the
+      # "acme-cert-issuer" patch also.
+      #
+      kustomize_acme_cert_server: https://pebble.pebble.svc.cluster.local:14000/dir
+      kustomize_acme_cert_email: epandurski@gmail.com
+
+      # Kubernetes memory and CPU requests and limits, for various
+      # containers.
+      #
+      kustomize_ingress_nginx_cpu_request: 50m
+      kustomize_ingress_nginx_cpu_limit: 4000m
+      kustomize_ingress_nginx_memory_request: 90Mi
+      kustomize_ingress_nginx_memory_limit: 1Gi
+
+      kustomize_swagger_ui_cpu_request: 10m
+      kustomize_swagger_ui_cpu_limit: 1000m
+      kustomize_swagger_ui_memory_request: 12Mi
+      kustomize_swagger_ui_memory_limit: 1Gi
+
+      kustomize_swpt_creditors_ui_cpu_request: 10m
+      kustomize_swpt_creditors_ui_cpu_limit: 1000m
+      kustomize_swpt_creditors_ui_memory_request: 12Mi
+      kustomize_swpt_creditors_ui_memory_limit: 1Gi
+
+- name: swpt-creditors-ui-config
+  literals:
+  # Those are undocumented configuration settings. They may change
+  # from version to version. Use these with caution!
+  - SERVER_API_TIMEOUT=8000
+  - TRANSFER_DELETION_DELAY_SECONDS=1296000
+  - DEBTOR_INFOS_REVISION_DAYS=7
+
+  options:
+    labels:
+      app.kubernetes.io/name: swpt-creditors
+
+- name: swpt-hydra
+  files:
+  # The configuration file for Ory-Hydra. Can reference a custom
+  # configuration file. Normally, the default one should be work
+  # reasonably well.
+  - hydra.yaml=../../base/swpt-creditors/static/hydra.yaml
+
+  literals:
+  # This string will be appended to the "data source name" (DSN)
+  # string (after the "?" character). It alters the behaviour of the
+  # database driver. For example: the maximum number of open
+  # connections, or the maximum number of idle connections.
+  - dsn_query_params=max_conns=20&max_idle_conns=4
+
+  # Configure how many records Hydra's janitor retrieves from the
+  # database for deletion.
+  - janitor_limit=10000
+
+  # Configure how many records Hydra's janitor deletes with each
+  # iteration.
+  - janitor_batch_size=100
+
+  # An URL to which the user will be redirected when an error has
+  # occurred during the OAuth 2.0 workflow.
+  - urls_error=https://github.com/swaptacular/swpt_login
+
+  options:
+    labels:
+      app.kubernetes.io/name: hydra
+      app.kubernetes.io/instance: swpt
+
+    # These annotations are used as sources for convenient Kustomize
+    # replacements:
+    #
+    annotations:
+      # Kubernetes memory and CPU requests and limits, for the Ory
+      # Hydra server containers.
+      #
+      kustomize_hydra_cpu_request: 100m
+      kustomize_hydra_cpu_limit: 1000m
+      kustomize_hydra_memory_request: 128Mi
+      kustomize_hydra_memory_limit: 1Gi
+
+- name: stomp-config
+  literals:
+  # The number of SMP messages that STOMP servers and STOMP clients
+  # will buffer in memory.
+  - SWPT_SERVER_BUFFER=100
+  - SWPT_CLIENT_BUFFER=100
+
+  # The number of worker threads that STOMP servers will use for file
+  # access to the NFS server.
+  - APP_FILE_READ_THREADS=10
+
+  options:
+    labels:
+      app.kubernetes.io/name: swpt-creditors
+
+    # These annotations are used as sources for convenient Kustomize
+    # replacements:
+    #
+    annotations:
+      # The static cluster IP address of the
+      # "nfs-server.swpt-nfs-server.svc.cluster.local" service.
+      kustomize_nfs_service_cluster_ip: 10.96.0.4
+
+      # Kubernetes memory and CPU requests and limits, for the STOMP
+      # server containers.
+      #
+      kustomize_stomp_server_cpu_request: 10m
+      kustomize_stomp_server_cpu_limit: 1000m
+      kustomize_stomp_server_memory_request: 64Mi
+      kustomize_stomp_server_memory_limit: 1Gi
+
+- name: apiproxy-config
+  files:
+  # The configuration file for the "apiproxy".
+  #
+  # Each line in the configuration file should start with a route
+  # specifier, followed by at least one space, followed by a web
+  # server URL (only "http://" server URLs are supported). Route
+  # specifiers consist of zero or more 0s or 1s, separated by dots,
+  # ending with a hash symbol ("#"). An example configuration file:
+  #
+  # 0.# http://web-server-0
+  # 1.# http://web-server-1
+  #
+  # or, for a sigle server:
+  #
+  # # http://web-server
+  #
+  # Note that the route specifiers in the configuration file must
+  # cover all possible bit masks. For example, the following
+  # configuration file is invalid:
+  #
+  # 0.# http://web-server-0
+  #
+  # because it does not cover sharding keys starting with a
+  # binary "1".
+  - apiproxy.conf=apiproxy.conf
+
+  options:
+    labels:
+      app.kubernetes.io/name: swpt-creditors
+
+    # These annotations are used as sources for convenient Kustomize
+    # replacements:
+    #
+    annotations:
+      # Kubernetes memory and CPU requests and limits, for the
+      # apiproxy server containers.
+      #
+      kustomize_apiproxy_cpu_request: 100m
+      kustomize_apiproxy_cpu_limit: 1000m
+      kustomize_apiproxy_memory_request: 128Mi
+      kustomize_apiproxy_memory_limit: 1Gi
+
+# The number of replicas for each component. One replica works fine,
+# but to have high-availability, should be at least 2.
+#
+replicas:
+- name: apiproxy
+  count: 1
+- name: stomp-server
+  count: 1
+- name: swpt-hydra
+  count: 1
+- name: swagger-ui
+  count: 1
+- name: swpt-creditors-ui
+  count: 1
+
+# OCI images to use for the different containers:
+#
+images:
+- name: swpt-creditors
+  newName: ghcr.io/swaptacular/swpt_creditors
+  newTag: 2.6.3
+- name: swpt-creditors-swagger-ui
+  newName: ghcr.io/swaptacular/swpt_creditors_swagger_ui
+  newTag: 2.6.3  # Must be the same as the tag for the "swpt-creditors" image.
+- name: swpt-creditors-ui
+  newName: ghcr.io/swaptacular/swpt_creditors_ui
+  newTag: 1.2.2
+- name: swpt-apiproxy
+  newName: ghcr.io/swaptacular/swpt_apiproxy
+  newTag: 1.2.2
+- name: swpt-stomp
+  newName: ghcr.io/swaptacular/swpt_stomp
+  newTag: 2.3.0
+- name: swpt-nfs-server
+  newName: ghcr.io/swaptacular/swpt_nfs_server
+  newTag: 0.1.6
+- name: oryd-hydra-maester
+  newName: docker.io/oryd/hydra-maester
+  newTag: v0.0.36
+- name: oryd-hydra
+  newName: docker.io/oryd/hydra
+  newTag: v2.3.0
+- name: nginx
+  newName: docker.io/nginx
+  newTag: 1.26.3-alpine3.20
+
+patches:
+# This patch changes the number of Nginx servers' replicas. One
+# replica works fine, but to have high-availability, should be at
+# least 2.
+#
+- patch: |
+    - op: replace
+      path: /spec/values/controller/replicaCount
+      value: 1
+  target:
+    group: helm.toolkit.fluxcd.io
+    version: v2
+    kind: HelmRelease
+    name: ingress-nginx
+
+# This patch sets the correct reference to the stomp-server service.
+# The format is "namespace/service-name:port[:PROXY]". Where:
+#
+# * "namespace" must be the same as the current namespace. That is:
+#   the name of the directory that contains this `kustomization.yaml`
+#   file;
+#
+# * "service-name" must be "stomp-server"; "port" must be "stomp";
+#
+# * If the optional ":PROXY" is appended to the value, this means that
+#   PROXY protocol parsing will be applied to the incoming STOMP
+#   connections.
+#
+- patch: |
+    - op: replace
+      path: /spec/values/tcp/1234
+      value: swpt-creditors/stomp-server:stomp
+  target:
+    group: helm.toolkit.fluxcd.io
+    version: v2
+    kind: HelmRelease
+    name: ingress-nginx
+
+# This patch enables or disables the PROXY protocol parsing for the
+# incoming HTTP and HTTPS connections. To enable PROXY protocol
+# parsing, set the value to "true". To disable PROXY protocol parsing,
+# set the value to "false".
+#
+- patch: |
+    - op: replace
+      path: /spec/values/controller/config/use-proxy-protocol
+      value: "false"
+  target:
+    group: helm.toolkit.fluxcd.io
+    version: v2
+    kind: HelmRelease
+    name: ingress-nginx
+
+# This patch enables or disables the skipping of the verification of
+# the SSL/TLS certificate of the ACME certificates issuer. To skip the
+# verification, set the value to true (unquoted). This is useful for
+# testing. Normally the value must be false (unquoted). See
+# https://medium.com/@manabie/simulate-lets-encrypt-certificate-issuing-in-local-kubernetes-c3750fc07674
+#
+- patch: |
+    - op: add
+      path: /spec/acme/skipTLSVerify
+      value: true
+  target:
+    group: cert-manager.io
+    version: v1
+    kind: Issuer
+    name: acme-cert-issuer
+
+- path: ../../base/swpt-creditors/patches/broker.yaml
+  target:
+    group: rabbitmq.com
+    kind: RabbitmqCluster
+    name: broker
+    version: v1beta1
+
+resources:
+- ../../base/swpt-creditors/
+- broker.yaml
+- hydra-db/
+- login/
+- shards/
+- node-data/peers/
+
+replacements:
+- path: ../../base/swpt-creditors/replacements/nfs-cluster-ip.yaml
+- path: ../../base/swpt-creditors/replacements/nfs-pv-name.yaml
+- path: ../../base/swpt-creditors/replacements/apiproxy-cpu-limit.yaml
+- path: ../../base/swpt-creditors/replacements/apiproxy-cpu-request.yaml
+- path: ../../base/swpt-creditors/replacements/apiproxy-memory-limit.yaml
+- path: ../../base/swpt-creditors/replacements/apiproxy-memory-request.yaml
+- path: ../../base/swpt-creditors/replacements/stomp-server-cpu-limit.yaml
+- path: ../../base/swpt-creditors/replacements/stomp-server-cpu-request.yaml
+- path: ../../base/swpt-creditors/replacements/stomp-server-memory-limit.yaml
+- path: ../../base/swpt-creditors/replacements/stomp-server-memory-request.yaml
+- path: ../../base/swpt-creditors/replacements/hydra-cluster-role-name.yaml
+- path: ../../base/swpt-creditors/replacements/hydra-cpu-limit.yaml
+- path: ../../base/swpt-creditors/replacements/hydra-cpu-request.yaml
+- path: ../../base/swpt-creditors/replacements/hydra-memory-limit.yaml
+- path: ../../base/swpt-creditors/replacements/hydra-memory-request.yaml
+- path: ../../base/swpt-creditors/replacements/swagger-ui-cpu-limit.yaml
+- path: ../../base/swpt-creditors/replacements/swagger-ui-cpu-request.yaml
+- path: ../../base/swpt-creditors/replacements/swagger-ui-memory-limit.yaml
+- path: ../../base/swpt-creditors/replacements/swagger-ui-memory-request.yaml
+- path: ../../base/swpt-creditors/replacements/swpt-creditors-ui-cpu-limit.yaml
+- path: ../../base/swpt-creditors/replacements/swpt-creditors-ui-cpu-request.yaml
+- path: ../../base/swpt-creditors/replacements/swpt-creditors-ui-memory-limit.yaml
+- path: ../../base/swpt-creditors/replacements/swpt-creditors-ui-memory-request.yaml
+- path: ../../base/swpt-creditors/replacements/ingress-nginx-cpu-limit.yaml
+- path: ../../base/swpt-creditors/replacements/ingress-nginx-cpu-request.yaml
+- path: ../../base/swpt-creditors/replacements/ingress-nginx-memory-limit.yaml
+- path: ../../base/swpt-creditors/replacements/ingress-nginx-memory-request.yaml
+- path: ../../base/swpt-creditors/replacements/public-hostname.yaml
+- path: ../../base/swpt-creditors/replacements/acme-cert-server.yaml
+- path: ../../base/swpt-creditors/replacements/acme-cert-email.yaml
+- path: ../../base/swpt-creditors/replacements/s3-ip-block.yaml
+- path: ../../base/swpt-creditors/replacements/ingress-nginx-namespace.yaml
+- path: ../../base/swpt-creditors/web-ui/replacements/public-hostname.yaml
+- path: ../../base/swpt-creditors/web-ui/replacements/ingress-nginx-namespace.yaml

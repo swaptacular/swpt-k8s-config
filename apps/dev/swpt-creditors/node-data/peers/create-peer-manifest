@@ -1,0 +1,111 @@
+#!/bin/bash
+set -e
+set -o pipefail
+
+peer_id="$1"
+number_of_queues="$(cat $peer_id/queues.txt)"
+
+if [ -e "$peer_id/DEACTIVATED" ]; then
+    # The peer has been deactivated.
+    container_arg0="swpt-drainer"
+else
+    # The peer has not been deactivated yet.
+    container_arg0="swpt-client"
+fi
+
+pushd . > /dev/null
+cd ../..
+base_app_name="$(basename $(pwd))"
+popd > /dev/null
+
+if [ "$base_app_name" = "/" ]; then
+    echo
+    echo "ERROR: create-peer-manifest can not determine the base app name."
+    echo
+    exit 1
+fi
+
+aggregator_file="kustomization.yaml"
+manifest_file="$peer_id/kustomization.yaml"
+cat > "$manifest_file" <<EOF
+# This file is machine-generated. DO NOT EDIT IT!
+#
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- ../../../../../base/$base_app_name/peer/stomp-client.yaml
+
+patches:
+- patch: |-
+    - op: add
+      path: /metadata/annotations/swpt-node-id
+      value: $peer_id
+    - op: replace
+      path: /spec/replicas
+      value: $number_of_queues
+    - op: replace
+      path: /spec/template/spec/containers/0/args/0
+      value: $container_arg0
+  target:
+    group: apps
+    kind: StatefulSet
+    name: stomp-client
+    version: v1
+- path: resources-patch.yaml
+  target:
+    group: apps
+    kind: StatefulSet
+    name: stomp-client
+    version: v1
+
+replacements:
+- path: ../../../../../base/$base_app_name/peer/replacements/stomp-client-node-id.yaml
+EOF
+echo "Created new $manifest_file file."
+
+resources_patch_file="$peer_id/resources-patch.yaml"
+if [ ! -e "$resources_patch_file" ]; then
+    cat > "$resources_patch_file" <<EOF
+- op: replace
+  path: /spec/template/spec/containers/0/resources
+  value:
+    # NOTE: You can change these values to reflect the actual load
+    # coming from this peer, and the resource constraints in your
+    # Kubernetes cluster.
+    limits:
+      cpu: "1"
+      memory: 1Gi
+    requests:
+      cpu: 1m
+      memory: 32Mi
+EOF
+    echo "Created new $resources_patch_file file."
+else
+    echo "Found an already existing $resources_patch_file file."
+fi
+
+function generate_peers_aggregator_file {
+    cat > "$aggregator_file" <<EOF
+# This file is machine-generated. DO NOT EDIT IT!
+#
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+EOF
+    echo "Created new peers aggregator file."
+}
+
+if [ ! -e "$aggregator_file" ]; then
+    generate_peers_aggregator_file
+fi
+if ! grep -q "^resources:$" "$aggregator_file"; then
+    generate_peers_aggregator_file
+fi
+
+if grep -q "^- ${peer_id}/$" "$aggregator_file"; then
+    echo "Peer ${peer_id} is already included in the peers aggregator file."
+else
+    echo "- ${peer_id}/" >> "$aggregator_file"
+    echo "Added peer ${peer_id} to the peers aggregator file."
+fi

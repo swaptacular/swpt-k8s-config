@@ -1,8 +1,6 @@
+# This file is machine-generated. DO NOT EDIT IT!
+#
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-
 resources:
-- swpt-nfs-server/
-- swpt-accounts/
-- swpt-debtors/
-- swpt-creditors/
+- 0abcdef1/
