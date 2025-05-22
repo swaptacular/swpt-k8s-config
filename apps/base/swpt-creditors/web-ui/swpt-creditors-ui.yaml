@@ -51,7 +51,7 @@ spec:
             - name: BASE_URL
               value: /creditors-webapp
             - name: SERVER_API_ENTRYPOINT
-              value: https://$(PUBLIC_HOSTNAME)/creditors/.creditor
+              value: https://$(PUBLIC_HOSTNAME)/creditors/.wallet
             - name: AUTHORIZATION_URL
               value: https://$(PUBLIC_HOSTNAME)/oauth2/auth
             - name: TOKEN_URL
