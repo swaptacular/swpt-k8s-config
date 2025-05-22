@@ -1,0 +1,21 @@
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: acme-cert-issuer
+spec:
+  acme:
+    # The value will be automatically replaced.
+    email: user@example.com
+
+    # The value will be automatically replaced.
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+
+    privateKeySecretRef:
+      name: acme-cert-issuer-account-key
+
+    solvers:
+    - http01:
+        ingress:
+          # Here "namespace" will be automatically replaced with the
+          # name of the current namespace.
+          class: namespace.nginx

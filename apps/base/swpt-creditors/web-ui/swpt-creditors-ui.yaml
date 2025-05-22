@@ -1,0 +1,142 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: swpt-creditors-ui
+  labels:
+    app.kubernetes.io/name: swpt-creditors
+    app.kubernetes.io/component: swpt-creditors-ui
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: swpt-creditors
+      app.kubernetes.io/component: swpt-creditors-ui
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: swpt-creditors
+        app.kubernetes.io/component: swpt-creditors-ui
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                app.kubernetes.io/name: swpt-creditors
+                app.kubernetes.io/component: swpt-creditors-ui
+            topologyKey: kubernetes.io/hostname
+            matchLabelKeys:
+            - pod-template-hash
+      priorityClassName: user-ui-webserver
+      containers:
+        - name: swpt-creditors-ui
+          image: swpt-creditors-ui
+          ports:
+            - name: http
+              containerPort: 80
+          readinessProbe:
+            httpGet:
+              path: /creditors-webapp/
+              port: http
+            initialDelaySeconds: 5
+          envFrom:
+            - configMapRef:
+                name: swpt-creditors-ui-config
+          env:
+            - name: PUBLIC_HOSTNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: creditors-agent-config
+                  key: PUBLIC_HOSTNAME
+            - name: BASE_URL
+              value: /creditors-webapp
+            - name: SERVER_API_ENTRYPOINT
+              value: https://$(PUBLIC_HOSTNAME)/creditors/.creditor
+            - name: AUTHORIZATION_URL
+              value: https://$(PUBLIC_HOSTNAME)/oauth2/auth
+            - name: TOKEN_URL
+              value: https://$(PUBLIC_HOSTNAME)/oauth2/token
+            - name: CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: oauth2-clients.creditors-webapp
+                  key: CLIENT_ID
+            - name: REDIRECT_URL
+              value: https://$(PUBLIC_HOSTNAME)/creditors-webapp/
+          resources:
+            limits:
+              cpu: "1"
+              memory: 1Gi
+            requests:
+              cpu: 10m
+              memory: 12Mi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: swpt-creditors-ui
+  labels:
+    app.kubernetes.io/name: swpt-creditors
+    app.kubernetes.io/component: swpt-creditors-ui
+spec:
+  selector:
+    app.kubernetes.io/name: swpt-creditors
+    app.kubernetes.io/component: swpt-creditors-ui
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: http
+
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: swpt-creditors-ui
+  labels:
+    app.kubernetes.io/name: swpt-creditors
+    app.kubernetes.io/component: swpt-creditors-ui
+spec:
+  maxUnavailable: 30%
+  unhealthyPodEvictionPolicy: AlwaysAllow
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: swpt-creditors
+      app.kubernetes.io/component: swpt-creditors-ui
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-swpt-creditors-ui
+  annotations:
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+spec:
+  # Here "namespace" will be automatically replaced with the name of
+  # the current namespace.
+  #
+  ingressClassName: namespace.nginx
+
+  # Here "public-hostname" will be automatically replaced with the
+  # real public hostname of the Swaptacular node.
+  #
+  tls:
+  - hosts:
+    - public-hostname
+    secretName: acme-cert-key
+
+  rules:
+  # Here "public-hostname" will be automatically replaced with the
+  # real public hostname of the Swaptacular node.
+  #
+  - host: public-hostname
+    http:
+      paths:
+      - path: /creditors-webapp/
+        pathType: Prefix
+        backend:
+          service:
+            name: swpt-creditors-ui
+            port:
+              name: http

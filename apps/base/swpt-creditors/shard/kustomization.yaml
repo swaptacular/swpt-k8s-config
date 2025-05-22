@@ -1,0 +1,9 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- tasks-processor.yaml
+- messages-flusher.yaml
+- messages-consumer.yaml
+- web-server.yaml
+- network-policies.yaml

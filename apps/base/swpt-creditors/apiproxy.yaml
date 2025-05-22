@@ -1,0 +1,98 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apiproxy
+  labels:
+    app.kubernetes.io/name: swpt-creditors
+    app.kubernetes.io/component: apiproxy
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: swpt-creditors
+      app.kubernetes.io/component: apiproxy
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: swpt-creditors
+        app.kubernetes.io/component: apiproxy
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                app.kubernetes.io/name: swpt-creditors
+                app.kubernetes.io/component: apiproxy
+            topologyKey: kubernetes.io/hostname
+            matchLabelKeys:
+            - pod-template-hash
+      priorityClassName: webapi-apiproxy
+      containers:
+        - name: apiproxy
+          image: swpt-apiproxy
+          ports:
+            - name: http
+              containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 5
+          volumeMounts:
+            - name: config-volume
+              mountPath: "/etc/apiproxy.conf"
+              subPath: apiproxy.conf
+          envFrom:
+            - configMapRef:
+                name: creditors-agent-config
+          env:
+            - name: APIPROXY_PORT
+              value: "8080"
+            - name: APIPROXY_CONFIG_FILE
+              value: "/etc/apiproxy.conf"
+          resources:
+            limits:
+              cpu: "1"
+              memory: 1Gi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+      volumes:
+        - name: config-volume
+          configMap:
+            name: apiproxy-config
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: apiproxy
+  labels:
+    app.kubernetes.io/name: swpt-creditors
+    app.kubernetes.io/component: apiproxy
+spec:
+  selector:
+    app.kubernetes.io/name: swpt-creditors
+    app.kubernetes.io/component: apiproxy
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: http
+
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: apiproxy
+  labels:
+    app.kubernetes.io/name: swpt-creditors
+    app.kubernetes.io/component: apiproxy
+spec:
+  maxUnavailable: 30%
+  unhealthyPodEvictionPolicy: AlwaysAllow
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: swpt-creditors
+      app.kubernetes.io/component: apiproxy

@@ -1,0 +1,135 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: isolate-login-db
+  labels:
+    app.kubernetes.io/name: swpt-creditors
+    app.kubernetes.io/component: login-db
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: swpt-creditors
+      app.kubernetes.io/component: login-db
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app.kubernetes.io/name: swpt-creditors
+          app.kubernetes.io/component: login-db
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          app.kubernetes.io/name: postgres-operator
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-login-db-users
+  labels:
+    app.kubernetes.io/name: swpt-creditors
+    app.kubernetes.io/component: login-db
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: swpt-creditors
+      app.kubernetes.io/component: login-db
+  policyTypes:
+  - Ingress
+  ingress:
+  - ports:
+    - port: 5432
+    from:
+    - podSelector:
+        matchLabels:
+          app.kubernetes.io/name: swpt-creditors
+          app.kubernetes.io/component: login
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: isolate-dragonfly-db
+  labels:
+    app.kubernetes.io/name: swpt-creditors
+    app.kubernetes.io/component: login-db
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: dragonfly
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app.kubernetes.io/name: dragonfly
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          app.kubernetes.io/instance: system
+          app.kubernetes.io/component: manager
+          app.kubernetes.io/part-of: dragonfly-operator
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-dragonfly-db-users
+  labels:
+    app.kubernetes.io/name: swpt-creditors
+    app.kubernetes.io/component: login-db
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: dragonfly
+  policyTypes:
+  - Ingress
+  ingress:
+  - ports:
+    - port: 6379
+    from:
+    - podSelector:
+        matchLabels:
+          app.kubernetes.io/name: swpt-creditors
+          app.kubernetes.io/component: login
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-login-web-server-captcha-servers-access
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: swpt-creditors
+      app.kubernetes.io/component: login
+      app: login-web-server
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - ipBlock:
+        # This value will be automatically replaced.
+        cidr: 255.255.255.255/32
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-login-web-server-email-servers-access
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: swpt-creditors
+      app.kubernetes.io/component: login
+      app: login-web-server
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - ipBlock:
+        # This value will be automatically replaced.
+        cidr: 255.255.255.255/32

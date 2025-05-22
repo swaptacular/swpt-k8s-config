@@ -1,0 +1,68 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-rules
+  annotations:
+    cert-manager.io/issuer: acme-cert-issuer
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+
+    # NOTE: Setting connections and requests-per-second limits here is
+    # not efficient, because there will be multiple ingrss-server
+    # instances, multiplying the limits set here. Also, here we can
+    # not set a limit on the number of new TCP connections per second,
+    # per IP address, which is what we really need. The solution to
+    # this problem is to configure a limit on the number of new TCP
+    # connections per IP address either on the load balancer, or even
+    # before the load balancer.
+    #
+    # nginx.ingress.kubernetes.io/limit-connections: "25"
+    # nginx.ingress.kubernetes.io/limit-rps: "5"
+spec:
+  # Here "namespace" will be automatically replaced with the name of
+  # the current namespace.
+  #
+  ingressClassName: namespace.nginx
+
+  # Here "public-hostname" will be automatically replaced with the
+  # real public hostname of the Swaptacular node.
+  #
+  tls:
+  - hosts:
+    - public-hostname
+    secretName: acme-cert-key
+
+  rules:
+  # Here "public-hostname" will be automatically replaced with the
+  # real public hostname of the Swaptacular node.
+  #
+  - host: public-hostname
+    http:
+      paths:
+      - path: /oauth2/
+        pathType: Prefix
+        backend:
+          service:
+            name: swpt-hydra-public
+            port:
+              name: http
+      - path: /creditors/
+        pathType: Prefix
+        backend:
+          service:
+            name: apiproxy
+            port:
+              name: http
+      - path: /creditors-login/
+        pathType: Prefix
+        backend:
+          service:
+            name: login-web-server
+            port:
+              name: http
+      - path: /creditors-consent/
+        pathType: Prefix
+        backend:
+          service:
+            name: login-web-server
+            port:
+              name: http

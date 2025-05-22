@@ -1,0 +1,136 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: swagger-ui
+  labels:
+    app.kubernetes.io/name: swpt-creditors
+    app.kubernetes.io/component: swagger-ui
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: swpt-creditors
+      app.kubernetes.io/component: swagger-ui
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: swpt-creditors
+        app.kubernetes.io/component: swagger-ui
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                app.kubernetes.io/name: swpt-creditors
+                app.kubernetes.io/component: swagger-ui
+            topologyKey: kubernetes.io/hostname
+            matchLabelKeys:
+            - pod-template-hash
+      priorityClassName: user-ui-webserver
+      containers:
+        - name: swagger-ui
+          image: swpt-creditors-swagger-ui
+          ports:
+            - name: http
+              containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /creditors-swagger-ui/
+              port: http
+            initialDelaySeconds: 5
+          env:
+            - name: PUBLIC_HOSTNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: creditors-agent-config
+                  key: PUBLIC_HOSTNAME
+            - name: BASE_URL
+              value: /creditors-swagger-ui
+            - name: API_ROOT
+              value: https://$(PUBLIC_HOSTNAME)/
+            - name: OAUTH2_AUTHORIZATION_URL
+              value: https://$(PUBLIC_HOSTNAME)/oauth2/auth
+            - name: OAUTH2_TOKEN_URL
+              value: https://$(PUBLIC_HOSTNAME)/oauth2/token
+            - name: OAUTH2_REFRESH_URL
+              value: https://$(PUBLIC_HOSTNAME)/oauth2/token
+            - name: OAUTH2_REDIRECT_URL
+              value: https://$(PUBLIC_HOSTNAME)/creditors-swagger-ui/oauth2-redirect.html
+          resources:
+            limits:
+              cpu: "1"
+              memory: 1Gi
+            requests:
+              cpu: 10m
+              memory: 12Mi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: swagger-ui
+  labels:
+    app.kubernetes.io/name: swpt-creditors
+    app.kubernetes.io/component: swagger-ui
+spec:
+  selector:
+    app.kubernetes.io/name: swpt-creditors
+    app.kubernetes.io/component: swagger-ui
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: http
+
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: swagger-ui
+  labels:
+    app.kubernetes.io/name: swpt-creditors
+    app.kubernetes.io/component: swagger-ui
+spec:
+  maxUnavailable: 30%
+  unhealthyPodEvictionPolicy: AlwaysAllow
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: swpt-creditors
+      app.kubernetes.io/component: swagger-ui
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-swagger-ui
+  annotations:
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+spec:
+  # Here "namespace" will be automatically replaced with the name of
+  # the current namespace.
+  #
+  ingressClassName: namespace.nginx
+
+  # Here "public-hostname" will be automatically replaced with the
+  # real public hostname of the Swaptacular node.
+  #
+  tls:
+  - hosts:
+    - public-hostname
+    secretName: acme-cert-key
+
+  rules:
+  # Here "public-hostname" will be automatically replaced with the
+  # real public hostname of the Swaptacular node.
+  #
+  - host: public-hostname
+    http:
+      paths:
+      - path: /creditors-swagger-ui/
+        pathType: Prefix
+        backend:
+          service:
+            name: swagger-ui
+            port:
+              name: http

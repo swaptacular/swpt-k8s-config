@@ -1,0 +1,156 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: stomp-client
+  annotations:
+    swpt-node-id: SWPT_NODE_ID
+  labels:
+    app.kubernetes.io/name: swpt-creditors
+    app.kubernetes.io/component: stomp-client
+    app.kubernetes.io/instance: SWPT_NODE_ID
+spec:
+  podManagementPolicy: Parallel
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: swpt-creditors
+      app.kubernetes.io/component: stomp-client
+      app.kubernetes.io/instance: SWPT_NODE_ID
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: swpt-creditors
+        app.kubernetes.io/component: stomp-client
+        app.kubernetes.io/instance: SWPT_NODE_ID
+    spec:
+      priorityClassName: smp-receiver
+      containers:
+        - name: stomp-client
+          image: swpt-stomp
+          args:
+            - swpt-client
+            - "$(SWPT_NODE_ID)"
+            - "$(QUEUE_NAME_PREFIX).$(SWPT_NODE_ID).$(ORDINAL_NUMBER)"
+          volumeMounts:
+            - name: node-data
+              mountPath: "/var/lib/swpt"
+            - name: server-certificate
+              mountPath: "/etc/swpt"
+          envFrom:
+            - secretRef:
+                name: broker-default-user
+              prefix: rmq_
+            - configMapRef:
+                name: stomp-config
+          env:
+            - name: APP_K8S_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: ORDINAL_NUMBER
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.labels['apps.kubernetes.io/pod-index']            
+            - name: SWPT_NODE_ID
+              value: SWPT_NODE_ID
+            - name: QUEUE_NAME_PREFIX
+              value: da
+            - name: SWPT_SERVER_CERT
+              value: /etc/swpt/server.crt
+            - name: SWPT_SERVER_KEY
+              value: /etc/swpt/server.key
+            - name: SWPT_NODEDATA_URL
+              value: "file:///var/lib/swpt/.overlay/$(APP_K8S_NAMESPACE)/node-data"
+            - name: PROTOCOL_BROKER_URL
+              value: "$(rmq_connection_string)"
+            - name: APP_LOG_LEVEL
+              value: warning
+            - name: APP_LOG_FORMAT
+              value: json
+          resources:
+            limits:
+              cpu: "1"
+              memory: 1Gi
+            requests:
+              cpu: 1m
+              memory: 32Mi
+      initContainers:
+        - name: configure-queue
+          image: swpt-stomp
+          args:
+            - configure-queue
+            - "$(SWPT_NODE_ID)"
+            - "$(QUEUE_NAME_PREFIX).$(SWPT_NODE_ID).$(ORDINAL_NUMBER)"
+          volumeMounts:
+            - name: node-data
+              mountPath: "/var/lib/swpt"
+            - name: server-certificate
+              mountPath: "/etc/swpt"
+          envFrom:
+            - secretRef:
+                name: broker-default-user
+              prefix: rmq_
+            - configMapRef:
+                name: stomp-config
+          env:
+            - name: APP_K8S_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: ORDINAL_NUMBER
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.labels['apps.kubernetes.io/pod-index']            
+            - name: SWPT_NODE_ID
+              value: SWPT_NODE_ID
+            - name: QUEUE_NAME_PREFIX
+              value: da
+            - name: SWPT_SERVER_CERT
+              value: /etc/swpt/server.crt
+            - name: SWPT_SERVER_KEY
+              value: /etc/swpt/server.key
+            - name: SWPT_NODEDATA_URL
+              value: "file:///var/lib/swpt/.overlay/$(APP_K8S_NAMESPACE)/node-data"
+            - name: PROTOCOL_BROKER_URL
+              value: "$(rmq_connection_string)"
+            - name: APP_LOG_LEVEL
+              value: warning
+            - name: APP_LOG_FORMAT
+              value: json
+          resources:
+            limits:
+              cpu: "1"
+              memory: 1Gi
+            requests:
+              cpu: 5m
+              memory: 32Mi
+        - name: activate-node
+          image: swpt-nfs-server
+          args:
+            - touch
+            - "-a"
+            - "/var/lib/swpt/.overlay/$(APP_K8S_NAMESPACE)/node-data/peers/$(SWPT_NODE_ID)/ACTIVE"
+          volumeMounts:
+            - name: node-data
+              mountPath: "/var/lib/swpt"
+          env:
+            - name: APP_K8S_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: SWPT_NODE_ID
+              value: SWPT_NODE_ID
+          resources:
+            limits:
+              cpu: "1"
+              memory: 1Gi
+            requests:
+              cpu: 5m
+              memory: 32Mi
+      volumes:
+        - name: node-data
+          persistentVolumeClaim:
+            claimName: node-data
+        - name: server-certificate
+          secret:
+            secretName: server-certificate

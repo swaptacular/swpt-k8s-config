@@ -1,0 +1,13 @@
+source:
+  kind: ConfigMap
+  name: stomp-config
+  fieldPath: metadata.annotations.kustomize_stomp_server_cpu_limit
+targets:
+  - select:
+      kind: Deployment
+      name: stomp-server
+    fieldPaths:
+      - spec.template.spec.containers.[name=stomp-server].resources.limits.cpu
+    options:
+      create: true
+

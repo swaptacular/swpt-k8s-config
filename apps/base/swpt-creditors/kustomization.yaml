@@ -1,0 +1,23 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+configMapGenerator:
+- name: ingress-nginx-tmpl
+  files:
+  - nginx.tmpl=static/nginx.tmpl
+  options:
+    disableNameSuffixHash: true
+
+resources:
+- namespace.yaml
+- broker-pdb.yaml
+- apiproxy.yaml
+- nfs-pvc.yaml
+- stomp-server.yaml
+- ory-hydra.yaml
+- ory-hydra-oauth2-clients.yaml
+- network-policies.yaml
+- ingress-nginx.yaml
+- ingress-rules.yaml
+- acme-cert-issuer.yaml
+- web-ui/

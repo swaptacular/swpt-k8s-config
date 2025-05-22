@@ -1,0 +1,14 @@
+source:
+  kind: ConfigMap
+  name: shardconfig
+  fieldPath: metadata.annotations.kustomize_zalando_clone_timestamp
+targets:
+  - select:
+      name: db
+      kind: postgresql
+      group: acid.zalan.do
+      version: v1
+    fieldPaths:
+      - spec.clone.timestamp
+    options:
+      create: True

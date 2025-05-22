@@ -1,0 +1,81 @@
+apiVersion: hydra.ory.sh/v1alpha1
+kind: OAuth2Client
+metadata:
+  name: creditors-webapp
+spec:
+  clientName: "Creditors Agent UI"
+  grantTypes:
+    - authorization_code
+  responseTypes:
+    - code
+  scopeArray:
+    - access
+    - access.readonly
+    - disable_pin
+  secretName: oauth2-clients.creditors-webapp
+  redirectUris:
+    # Here "hostname" will be automatically replaced with the public
+    # hostname of the Swaptacular node.
+    - https://hostname/creditors-webapp/
+  tokenEndpointAuthMethod: none
+
+---
+apiVersion: hydra.ory.sh/v1alpha1
+kind: OAuth2Client
+metadata:
+  name: swagger-ui
+spec:
+  clientName: "Swagger UI"
+  grantTypes:
+    - authorization_code
+  responseTypes:
+    - code
+  scopeArray:
+    - access
+    - access.readonly
+    - disable_pin
+  secretName: oauth2-clients.swagger-ui
+  redirectUris:
+    # Here "hostname" will be automatically replaced with the public
+    # hostname of the Swaptacular node.
+    - https://hostname/creditors-swagger-ui/oauth2-redirect.html
+  tokenEndpointAuthMethod: client_secret_post
+
+---
+apiVersion: hydra.ory.sh/v1alpha1
+kind: OAuth2Client
+metadata:
+  name: creditors-supervisor
+spec:
+  clientName: "This is the creditors supervisor."
+  grantTypes:
+    - client_credentials
+    - refresh_token
+  responseTypes:
+    - token
+  scopeArray:
+    - access.readonly
+    - activate
+  secretName: oauth2-clients.creditors-supervisor
+  tokenEndpointAuthMethod: client_secret_basic
+
+---
+apiVersion: hydra.ory.sh/v1alpha1
+kind: OAuth2Client
+metadata:
+  name: creditors-superuser
+spec:
+  clientName: "This is the creditors superuser."
+  grantTypes:
+    - client_credentials
+    - refresh_token
+  responseTypes:
+    - token
+  scopeArray:
+    - access
+    - access.readonly
+    - activate
+    - deactivate
+    - disable_pin
+  secretName: oauth2-clients.creditors-superuser
+  tokenEndpointAuthMethod: client_secret_basic

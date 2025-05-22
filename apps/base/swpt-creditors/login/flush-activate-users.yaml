@@ -1,0 +1,83 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: login-flush-activate-users
+  labels:
+    app.kubernetes.io/name: swpt-creditors
+    app.kubernetes.io/component: login
+    app: login-flush-activate-users
+spec:
+  replicas: 1  # Must always be 1!
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: swpt-creditors
+      app.kubernetes.io/component: login
+      app: login-flush-activate-users
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: swpt-creditors
+        app.kubernetes.io/component: login
+        app: login-flush-activate-users
+    spec:
+      priorityClassName: login-webserver
+      containers:
+        - name: flush-activate-users
+          image: swpt-login
+          args: ['flush_activate_users']
+          envFrom:
+            - secretRef:
+                name: db-owner-credentials
+              prefix: pg_
+            - secretRef:
+                name: oauth2-clients.creditors-superuser
+              prefix: "SUPERUSER_"
+            - configMapRef:
+                name: creditors-agent-config
+            - configMapRef:
+                name: swpt-login-config
+          env:
+            - name: WEBSERVER_PORT
+              value: "8080"
+            - name: HYDRA_ADMIN_URL
+              value: http://swpt-hydra-admin:4445/admin/
+            - name: SUBJECT_PREFIX
+              value: "creditors:"
+            - name: POSTGRES_URL
+              value: "postgresql+psycopg://$(pg_username):$(pg_password)@login-db:5432/db"
+            - name: REDIS_URL
+              value: "redis://default:$(pg_password)@dragonfly-db:6379/0"
+            - name: SIGNED_UP_REDIRECT_URL
+              value: https://$(PUBLIC_HOSTNAME)/creditors-webapp/
+            - name: API_AUTH2_TOKEN_URL
+              value: http://swpt-hydra-public:4444/oauth2/token
+            - name: API_RESOURCE_SERVER
+              value: http://apiproxy
+            - name: API_TIMEOUT_SECONDS
+              value: "5"
+            - name: FLUSH_PERIOD
+              value: "5.0"
+            - name: APP_LOG_LEVEL
+              value: info
+            - name: APP_LOG_FORMAT
+              value: json
+      initContainers:
+        - name: configure
+          image: swpt-login
+          args: ["configure"]
+          envFrom:
+            - secretRef:
+                name: db-owner-credentials
+              prefix: pg_
+          env:
+            - name: SUBJECT_PREFIX
+              value: "creditors:"
+            - name: POSTGRES_URL
+              value: "postgresql+psycopg://$(pg_username):$(pg_password)@login-db:5432/db"
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 1Gi
+            requests:
+              cpu: 10m
+              memory: 100Mi

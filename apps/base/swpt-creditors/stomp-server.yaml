@@ -1,0 +1,117 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stomp-server
+  labels:
+    app.kubernetes.io/name: swpt-creditors
+    app.kubernetes.io/component: stomp-server
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: swpt-creditors
+      app.kubernetes.io/component: stomp-server
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: swpt-creditors
+        app.kubernetes.io/component: stomp-server
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                app.kubernetes.io/name: swpt-creditors
+                app.kubernetes.io/component: stomp-server
+            topologyKey: kubernetes.io/hostname
+            matchLabelKeys:
+            - pod-template-hash
+      priorityClassName: smp-receiver
+      containers:
+        - name: stomp-server
+          image: swpt-stomp
+          args: ['swpt-server']
+          ports:
+            - name: stomp
+              containerPort: 1234
+          readinessProbe:
+            tcpSocket:
+              port: stomp
+            initialDelaySeconds: 5
+          volumeMounts:
+            - name: node-data
+              mountPath: "/var/lib/swpt"
+            - name: server-certificate
+              mountPath: "/etc/swpt"
+          envFrom:
+            - secretRef:
+                name: broker-default-user
+              prefix: rmq_
+            - configMapRef:
+                name: stomp-config
+          env:
+            - name: APP_K8S_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: SWPT_SERVER_PORT
+              value: "1234"
+            - name: SWPT_SERVER_CERT
+              value: /etc/swpt/server.crt
+            - name: SWPT_SERVER_KEY
+              value: /etc/swpt/server.key
+            - name: SWPT_NODEDATA_URL
+              value: "file:///var/lib/swpt/.overlay/$(APP_K8S_NAMESPACE)/node-data"
+            - name: PROTOCOL_BROKER_URL
+              value: "$(rmq_connection_string)"
+            - name: APP_LOG_FORMAT
+              value: json
+          resources:
+            limits:
+              cpu: "1"
+              memory: 1Gi
+            requests:
+              cpu: 10m
+              memory: 64Mi
+      volumes:
+        - name: node-data
+          persistentVolumeClaim:
+            claimName: node-data
+        - name: server-certificate
+          secret:
+            secretName: server-certificate
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: stomp-server
+  labels:
+    app.kubernetes.io/name: swpt-creditors
+    app.kubernetes.io/component: stomp-server
+spec:
+  selector:
+    app.kubernetes.io/name: swpt-creditors
+    app.kubernetes.io/component: stomp-server
+  ports:
+    - name: stomp
+      port: 1234
+      protocol: TCP
+      targetPort: stomp
+
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: stomp-server
+  labels:
+    app.kubernetes.io/name: swpt-creditors
+    app.kubernetes.io/component: stomp-server
+spec:
+  maxUnavailable: 30%
+  unhealthyPodEvictionPolicy: AlwaysAllow
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: swpt-creditors
+      app.kubernetes.io/component: stomp-server

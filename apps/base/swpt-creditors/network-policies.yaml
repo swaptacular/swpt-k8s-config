@@ -1,0 +1,66 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: restrict-hydra-admin
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: hydra
+      app.kubernetes.io/instance: swpt
+  policyTypes:
+  - Ingress
+  ingress:
+  - ports:
+    - port: http-public
+  - from:
+    - podSelector:
+        matchLabels:
+          app.kubernetes.io/name: hydra
+          app.kubernetes.io/instance: swpt
+    - podSelector:
+        matchLabels:
+          app.kubernetes.io/name: swpt-hydra-maester
+    - podSelector:
+        matchLabels:
+          app.kubernetes.io/name: swpt-creditors-shard
+          app.kubernetes.io/component: web-server
+          app.kubernetes.io/part-of: swpt-creditors
+    - podSelector:
+        matchLabels:
+          app.kubernetes.io/name: swpt-creditors
+          app.kubernetes.io/component: login
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: forbid-pods-internet-access
+spec:
+  podSelector: {}
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 10.0.0.0/8
+    - ipBlock:
+        cidr: 172.16.0.0/12
+    - ipBlock:
+        cidr: 192.168.0.0/16
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-spilo-s3-access
+spec:
+  podSelector:
+    matchLabels:
+      application: spilo
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - ipBlock:
+        # This value will be automatically replaced.
+        cidr: 255.255.255.255/32

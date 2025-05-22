@@ -1,0 +1,21 @@
+source:
+  kind: ServiceAccount
+  name: swpt-hydra-maester-account
+  fieldPath: metadata.namespace
+targets:
+  - select:
+      kind: ClusterRole
+      name: namespace-hydra-maester-role
+    fieldPaths:
+      - metadata.name
+    options:
+      delimiter: "-"
+      index: 0
+  - select:
+      kind: ClusterRoleBinding
+      name: namespace-hydra-maester-role-binding
+    fieldPaths:
+      - metadata.name
+    options:
+      delimiter: "-"
+      index: 0

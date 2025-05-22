@@ -1,0 +1,14 @@
+source:
+  group: acid.zalan.do
+  version: v1
+  kind: postgresql
+  name: db
+  fieldPath: metadata.name
+targets:
+  - select:
+      name: shardconfig
+      kind: ConfigMap
+    fieldPaths:
+      - data.pg_cluster_name
+    options:
+      create: True

@@ -1,0 +1,12 @@
+source:
+  kind: ConfigMap
+  name: creditors-agent-config
+  fieldPath: metadata.annotations.kustomize_swpt_creditors_ui_cpu_request
+targets:
+  - select:
+      kind: Deployment
+      name: swpt-creditors-ui
+    fieldPaths:
+      - spec.template.spec.containers.[name=swpt-creditors-ui].resources.requests.cpu
+    options:
+      create: true
