@@ -18,6 +18,6 @@ resources:
 - ory-hydra-oauth2-clients.yaml
 - network-policies.yaml
 - ingress-nginx.yaml
-# - ingress-rules.yaml
-# - acme-cert-issuer.yaml
+- ingress-rules.yaml
+- acme-cert-issuer.yaml
 - web-ui/
