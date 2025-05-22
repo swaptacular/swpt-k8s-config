@@ -16,6 +16,8 @@ targets:
       name: namespace-hydra-maester-role-binding
     fieldPaths:
       - metadata.name
+      - subjects.0.namespace
+      - roleRef.name
     options:
       delimiter: "-"
       index: 0
