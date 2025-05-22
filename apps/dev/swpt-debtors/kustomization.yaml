@@ -165,17 +165,17 @@ configMapGenerator:
       # Kubernetes memory and CPU requests and limits, for various
       # containers.
       #
-      kustomize_ingress_nginx_cpu_request: 50m
+      kustomize_ingress_nginx_cpu_request: 1m
       kustomize_ingress_nginx_cpu_limit: 4000m
       kustomize_ingress_nginx_memory_request: 90Mi
       kustomize_ingress_nginx_memory_limit: 1Gi
 
-      kustomize_swagger_ui_cpu_request: 10m
+      kustomize_swagger_ui_cpu_request: 1m
       kustomize_swagger_ui_cpu_limit: 1000m
       kustomize_swagger_ui_memory_request: 12Mi
       kustomize_swagger_ui_memory_limit: 1Gi
 
-      kustomize_swpt_debtors_ui_cpu_request: 10m
+      kustomize_swpt_debtors_ui_cpu_request: 1m
       kustomize_swpt_debtors_ui_cpu_limit: 1000m
       kustomize_swpt_debtors_ui_memory_request: 12Mi
       kustomize_swpt_debtors_ui_memory_limit: 1Gi
@@ -235,7 +235,7 @@ configMapGenerator:
       # Kubernetes memory and CPU requests and limits, for the Ory
       # Hydra server containers.
       #
-      kustomize_hydra_cpu_request: 100m
+      kustomize_hydra_cpu_request: 1m
       kustomize_hydra_cpu_limit: 1000m
       kustomize_hydra_memory_request: 128Mi
       kustomize_hydra_memory_limit: 1Gi
@@ -266,7 +266,7 @@ configMapGenerator:
       # Kubernetes memory and CPU requests and limits, for the STOMP
       # server containers.
       #
-      kustomize_stomp_server_cpu_request: 10m
+      kustomize_stomp_server_cpu_request: 1m
       kustomize_stomp_server_cpu_limit: 1000m
       kustomize_stomp_server_memory_request: 64Mi
       kustomize_stomp_server_memory_limit: 1Gi
@@ -309,7 +309,7 @@ configMapGenerator:
       # Kubernetes memory and CPU requests and limits, for the
       # apiproxy server containers.
       #
-      kustomize_apiproxy_cpu_request: 100m
+      kustomize_apiproxy_cpu_request: 1m
       kustomize_apiproxy_cpu_limit: 1000m
       kustomize_apiproxy_memory_request: 128Mi
       kustomize_apiproxy_memory_limit: 1Gi

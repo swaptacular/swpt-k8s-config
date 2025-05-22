@@ -65,11 +65,11 @@ configMapGenerator:
       # Kubernetes memory and CPU requests and limits, for the NFS
       # server containers.
       #
-      kustomize_nfs_server_cpu_request: 10m
+      kustomize_nfs_server_cpu_request: 1m
       kustomize_nfs_server_cpu_limit: 1000m
       kustomize_nfs_server_memory_request: 64Mi
       kustomize_nfs_server_memory_limit: 1Gi
-      kustomize_git_pull_cpu_request: 10m
+      kustomize_git_pull_cpu_request: 1m
       kustomize_git_pull_cpu_limit: 1000m
       kustomize_git_pull_memory_request: 64Mi
       kustomize_git_pull_memory_limit: 1Gi

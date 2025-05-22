@@ -119,7 +119,7 @@ configMapGenerator:
       # Kubernetes memory and CPU requests and limits, for the STOMP
       # server containers.
       #
-      kustomize_stomp_server_cpu_request: 10m
+      kustomize_stomp_server_cpu_request: 1m
       kustomize_stomp_server_cpu_limit: 1000m
       kustomize_stomp_server_memory_request: 64Mi
       kustomize_stomp_server_memory_limit: 1Gi
@@ -162,7 +162,7 @@ configMapGenerator:
       # Kubernetes memory and CPU requests and limits, for the
       # apiproxy server containers.
       #
-      kustomize_apiproxy_cpu_request: 100m
+      kustomize_apiproxy_cpu_request: 1m
       kustomize_apiproxy_cpu_limit: 1000m
       kustomize_apiproxy_memory_request: 128Mi
       kustomize_apiproxy_memory_limit: 1Gi

@@ -44,19 +44,19 @@ configMapGenerator:
       # replacements. They specify Kubernetes memory and CPU requests
       # and limits, for different shard container types.
       #
-      kustomize_messages_consumer_cpu_request: 10m
+      kustomize_messages_consumer_cpu_request: 1m
       kustomize_messages_consumer_cpu_limit: 2000m
       kustomize_messages_consumer_memory_request: 128Mi
       kustomize_messages_consumer_memory_limit: 1Gi
-      kustomize_messages_flusher_cpu_request: 50m
+      kustomize_messages_flusher_cpu_request: 1m
       kustomize_messages_flusher_cpu_limit: 2000m
       kustomize_messages_flusher_memory_request: 128Mi
       kustomize_messages_flusher_memory_limit: 1Gi
-      kustomize_tasks_processor_cpu_request: 50m
+      kustomize_tasks_processor_cpu_request: 1m
       kustomize_tasks_processor_cpu_limit: 2000m
       kustomize_tasks_processor_memory_request: 1Gi
       kustomize_tasks_processor_memory_limit: 2Gi
-      kustomize_web_server_cpu_request: 10m
+      kustomize_web_server_cpu_request: 1m
       kustomize_web_server_cpu_limit: 2000m
       kustomize_web_server_memory_request: 128Mi
       kustomize_web_server_memory_limit: 1Gi

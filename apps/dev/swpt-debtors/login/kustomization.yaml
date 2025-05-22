@@ -88,12 +88,12 @@ configMapGenerator:
       # Kubernetes memory and CPU requests and limits, for various
       # containers.
       #
-      kustomize_login_webserver_cpu_request: 10m
+      kustomize_login_webserver_cpu_request: 1m
       kustomize_login_webserver_cpu_limit: 1000m
       kustomize_login_webserver_memory_request: 100Mi
       kustomize_login_webserver_memory_limit: 1Gi
 
-      kustomize_login_flush_cpu_request: 10m
+      kustomize_login_flush_cpu_request: 1m
       kustomize_login_flush_cpu_limit: 1000m
       kustomize_login_flush_memory_request: 100Mi
       kustomize_login_flush_memory_limit: 1Gi
