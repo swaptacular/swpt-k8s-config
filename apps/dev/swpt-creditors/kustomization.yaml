@@ -126,6 +126,24 @@ secretGenerator:
       app.kubernetes.io/instance: swpt
   type: Opaque
 
+- name: pin-protection-secret
+  files:
+  # A secret used for encrypting user's PINs. The
+  # "secrets/pin-protection-secret.encrypted" file must be a
+  # SOPS-encrypted file containing a cryptographic-grade secret. For
+  # example, to generate this file you may use the following commands:
+  #
+  # $ openssl rand -base64 32 > pin-protection-secret
+  # $ sops encrypt pin-protection-secret > pin-protection-secret.encrypted
+  # $ shred -z pin-protection-secret
+  # $ rm pin-protection-secret
+  - PIN_PROTECTION_SECRET=secrets/pin-protection-secret.encrypted
+
+  options:
+    labels:
+      app.kubernetes.io/name: swpt-creditors
+  type: Opaque
+
 configMapGenerator:
 - name: creditors-agent-config
   literals:

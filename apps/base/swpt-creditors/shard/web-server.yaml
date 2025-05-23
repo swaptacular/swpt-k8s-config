@@ -76,6 +76,11 @@ spec:
                 secretKeyRef:
                   name: oauth2-clients.creditors-supervisor
                   key: CLIENT_ID
+            - name: PIN_PROTECTION_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: pin-protection-secret
+                  key: PIN_PROTECTION_SECRET
             - name: APP_LOG_FORMAT
               value: json
       initContainers:
