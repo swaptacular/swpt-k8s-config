@@ -28,7 +28,7 @@ configMapGenerator:
   # Shard configuration settings which you may want to change:
   #
   - PROTOCOL_BROKER_PROCESSES=1
-  - PROTOCOL_BROKER_THREADS=3
+  - PROTOCOL_BROKER_THREADS=1
   - PROTOCOL_BROKER_PREFETCH_COUNT=10
   - WEBSERVER_PROCESSES=1
   - WEBSERVER_THREADS=3
