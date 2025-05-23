@@ -182,14 +182,14 @@ configMapGenerator:
 
 - name: swpt-debtors-ui-config
   literals:
-    # When the currency issuer wants to peg its currency to another
-    # currency, a default peg currency will be suggested. Its
-    # abbreviation will be the value of "DEFAULT_PEG_ABBR", and its
-    # digital coin will be the value of "DEFAULT_PEG_COIN" (that is,
-    # the textual content of the digital coin's QR code). When one of
-    # those variables are set to an empty string, no default peg
-    # currency will be suggested to the user.
-    #
+  # When the currency issuer wants to peg its currency to another
+  # currency, a default peg currency will be suggested. Its
+  # abbreviation will be the value of "DEFAULT_PEG_ABBR", and its
+  # digital coin will be the value of "DEFAULT_PEG_COIN" (that is,
+  # the textual content of the digital coin's QR code). When one of
+  # those variables are set to an empty string, no default peg
+  # currency will be suggested to the user.
+  #
   - DEFAULT_PEG_ABBR=USD
   - DEFAULT_PEG_COIN=https://debtors.swaptacular.org/840#swpt:840
 
