@@ -54,7 +54,7 @@ spec:
             - name: SWPT_NODE_ID
               value: SWPT_NODE_ID
             - name: QUEUE_NAME_PREFIX
-              value: peer
+              value: aa
             - name: SWPT_SERVER_CERT
               value: /etc/swpt/server.crt
             - name: SWPT_SERVER_KEY
@@ -104,7 +104,7 @@ spec:
             - name: SWPT_NODE_ID
               value: SWPT_NODE_ID
             - name: QUEUE_NAME_PREFIX
-              value: peer
+              value: aa
             - name: SWPT_SERVER_CERT
               value: /etc/swpt/server.crt
             - name: SWPT_SERVER_KEY
