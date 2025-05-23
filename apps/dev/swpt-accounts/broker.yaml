@@ -13,7 +13,7 @@ spec:
     # because it will be added automatically by a Kustomize patch.
     # This field must be present, even if its value is an empty list.
     #
-    additionalPlugins: []
+    additionalPlugins: ["rabbitmq_management"]
 
   # Specifies the disk space allocated for the broker. The value must
   # not be decreased.
