@@ -1,0 +1,13 @@
+apiVersion: rabbitmq.com/v1beta1
+kind: Policy
+metadata:
+  name: broker-dead-letter-streams-policy
+spec:
+  name: dead-letter-streams
+  pattern: "^.+\.XQ$"
+  applyTo: "streams"
+  definition:
+    max-age: "30D"
+    max-length-bytes: 2000000000
+  rabbitmqClusterReference:
+    name: broker
