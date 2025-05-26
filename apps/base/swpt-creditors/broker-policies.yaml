@@ -10,3 +10,18 @@ spec:
     x-max-age: "7D"
   rabbitmqClusterReference:
     name: broker
+
+---
+apiVersion: rabbitmq.com/v1beta1
+kind: Policy
+metadata:
+  name: broker-dead-letter-queues-policy
+spec:
+  name: dead-letter-queues
+  pattern: "^.+\\.XQ$"
+  applyTo: "classic_queues"
+  definition:
+    x-max-length-bytes: 1000000000
+    x-overflow: drop-head
+  rabbitmqClusterReference:
+    name: broker
