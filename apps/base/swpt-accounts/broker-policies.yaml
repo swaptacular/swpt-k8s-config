@@ -7,7 +7,7 @@ spec:
   pattern: "^.+\\.XQ$"
   applyTo: "streams"
   definition:
-    x-max-age: "7D"
+    max-age: "7D"
   rabbitmqClusterReference:
     name: broker
 
@@ -21,7 +21,7 @@ spec:
   pattern: "^.+\\.XQ$"
   applyTo: "classic_queues"
   definition:
-    x-max-length-bytes: 1000000000
-    x-overflow: drop-head
+    max-length-bytes: 1000000000
+    overflow: drop-head
   rabbitmqClusterReference:
     name: broker
