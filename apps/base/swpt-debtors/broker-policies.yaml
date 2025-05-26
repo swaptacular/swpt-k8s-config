@@ -7,6 +7,6 @@ spec:
   pattern: "^.+\\.XQ$"
   applyTo: "streams"
   definition:
-    max-age: "7D"
+    x-max-age: "7D"
   rabbitmqClusterReference:
     name: broker
