@@ -4,7 +4,7 @@ metadata:
   name: broker-dead-letter-streams-policy
 spec:
   name: dead-letter-streams
-  pattern: "^.+\.XQ$"
+  pattern: "^.+\\.XQ$"
   applyTo: "streams"
   definition:
     max-age: "30D"
