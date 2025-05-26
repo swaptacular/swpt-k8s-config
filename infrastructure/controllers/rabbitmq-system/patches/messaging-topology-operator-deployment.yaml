@@ -1,0 +1,9 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: rabbitmq-system
+  name: messaging-topology-operator
+spec:
+  template:
+    spec:
+      priorityClassName: critical-operator
