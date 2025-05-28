@@ -1,0 +1,116 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+configMapGenerator:
+- name: swpt-trade-config
+  literals:
+  # Determiene when new trading turns will be started.
+  - TURN_PERIOD=1d
+  - TURN_PERIOD_OFFSET=2h
+  - TURN_PHASE1_DURATION=10m
+  - TURN_PHASE2_DURATION=1h
+  - TURN_CHECK_INTERVAL=60s    
+
+  # In order to be traded, currencies must be pegged to other
+  # currencies, thus forming a "peg-tree". At the root of the peg-tree
+  # sits the "base currency". The base currency is specified by its
+  # "debtor info locator" and its debtor ID ("BASE_DEBTOR_ID" and
+  # "BASE_DEBTOR_INFO_LOCATOR"). Currencies with distance to the root
+  # bigger than "MAX_DISTANCE_TO_BASE" will be ignored.
+  - BASE_DEBTOR_INFO_LOCATOR=https://debtors.swaptacular.org/840
+  - BASE_DEBTOR_ID=840
+  - MAX_DISTANCE_TO_BASE=10  
+
+  # The amount of every arranged trade must rounded to an integer
+  # number. For this reason, trading small amounts may result in
+  # signifficant rounding errors. To avoid this, trades for amounts
+  # smaller than "MIN_TRADE_AMOUNT" will be not be arranged.
+  - MIN_TRADE_AMOUNT=10000  
+  
+  options:
+    labels:
+      app.kubernetes.io/name: swpt-trade
+
+    # These annotations are used as sources for convenient Kustomize
+    # replacements:
+    #
+    annotations:
+      # Kubernetes memory and CPU requests and limits, for various
+      # containers.
+      #
+      kustomize_trade_solver_cpu_request: 1m
+      kustomize_trade_solver_cpu_limit: 4000m
+      kustomize_trade_solver_memory_request: 90Mi
+      kustomize_trade_solver_memory_limit: 1Gi
+
+# OCI images to use for the different containers:
+#
+images:
+- name: swpt-trade
+  newName: ghcr.io/swaptacular/swpt_trade
+  newTag: 0.1.11
+
+secretGenerator:
+- name: postgres.trade-solver-db.credentials.postgresql.acid.zalan.do
+  files:
+  - password=../secrets/postgres-cluster-password.encrypted
+  literals:
+  - username=postgres
+  options:
+    disableNameSuffixHash: true
+    labels:
+      app.kubernetes.io/name: swpt-trade
+      app.kubernetes.io/component: solver-db
+      application: spilo
+      cluster-name: trade-solver-db
+      team: swpt
+  type: Opaque
+
+- name: standby.trade-solver-db.credentials.postgresql.acid.zalan.do
+  files:
+  - password=../secrets/postgres-cluster-password.encrypted
+  literals:
+  - username=standby
+  options:
+    disableNameSuffixHash: true
+    labels:
+      app.kubernetes.io/name: swpt-trade
+      app.kubernetes.io/component: solver-db
+      application: spilo
+      cluster-name: trade-solver-db
+      team: swpt
+  type: Opaque
+
+- name: db-owner.trade-solver-db.credentials.postgresql.acid.zalan.do
+  files:
+  - password=../secrets/postgres-cluster-password.encrypted
+  literals:
+  - username=db_owner
+  options:
+    disableNameSuffixHash: true
+    labels:
+      app.kubernetes.io/name: swpt-trade
+      app.kubernetes.io/component: solver-db
+      application: spilo
+      cluster-name: trade-solver-db
+      team: swpt
+  type: Opaque
+  
+resources:
+- postgres-cluster.yaml
+# - workers/
+- ../../../base/swpt-creditors/trade/
+
+patches:
+- path: ../../../base/swpt-creditors/trade/patches/postgres-cluster.yaml
+  target:
+    group: acid.zalan.do
+    kind: postgresql
+    name: trade-solver-db
+    version: v1
+
+replacements:
+- path: ../../../base/swpt-creditors/trade/replacements/trade-solver-cpu-limit.yaml
+- path: ../../../base/swpt-creditors/trade/replacements/trade-solver-cpu-request.yaml
+- path: ../../../base/swpt-creditors/trade/replacements/trade-solver-memory-limit.yaml
+- path: ../../../base/swpt-creditors/trade/replacements/trade-solver-memory-request.yaml

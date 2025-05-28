@@ -459,6 +459,7 @@ resources:
 - broker.yaml
 - hydra-db/
 - login/
+- trade/
 - shards/
 - node-data/peers/
 

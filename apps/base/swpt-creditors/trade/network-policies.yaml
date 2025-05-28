@@ -1,0 +1,47 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: isolate-trade-solver-db
+  labels:
+    app.kubernetes.io/name: swpt-trade
+    app.kubernetes.io/component: solver-db
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: swpt-trade
+      app.kubernetes.io/component: solver-db
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app.kubernetes.io/name: swpt-trade
+          app.kubernetes.io/component: solver-db
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          app.kubernetes.io/name: postgres-operator
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-trade-solver-db-users
+  labels:
+    app.kubernetes.io/name: swpt-trade
+    app.kubernetes.io/component: solver-db
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: swpt-trade
+      app.kubernetes.io/component: solver-db
+  policyTypes:
+  - Ingress
+  ingress:
+  - ports:
+    - port: 5432
+    from:
+    - podSelector:
+        matchLabels:
+          app.kubernetes.io/name: swpt-trade
