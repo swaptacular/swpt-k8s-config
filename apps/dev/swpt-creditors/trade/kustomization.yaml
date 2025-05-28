@@ -40,7 +40,7 @@ configMapGenerator:
       #
       kustomize_trade_solver_cpu_request: 1m
       kustomize_trade_solver_cpu_limit: 4000m
-      kustomize_trade_solver_memory_request: 90Mi
+      kustomize_trade_solver_memory_request: 100Mi
       kustomize_trade_solver_memory_limit: 1Gi
 
 # OCI images to use for the different containers:
