@@ -16,7 +16,7 @@
   value: null
 - op: add
   path: /spec/pod_priority_class_name
-  value: login-database  # TODO: set the correct priority.
+  value: trade-solver-database
 
 - op: test
   path: /spec/teamId

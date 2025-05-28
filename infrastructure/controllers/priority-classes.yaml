@@ -28,6 +28,24 @@ description: "Used for sending SMP messages to peer nodes."
 apiVersion: scheduling.k8s.io/v1
 kind: PriorityClass
 metadata:
+  name: trade-solver-database
+value: 86600
+globalDefault: false
+description: "Used for the trade-solver's database."
+
+---
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: trade-solver
+value: 86500
+globalDefault: false
+description: "Used for the trade-solver."
+
+---
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
   name: shard-database
 value: 86000
 globalDefault: false

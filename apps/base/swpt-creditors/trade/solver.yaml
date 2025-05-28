@@ -20,7 +20,7 @@ spec:
         app.kubernetes.io/component: solver
         app: solver
     spec:
-      priorityClassName: login-webserver  # TODO: set this properly
+      priorityClassName: trade-solver
       containers:
         - name: trade-solver
           image: swpt-trade
