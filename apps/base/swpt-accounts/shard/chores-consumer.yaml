@@ -73,7 +73,7 @@ spec:
               value: json
           resources:
             limits:
-              cpu: 5m
+              cpu: 500m
               memory: 100Mi
             requests:
               cpu: 5m
