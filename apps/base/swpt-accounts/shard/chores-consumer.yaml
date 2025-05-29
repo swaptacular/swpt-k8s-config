@@ -50,6 +50,8 @@ spec:
               value: "$(pg_cluster_name)-chores"
             - name: FETCH_API_URL
               value: "http://apiproxy"
+            - name: APP_LOG_LEVEL
+              value: warning
             - name: APP_LOG_FORMAT
               value: json
       initContainers:
@@ -65,6 +67,10 @@ spec:
           env:
             - name: POSTGRES_URL
               value: "postgresql+psycopg://$(pg_username):$(pg_password)@$(pg_cluster_name):5432/db"
+            - name: APP_LOG_LEVEL
+              value: warning
+            - name: APP_LOG_FORMAT
+              value: json
 
 ---
 apiVersion: policy/v1

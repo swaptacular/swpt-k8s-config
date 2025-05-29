@@ -42,8 +42,6 @@ configMapGenerator:
   - HANDLE_PRISTINE_COLLECTORS_THREADS=1
   - HANDLE_PRISTINE_COLLECTORS_PERIOD=60.0
   - DELETE_PARENT_SHARD_RECORDS=false
-  - APP_LOG_LEVEL=warning
-  - APP_LOG_FORMAT=json
 
   options:
     annotations:

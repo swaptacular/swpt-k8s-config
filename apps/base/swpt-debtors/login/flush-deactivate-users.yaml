@@ -74,6 +74,10 @@ spec:
               value: "debtors:"
             - name: POSTGRES_URL
               value: "postgresql+psycopg://$(pg_username):$(pg_password)@login-db:5432/db"
+            - name: APP_LOG_LEVEL
+              value: warning
+            - name: APP_LOG_FORMAT
+              value: json
           resources:
             limits:
               cpu: 1000m

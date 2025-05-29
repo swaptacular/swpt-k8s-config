@@ -81,6 +81,8 @@ spec:
                 secretKeyRef:
                   name: pin-protection-secret
                   key: PIN_PROTECTION_SECRET
+            - name: APP_LOG_LEVEL
+              value: warning
             - name: APP_LOG_FORMAT
               value: json
       initContainers:
@@ -96,6 +98,10 @@ spec:
           env:
             - name: POSTGRES_URL
               value: "postgresql+psycopg://$(pg_username):$(pg_password)@$(pg_cluster_name):5432/db"
+            - name: APP_LOG_LEVEL
+              value: warning
+            - name: APP_LOG_FORMAT
+              value: json
 
 ---
 apiVersion: v1

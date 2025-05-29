@@ -59,6 +59,8 @@ spec:
                 secretKeyRef:
                   name: oauth2-clients.debtors-supervisor
                   key: CLIENT_ID
+            - name: APP_LOG_LEVEL
+              value: warning
             - name: APP_LOG_FORMAT
               value: json
       initContainers:
@@ -85,5 +87,7 @@ spec:
               value: "$(pg_cluster_name)"
             - name: SETUP_RABBITMQ_BINDINGS
               value: "yes"
+            - name: APP_LOG_LEVEL
+              value: warning
             - name: APP_LOG_FORMAT
               value: json

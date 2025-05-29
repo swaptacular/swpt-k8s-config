@@ -53,6 +53,10 @@ spec:
           env:
             - name: SOLVER_POSTGRES_URL
               value: "postgresql+psycopg://$(pg_username):$(pg_password)@trade-solver-db:5432/db"
+            - name: APP_LOG_LEVEL
+              value: warning
+            - name: APP_LOG_FORMAT
+              value: json
           resources:
             limits:
               cpu: 1000m
