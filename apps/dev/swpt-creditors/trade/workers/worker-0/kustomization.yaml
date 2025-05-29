@@ -57,14 +57,10 @@ configMapGenerator:
       kustomize_messages_flusher_cpu_limit: 2000m
       kustomize_messages_flusher_memory_request: 128Mi
       kustomize_messages_flusher_memory_limit: 1Gi
-      kustomize_tasks_processor_cpu_request: 1m
-      kustomize_tasks_processor_cpu_limit: 2000m
-      kustomize_tasks_processor_memory_request: 1Gi
-      kustomize_tasks_processor_memory_limit: 2Gi
-      kustomize_web_server_cpu_request: 1m
-      kustomize_web_server_cpu_limit: 2000m
-      kustomize_web_server_memory_request: 128Mi
-      kustomize_web_server_memory_limit: 1Gi
+      kustomize_turn_roller_cpu_request: 1m
+      kustomize_turn_roller_cpu_limit: 2000m
+      kustomize_turn_roller_memory_request: 1Gi
+      kustomize_turn_roller_memory_limit: 2Gi
 
       # Do not change the next two lines!
       kustomize_zalando_top_level_domain: do
@@ -135,6 +131,10 @@ replacements:
 - path: ../../../../../base/swpt-creditors/trade/worker/replacements/secrets-clustername.yaml
 - path: ../../../../../base/swpt-creditors/trade/worker/replacements/secrets-namesuffix.yaml
 - path: ../../../../../base/swpt-creditors/trade/worker/replacements/trade-workerconfig.yaml
+- path: ../../../../../base/swpt-creditors/trade/worker/replacements/turn-roller-cpu-request.yaml
+- path: ../../../../../base/swpt-creditors/trade/worker/replacements/turn-roller-cpu-limit.yaml
+- path: ../../../../../base/swpt-creditors/trade/worker/replacements/turn-roller-memory-request.yaml
+- path: ../../../../../base/swpt-creditors/trade/worker/replacements/turn-roller-memory-limit.yaml
 # - path: ../../../../../base/swpt-creditors/trade/worker/replacements/messages-consumer-cpu-request.yaml
 # - path: ../../../../../base/swpt-creditors/trade/worker/replacements/messages-consumer-cpu-limit.yaml
 # - path: ../../../../../base/swpt-creditors/trade/worker/replacements/messages-consumer-memory-request.yaml
@@ -143,14 +143,6 @@ replacements:
 # - path: ../../../../../base/swpt-creditors/trade/worker/replacements/messages-flusher-cpu-limit.yaml
 # - path: ../../../../../base/swpt-creditors/trade/worker/replacements/messages-flusher-memory-request.yaml
 # - path: ../../../../../base/swpt-creditors/trade/worker/replacements/messages-flusher-memory-limit.yaml
-# - path: ../../../../../base/swpt-creditors/trade/worker/replacements/tasks-processor-cpu-request.yaml
-# - path: ../../../../../base/swpt-creditors/trade/worker/replacements/tasks-processor-cpu-limit.yaml
-# - path: ../../../../../base/swpt-creditors/trade/worker/replacements/tasks-processor-memory-request.yaml
-# - path: ../../../../../base/swpt-creditors/trade/worker/replacements/tasks-processor-memory-limit.yaml
-# - path: ../../../../../base/swpt-creditors/trade/worker/replacements/web-server-cpu-request.yaml
-# - path: ../../../../../base/swpt-creditors/trade/worker/replacements/web-server-cpu-limit.yaml
-# - path: ../../../../../base/swpt-creditors/trade/worker/replacements/web-server-memory-request.yaml
-# - path: ../../../../../base/swpt-creditors/trade/worker/replacements/web-server-memory-limit.yaml
 
 # # Uncomment the these lines to recover from the S3 backup. Once the
 # # data has been recovered successfully, the lines can be commented

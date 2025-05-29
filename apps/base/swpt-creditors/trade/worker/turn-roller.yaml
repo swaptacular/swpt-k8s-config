@@ -81,13 +81,6 @@ spec:
               value: warning
             - name: APP_LOG_FORMAT
               value: json
-          resources:
-            limits:
-              cpu: 1000m
-              memory: 1Gi
-            requests:
-              cpu: 10m
-              memory: 100Mi
         - name: await-migrations  # Awaits solver's database migrations.
           image: swpt-trade
           args: ["await_migrations"]
@@ -108,10 +101,3 @@ spec:
               value: warning
             - name: APP_LOG_FORMAT
               value: json
-          resources:
-            limits:
-              cpu: 1000m
-              memory: 1Gi
-            requests:
-              cpu: 10m
-              memory: 100Mi

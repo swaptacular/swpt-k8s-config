@@ -1,0 +1,14 @@
+source:
+  kind: ConfigMap
+  name: trade-workerconfig
+  fieldPath: metadata.annotations.kustomize_turn_roller_cpu_limit
+targets:
+  - select:
+      kind: Deployment
+      name: trade-worker-turn-roller
+    fieldPaths:
+      - spec.template.spec.containers.[name=turn-roller].resources.limits.cpu
+      - spec.template.spec.initContainers.[name=init].resources.limits.cpu
+      - spec.template.spec.initContainers.[name=await-migrations].resources.limits.cpu
+    options:
+      create: true
