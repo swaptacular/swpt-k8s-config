@@ -407,10 +407,10 @@ spec:
               type: RuntimeDefault
           resources:
             limits:
-              cpu: 10m
+              cpu: "1"
               memory: 64Mi
             requests:
-              cpu: 10m
+              cpu: 5m
               memory: 64Mi
           volumeMounts:
             - name: hydra-config-volume
@@ -547,10 +547,10 @@ spec:
                   type: RuntimeDefault
               resources:
                 limits:
-                  cpu: 10m
+                  cpu: "1"
                   memory: 64Mi
                 requests:
-                  cpu: 10m
+                  cpu: 5m
                   memory: 64Mi
               volumeMounts:
                 - name: hydra-config-volume
@@ -648,10 +648,10 @@ spec:
             type: RuntimeDefault
         resources:
           limits:
-            cpu: 10m
+            cpu: "1"
             memory: 128Mi
           requests:
-            cpu: 10m
+            cpu: 5m
             memory: 128Mi
         volumeMounts:
           - name: hydra-config-volume

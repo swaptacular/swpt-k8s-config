@@ -83,7 +83,7 @@ spec:
               value: json
           resources:
             limits:
-              cpu: 5m
+              cpu: "1"
               memory: 100Mi
             requests:
               cpu: 5m
@@ -110,7 +110,7 @@ spec:
               value: json
           resources:
             limits:
-              cpu: 5m
+              cpu: "1"
               memory: 100Mi
             requests:
               cpu: 5m
