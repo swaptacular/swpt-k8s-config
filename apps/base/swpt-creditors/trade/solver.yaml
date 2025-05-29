@@ -8,6 +8,8 @@ metadata:
     app: solver
 spec:
   replicas: 1  # Must always be exactly 1!
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app.kubernetes.io/name: swpt-trade
