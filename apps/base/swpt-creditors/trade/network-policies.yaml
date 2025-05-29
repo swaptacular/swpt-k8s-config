@@ -45,3 +45,7 @@ spec:
     - podSelector:
         matchLabels:
           app.kubernetes.io/name: swpt-trade
+    - podSelector:
+        matchLabels:
+          app.kubernetes.io/name: swpt-trade-worker
+          app.kubernetes.io/part-of: swpt-trade
