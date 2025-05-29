@@ -69,13 +69,11 @@ configMapGenerator:
 # The number of replicas for each component. One replica works fine,
 # but to have high-availability, should be at least 2.
 #
-# replicas:
-# - name: web-server
-#   count: 1
-# - name: messages-flusher
-#   count: 1
-# - name: messages-consumer
-#   count: 1
+replicas:
+- name: trade-worker-messages-flusher
+  count: 1
+- name: trade-worker-messages-consumer
+  count: 1
 
 secretGenerator:
 - name: postgres.cluster-name.credentials.postgresql.acid.zalan.do
@@ -135,14 +133,14 @@ replacements:
 - path: ../../../../../base/swpt-creditors/trade/worker/replacements/turn-roller-cpu-limit.yaml
 - path: ../../../../../base/swpt-creditors/trade/worker/replacements/turn-roller-memory-request.yaml
 - path: ../../../../../base/swpt-creditors/trade/worker/replacements/turn-roller-memory-limit.yaml
-# - path: ../../../../../base/swpt-creditors/trade/worker/replacements/messages-consumer-cpu-request.yaml
-# - path: ../../../../../base/swpt-creditors/trade/worker/replacements/messages-consumer-cpu-limit.yaml
-# - path: ../../../../../base/swpt-creditors/trade/worker/replacements/messages-consumer-memory-request.yaml
-# - path: ../../../../../base/swpt-creditors/trade/worker/replacements/messages-consumer-memory-limit.yaml
-# - path: ../../../../../base/swpt-creditors/trade/worker/replacements/messages-flusher-cpu-request.yaml
-# - path: ../../../../../base/swpt-creditors/trade/worker/replacements/messages-flusher-cpu-limit.yaml
-# - path: ../../../../../base/swpt-creditors/trade/worker/replacements/messages-flusher-memory-request.yaml
-# - path: ../../../../../base/swpt-creditors/trade/worker/replacements/messages-flusher-memory-limit.yaml
+- path: ../../../../../base/swpt-creditors/trade/worker/replacements/messages-consumer-cpu-request.yaml
+- path: ../../../../../base/swpt-creditors/trade/worker/replacements/messages-consumer-cpu-limit.yaml
+- path: ../../../../../base/swpt-creditors/trade/worker/replacements/messages-consumer-memory-request.yaml
+- path: ../../../../../base/swpt-creditors/trade/worker/replacements/messages-consumer-memory-limit.yaml
+- path: ../../../../../base/swpt-creditors/trade/worker/replacements/messages-flusher-cpu-request.yaml
+- path: ../../../../../base/swpt-creditors/trade/worker/replacements/messages-flusher-cpu-limit.yaml
+- path: ../../../../../base/swpt-creditors/trade/worker/replacements/messages-flusher-memory-request.yaml
+- path: ../../../../../base/swpt-creditors/trade/worker/replacements/messages-flusher-memory-limit.yaml
 
 # # Uncomment the these lines to recover from the S3 backup. Once the
 # # data has been recovered successfully, the lines can be commented

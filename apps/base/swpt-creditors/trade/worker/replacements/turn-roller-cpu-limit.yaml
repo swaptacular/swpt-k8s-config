@@ -9,6 +9,5 @@ targets:
     fieldPaths:
       - spec.template.spec.containers.[name=turn-roller].resources.limits.cpu
       - spec.template.spec.initContainers.[name=init].resources.limits.cpu
-      - spec.template.spec.initContainers.[name=await-migrations].resources.limits.cpu
     options:
       create: true

@@ -9,7 +9,6 @@ targets:
     fieldPaths:
       - spec.template.spec.containers.[name=turn-roller].resources.requests.memory
       - spec.template.spec.initContainers.[name=init].resources.requests.memory
-      - spec.template.spec.initContainers.[name=await-migrations].resources.requests.memory
     options:
       create: true
 

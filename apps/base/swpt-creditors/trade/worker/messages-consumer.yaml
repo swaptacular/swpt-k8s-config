@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: messages-consumer
+  name: trade-worker-messages-consumer
   labels:
     app.kubernetes.io/component: messages-consumer
 spec:
@@ -26,7 +26,7 @@ spec:
       priorityClassName: shard-smp-consumer
       containers:
         - name: messages-consumer
-          image: swpt-creditors
+          image: swpt-trade
           args: ['consume_messages']
           envFrom:
             - secretRef:
@@ -36,11 +36,13 @@ spec:
                 name: broker-default-user
               prefix: rmq_
             - configMapRef:
-                name: shardconfig
+                name: swpt-trade-config
             - configMapRef:
-                name: creditors-agent-config
+                name: trade-workerconfig
           env:
-            - name: POSTGRES_URL
+            - name: SOLVER_POSTGRES_URL
+              value: "postgresql+psycopg://$(pg_username):$(pg_password)@trade-solver-db:5432/db"
+            - name: WORKER_POSTGRES_URL
               value: "postgresql+psycopg://$(pg_username):$(pg_password)@$(pg_cluster_name):5432/db"
             - name: PROTOCOL_BROKER_URL
               value: "$(rmq_connection_string)"
@@ -52,16 +54,20 @@ spec:
               value: json
       initContainers:
         - name: await-migrations
-          image: swpt-creditors
+          image: swpt-trade
           args: ["await_migrations"]
           envFrom:
             - secretRef:
                 name: db-owner-credentials
               prefix: pg_
             - configMapRef:
-                name: shardconfig
+                name: swpt-trade-config
+            - configMapRef:
+                name: trade-workerconfig
           env:
-            - name: POSTGRES_URL
+            - name: SOLVER_POSTGRES_URL
+              value: "postgresql+psycopg://$(pg_username):$(pg_password)@trade-solver-db:5432/db"
+            - name: WORKER_POSTGRES_URL
               value: "postgresql+psycopg://$(pg_username):$(pg_password)@$(pg_cluster_name):5432/db"
             - name: APP_LOG_LEVEL
               value: warning
@@ -72,7 +78,7 @@ spec:
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: messages-consumer
+  name: trade-worker-messages-consumer
   labels:
     app.kubernetes.io/component: messages-consumer
 spec:
