@@ -96,3 +96,10 @@ spec:
               value: warning
             - name: APP_LOG_FORMAT
               value: json
+          resources:
+            limits:
+              cpu: 5m
+              memory: 100Mi
+            requests:
+              cpu: 5m
+              memory: 100Mi

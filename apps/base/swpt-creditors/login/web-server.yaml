@@ -114,10 +114,10 @@ spec:
               value: json
           resources:
             limits:
-              cpu: 1000m
-              memory: 1Gi
+              cpu: 5m
+              memory: 100Mi
             requests:
-              cpu: 10m
+              cpu: 5m
               memory: 100Mi
 
 ---

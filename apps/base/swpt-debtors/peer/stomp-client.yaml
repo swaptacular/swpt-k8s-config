@@ -119,8 +119,8 @@ spec:
               value: json
           resources:
             limits:
-              cpu: "1"
-              memory: 1Gi
+              cpu: 5m
+              memory: 32Mi
             requests:
               cpu: 5m
               memory: 32Mi
@@ -142,8 +142,8 @@ spec:
               value: SWPT_NODE_ID
           resources:
             limits:
-              cpu: "1"
-              memory: 1Gi
+              cpu: 5m
+              memory: 32Mi
             requests:
               cpu: 5m
               memory: 32Mi
