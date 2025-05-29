@@ -4,4 +4,5 @@ kind: Kustomization
 resources:
 # - messages-flusher.yaml
 # - messages-consumer.yaml
+- turn-roller.yaml
 - network-policies.yaml
