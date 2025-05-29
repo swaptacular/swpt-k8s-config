@@ -2,11 +2,11 @@ source:
   group: acid.zalan.do
   version: v1
   kind: postgresql
-  name: db
+  name: trade-worker-db
   fieldPath: metadata.name
 targets:
   - select:
-      name: shardconfig
+      name: trade-workerconfig
       kind: ConfigMap
     fieldPaths:
       - data.pg_cluster_name

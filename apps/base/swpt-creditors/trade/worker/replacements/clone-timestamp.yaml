@@ -1,10 +1,10 @@
 source:
   kind: ConfigMap
-  name: shardconfig
+  name: trade-workerconfig
   fieldPath: metadata.annotations.kustomize_zalando_clone_timestamp
 targets:
   - select:
-      name: db
+      name: trade-worker-db
       kind: postgresql
       group: acid.zalan.do
       version: v1

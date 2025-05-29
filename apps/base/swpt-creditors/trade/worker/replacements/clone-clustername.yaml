@@ -2,11 +2,11 @@ source:
   group: acid.zalan.do
   version: v1
   kind: postgresql
-  name: db
+  name: trade-worker-db
   fieldPath: metadata.name
 targets:
   - select:
-      name: db
+      name: trade-worker-db
       kind: postgresql
       group: acid.zalan.do
       version: v1

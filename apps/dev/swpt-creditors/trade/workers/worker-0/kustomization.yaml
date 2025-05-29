@@ -17,7 +17,7 @@ labels:
     app.kubernetes.io/instance: worker-0
 
 configMapGenerator:
-- name: shardconfig
+- name: trade-workerconfig
   literals:
   # The routing key must correspond to the "nameSuffix" value. For
   # example, if "nameSuffix" is "-101", the routing key must be
@@ -25,17 +25,22 @@ configMapGenerator:
   #
   - PROTOCOL_BROKER_QUEUE_ROUTING_KEY=0.#
 
-  # Shard configuration settings which you may want to change:
+  # Worker configuration settings which you may want to change:
   #
   - PROTOCOL_BROKER_PROCESSES=1
   - PROTOCOL_BROKER_THREADS=1
   - PROTOCOL_BROKER_PREFETCH_COUNT=10
-  - WEBSERVER_PROCESSES=1
-  - WEBSERVER_THREADS=3
+  - SOLVER_CLIENT_POOL_SIZE=0
   - FLUSH_PROCESSES=1
   - FLUSH_PERIOD=1.5
-  - PROCESS_LOG_ADDITIONS_THREADS=1
-  - PROCESS_LEDGER_UPDATES_THREADS=1
+  - HTTP_FETCH_PROCESSES=1
+  - HTTP_FETCH_CONNECTIONS=100
+  - HTTP_FETCH_TIMEOUT=10.0
+  - HTTP_FETCH_PERIOD=5.0
+  - TRIGGER_TRANSFERS_PROCESSES=1
+  - TRIGGER_TRANSFERS_PERIOD=5.0
+  - HANDLE_PRISTINE_COLLECTORS_THREADS=1
+  - HANDLE_PRISTINE_COLLECTORS_PERIOD=60.0
   - DELETE_PARENT_SHARD_RECORDS=false
   - APP_LOG_LEVEL=warning
   - APP_LOG_FORMAT=json
@@ -70,13 +75,13 @@ configMapGenerator:
 # The number of replicas for each component. One replica works fine,
 # but to have high-availability, should be at least 2.
 #
-replicas:
-- name: web-server
-  count: 1
-- name: messages-flusher
-  count: 1
-- name: messages-consumer
-  count: 1
+# replicas:
+# - name: web-server
+#   count: 1
+# - name: messages-flusher
+#   count: 1
+# - name: messages-consumer
+#   count: 1
 
 secretGenerator:
 - name: postgres.cluster-name.credentials.postgresql.acid.zalan.do
@@ -125,29 +130,29 @@ patches:
   target:
     group: acid.zalan.do
     kind: postgresql
-    name: db
+    name: trade-worker-db
     version: v1
 
 replacements:
-- path: ../../../../base/swpt-creditors/shard/replacements/secrets-clustername.yaml
-- path: ../../../../base/swpt-creditors/shard/replacements/secrets-namesuffix.yaml
-- path: ../../../../base/swpt-creditors/shard/replacements/shardconfig.yaml
-- path: ../../../../base/swpt-creditors/shard/replacements/messages-consumer-cpu-request.yaml
-- path: ../../../../base/swpt-creditors/shard/replacements/messages-consumer-cpu-limit.yaml
-- path: ../../../../base/swpt-creditors/shard/replacements/messages-consumer-memory-request.yaml
-- path: ../../../../base/swpt-creditors/shard/replacements/messages-consumer-memory-limit.yaml
-- path: ../../../../base/swpt-creditors/shard/replacements/messages-flusher-cpu-request.yaml
-- path: ../../../../base/swpt-creditors/shard/replacements/messages-flusher-cpu-limit.yaml
-- path: ../../../../base/swpt-creditors/shard/replacements/messages-flusher-memory-request.yaml
-- path: ../../../../base/swpt-creditors/shard/replacements/messages-flusher-memory-limit.yaml
-- path: ../../../../base/swpt-creditors/shard/replacements/tasks-processor-cpu-request.yaml
-- path: ../../../../base/swpt-creditors/shard/replacements/tasks-processor-cpu-limit.yaml
-- path: ../../../../base/swpt-creditors/shard/replacements/tasks-processor-memory-request.yaml
-- path: ../../../../base/swpt-creditors/shard/replacements/tasks-processor-memory-limit.yaml
-- path: ../../../../base/swpt-creditors/shard/replacements/web-server-cpu-request.yaml
-- path: ../../../../base/swpt-creditors/shard/replacements/web-server-cpu-limit.yaml
-- path: ../../../../base/swpt-creditors/shard/replacements/web-server-memory-request.yaml
-- path: ../../../../base/swpt-creditors/shard/replacements/web-server-memory-limit.yaml
+- path: ../../../../../base/swpt-creditors/trade/worker/replacements/secrets-clustername.yaml
+- path: ../../../../../base/swpt-creditors/trade/worker/replacements/secrets-namesuffix.yaml
+- path: ../../../../../base/swpt-creditors/trade/worker/replacements/trade-workerconfig.yaml
+# - path: ../../../../../base/swpt-creditors/trade/worker/replacements/messages-consumer-cpu-request.yaml
+# - path: ../../../../../base/swpt-creditors/trade/worker/replacements/messages-consumer-cpu-limit.yaml
+# - path: ../../../../../base/swpt-creditors/trade/worker/replacements/messages-consumer-memory-request.yaml
+# - path: ../../../../../base/swpt-creditors/trade/worker/replacements/messages-consumer-memory-limit.yaml
+# - path: ../../../../../base/swpt-creditors/trade/worker/replacements/messages-flusher-cpu-request.yaml
+# - path: ../../../../../base/swpt-creditors/trade/worker/replacements/messages-flusher-cpu-limit.yaml
+# - path: ../../../../../base/swpt-creditors/trade/worker/replacements/messages-flusher-memory-request.yaml
+# - path: ../../../../../base/swpt-creditors/trade/worker/replacements/messages-flusher-memory-limit.yaml
+# - path: ../../../../../base/swpt-creditors/trade/worker/replacements/tasks-processor-cpu-request.yaml
+# - path: ../../../../../base/swpt-creditors/trade/worker/replacements/tasks-processor-cpu-limit.yaml
+# - path: ../../../../../base/swpt-creditors/trade/worker/replacements/tasks-processor-memory-request.yaml
+# - path: ../../../../../base/swpt-creditors/trade/worker/replacements/tasks-processor-memory-limit.yaml
+# - path: ../../../../../base/swpt-creditors/trade/worker/replacements/web-server-cpu-request.yaml
+# - path: ../../../../../base/swpt-creditors/trade/worker/replacements/web-server-cpu-limit.yaml
+# - path: ../../../../../base/swpt-creditors/trade/worker/replacements/web-server-memory-request.yaml
+# - path: ../../../../../base/swpt-creditors/trade/worker/replacements/web-server-memory-limit.yaml
 
 # # Uncomment the these lines to recover from the S3 backup. Once the
 # # data has been recovered successfully, the lines can be commented
@@ -163,5 +168,5 @@ replacements:
 # #     cluster: <cluster-name>
 # #     timestamp: "2199-01-01T00:00:00.000+00:00"
 # #
-# - path: ../../../../base/swpt-creditors/shard/replacements/clone-clustername.yaml
-# - path: ../../../../base/swpt-creditors/shard/replacements/clone-timestamp.yaml
+# - path: ../../../../../base/swpt-creditors/trade/worker/replacements/clone-clustername.yaml
+# - path: ../../../../../base/swpt-creditors/trade/worker/replacements/clone-timestamp.yaml
