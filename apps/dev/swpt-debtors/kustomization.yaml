@@ -237,7 +237,7 @@ configMapGenerator:
       #
       kustomize_hydra_cpu_request: 1m
       kustomize_hydra_cpu_limit: 1000m
-      kustomize_hydra_memory_request: 128Mi
+      kustomize_hydra_memory_request: 34Mi
       kustomize_hydra_memory_limit: 1Gi
 
 - name: stomp-config
@@ -268,7 +268,7 @@ configMapGenerator:
       #
       kustomize_stomp_server_cpu_request: 1m
       kustomize_stomp_server_cpu_limit: 1000m
-      kustomize_stomp_server_memory_request: 64Mi
+      kustomize_stomp_server_memory_request: 26Mi
       kustomize_stomp_server_memory_limit: 1Gi
 
 - name: apiproxy-config
@@ -311,7 +311,7 @@ configMapGenerator:
       #
       kustomize_apiproxy_cpu_request: 1m
       kustomize_apiproxy_cpu_limit: 1000m
-      kustomize_apiproxy_memory_request: 128Mi
+      kustomize_apiproxy_memory_request: 24Mi
       kustomize_apiproxy_memory_limit: 1Gi
 
 # The number of replicas for each component. One replica works fine,
