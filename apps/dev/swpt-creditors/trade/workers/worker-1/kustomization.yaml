@@ -51,15 +51,15 @@ configMapGenerator:
       #
       kustomize_messages_consumer_cpu_request: 1m
       kustomize_messages_consumer_cpu_limit: 2000m
-      kustomize_messages_consumer_memory_request: 128Mi
+      kustomize_messages_consumer_memory_request: 100Mi
       kustomize_messages_consumer_memory_limit: 1Gi
       kustomize_messages_flusher_cpu_request: 1m
       kustomize_messages_flusher_cpu_limit: 2000m
-      kustomize_messages_flusher_memory_request: 128Mi
+      kustomize_messages_flusher_memory_request: 94Mi
       kustomize_messages_flusher_memory_limit: 1Gi
       kustomize_turn_roller_cpu_request: 1m
       kustomize_turn_roller_cpu_limit: 2000m
-      kustomize_turn_roller_memory_request: 1600Mi
+      kustomize_turn_roller_memory_request: 1530Mi
       kustomize_turn_roller_memory_limit: 2Gi
 
       # Do not change the next two lines!
