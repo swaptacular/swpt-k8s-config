@@ -4,7 +4,7 @@ kind: Kustomization
 # This must be either an empty string, or a string starting with '-',
 # and followed by 0s or 1s. "-101" for example.
 #
-nameSuffix: "-1"
+nameSuffix: ""
 
 labels:
 - includeSelectors: true
@@ -14,7 +14,7 @@ labels:
     # label must be "shard-101". If "nameSuffix" is "", the value for
     # the label must be "shard".
     #
-    app.kubernetes.io/instance: shard-1
+    app.kubernetes.io/instance: shard
 
 configMapGenerator:
 - name: shardconfig
@@ -23,7 +23,7 @@ configMapGenerator:
   # example, if "nameSuffix" is "-101", the routing key must be
   # "1.0.1.#". If "nameSuffix" is "", the routing key must be "#".
   #
-  - PROTOCOL_BROKER_QUEUE_ROUTING_KEY=1.#
+  - PROTOCOL_BROKER_QUEUE_ROUTING_KEY=#
 
   # Shard configuration settings which you may want to change:
   #
