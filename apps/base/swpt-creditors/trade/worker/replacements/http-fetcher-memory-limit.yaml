@@ -1,0 +1,14 @@
+source:
+  kind: ConfigMap
+  name: trade-workerconfig
+  fieldPath: metadata.annotations.kustomize_http_fetcher_memory_limit
+targets:
+  - select:
+      kind: Deployment
+      name: trade-worker-http-fetcher
+    fieldPaths:
+      - spec.template.spec.containers.[name=http-fetcher].resources.limits.memory
+      - spec.template.spec.initContainers.[name=await-migrations].resources.limits.memory
+    options:
+      create: true
+

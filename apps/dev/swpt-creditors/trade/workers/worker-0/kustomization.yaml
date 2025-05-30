@@ -61,6 +61,14 @@ configMapGenerator:
       kustomize_turn_roller_cpu_limit: 2000m
       kustomize_turn_roller_memory_request: 1530Mi
       kustomize_turn_roller_memory_limit: 2Gi
+      kustomize_http_fetcher_cpu_request: 1m
+      kustomize_http_fetcher_cpu_limit: 2000m
+      kustomize_http_fetcher_memory_request: 93Mi
+      kustomize_http_fetcher_memory_limit: 1Gi
+      kustomize_transfers_triggerer_cpu_request: 1m
+      kustomize_transfers_triggerer_cpu_limit: 2000m
+      kustomize_transfers_triggerer_memory_request: 92Mi
+      kustomize_transfers_triggerer_memory_limit: 1Gi
 
       # Do not change the next two lines!
       kustomize_zalando_top_level_domain: do
@@ -145,6 +153,14 @@ replacements:
 - path: ../../../../../base/swpt-creditors/trade/worker/replacements/messages-flusher-cpu-limit.yaml
 - path: ../../../../../base/swpt-creditors/trade/worker/replacements/messages-flusher-memory-request.yaml
 - path: ../../../../../base/swpt-creditors/trade/worker/replacements/messages-flusher-memory-limit.yaml
+- path: ../../../../../base/swpt-creditors/trade/worker/replacements/http-fetcher-cpu-request.yaml
+- path: ../../../../../base/swpt-creditors/trade/worker/replacements/http-fetcher-cpu-limit.yaml
+- path: ../../../../../base/swpt-creditors/trade/worker/replacements/http-fetcher-memory-request.yaml
+- path: ../../../../../base/swpt-creditors/trade/worker/replacements/http-fetcher-memory-limit.yaml
+- path: ../../../../../base/swpt-creditors/trade/worker/replacements/transfers-triggerer-cpu-request.yaml
+- path: ../../../../../base/swpt-creditors/trade/worker/replacements/transfers-triggerer-cpu-limit.yaml
+- path: ../../../../../base/swpt-creditors/trade/worker/replacements/transfers-triggerer-memory-request.yaml
+- path: ../../../../../base/swpt-creditors/trade/worker/replacements/transfers-triggerer-memory-limit.yaml
 
 # # Uncomment the these lines to recover from the S3 backup. Once the
 # # data has been recovered successfully, the lines can be commented

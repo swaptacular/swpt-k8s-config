@@ -1,0 +1,14 @@
+source:
+  kind: ConfigMap
+  name: trade-workerconfig
+  fieldPath: metadata.annotations.kustomize_http_fetcher_cpu_limit
+targets:
+  - select:
+      kind: Deployment
+      name: trade-worker-http-fetcher
+    fieldPaths:
+      - spec.template.spec.containers.[name=http-fetcher].resources.limits.cpu
+      - spec.template.spec.initContainers.[name=await-migrations].resources.limits.cpu
+    options:
+      create: true
+

@@ -1,0 +1,14 @@
+source:
+  kind: ConfigMap
+  name: trade-workerconfig
+  fieldPath: metadata.annotations.kustomize_transfers_triggerer_memory_request
+targets:
+  - select:
+      kind: Deployment
+      name: trade-worker-transfers-triggerer
+    fieldPaths:
+      - spec.template.spec.containers.[name=transfers-triggerer].resources.requests.memory
+      - spec.template.spec.initContainers.[name=await-migrations].resources.requests.memory
+    options:
+      create: true
+
