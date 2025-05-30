@@ -49,3 +49,19 @@ spec:
         matchLabels:
           app.kubernetes.io/name: swpt-trade-worker
           app.kubernetes.io/part-of: swpt-trade
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-http-fetcher-access
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/component: http-fetcher
+      app.kubernetes.io/name: swpt-trade-worker
+      app.kubernetes.io/part-of: swpt-trade
+  policyTypes:
+  - Egress
+  egress:
+  - {}
