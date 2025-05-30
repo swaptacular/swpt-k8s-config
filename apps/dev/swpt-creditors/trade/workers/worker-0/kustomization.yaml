@@ -59,7 +59,7 @@ configMapGenerator:
       kustomize_messages_flusher_memory_limit: 1Gi
       kustomize_turn_roller_cpu_request: 1m
       kustomize_turn_roller_cpu_limit: 2000m
-      kustomize_turn_roller_memory_request: 1Gi
+      kustomize_turn_roller_memory_request: 1600Mi
       kustomize_turn_roller_memory_limit: 2Gi
 
       # Do not change the next two lines!
