@@ -90,12 +90,12 @@ configMapGenerator:
       #
       kustomize_login_webserver_cpu_request: 1m
       kustomize_login_webserver_cpu_limit: 1000m
-      kustomize_login_webserver_memory_request: 100Mi
+      kustomize_login_webserver_memory_request: 84Mi
       kustomize_login_webserver_memory_limit: 1Gi
 
       kustomize_login_flush_cpu_request: 1m
       kustomize_login_flush_cpu_limit: 1000m
-      kustomize_login_flush_memory_request: 100Mi
+      kustomize_login_flush_memory_request: 86Mi
       kustomize_login_flush_memory_limit: 1Gi
 
 # The number of replicas for each component. One replica works fine,
