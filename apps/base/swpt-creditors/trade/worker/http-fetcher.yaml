@@ -1,0 +1,96 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trade-worker-http-fetcher
+  labels:
+    app.kubernetes.io/component: http-fetcher
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: http-fetcher
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: http-fetcher
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                app.kubernetes.io/component: http-fetcher
+            topologyKey: kubernetes.io/hostname
+            matchLabelKeys:
+            - pod-template-hash
+      priorityClassName: shard-background-worker
+      containers:
+        - name: http-fetcher
+          image: swpt-trade
+          args: ['fetch_debtor_infos']
+          envFrom:
+            - secretRef:
+                name: db-owner-credentials
+              prefix: pg_
+            - secretRef:
+                name: broker-default-user
+              prefix: rmq_
+            - configMapRef:
+                name: swpt-trade-config
+            - configMapRef:
+                name: trade-workerconfig
+          env:
+            - name: SOLVER_POSTGRES_URL
+              value: "postgresql+psycopg://$(pg_username):$(pg_password)@trade-solver-db:5432/db"
+            - name: WORKER_POSTGRES_URL
+              value: "postgresql+psycopg://$(pg_username):$(pg_password)@$(pg_cluster_name):5432/db"
+            - name: PROTOCOL_BROKER_URL
+              value: "$(rmq_connection_string)"
+            - name: PROTOCOL_BROKER_QUEUE
+              value: "$(pg_cluster_name)"
+            - name: APP_LOG_LEVEL
+              value: warning
+            - name: APP_LOG_FORMAT
+              value: json
+      initContainers:
+        - name: await-migrations
+          image: swpt-trade
+          args: ["await_migrations"]
+          envFrom:
+            - secretRef:
+                name: db-owner-credentials
+              prefix: pg_
+            - configMapRef:
+                name: swpt-trade-config
+            - configMapRef:
+                name: trade-workerconfig
+          env:
+            - name: SOLVER_POSTGRES_URL
+              value: "postgresql+psycopg://$(pg_username):$(pg_password)@trade-solver-db:5432/db"
+            - name: WORKER_POSTGRES_URL
+              value: "postgresql+psycopg://$(pg_username):$(pg_password)@$(pg_cluster_name):5432/db"
+            - name: APP_LOG_LEVEL
+              value: warning
+            - name: APP_LOG_FORMAT
+              value: json
+          resources:
+            limits:
+              cpu: "1"
+              memory: 100Mi
+            requests:
+              cpu: 5m
+              memory: 100Mi
+
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: trade-worker-http-fetcher
+  labels:
+    app.kubernetes.io/component: http-fetcher
+spec:
+  maxUnavailable: 30%
+  unhealthyPodEvictionPolicy: AlwaysAllow
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: http-fetcher

@@ -74,6 +74,10 @@ replicas:
   count: 1
 - name: trade-worker-messages-consumer
   count: 1
+- name: trade-worker-http-fetcher
+  count: 1
+- name: trade-worker-transfers-triggerer
+  count: 1
 
 secretGenerator:
 - name: postgres.cluster-name.credentials.postgresql.acid.zalan.do
