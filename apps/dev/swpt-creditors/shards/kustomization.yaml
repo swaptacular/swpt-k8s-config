@@ -8,5 +8,4 @@ labels:
     app.kubernetes.io/part-of: swpt-creditors
 
 resources:
-- shard-0/
-- shard-1/
+- shard/
