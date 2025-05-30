@@ -8,6 +8,7 @@ targets:
       name: chores-consumer
     fieldPaths:
       - spec.template.spec.containers.[name=chores-consumer].resources.requests.memory
+      - spec.template.spec.initContainers.[name=await-migrations].resources.requests.memory
     options:
       create: true
 
