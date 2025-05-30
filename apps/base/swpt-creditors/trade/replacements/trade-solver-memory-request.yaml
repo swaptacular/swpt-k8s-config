@@ -8,6 +8,7 @@ targets:
       name: trade-solver
     fieldPaths:
       - spec.template.spec.containers.[name=trade-solver].resources.requests.memory
+      - spec.template.spec.initContainers.[name=configure].resources.requests.memory
     options:
       create: true
 

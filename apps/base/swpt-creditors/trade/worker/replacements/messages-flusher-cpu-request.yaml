@@ -8,5 +8,6 @@ targets:
       name: trade-worker-messages-flusher
     fieldPaths:
       - spec.template.spec.containers.[name=messages-flusher].resources.requests.cpu
+      - spec.template.spec.initContainers.[name=await-migrations].resources.requests.cpu
     options:
       create: true
