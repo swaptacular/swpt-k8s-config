@@ -8,6 +8,7 @@ targets:
       name: login-flush-activate-users
     fieldPaths:
       - spec.template.spec.containers.[name=flush-activate-users].resources.limits.cpu
+      - spec.template.spec.initContainers.[name=configure].resources.limits.cpu
     options:
       create: true
   - select:
@@ -15,5 +16,6 @@ targets:
       name: login-flush-deactivate-users
     fieldPaths:
       - spec.template.spec.containers.[name=flush-deactivate-users].resources.limits.cpu
+      - spec.template.spec.initContainers.[name=await-migrations].resources.limits.cpu
     options:
       create: true

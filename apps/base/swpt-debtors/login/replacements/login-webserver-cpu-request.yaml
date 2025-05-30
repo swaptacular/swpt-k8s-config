@@ -8,5 +8,6 @@ targets:
       name: login-web-server
     fieldPaths:
       - spec.template.spec.containers.[name=web-server].resources.requests.cpu
+      - spec.template.spec.initContainers.[name=await-migrations].resources.requests.cpu
     options:
       create: true
