@@ -53,7 +53,7 @@ configMapGenerator:
       kustomize_tasks_processor_cpu_request: 1m
       kustomize_tasks_processor_cpu_limit: 2000m
       kustomize_tasks_processor_memory_request: 302Mi
-      kustomize_tasks_processor_memory_limit: 2Gi
+      kustomize_tasks_processor_memory_limit: 600Mi
       kustomize_web_server_cpu_request: 1m
       kustomize_web_server_cpu_limit: 2000m
       kustomize_web_server_memory_request: 119Mi
