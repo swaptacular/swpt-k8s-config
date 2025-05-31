@@ -57,7 +57,7 @@ configMapGenerator:
       kustomize_web_server_cpu_request: 1m
       kustomize_web_server_cpu_limit: 2000m
       kustomize_web_server_memory_request: 119Mi
-      kustomize_web_server_memory_limit: 1Gi
+      kustomize_web_server_memory_limit: 200Mi
 
       # Do not change the next two lines!
       kustomize_zalando_top_level_domain: do
