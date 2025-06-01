@@ -59,6 +59,8 @@ spec:
                 secretKeyRef:
                   name: oauth2-clients.debtors-supervisor
                   key: CLIENT_ID
+            - name: SQA_OPT_OUT
+              value: "true"
             - name: APP_LOG_LEVEL
               value: warning
             - name: APP_LOG_FORMAT

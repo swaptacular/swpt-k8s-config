@@ -81,6 +81,8 @@ spec:
                 secretKeyRef:
                   name: pin-protection-secret
                   key: PIN_PROTECTION_SECRET
+            - name: SQA_OPT_OUT
+              value: "true"
             - name: APP_LOG_LEVEL
               value: warning
             - name: APP_LOG_FORMAT
