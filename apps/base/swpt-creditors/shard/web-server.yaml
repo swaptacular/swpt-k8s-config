@@ -35,16 +35,15 @@ spec:
             httpGet:
               path: /creditors/health/check/public
               port: http
-            periodSeconds: 10
-            initialDelaySeconds: 20
-          # livenessProbe:
-          #   httpGet:
-          #     path: /creditors/health/check/public
-          #     port: http
-          #   initialDelaySeconds: 30
-          #   periodSeconds: 30
-          #   timeoutSeconds: 10
-          #   failureThreshold: 5
+            initialDelaySeconds: 30
+          livenessProbe:
+            httpGet:
+              path: /creditors/health/check/public
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            timeoutSeconds: 10
+            failureThreshold: 5
           envFrom:
             - secretRef:
                 name: db-owner-credentials
