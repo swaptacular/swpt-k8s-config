@@ -5,10 +5,10 @@ configMapGenerator:
 - name: swpt-trade-config
   literals:
   # Determiene when new trading turns will be started.
-  - TURN_PERIOD=10m
+  - TURN_PERIOD=20m
   - TURN_PERIOD_OFFSET=0
-  - TURN_PHASE1_DURATION=1m
-  - TURN_PHASE2_DURATION=5m
+  - TURN_PHASE1_DURATION=2m
+  - TURN_PHASE2_DURATION=10m
   - TURN_CHECK_INTERVAL=5s
 
   # In order to be traded, currencies must be pegged to other
@@ -53,7 +53,7 @@ configMapGenerator:
   # scheduled outgoing transfers will be successfully performed. As a
   # rule of thumb, this period should be twice as big as the
   # TURN_PHASE2_DURATION period.
-  - TRANSFERS_HEALTHY_MAX_COMMIT_DELAY=2h
+  - TRANSFERS_HEALTHY_MAX_COMMIT_DELAY=20m
 
   # For each arranged transfer, a very small portion of the
   # transferred amount will be seized as a reward for performing a
