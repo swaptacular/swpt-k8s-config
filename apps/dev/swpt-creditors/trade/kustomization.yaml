@@ -68,6 +68,12 @@ configMapGenerator:
   # only for testing.
   - APP_VERIFY_SSL_CERTS=false
 
+  # The number of seconds between to polls of the solver's database
+  # for new or progressed turns. The default is 60 seconds, which
+  # normally should be OK, but when turns are started every few
+  # minutes (like during testing), this value should be decreased.
+  - APP_ROLL_WORKER_TURNS_WAIT=5.0
+
   options:
     labels:
       app.kubernetes.io/name: swpt-trade
