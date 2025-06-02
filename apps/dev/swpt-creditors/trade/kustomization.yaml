@@ -5,11 +5,11 @@ configMapGenerator:
 - name: swpt-trade-config
   literals:
   # Determiene when new trading turns will be started.
-  - TURN_PERIOD=1d
-  - TURN_PERIOD_OFFSET=2h
-  - TURN_PHASE1_DURATION=10m
-  - TURN_PHASE2_DURATION=1h
-  - TURN_CHECK_INTERVAL=60s    
+  - TURN_PERIOD=10m
+  - TURN_PERIOD_OFFSET=0
+  - TURN_PHASE1_DURATION=1m
+  - TURN_PHASE2_DURATION=5m
+  - TURN_CHECK_INTERVAL=5s
 
   # In order to be traded, currencies must be pegged to other
   # currencies, thus forming a "peg-tree". At the root of the peg-tree
@@ -19,14 +19,14 @@ configMapGenerator:
   # bigger than "MAX_DISTANCE_TO_BASE" will be ignored.
   - BASE_DEBTOR_INFO_LOCATOR=https://debtors.swaptacular.org/840
   - BASE_DEBTOR_ID=840
-  - MAX_DISTANCE_TO_BASE=10  
+  - MAX_DISTANCE_TO_BASE=10
 
   # The amount of every arranged trade must rounded to an integer
   # number. For this reason, trading small amounts may result in
   # signifficant rounding errors. To avoid this, trades for amounts
   # smaller than "MIN_TRADE_AMOUNT" will be not be arranged.
-  - MIN_TRADE_AMOUNT=10000  
-  
+  - MIN_TRADE_AMOUNT=1000
+
   # Collector accounts are used for arranging circular trades. All
   # collector accounts will have their creditor IDs between
   # "MIN_COLLECTOR_ID" and "MAX_COLLECTOR_ID". Normally, you would not
