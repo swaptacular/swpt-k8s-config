@@ -63,6 +63,11 @@ configMapGenerator:
   # amount will be seized.
   - TRANSFERS_AMOUNT_CUT=1e-3
 
+  # Whether to verify the SSL certificates of digital coin URLs.
+  # Normally, this should be "true". Setting it to "false" is useful
+  # only for testing.
+  - APP_VERIFY_SSL_CERTS=false
+
   options:
     labels:
       app.kubernetes.io/name: swpt-trade
