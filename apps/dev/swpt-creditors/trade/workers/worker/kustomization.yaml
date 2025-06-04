@@ -4,7 +4,7 @@ kind: Kustomization
 # This must be either an empty string, or a string starting with '-',
 # and followed by 0s or 1s. "-101" for example.
 #
-nameSuffix: "-0"
+nameSuffix: ""
 
 labels:
 - includeSelectors: true
@@ -14,7 +14,7 @@ labels:
     # label must be "worker-101". If "nameSuffix" is "", the value for
     # the label must be "worker".
     #
-    app.kubernetes.io/instance: worker-0
+    app.kubernetes.io/instance: worker
 
 configMapGenerator:
 - name: trade-workerconfig
@@ -23,7 +23,7 @@ configMapGenerator:
   # example, if "nameSuffix" is "-101", the routing key must be
   # "1.0.1.#". If "nameSuffix" is "", the routing key must be "#".
   #
-  - PROTOCOL_BROKER_QUEUE_ROUTING_KEY=0.#
+  - PROTOCOL_BROKER_QUEUE_ROUTING_KEY=#
 
   # Worker configuration settings which you may want to change:
   #
