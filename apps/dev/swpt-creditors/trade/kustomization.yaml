@@ -145,7 +145,7 @@ secretGenerator:
   
 resources:
 - postgres-cluster.yaml
-- workers/
+# - workers/
 - ../../../base/swpt-creditors/trade/
 
 patches:
