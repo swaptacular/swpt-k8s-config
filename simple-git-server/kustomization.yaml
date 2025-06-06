@@ -18,3 +18,11 @@ secretGenerator:
 
 resources:
   - base/
+
+# You may edit the following lines to specify a different container
+# image repository. Also, it is recommended to use an image digest
+# instead of an image tag.
+images:
+- name: docker.io/rockstorm/git-server:2.47
+  newName: docker.io/rockstorm/git-server
+  newTag: "2.47"

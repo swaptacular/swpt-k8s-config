@@ -6,7 +6,10 @@ Swaptacular GitOps repo for deploying Kubernetes clusters
 **Note**: In this example, the name of the user is `johndoe`.
 
 First you need to install a Git server to your Kubernetes cluster,
-which will contain a copy of your GitOps repository:
+which will contain a copy of your GitOps repository. Note that you may
+want to edit the `simple-git-server/kustomization.yaml` file in order
+to specify custom container image repository and the image tag (or
+digest) that must be used for the Git server:
 
 ``` console
 $ cd simple-git-server/
@@ -130,7 +133,11 @@ To ssh://127.0.0.1:2222/srv/git/fluxcd.git
    59b1758..b019dfe  master -> master
 ```
 
-To bootstraps FluxCD from the Git server on your Kubernetes cluster:
+The next step is to bootstraps FluxCD from the Git server on your
+Kubernetes cluster. Note that when you execute the `flux bootstrap`
+command, you may want to use the `--registry` option in order to
+specify a custom container image registry where the Flux controller
+images are published:
 
 ``` console
 $ sudo sh -c "sed -i '/git-server.simple-git-server.svc.cluster.local/d' /etc/hosts"
