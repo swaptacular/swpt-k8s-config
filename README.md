@@ -8,8 +8,8 @@ Swaptacular GitOps repo for deploying Kubernetes clusters
 First you need to install a Git server to your Kubernetes cluster,
 which will contain a copy of your GitOps repository. Note that you may
 want to edit the `simple-git-server/kustomization.yaml` file in order
-to specify custom container image repository and the image tag (or
-digest) that must be used for the Git server:
+to specify custom container image repository and image tag (or digest)
+that must be used for the Git server:
 
 ``` console
 $ cd simple-git-server/
