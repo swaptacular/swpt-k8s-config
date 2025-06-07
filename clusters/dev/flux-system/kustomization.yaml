@@ -3,3 +3,44 @@ kind: Kustomization
 resources:
 - gotk-components.yaml
 - gotk-sync.yaml
+
+patches:
+# This patch specifies Flux source-controller's container image.
+#
+- patch: |
+    - op: replace
+      path: /spec/template/spec/containers/0/image
+      value: ghcr.io/fluxcd/source-controller:v1.4.1
+  target:
+    kind: Deployment
+    name: source-controller
+
+# This patch specifies Flux kustomize-controller's container image.
+#
+- patch: |
+    - op: replace
+      path: /spec/template/spec/containers/0/image
+      value: ghcr.io/fluxcd/kustomize-controller:v1.4.0
+  target:
+    kind: Deployment
+    name: kustomize-controller
+
+# This patch specifies Flux helm-controller's container image.
+#
+- patch: |
+    - op: replace
+      path: /spec/template/spec/containers/0/image
+      value: ghcr.io/fluxcd/helm-controller:v1.1.0
+  target:
+    kind: Deployment
+    name: helm-controller
+
+# This patch specifies Flux notification-controller's container image.
+#
+- patch: |
+    - op: replace
+      path: /spec/template/spec/containers/0/image
+      value: ghcr.io/fluxcd/notification-controller:v1.4.0
+  target:
+    kind: Deployment
+    name: notification-controller
