@@ -361,6 +361,21 @@ images:
   newTag: 1.26.3-alpine3.20
 
 patches:
+# This patch specifies the ingress-nginx's container image.
+#
+- patch: |
+    - op: replace
+      path: /spec/postRenderers/kustomize/images
+      value:
+        - name: registry.k8s.io/ingress-nginx/controller:v1.12.1@sha256:d2fbc4ec70d8aa2050dd91a91506e998765e86c96f32cffb56c503c9c34eed5b
+          newName: registry.k8s.io/ingress-nginx/controller
+          digest: sha256:d2fbc4ec70d8aa2050dd91a91506e998765e86c96f32cffb56c503c9c34eed5b
+  target:
+    group: helm.toolkit.fluxcd.io
+    version: v2
+    kind: HelmRelease
+    name: ingress-nginx
+
 # This patch changes the number of Nginx servers' replicas. One
 # replica works fine, but to have high-availability, should be at
 # least 2.

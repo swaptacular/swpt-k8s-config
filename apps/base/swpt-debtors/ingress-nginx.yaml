@@ -11,6 +11,9 @@ spec:
         kind: GitRepository
         name: flux-system
         namespace: flux-system
+  postRenderers:
+    kustomize:
+      images: []
 
   # NOTE: Bellow, "namespace" will be automatically replaced with the
   # name of the current namespace.
