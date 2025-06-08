@@ -361,7 +361,7 @@ remote: Resolving deltas: 100% (5/5), completed with 4 local objects.
 To github.com:johndoe/swpt-k8s-config.git
    dca1e7a..175b62a  master -> master
 
-$ git push k8s-repo master  # Pushes the updated secret to Kubernetes cluster.
+$ git push k8s-repo master  # Pushes the updated secret to the Kubernetes cluster.
 Enumerating objects: 11, done.
 Counting objects: 100% (11/11), done.
 Delta compression using up to 4 threads
