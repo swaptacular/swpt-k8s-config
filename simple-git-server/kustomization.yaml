@@ -26,9 +26,9 @@ resources:
   - base/
 
 # You may edit the following lines to specify a different container
-# image repository. Also, it is recommended to use an image digest
+# image repository. Also, it is recommended to specify an image digest
 # instead of an image tag.
 images:
 - name: docker.io/rockstorm/git-server:2.47
   newName: docker.io/rockstorm/git-server
-  newTag: "2.47"
+  digest: sha256:0b2f02446b2e3824f1fe17b8ba57f7d732b8ad440f7c248f007e6fc38b5d8935
