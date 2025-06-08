@@ -16,6 +16,20 @@ configuration:
     pdb_master_label_selector: false
     pod_environment_configmap: "postgres-operator/spilo-env-config"
     pod_environment_secret: "spilo-env-secret"
+    pod_service_account_name: postgres-pod
+    pod_service_account_definition: '
+      {
+        "apiVersion": "v1",
+        "kind": "ServiceAccount",
+        "metadata": {
+          "name": "postgres-pod"
+        },
+        "imagePullSecrets": [
+          {
+            "name": "regcreds"
+          }
+        ]
+      }'
     inherited_labels:
     - app.kubernetes.io/name
     - app.kubernetes.io/instance
