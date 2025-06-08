@@ -7,5 +7,5 @@ labels:
     app.kubernetes.io/name: swpt-debtors-shard
     app.kubernetes.io/part-of: swpt-debtors
 
-# resources:
-# - shard/
+resources:
+- shard/
