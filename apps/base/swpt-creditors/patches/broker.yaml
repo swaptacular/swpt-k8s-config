@@ -34,6 +34,14 @@
             containers:
             - name: rabbitmq
 
+- op: test
+  path: /spec/imagePullSecrets
+  value: null
+- op: add
+  path: /spec/imagePullSecrets
+  value:
+    - name: regcreds
+
 - op: add
   path: /spec/rabbitmq/additionalPlugins/0
   value: rabbitmq_random_exchange
