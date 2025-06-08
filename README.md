@@ -114,6 +114,7 @@ $ kubectl apply -k .  # Installs a simple Git server to your Kubernetes cluster.
 namespace/simple-git-server configured
 configmap/sshd-config-t9g57f6875 configured
 secret/host-keys configured
+secret/regcreds configured
 service/git-server configured
 persistentvolumeclaim/git-repositories configured
 deployment.apps/simple-git-server configured
@@ -282,12 +283,12 @@ Now, when team members clone the GitOps repository, they will be able
 to import the public PGP key, and create a SOPS configuration file:
 
 ``` console
-$ gpg --import clusters/dev/.sops.pub.asc  # Imports the public PGP key.
+$ gpg --import $CLUSTER_DIR/.sops.pub.asc  # Imports the public PGP key.
 gpg: key 9F85AF312DC6F642: "clusters/dev (flux secrets)" not changed
 gpg: Total number processed: 1
 gpg:              unchanged: 1
 
-$ cp clusters/dev/.sops.yaml .  # Creates a SOPS configuration file.
+$ cp $CLUSTER_DIR/.sops.yaml .  # Creates a SOPS configuration file.
 ```
 
 It is **highly recommended** that you create a backup copy of the PGP
@@ -337,14 +338,15 @@ gpg:       secret keys read: 1
 gpg:  secret keys unchanged: 1
 ```
 
-If you use a private container image registry, you will have to
-encrypt your "image pull secret" file:
+Now that you have configured SOPS, if you use a private container
+image registry, you will have to encrypt your "image pull secret"
+file:
 
 ``` console
 $ sops encrypt --input-type binary simple-git-server/secret-files/regcreds.json > secrets/regcreds.json.encrypted
 ```
 
-Finally, you should delete the unencrypted secrets from the
+Finally, do not forget to delete the unencrypted secrets from the
 `simple-git-server` directory:
 
 ``` console
