@@ -52,3 +52,11 @@
   path: /spec/args
   value:
     - "--dbfilename=snapshot"
+
+- op: test
+  path: /spec/imagePullSecrets
+  value: null
+- op: add
+  path: /spec/imagePullSecrets
+  value:
+    - name: regcreds
