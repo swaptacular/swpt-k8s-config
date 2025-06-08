@@ -360,6 +360,17 @@ Total 7 (delta 5), reused 0 (delta 0), pack-reused 0
 remote: Resolving deltas: 100% (5/5), completed with 4 local objects.
 To github.com:johndoe/swpt-k8s-config.git
    dca1e7a..175b62a  master -> master
+
+$ git push k8s-repo master  # Pushes the updated secret to Kubernetes cluster.
+Enumerating objects: 11, done.
+Counting objects: 100% (11/11), done.
+Delta compression using up to 4 threads
+Compressing objects: 100% (7/7), done.
+Writing objects: 100% (7/7), 1.94 KiB | 662.00 KiB/s, done.
+Total 7 (delta 5), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (5/5), completed with 4 local objects.
+To github.com:johndoe/swpt-k8s-config.git
+   dca1e7a..175b62a  master -> master
 ```
 
 Finally, do not forget to delete the unencrypted secrets from the
