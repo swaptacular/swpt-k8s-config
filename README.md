@@ -80,7 +80,7 @@ Compressing objects: 100% (7/7), done.
 Writing objects: 100% (7/7), 1.94 KiB | 662.00 KiB/s, done.
 Total 7 (delta 5), reused 0 (delta 0), pack-reused 0
 remote: Resolving deltas: 100% (5/5), completed with 4 local objects.
-To github.com:epandurski/swpt-k8s-config.git
+To github.com:johndoe/swpt-k8s-config.git
    dca1e7a..175b62a  master -> master
 
 $ ./generate-secret-files.sh  # Generates an SSH private/public key pair.
@@ -275,7 +275,7 @@ Compressing objects: 100% (4/4), done.
 Writing objects: 100% (5/5), 3.93 KiB | 1.31 MiB/s, done.
 Total 5 (delta 2), reused 0 (delta 0), pack-reused 0
 remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
-To github.com:epandurski/swpt-k8s-config.git
+To github.com:johndoe/swpt-k8s-config.git
    c46b496..1c50aeb  master -> master
 ```
 
@@ -340,10 +340,26 @@ gpg:  secret keys unchanged: 1
 
 Now that you have configured SOPS, if you use a private container
 image registry, you will have to encrypt your "image pull secret"
-file:
+file. Skip this step if you DO NOT use a private container image
+registry:
 
 ``` console
 $ sops encrypt --input-type binary simple-git-server/secret-files/regcreds.json > secrets/regcreds.json.encrypted
+$ git add secrets/regcreds.json.encrypted
+$ git commit -m 'Update secrets/regcreds.json.encrypted'
+[master 2f1bd3c] Update secrets/regcreds.json.encrypted
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+$ git push origin master  # Pushes the updated secret to the GitOps repository.
+Enumerating objects: 11, done.
+Counting objects: 100% (11/11), done.
+Delta compression using up to 4 threads
+Compressing objects: 100% (7/7), done.
+Writing objects: 100% (7/7), 1.94 KiB | 662.00 KiB/s, done.
+Total 7 (delta 5), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (5/5), completed with 4 local objects.
+To github.com:johndoe/swpt-k8s-config.git
+   dca1e7a..175b62a  master -> master
 ```
 
 Finally, do not forget to delete the unencrypted secrets from the
