@@ -4,43 +4,18 @@ resources:
 - gotk-components.yaml
 - gotk-sync.yaml
 
-patches:
-# This patch specifies Flux source-controller's container image.
+# OCI images to use for the different FluxCD containers:
 #
-- patch: |
-    - op: replace
-      path: /spec/template/spec/containers/0/image
-      value: ghcr.io/fluxcd/source-controller:v1.4.1
-  target:
-    kind: Deployment
-    name: source-controller
-
-# This patch specifies Flux kustomize-controller's container image.
-#
-- patch: |
-    - op: replace
-      path: /spec/template/spec/containers/0/image
-      value: ghcr.io/fluxcd/kustomize-controller:v1.4.0
-  target:
-    kind: Deployment
-    name: kustomize-controller
-
-# This patch specifies Flux helm-controller's container image.
-#
-- patch: |
-    - op: replace
-      path: /spec/template/spec/containers/0/image
-      value: ghcr.io/fluxcd/helm-controller:v1.1.0
-  target:
-    kind: Deployment
-    name: helm-controller
-
-# This patch specifies Flux notification-controller's container image.
-#
-- patch: |
-    - op: replace
-      path: /spec/template/spec/containers/0/image
-      value: ghcr.io/fluxcd/notification-controller:v1.4.0
-  target:
-    kind: Deployment
-    name: notification-controller
+images:
+- name: ghcr.io/fluxcd/source-controller:v1.4.1
+  newName: ghcr.io/fluxcd/source-controller
+  newTag: v1.4.1
+- name: ghcr.io/fluxcd/kustomize-controller:v1.4.0
+  newName: ghcr.io/fluxcd/kustomize-controller
+  newTag: v1.4.0
+- name: ghcr.io/fluxcd/helm-controller:v1.1.0
+  newName: ghcr.io/fluxcd/helm-controller
+  newTag: v1.1.0
+- name: ghcr.io/fluxcd/notification-controller:v1.4.0
+  newName: ghcr.io/fluxcd/notification-controller
+  newTag: v1.4.0
