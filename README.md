@@ -190,7 +190,8 @@ $ cat /etc/hosts  # The internal name of the Git-server has been added to your h
 127.0.0.1 localhost
 127.0.0.1 git-server.simple-git-server.svc.cluster.local
 
-$ export CLUSTER_DIR=clusters/dev  # one of the subdirectories in the "./clusters" directory
+$ export CLUSTER_NAME=dev  # one of the subdirectories in the "./clusters/" directory
+$ export CLUSTER_DIR=clusters/$CLUSTER_NAME
 
 $ flux bootstrap git --url=ssh://git@git-server.simple-git-server.svc.cluster.local:2222/srv/git/fluxcd.git --branch=master --private-key-file=secret-files/ssh_host_rsa_key --path=$CLUSTER_DIR --image-pull-secret regcreds --registry ghcr.io/fluxcd
 ...
@@ -344,10 +345,10 @@ file. Skip this step if you DO NOT use a private container image
 registry:
 
 ``` console
-$ sops encrypt --input-type binary simple-git-server/secret-files/regcreds.json > secrets/regcreds.json.encrypted
-$ git add secrets/regcreds.json.encrypted
-$ git commit -m 'Update secrets/regcreds.json.encrypted'
-[master 2f1bd3c] Update secrets/regcreds.json.encrypted
+$ sops encrypt --input-type binary simple-git-server/secret-files/regcreds.json > apps/$CLUSTER_NAME/regcreds.json.encrypted
+$ git add apps/$CLUSTER_NAME/regcreds.json.encrypted
+$ git commit -m 'Update apps/dev/regcreds.json.encrypted'
+[master 2f1bd3c] Update apps/dev/regcreds.json.encrypted
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 $ git push origin master  # Pushes the updated secret to the GitOps repository.

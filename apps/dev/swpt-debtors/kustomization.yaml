@@ -126,6 +126,13 @@ secretGenerator:
       app.kubernetes.io/instance: swpt
   type: Opaque
 
+- name: regcreds
+  files:
+  - ".dockerconfigjson=../regcreds.json.encrypted"
+  options:
+    disableNameSuffixHash: true
+  type: kubernetes.io/dockerconfigjson
+
 configMapGenerator:
 - name: debtors-agent-config
   literals:

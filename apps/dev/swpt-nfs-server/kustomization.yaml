@@ -33,6 +33,13 @@ secretGenerator:
 
   type: Opaque
 
+- name: regcreds
+  files:
+  - ".dockerconfigjson=../regcreds.json.encrypted"
+  options:
+    disableNameSuffixHash: true
+  type: kubernetes.io/dockerconfigjson
+
 configMapGenerator:
 - name: nfs-server-config
   literals:
