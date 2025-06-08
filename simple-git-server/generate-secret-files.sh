@@ -4,6 +4,7 @@ set -o pipefail
 
 mkdir secret-files || true
 ssh-keygen -f secret-files/ssh_host_rsa_key -N ''
+[[ -e secret-files/regcreds.json ]] || echo '{"auths": {}}'> secret-files/regcreds.json
 
 echo
 echo '****************************************************************'

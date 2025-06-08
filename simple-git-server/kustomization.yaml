@@ -15,6 +15,12 @@ secretGenerator:
       - secret-files/ssh_host_rsa_key
     options:
       disableNameSuffixHash: true
+  - name: regcreds
+    files:
+      - ".dockerconfigjson=secret-files/regcreds.json"
+    options:
+      disableNameSuffixHash: true
+    type: kubernetes.io/dockerconfigjson
 
 resources:
   - base/

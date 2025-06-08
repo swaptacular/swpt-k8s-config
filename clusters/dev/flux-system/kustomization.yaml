@@ -4,8 +4,9 @@ resources:
 - gotk-components.yaml
 - gotk-sync.yaml
 
-# OCI images to use for the different FluxCD containers:
-#
+# You may edit the following lines to specify image digests instead of
+# image tags for the FluxCD images (using "digest: <the digest>"
+# instead of "newTag: <the tag>").
 images:
 - name: ghcr.io/fluxcd/source-controller:v1.4.1
   newName: ghcr.io/fluxcd/source-controller

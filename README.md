@@ -3,19 +3,58 @@ Swaptacular GitOps repo for deploying Kubernetes clusters
 
 ## Bootstrapping the GitOps
 
+First you need to install a Git server to your Kubernetes cluster,
+which will contain a copy of your GitOps repository.
+
+If you want to use a private container image registry (recommended for
+production deployments), you will have to prepare an "image pull
+secret" containing the credentials for pulling from your private
+registry. Here is how to do this:
+
 **Note**: In this example, the name of the user is `johndoe`.
 
-First you need to install a Git server to your Kubernetes cluster,
-which will contain a copy of your GitOps repository. Note that you may
-want to edit the `simple-git-server/kustomization.yaml` file in order
-to specify custom container image repository and image tag (or digest)
-that must be used for the Git server:
-
 ``` console
+$ docker login registry.example.com  # Enter the name of your private registry here.
+Username: johndoe
+Password:
+WARNING! Your password will be stored unencrypted in /home/johndoe/.docker/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+Login Succeeded
+
+$ cat ~/.docker/config.json
+{
+	"auths": {
+		"registry.example.com": {
+			"auth": "am9obmRvZToxMjMK"
+		}
+	}
+}
+
 $ cd simple-git-server/
 $ pwd
 /home/johndoe/swpt-k8s-config/simple-git-server
 
+$ cp ~/.docker/config.json secret-files/regcreds.json
+$ cat secret-files/regcreds.json  # contains the "image pull secret"
+{
+	"auths": {
+		"registry.example.com": {
+			"auth": "am9obmRvZToxMjMK"
+		}
+	}
+}
+```
+
+You will also need to change the `simple-git-server/kustomization.yaml`
+file to use your private container image registry for the Git server's
+image.
+
+If you DO NOT want to use a private container image registry, you may
+skip the previous steps, and start installing the Git server:
+
+``` console
 $ sed -i -E '/^([^#].*)?$/d' trusted_user_ca_keys  # Removes existing trusted CA keys, preserves comments.
 
 $ export ROOT_CA_CRT_FILE=~/swpt_ca_scripts/root-ca.crt  # the path to your Swaptacular node's self-signed root-CA certificate
@@ -134,10 +173,12 @@ To ssh://127.0.0.1:2222/srv/git/fluxcd.git
 ```
 
 The next step is to bootstraps FluxCD from the Git server on your
-Kubernetes cluster. Note that when you execute the `flux bootstrap`
-command, you may want to use the `--registry` option in order to
-specify a custom container image registry where the Flux controller
-images are published:
+Kubernetes cluster. If you want to use your private container image
+registry for the FluxCD images, you will need to specify your registry
+in the `--registry` option (the default is "ghcr.io/fluxcd"), and add
+the `--registry-creds username:password` option in the `flux
+bootstrap` command, giving the username and the password for your
+private container image registry.
 
 ``` console
 $ sudo sh -c "sed -i '/git-server.simple-git-server.svc.cluster.local/d' /etc/hosts"
@@ -150,13 +191,11 @@ $ cat /etc/hosts  # The internal name of the Git-server has been added to your h
 
 $ export CLUSTER_DIR=clusters/dev  # one of the subdirectories in the "./clusters" directory
 
-$ flux bootstrap git --url=ssh://git@git-server.simple-git-server.svc.cluster.local:2222/srv/git/fluxcd.git --branch=master --private-key-file=secret-files/ssh_host_rsa_key --path=$CLUSTER_DIR
+$ flux bootstrap git --url=ssh://git@git-server.simple-git-server.svc.cluster.local:2222/srv/git/fluxcd.git --branch=master --private-key-file=secret-files/ssh_host_rsa_key --path=$CLUSTER_DIR --image-pull-secret regcreds --registry ghcr.io/fluxcd
 ...
 ...
 Configuring the cluster to synchronize with the repository
 Flux controllers installed and configured successfully
-
-$ ./delete-secret-files.sh  # The SSH secrets have already been copied to the cluster.
 ```
 
 The only remaining task is to configure secrets management with
@@ -298,3 +337,17 @@ gpg:       secret keys read: 1
 gpg:  secret keys unchanged: 1
 ```
 
+If you use a private container image registry, you will have to
+encrypt your "image pull secret" file:
+
+``` console
+$ sops encrypt --input-type binary simple-git-server/secret-files/regcreds.json > secrets/regcreds.json.encrypted
+```
+
+Finally, you should delete the unencrypted secrets from the
+`simple-git-server` directory:
+
+``` console
+$ cd simple-git-server
+$ ./delete-secret-files.sh  # The secrets have already been copied to the cluster.
+```

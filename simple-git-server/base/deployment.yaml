@@ -47,6 +47,8 @@ spec:
               subPath: ssh_host_rsa_key.pub
             - mountPath: "/tmp/host-keys/"
               name: host-keys
+      imagePullSecrets:
+        - name: regcreds
       volumes:
         - name: git-repositories
           persistentVolumeClaim:
