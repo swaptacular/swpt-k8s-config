@@ -11,6 +11,6 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./mailhog/dev
+  path: ./testing-tools/mailhog
   prune: true
   timeout: 5m0s

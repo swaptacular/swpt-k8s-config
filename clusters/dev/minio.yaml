@@ -11,6 +11,6 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./minio/dev
+  path: ./testing-tools/minio-tenant
   prune: true
   timeout: 5m0s
