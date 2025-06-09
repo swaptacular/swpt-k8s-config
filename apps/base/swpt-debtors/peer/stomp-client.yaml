@@ -24,6 +24,8 @@ spec:
         app.kubernetes.io/instance: SWPT_NODE_ID
     spec:
       priorityClassName: smp-receiver
+      imagePullSecrets:
+        - name: regcreds
       containers:
         - name: stomp-client
           image: swpt-stomp

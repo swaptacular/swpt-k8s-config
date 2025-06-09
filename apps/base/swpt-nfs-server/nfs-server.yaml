@@ -20,6 +20,8 @@ spec:
         app.kubernetes.io/part-of: swpt-nodeset
     spec:
       priorityClassName: critical-database
+      imagePullSecrets:
+        - name: regcreds
       containers:
         - name: nfs-server
           image: swpt-nfs-server

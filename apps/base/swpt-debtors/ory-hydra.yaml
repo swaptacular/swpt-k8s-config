@@ -180,6 +180,8 @@ spec:
     spec:
       terminationGracePeriodSeconds: 60
       priorityClassName: oauth2-server
+      imagePullSecrets:
+        - name: regcreds
       containers:
         - name: hydra-maester
           image: oryd-hydra-maester
@@ -270,6 +272,8 @@ spec:
       serviceAccountName: swpt-hydra
       automountServiceAccountToken: false
       terminationGracePeriodSeconds: 60
+      imagePullSecrets:
+        - name: regcreds
       containers:
         - name: hydra
           image: oryd-hydra
@@ -455,6 +459,8 @@ spec:
             - name: hydra-config-volume
               configMap:
                 name: swpt-hydra
+          imagePullSecrets:
+            - name: regcreds
           containers:
             - name: janitor
               image: oryd-hydra
@@ -602,6 +608,8 @@ spec:
       serviceAccountName: swpt-hydra-job
       automountServiceAccountToken: true
       priorityClassName: oauth2-server
+      imagePullSecrets:
+        - name: regcreds
       containers:
       - name: infinite-loop
         image: oryd-hydra

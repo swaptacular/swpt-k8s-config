@@ -21,6 +21,8 @@ spec:
         app: login-flush-activate-users
     spec:
       priorityClassName: login-webserver
+      imagePullSecrets:
+        - name: regcreds
       containers:
         - name: flush-activate-users
           image: swpt-login

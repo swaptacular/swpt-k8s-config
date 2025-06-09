@@ -28,6 +28,8 @@ spec:
             matchLabelKeys:
             - pod-template-hash
       priorityClassName: user-ui-webserver
+      imagePullSecrets:
+        - name: regcreds
       containers:
         - name: swpt-debtors-ui
           image: swpt-debtors-ui

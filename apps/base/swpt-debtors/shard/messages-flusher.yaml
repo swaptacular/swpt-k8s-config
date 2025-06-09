@@ -24,6 +24,8 @@ spec:
             matchLabelKeys:
             - pod-template-hash
       priorityClassName: shard-background-worker
+      imagePullSecrets:
+        - name: regcreds
       containers:
         - name: messages-flusher
           image: swpt-debtors

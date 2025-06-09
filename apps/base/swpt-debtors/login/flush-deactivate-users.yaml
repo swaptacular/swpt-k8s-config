@@ -21,6 +21,8 @@ spec:
         app: login-flush-deactivate-users
     spec:
       priorityClassName: login-webserver
+      imagePullSecrets:
+        - name: regcreds
       containers:
         - name: flush-deactivate-users
           image: swpt-login

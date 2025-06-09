@@ -28,6 +28,8 @@ spec:
             matchLabelKeys:
             - pod-template-hash
       priorityClassName: webapi-apiproxy
+      imagePullSecrets:
+        - name: regcreds
       containers:
         - name: apiproxy
           image: swpt-apiproxy
