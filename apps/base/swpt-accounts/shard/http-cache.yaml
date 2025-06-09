@@ -23,6 +23,8 @@ spec:
                 app.kubernetes.io/component: http-cache
             topologyKey: kubernetes.io/hostname
       priorityClassName: webapi-shard
+      imagePullSecrets:
+        - name: regcreds
       containers:
         - name: http-cache
           image: nginx

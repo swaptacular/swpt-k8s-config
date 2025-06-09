@@ -17,6 +17,8 @@ spec:
         app.kubernetes.io/component: tasks-processor
     spec:
       priorityClassName: shard-background-worker
+      imagePullSecrets:
+        - name: regcreds
       containers:
         - name: tasks-processor
           image: swpt-accounts
