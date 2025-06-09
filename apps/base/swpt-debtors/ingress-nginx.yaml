@@ -11,22 +11,25 @@ spec:
         kind: GitRepository
         name: flux-system
         namespace: flux-system
-  postRenderers:
-  - kustomize:
-      images: []
 
   # NOTE: Bellow, "namespace" will be automatically replaced with the
-  # name of the current namespace.
+  # name of the current namespace. However, this can not be done for
+  # the `values/tcp` section, because for some reason Kustomize seems
+  # to be unable to handle numerical properties (like "1234"). For
+  # this reason, the `values/tcp` section must be "manually" patched.
   #
   targetNamespace: namespace
   releaseName: namespace
   values:
-    global:
-      image:
-        registry: registry.k8s.io
+    imagePullSecrets:
+      - name: regcreds
     tcp:
       "1234": "namespace/stomp-server:stomp"
     controller:
+      image: {}
+      admissionWebhooks:
+        patch:
+          image: {}
       replicaCount: 2
       maxUnavailable: 30%
       unhealthyPodEvictionPolicy: AlwaysAllow
