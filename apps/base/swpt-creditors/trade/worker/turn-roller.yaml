@@ -17,6 +17,8 @@ spec:
         app.kubernetes.io/component: turn-roller
     spec:
       priorityClassName: shard-background-worker
+      imagePullSecrets:
+        - name: regcreds
       containers:
         - name: turn-roller
           image: swpt-trade

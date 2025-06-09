@@ -28,6 +28,8 @@ spec:
             matchLabelKeys:
             - pod-template-hash
       priorityClassName: smp-receiver
+      imagePullSecrets:
+        - name: regcreds
       containers:
         - name: stomp-server
           image: swpt-stomp

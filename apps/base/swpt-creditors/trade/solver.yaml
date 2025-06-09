@@ -23,6 +23,8 @@ spec:
         app: solver
     spec:
       priorityClassName: trade-solver
+      imagePullSecrets:
+        - name: regcreds
       containers:
         - name: trade-solver
           image: swpt-trade

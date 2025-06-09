@@ -32,6 +32,8 @@ spec:
             matchLabelKeys:
             - pod-template-hash
       priorityClassName: login-webserver
+      imagePullSecrets:
+        - name: regcreds
       containers:
         - name: web-server
           image: swpt-login

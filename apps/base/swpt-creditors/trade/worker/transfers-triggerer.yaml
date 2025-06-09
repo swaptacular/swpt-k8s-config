@@ -24,6 +24,8 @@ spec:
             matchLabelKeys:
             - pod-template-hash
       priorityClassName: shard-background-worker
+      imagePullSecrets:
+        - name: regcreds
       containers:
         - name: transfers-triggerer
           image: swpt-trade
