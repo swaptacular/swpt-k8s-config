@@ -355,10 +355,12 @@ registry:
 
 ``` console
 $ sops encrypt --input-type binary simple-git-server/secret-files/regcreds.json > apps/$CLUSTER_NAME/regcreds.json.encrypted
+$ sops encrypt --input-type binary simple-git-server/secret-files/regcreds.json > infrastructure/$CLUSTER_NAME/regcreds.json.encrypted
 $ git add apps/$CLUSTER_NAME/regcreds.json.encrypted
-$ git commit -m 'Update apps/dev/regcreds.json.encrypted'
-[master 2f1bd3c] Update apps/dev/regcreds.json.encrypted
- 1 file changed, 1 insertion(+), 1 deletion(-)
+$ git add infrastructure/$CLUSTER_NAME/regcreds.json.encrypted
+$ git commit -m 'Update regcreds'
+[master 2f1bd3c] Update regcreds
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
 $ git push origin master  # Pushes the updated secret to the GitOps repository.
 Enumerating objects: 11, done.
