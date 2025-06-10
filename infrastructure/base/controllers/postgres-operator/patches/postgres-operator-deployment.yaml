@@ -6,3 +6,5 @@ spec:
   template:
     spec:
       priorityClassName: critical-operator
+      imagePullSecrets:
+        - name: regcreds
