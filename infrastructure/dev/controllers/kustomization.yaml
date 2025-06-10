@@ -1,5 +1,77 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
+# You may edit this section to specify different OCI images to use for
+# the controllers. Also, it is recommended to specify an image digest
+# instead of an image tag ("digest: <DIGEST>", instead of "newTag:
+# <TAG>").
+#
+images:
+
+# Postgres operator:
+- name: ghcr.io/zalando/postgres-operator:v1.14.0
+  newName: ghcr.io/zalando/postgres-operator
+  newTag: v1.14.0
+
+# DragonflyDB operator:
+- name: docker.dragonflydb.io/dragonflydb/operator:v1.1.11
+  newName: docker.dragonflydb.io/dragonflydb/operator
+  newTag: v1.1.11
+- name: quay.io/brancz/kube-rbac-proxy:v0.16.0
+  newName: quay.io/brancz/kube-rbac-proxy
+  newTag: v0.16.0
+
+# Cert-manager:
+- name: quay.io/jetstack/cert-manager-cainjector:v1.17.2
+  newName: quay.io/jetstack/cert-manager-cainjector
+  newTag: v1.17.2
+- name: quay.io/jetstack/cert-manager-controller:v1.17.2
+  newName: quay.io/jetstack/cert-manager-controller
+  newTag: v1.17.2
+- name: quay.io/jetstack/cert-manager-webhook:v1.17.2
+  newName: quay.io/jetstack/cert-manager-webhook
+  newTag: v1.17.2
+
+# RabbitMQ operators:
+- name: rabbitmqoperator/cluster-operator:2.12.1
+  newName: rabbitmqoperator/cluster-operator
+  newTag: 2.12.1
+- name: rabbitmqoperator/messaging-topology-operator:1.17.0
+  newName: rabbitmqoperator/messaging-topology-operator
+  newTag: 1.17.0
+
 resources:
 - ../../base/controllers/
+
+secretGenerator:
+- name: regcreds
+  namespace: cert-manager
+  files:
+  - ".dockerconfigjson=../regcreds.json.encrypted"
+  options:
+    disableNameSuffixHash: true
+  type: kubernetes.io/dockerconfigjson
+
+- name: regcreds
+  namespace: dragonfly-operator-system
+  files:
+  - ".dockerconfigjson=../regcreds.json.encrypted"
+  options:
+    disableNameSuffixHash: true
+  type: kubernetes.io/dockerconfigjson
+
+- name: regcreds
+  namespace: postgres-operator
+  files:
+  - ".dockerconfigjson=../regcreds.json.encrypted"
+  options:
+    disableNameSuffixHash: true
+  type: kubernetes.io/dockerconfigjson
+
+- name: regcreds
+  namespace: rabbitmq-system
+  files:
+  - ".dockerconfigjson=../regcreds.json.encrypted"
+  options:
+    disableNameSuffixHash: true
+  type: kubernetes.io/dockerconfigjson
