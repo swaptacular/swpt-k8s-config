@@ -60,8 +60,9 @@ spec:
       networkPolicy:
         enabled: false
       podDisruptionBudget:
-        enabled: false
-        minAvailable: 1
+        enabled: true
+        minAvailable: null
+        maxUnavailable: 50%
         unhealthyPodEvictionPolicy: AlwaysAllow
 
     prometheusOperator:
@@ -122,8 +123,9 @@ spec:
       networkPolicy:
         enabled: false
       podDisruptionBudget:
-        enabled: false
-        minAvailable: 1
+        enabled: true
+        minAvailable: null
+        maxUnavailable: 50%
         unhealthyPodEvictionPolicy: AlwaysAllow
 
     grafana:
@@ -150,7 +152,7 @@ spec:
          cpu: 10m
          memory: 32Mi
       podDisruptionBudget:
-        maxUnavailable: 30%
+        maxUnavailable: 50%
         unhealthyPodEvictionPolicy: AlwaysAllow
 
     prometheus-node-exporter:
