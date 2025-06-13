@@ -1,0 +1,158 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: kube-prometheus-stack
+spec:
+  interval: 10m
+  chart:
+    spec:
+      chart: charts/kube-prometheus-stack-74.0.0.tgz
+      sourceRef:
+        kind: GitRepository
+        name: flux-system
+        namespace: flux-system
+
+  targetNamespace: prometheus
+  releaseName: prometheus
+  values:
+    global:
+      imagePullSecrets:
+        - name: regcreds
+
+      # # Global image registry to use if it needs to be overridden for some
+      # # specific use cases (e.g local registries, custom images, ...)
+      # imageRegistry: "myregistry.example.com"
+
+    alertmanager:
+      alertmanagerSpec:
+        image:
+          repository: prometheus/alertmanager
+          sha: ""
+        replicas: 1
+        retention: 120h
+        logFormat: json
+        storage:
+          volumeClaimTemplate:
+            spec:
+              accessModes:
+              - ReadWriteOnce
+              resources:
+                requests:
+                  storage: 1Gi
+        priorityClassName: critical-monitoring
+        resources:
+          limits:
+            cpu: 200m
+            memory: 200Mi
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        podAntiAffinity: "hard"  # can also be "soft" or ""
+      networkPolicy:
+        enabled: false
+      podDisruptionBudget:
+        enabled: false
+        minAvailable: 1
+        unhealthyPodEvictionPolicy: AlwaysAllow
+
+    prometheusOperator:
+      image:
+        repository: prometheus-operator/prometheus-operator
+        sha: ""
+      logFormat: json
+      priorityClassName: critical-operator
+      resources:
+        limits:
+          cpu: 200m
+          memory: 200Mi
+        requests:
+          cpu: 100m
+          memory: 100Mi
+      admissionWebhooks:
+        patch:
+          image:
+            repository: ingress-nginx/kube-webhook-certgen
+            sha: ""
+      prometheusConfigReloader:
+        image:
+          repository: prometheus-operator/prometheus-config-reloader
+          sha: ""
+        resources:
+          requests:
+            cpu: 10m
+            memory: 50Mi
+          limits:
+            cpu: 200m
+            memory: 50Mi
+
+    prometheus:
+      prometheusSpec:
+        image:
+          repository: prometheus/prometheus
+          sha: ""
+        replicas: 1
+        logFormat: json
+        retention: 10d
+        storageSpec:
+          volumeClaimTemplate:
+            spec:
+              accessModes:
+              - ReadWriteOnce
+              resources:
+                requests:
+                  storage: 1Gi
+        priorityClassName: critical-monitoring
+        resources:
+          limits:
+            cpu: "4"
+            memory: 1Gi
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        podAntiAffinity: "hard"  # can also be "soft" or ""
+      networkPolicy:
+        enabled: false
+      podDisruptionBudget:
+        enabled: false
+        minAvailable: 1
+        unhealthyPodEvictionPolicy: AlwaysAllow
+
+    grafana:
+      enabled: false
+
+    kube-state-metrics:
+      image:
+        repository: kube-state-metrics/kube-state-metrics
+        sha: ""
+      replicas: 1
+      affinity: |
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchLabels:
+                  {{- include "kube-state-metrics.selectorLabels" . | indent 10 }}
+              topologyKey: kubernetes.io/hostname
+      priorityClassName: critical-monitoring
+      resources:
+        limits:
+         cpu: 100m
+         memory: 64Mi
+        requests:
+         cpu: 10m
+         memory: 32Mi
+      podDisruptionBudget:
+        maxUnavailable: 30%
+        unhealthyPodEvictionPolicy: AlwaysAllow
+
+    prometheus-node-exporter:
+      image:
+        repository: prometheus/node-exporter
+        tag: ""
+      priorityClassName: critical-monitoring
+      resources:
+        limits:
+          cpu: 200m
+          memory: 50Mi
+        requests:
+          cpu: 10m
+          memory: 30Mi

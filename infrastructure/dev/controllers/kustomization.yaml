@@ -75,3 +75,11 @@ secretGenerator:
   options:
     disableNameSuffixHash: true
   type: kubernetes.io/dockerconfigjson
+
+- name: regcreds
+  namespace: prometheus
+  files:
+  - ".dockerconfigjson=../regcreds.json.encrypted"
+  options:
+    disableNameSuffixHash: true
+  type: kubernetes.io/dockerconfigjson
