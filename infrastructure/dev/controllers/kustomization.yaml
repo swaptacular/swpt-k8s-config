@@ -77,7 +77,7 @@ secretGenerator:
   type: kubernetes.io/dockerconfigjson
 
 - name: regcreds
-  namespace: prometheus
+  namespace: monitoring
   files:
   - ".dockerconfigjson=../regcreds.json.encrypted"
   options:
