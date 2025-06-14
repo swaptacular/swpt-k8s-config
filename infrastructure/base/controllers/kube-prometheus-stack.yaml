@@ -138,25 +138,25 @@ spec:
         image:
           repository: kiwigrid/k8s-sidecar
           sha: ""
-        resources:
-          limits:
-            cpu: 100m
-            memory: 100Mi
-          requests:
-            cpu: 10m
-            memory: 50Mi
+        # resources:
+        #   limits:
+        #     cpu: 100m
+        #     memory: 100Mi
+        #   requests:
+        #     cpu: 10m
+        #     memory: 50Mi
       testFramework:
         enabled: true
       service:
         type: LoadBalancer  # ClusterIP
       priorityClassName: critical-monitoring
-      resources:
-        limits:
-          cpu: 100m
-          memory: 128Mi
-        requests:
-          cpu: 10m
-          memory: 128Mi
+      # resources:
+      #   limits:
+      #     cpu: 100m
+      #     memory: 128Mi
+      #   requests:
+      #     cpu: 10m
+      #     memory: 128Mi
       podDisruptionBudget:
         maxUnavailable: 50%
         unhealthyPodEvictionPolicy: AlwaysAllow
