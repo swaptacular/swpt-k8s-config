@@ -81,6 +81,10 @@ spec:
         size: 1Gi
         storageClass: null
       resources: {}
+    chunksCache:
+      enabled: false
+    resultsCache:
+      enabled: false
     lokiCanary:
       enabled: true
       image:
