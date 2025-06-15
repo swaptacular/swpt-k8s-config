@@ -39,6 +39,8 @@ spec:
       image:
         repository: grafana/loki
         digest: null
+      commonConfig:
+        replication_factor: 1
       schemaConfig:
         configs:
           - from: "2024-04-01"
@@ -69,16 +71,16 @@ spec:
         # Default is 4, if you have enough memory and CPU you can increase, reduce if OOMing
         max_concurrent: 4
     write:
-      replicas: 2
+      replicas: 1
       persistence:
         size: 1Gi
         storageClass: null
       resources: {}
     read:
-      replicas: 2
+      replicas: 1
       resources: {}
     backend:
-      replicas: 2
+      replicas: 1
       persistence:
         size: 1Gi
         storageClass: null
@@ -95,7 +97,7 @@ spec:
       resources: {}
     gateway:
       enabled: true
-      replicas: 2
+      replicas: 1
       image:
         repository: nginxinc/nginx-unprivileged
         digest: null
