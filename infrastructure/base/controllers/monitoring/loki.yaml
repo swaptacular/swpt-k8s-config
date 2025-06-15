@@ -1,0 +1,117 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: loki
+  namespace: monitoring
+spec:
+  interval: 10m
+  chart:
+    spec:
+      chart: charts/loki-6.30.1.tgz
+      sourceRef:
+        kind: GitRepository
+        name: flux-system
+        namespace: flux-system
+
+  targetNamespace: monitoring
+  releaseName: loki
+  values:
+    global:
+      image:
+        # Overrides the container registry globally for all images.
+        registry: null
+      extraEnvFrom:
+        - secretRef:
+            name: loki-object-store
+      extraVolumes:
+        - name: minio-ca-certificate
+          configMap:
+            name: kube-root-ca.crt
+      extraVolumeMounts:
+        - name: minio-ca-certificate
+          mountPath: /certs/minio
+      priorityClassName: critical-monitoring
+    imagePullSecrets:
+      - name: regcreds
+    loki:
+      image:
+        repository: grafana/loki
+        digest: null
+      schemaConfig:
+        configs:
+          - from: "2024-04-01"
+            store: tsdb
+            object_store: s3
+            schema: v13
+            index:
+              prefix: loki_index_
+              period: 24h
+      storage:
+        type: s3
+        s3:
+          endpoint: "${AWS_ENDPOINT}"
+          region: "${AWS_REGION}"
+          accessKeyId: "${AWS_ACCESS_KEY_ID}"
+          secretAccessKey: "${AWS_SECRET_ACCESS_KEY}"
+          s3ForcePathStyle: true
+          insecure: false
+          http_config:
+            ca_file: /certs/minio/ca.crt
+        bucketNames:
+          chunks: loki-chunks
+          ruler: loki-ruler
+          admin: loki-admin
+      ingester:
+        chunk_encoding: snappy
+      querier:
+        # Default is 4, if you have enough memory and CPU you can increase, reduce if OOMing
+        max_concurrent: 4
+    write:
+      replicas: 1
+      persistence:
+        size: 1Gi
+        storageClass: null
+      resources: {}
+    read:
+      replicas: 1
+      resources: {}
+    backend:
+      replicas: 1
+      persistence:
+        size: 1Gi
+        storageClass: null
+      resources: {}
+    lokiCanary:
+      enabled: true
+      image:
+        repository: grafana/loki-canary
+        digest: null
+      resources: {}
+    gateway:
+      enabled: true
+      replicas: 1
+      image:
+        repository: nginxinc/nginx-unprivileged
+        digest: null
+      resources: {}
+    sidecar:
+      image:
+        repository: docker.io/kiwigrid/k8s-sidecar  # This ignores "global.image.registry"!
+        tag: 1.30.3
+        sha: ""
+      resources: {}
+    memcached:
+      image:
+        repository: docker.io/memcached  # This ignores "global.image.registry"!
+        tag: 1.6.38-alpine
+        # no "sha"!
+    test:
+      enabled: true
+      image:
+        repository: grafana/loki-helm-test
+        digest: null
+    kubectlImage:
+      repository: bitnami/kubectl
+      digest: null
+    networkPolicy:
+      enabled: false

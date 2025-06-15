@@ -8,6 +8,12 @@ spec:
   buckets:
     - name: "swpt"
       objectLock: false
+    - name: "loki-chunks"
+      objectLock: false
+    - name: "loki-ruler"
+      objectLock: false
+    - name: "loki-admin"
+      objectLock: false
     - name: "test-bucket1"
       objectLock: false
     - name: "test-bucket2"
