@@ -69,16 +69,16 @@ spec:
         # Default is 4, if you have enough memory and CPU you can increase, reduce if OOMing
         max_concurrent: 4
     write:
-      replicas: 1
+      replicas: 2
       persistence:
         size: 1Gi
         storageClass: null
       resources: {}
     read:
-      replicas: 1
+      replicas: 2
       resources: {}
     backend:
-      replicas: 1
+      replicas: 2
       persistence:
         size: 1Gi
         storageClass: null
@@ -95,7 +95,7 @@ spec:
       resources: {}
     gateway:
       enabled: true
-      replicas: 1
+      replicas: 2
       image:
         repository: nginxinc/nginx-unprivileged
         digest: null
