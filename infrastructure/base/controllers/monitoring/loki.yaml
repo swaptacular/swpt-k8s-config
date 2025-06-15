@@ -20,6 +20,8 @@ spec:
       image:
         # Overrides the container registry globally for all images.
         registry: null
+      extraArgs:
+        - "-config.expand-env=true"
       extraEnvFrom:
         - secretRef:
             name: loki-object-store
@@ -104,11 +106,6 @@ spec:
         tag: 1.30.3
         sha: ""
       resources: {}
-    memcached:
-      image:
-        repository: docker.io/memcached  # This ignores "global.image.registry"!
-        tag: 1.6.38-alpine
-        # no "sha"!
     test:
       enabled: true
       image:
