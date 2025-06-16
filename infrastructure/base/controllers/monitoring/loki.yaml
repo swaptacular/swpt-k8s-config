@@ -103,7 +103,7 @@ spec:
           requiredDuringSchedulingIgnoredDuringExecution:
           - labelSelector:
               matchLabels:
-                app.kubernetes.io/component: gateway
+                app.kubernetes.io/component: memcached-chunks-cache
             topologyKey: kubernetes.io/hostname
     resultsCache:
       replicas: 1
@@ -118,7 +118,7 @@ spec:
           requiredDuringSchedulingIgnoredDuringExecution:
           - labelSelector:
               matchLabels:
-                app.kubernetes.io/component: gateway
+                app.kubernetes.io/component: memcached-results-cache
             topologyKey: kubernetes.io/hostname
     lokiCanary:
       enabled: true
