@@ -40,7 +40,7 @@ spec:
         repository: grafana/loki
         digest: null
       commonConfig:
-        replication_factor: 1
+        replication_factor: 1  # This is 3 by default.
       schemaConfig:
         configs:
           - from: "2024-04-01"
@@ -116,5 +116,7 @@ spec:
     kubectlImage:
       repository: bitnami/kubectl
       digest: null
+    rbac:
+      namespaced: true
     networkPolicy:
       enabled: false
