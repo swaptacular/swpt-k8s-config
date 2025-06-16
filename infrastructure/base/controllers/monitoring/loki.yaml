@@ -60,6 +60,9 @@ spec:
           s3ForcePathStyle: true
           insecure: false
           http_config:
+            # This specifies the trusted CA for the local MinIO S3
+            # server. This should not be necessary for "proper" S3
+            # providers.
             ca_file: /certs/minio/ca.crt
         bucketNames:
           chunks: loki-chunks
@@ -75,6 +78,7 @@ spec:
       persistence:
         size: 1Gi
         storageClass: null
+        enableStatefulSetAutoDeletePVC: false
       resources: {}
     read:
       replicas: 1
@@ -84,11 +88,38 @@ spec:
       persistence:
         size: 1Gi
         storageClass: null
+        enableStatefulSetAutoDeletePVC: false
       resources: {}
     chunksCache:
-      enabled: false
+      replicas: 1
+      allocatedMemory: 128  # Megabytes
+      priorityClassName: critical-monitoring
+      persistence:
+        enabled: true
+        storageSize: 2Gi
+        storageClass: null
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                app.kubernetes.io/component: gateway
+            topologyKey: kubernetes.io/hostname
     resultsCache:
-      enabled: false
+      replicas: 1
+      allocatedMemory: 64  # Megabytes
+      priorityClassName: critical-monitoring
+      persistence:
+        enabled: true
+        storageSize: 2Gi
+        storageClass: null
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                app.kubernetes.io/component: gateway
+            topologyKey: kubernetes.io/hostname
     lokiCanary:
       enabled: true
       image:
@@ -104,9 +135,11 @@ spec:
       resources: {}
     sidecar:
       image:
-        repository: docker.io/kiwigrid/k8s-sidecar  # This ignores "global.image.registry"!
+        repository: docker.io/kiwigrid/k8s-sidecar  # Ignores "global.image.registry"!
         tag: 1.30.3
         sha: ""
+      resources: {}
+    memcachedExporter:
       resources: {}
     test:
       enabled: true
