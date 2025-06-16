@@ -5,6 +5,7 @@ namespace: monitoring
 resources:
 - namespace.yaml
 - kube-prometheus-stack.yaml
+- promtail.yaml
 - loki.yaml
 - loki-pdb.yaml
 - network-policies.yaml
