@@ -127,7 +127,6 @@ spec:
         digest: null
       resources: {}
     gateway:
-      enabled: true
       replicas: 1
       image:
         repository: nginxinc/nginx-unprivileged
@@ -135,7 +134,10 @@ spec:
       resources: {}
     sidecar:
       image:
-        repository: docker.io/kiwigrid/k8s-sidecar  # Ignores "global.image.registry"!
+        # The registry must be included in the "repository" value
+        # ("docker.io" for example), because the chart ignores the
+        # value of "global.image.registry" for sidecars.
+        repository: docker.io/kiwigrid/k8s-sidecar
         tag: 1.30.3
         sha: ""
       resources: {}
