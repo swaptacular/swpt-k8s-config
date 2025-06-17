@@ -76,7 +76,7 @@ spec:
     write:
       replicas: 1
       persistence:
-        size: 1Gi
+        size: 1Gi  # Should be >= 10Gi in production
         storageClass: null
         enableStatefulSetAutoDeletePVC: false
       resources: {}
@@ -86,7 +86,7 @@ spec:
     backend:
       replicas: 1
       persistence:
-        size: 1Gi
+        size: 1Gi  # Should be >= 10Gi in production
         storageClass: null
         enableStatefulSetAutoDeletePVC: false
       resources: {}
