@@ -73,13 +73,18 @@ spec:
       querier:
         # Default is 4, if you have enough memory and CPU you can increase, reduce if OOMing
         max_concurrent: 4
+      compactor:
+        retention_enabled: true
+        delete_request_store: s3
+      limits_config:
+        retention_period: 30d
     write:
       replicas: 1
       persistence:
         size: 1Gi  # Should be >= 10Gi in production
         storageClass: null
         enableStatefulSetAutoDeletePVC: false
-      resources: {}
+      resources: {}  # The memory request should be >= 5Gi in production.
     read:
       replicas: 1
       resources: {}
