@@ -359,10 +359,10 @@ replicas:
 images:
 - name: swpt-creditors
   newName: ghcr.io/swaptacular/swpt_creditors
-  newTag: 2.6.5
+  newTag: 2.6.6
 - name: swpt-creditors-swagger-ui
   newName: ghcr.io/swaptacular/swpt_creditors_swagger_ui
-  newTag: 2.6.5  # Must be the same as the tag for the "swpt-creditors" image.
+  newTag: 2.6.6  # Must be the same as the tag for the "swpt-creditors" image.
 - name: swpt-creditors-ui
   newName: ghcr.io/swaptacular/swpt_creditors_ui
   newTag: 1.2.2
