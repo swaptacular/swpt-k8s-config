@@ -77,7 +77,9 @@ spec:
             # 10 miniutes (the default is 1m). Note that the similar
             # setting `ingester.lifecycler.heartbeat_timeout` seems to
             # be deprecated, but this is not mentioned in the docs.
-            heartbeat_timeout: 10m
+            # However, ChatGPT "claims" that 3m is a sweet spot when
+            # using memberlist kvstore with non-HA control plane.
+            heartbeat_timeout: 3m
         chunk_idle_period: 1h
         chunk_encoding: snappy
         wal:
