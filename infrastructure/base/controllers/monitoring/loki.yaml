@@ -71,6 +71,13 @@ spec:
           admin: loki-admin
       ingester:
         chunk_encoding: snappy
+        wal:
+          # Maximum memory size the WAL may use during replay. After
+          # hitting this, it will flush data to storage before
+          # continuing. A unit suffix (KB, MB, GB) may be applied. The
+          # default is 4GB. Normally, this should be about 75% of the
+          # memory request for the ingester pods.
+          replay_memory_ceiling: 100MB
       querier:
         # Default is 4, if you have enough memory and CPU you can increase, reduce if OOMing
         max_concurrent: 4
