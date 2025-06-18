@@ -98,7 +98,7 @@ spec:
         delete_request_store: s3
       limits_config:
         retention_period: 30d
-        max_query_lookback: 30d
+        max_query_lookback: 30d  # Should be the same as `retention_period`.
     write:
       replicas: 1
       persistence:
