@@ -71,7 +71,13 @@ spec:
           admin: loki-admin
       ingester:
         lifecycler:
-          heartbeat_timeout: 10m
+          ring:
+            # https://grafana.com/blog/2021/02/16/the-essential-config-settings-you-should-use-so-you-wont-drop-logs-in-loki/
+            # suggest that `heartbeat_timeout` should be increased to
+            # 10 miniutes (the default is 1m). Note that the similar
+            # setting `ingester.lifecycler.heartbeat_timeout` seems to
+            # be deprecated, but this is not mentioned in the docs.
+            heartbeat_timeout: 10m
         chunk_idle_period: 1h
         chunk_encoding: snappy
         wal:
