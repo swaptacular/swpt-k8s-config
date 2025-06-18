@@ -70,6 +70,9 @@ spec:
           ruler: loki-ruler
           admin: loki-admin
       ingester:
+        lifecycler:
+          heartbeat_timeout: 10m
+        chunk_idle_period: 1h
         chunk_encoding: snappy
         wal:
           # Maximum memory size the WAL may use during replay. After
