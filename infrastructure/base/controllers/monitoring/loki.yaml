@@ -41,7 +41,7 @@ spec:
         digest: null
       auth_enabled: false
       commonConfig:
-        replication_factor: 1  # This is 3 by default.
+        replication_factor: 1  # This is 3 by default, and should be 3 in production.
       schemaConfig:
         configs:
           - from: "2024-04-01"
@@ -79,7 +79,8 @@ spec:
           # memory request for the ingester pods.
           replay_memory_ceiling: 100MB
       querier:
-        # Default is 4, if you have enough memory and CPU you can increase, reduce if OOMing
+        # Default is 4, if you have enough memory and CPU you can
+        # increase, reduce if OOMing.
         max_concurrent: 4
       compactor:
         retention_enabled: true
@@ -90,27 +91,26 @@ spec:
     write:
       replicas: 1
       persistence:
-        size: 1Gi  # Should be >= 10Gi in production
+        size: 1Gi  # Should be at least 10Gi in production, probably quite a bit more.
         storageClass: null
-        enableStatefulSetAutoDeletePVC: false
-      resources: {}  # The memory request should be >= 5Gi in production.
+      resources: {}
     read:
       replicas: 1
       resources: {}
     backend:
       replicas: 1
       persistence:
-        size: 1Gi  # Should be >= 10Gi in production
+        size: 1Gi  # The default is 10Gi.
         storageClass: null
-        enableStatefulSetAutoDeletePVC: false
       resources: {}
     chunksCache:
       replicas: 1
-      allocatedMemory: 128  # Megabytes
+      allocatedMemory: 128  # in megabytes, the default is 8192. Pods'
+                            # memory request will be adjusted automatically.
       priorityClassName: critical-monitoring
       persistence:
         enabled: true
-        storageSize: 2Gi
+        storageSize: 2Gi  # Will be used to "extend" the `allocatedMemory`.
         storageClass: null
       affinity:
         podAntiAffinity:
@@ -121,11 +121,12 @@ spec:
             topologyKey: kubernetes.io/hostname
     resultsCache:
       replicas: 1
-      allocatedMemory: 64  # Megabytes
+      allocatedMemory: 64  # in megabytes, the default is 1024. Pods'
+                           # memory request will be adjusted automatically.
       priorityClassName: critical-monitoring
       persistence:
         enabled: true
-        storageSize: 2Gi
+        storageSize: 2Gi  # Will be used to "extend" the `allocatedMemory`.
         storageClass: null
       affinity:
         podAntiAffinity:
@@ -135,7 +136,6 @@ spec:
                 app.kubernetes.io/component: memcached-results-cache
             topologyKey: kubernetes.io/hostname
     lokiCanary:
-      enabled: true
       image:
         repository: grafana/loki-canary
         digest: null
@@ -165,5 +165,3 @@ spec:
     kubectlImage:
       repository: bitnami/kubectl
       digest: null
-    networkPolicy:
-      enabled: false
