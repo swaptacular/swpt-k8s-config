@@ -1,6 +1,12 @@
 # swpt-k8s-config
 Swaptacular GitOps repo for deploying Kubernetes clusters
 
+*NOTE:* When running KinD (Kubernetes in Docker), you may need to execute:
+
+``` console
+$ sudo sysctl fs.inotify.max_user_instances=8192
+```
+
 ## Bootstrapping the GitOps
 
 First you need to install a Git server to your Kubernetes cluster,
