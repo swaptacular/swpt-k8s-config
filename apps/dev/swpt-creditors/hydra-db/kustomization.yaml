@@ -1,11 +1,6 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-labels:
-- includeSelectors: false
-  pairs:
-    app.kubernetes.io/name: swpt-creditors
-
 secretGenerator:
 - name: postgres.hydra-db.credentials.postgresql.acid.zalan.do
   files:
@@ -15,6 +10,7 @@ secretGenerator:
   options:
     disableNameSuffixHash: true
     labels:
+      app.kubernetes.io/name: hydra-db
       application: spilo
       cluster-name: hydra-db
       team: swpt
@@ -27,6 +23,7 @@ secretGenerator:
   options:
     disableNameSuffixHash: true
     labels:
+      app.kubernetes.io/name: hydra-db
       application: spilo
       cluster-name: hydra-db
       team: swpt
@@ -39,6 +36,7 @@ secretGenerator:
   options:
     disableNameSuffixHash: true
     labels:
+      app.kubernetes.io/name: hydra-db
       application: spilo
       cluster-name: hydra-db
       team: swpt

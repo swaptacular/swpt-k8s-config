@@ -3,18 +3,18 @@ kind: NetworkPolicy
 metadata:
   name: isolate-hydra-db
   labels:
-    app.kubernetes.io/component: hydra-db
+    app.kubernetes.io/name: hydra-db
 spec:
   podSelector:
     matchLabels:
-      app.kubernetes.io/component: hydra-db
+      app.kubernetes.io/name: hydra-db
   policyTypes:
   - Ingress
   ingress:
   - from:
     - podSelector:
         matchLabels:
-          app.kubernetes.io/component: hydra-db
+          app.kubernetes.io/name: hydra-db
   - from:
     - namespaceSelector:
         matchLabels:
@@ -26,11 +26,11 @@ kind: NetworkPolicy
 metadata:
   name: allow-hydra-db-users
   labels:
-    app.kubernetes.io/component: hydra-db
+    app.kubernetes.io/name: hydra-db
 spec:
   podSelector:
     matchLabels:
-      app.kubernetes.io/component: hydra-db
+      app.kubernetes.io/name: hydra-db
   policyTypes:
   - Ingress
   ingress:
