@@ -90,6 +90,8 @@ spec:
           # default is 4GB. Normally, this should be about 75% of the
           # memory request for the ingester pods.
           replay_memory_ceiling: 100MB
+      server:
+        log_level: warn
       querier:
         # Default is 4, if you have enough memory and CPU you can
         # increase, reduce if OOMing.
