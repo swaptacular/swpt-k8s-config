@@ -8,8 +8,8 @@
 - op: add
   path: /metadata/labels
   value:
-    app.kubernetes.io/name: swpt-creditors
-    app.kubernetes.io/component: login-db
+    app.kubernetes.io/name: swpt-login
+    app.kubernetes.io/component: database
 
 - op: test
   path: /spec/pod_priority_class_name

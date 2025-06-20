@@ -3,22 +3,19 @@ kind: Deployment
 metadata:
   name: login-flush-activate-users
   labels:
-    app.kubernetes.io/name: swpt-debtors
-    app.kubernetes.io/component: login
-    app: login-flush-activate-users
+    app.kubernetes.io/name: swpt-login
+    app.kubernetes.io/component: flush-activate-users
 spec:
   replicas: 1  # Must always be 1!
   selector:
     matchLabels:
-      app.kubernetes.io/name: swpt-debtors
-      app.kubernetes.io/component: login
-      app: login-flush-activate-users
+      app.kubernetes.io/name: swpt-login
+      app.kubernetes.io/component: flush-activate-users
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: swpt-debtors
-        app.kubernetes.io/component: login
-        app: login-flush-activate-users
+        app.kubernetes.io/name: swpt-login
+        app.kubernetes.io/component: flush-activate-users
     spec:
       priorityClassName: login-webserver
       imagePullSecrets:

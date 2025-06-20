@@ -3,21 +3,21 @@ kind: NetworkPolicy
 metadata:
   name: isolate-login-db
   labels:
-    app.kubernetes.io/name: swpt-debtors
-    app.kubernetes.io/component: login-db
+    app.kubernetes.io/name: swpt-login
+    app.kubernetes.io/component: database
 spec:
   podSelector:
     matchLabels:
-      app.kubernetes.io/name: swpt-debtors
-      app.kubernetes.io/component: login-db
+      app.kubernetes.io/name: swpt-login
+      app.kubernetes.io/component: database
   policyTypes:
   - Ingress
   ingress:
   - from:
     - podSelector:
         matchLabels:
-          app.kubernetes.io/name: swpt-debtors
-          app.kubernetes.io/component: login-db
+          app.kubernetes.io/name: swpt-login
+          app.kubernetes.io/component: database
   - from:
     - namespaceSelector:
         matchLabels:
@@ -29,13 +29,13 @@ kind: NetworkPolicy
 metadata:
   name: allow-login-db-users
   labels:
-    app.kubernetes.io/name: swpt-debtors
-    app.kubernetes.io/component: login-db
+    app.kubernetes.io/name: swpt-login
+    app.kubernetes.io/component: database
 spec:
   podSelector:
     matchLabels:
-      app.kubernetes.io/name: swpt-debtors
-      app.kubernetes.io/component: login-db
+      app.kubernetes.io/name: swpt-login
+      app.kubernetes.io/component: database
   policyTypes:
   - Ingress
   ingress:
@@ -44,8 +44,7 @@ spec:
     from:
     - podSelector:
         matchLabels:
-          app.kubernetes.io/name: swpt-debtors
-          app.kubernetes.io/component: login
+          app.kubernetes.io/name: swpt-login
 
 ---
 apiVersion: networking.k8s.io/v1
@@ -53,8 +52,8 @@ kind: NetworkPolicy
 metadata:
   name: isolate-dragonfly-db
   labels:
-    app.kubernetes.io/name: swpt-debtors
-    app.kubernetes.io/component: login-db
+    app.kubernetes.io/name: swpt-login
+    app.kubernetes.io/component: database
 spec:
   podSelector:
     matchLabels:
@@ -79,8 +78,8 @@ kind: NetworkPolicy
 metadata:
   name: allow-dragonfly-db-users
   labels:
-    app.kubernetes.io/name: swpt-debtors
-    app.kubernetes.io/component: login-db
+    app.kubernetes.io/name: swpt-login
+    app.kubernetes.io/component: database
 spec:
   podSelector:
     matchLabels:
@@ -93,8 +92,7 @@ spec:
     from:
     - podSelector:
         matchLabels:
-          app.kubernetes.io/name: swpt-debtors
-          app.kubernetes.io/component: login
+          app.kubernetes.io/name: swpt-login
 
 ---
 apiVersion: networking.k8s.io/v1
@@ -104,9 +102,8 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      app.kubernetes.io/name: swpt-debtors
-      app.kubernetes.io/component: login
-      app: login-web-server
+      app.kubernetes.io/name: swpt-login
+      app.kubernetes.io/component: database
   policyTypes:
   - Egress
   egress:
@@ -123,9 +120,8 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      app.kubernetes.io/name: swpt-debtors
-      app.kubernetes.io/component: login
-      app: login-web-server
+      app.kubernetes.io/name: swpt-login
+      app.kubernetes.io/component: database
   policyTypes:
   - Egress
   egress:

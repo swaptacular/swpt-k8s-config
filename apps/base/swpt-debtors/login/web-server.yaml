@@ -3,31 +3,27 @@ kind: Deployment
 metadata:
   name: login-web-server
   labels:
-    app.kubernetes.io/name: swpt-debtors
-    app.kubernetes.io/component: login
-    app: login-web-server
+    app.kubernetes.io/name: swpt-login
+    app.kubernetes.io/component: web-server
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app.kubernetes.io/name: swpt-debtors
-      app.kubernetes.io/component: login
-      app: login-web-server
+      app.kubernetes.io/name: swpt-login
+      app.kubernetes.io/component: web-server
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: swpt-debtors
-        app.kubernetes.io/component: login
-        app: login-web-server
+        app.kubernetes.io/name: swpt-login
+        app.kubernetes.io/component: web-server
     spec:
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
           - labelSelector:
               matchLabels:
-                app.kubernetes.io/name: swpt-debtors
-                app.kubernetes.io/component: login
-                app: login-web-server
+                app.kubernetes.io/name: swpt-login
+                app.kubernetes.io/component: web-server
             topologyKey: kubernetes.io/hostname
             matchLabelKeys:
             - pod-template-hash
@@ -128,14 +124,12 @@ kind: Service
 metadata:
   name: login-web-server
   labels:
-    app.kubernetes.io/name: swpt-debtors
-    app.kubernetes.io/component: login
-    app: login-web-server
+    app.kubernetes.io/name: swpt-login
+    app.kubernetes.io/component: web-server
 spec:
   selector:
-    app.kubernetes.io/name: swpt-debtors
-    app.kubernetes.io/component: login
-    app: login-web-server
+    app.kubernetes.io/name: swpt-login
+    app.kubernetes.io/component: web-server
   ports:
     - name: http
       port: 80
@@ -148,14 +142,12 @@ kind: PodDisruptionBudget
 metadata:
   name: login-web-server
   labels:
-    app.kubernetes.io/name: swpt-debtors
-    app.kubernetes.io/component: login
-    app: login-web-server
+    app.kubernetes.io/name: swpt-login
+    app.kubernetes.io/component: web-server
 spec:
   maxUnavailable: 30%
   unhealthyPodEvictionPolicy: AlwaysAllow
   selector:
     matchLabels:
-      app.kubernetes.io/name: swpt-debtors
-      app.kubernetes.io/component: login
-      app: login-web-server
+      app.kubernetes.io/name: swpt-login
+      app.kubernetes.io/component: web-server
