@@ -97,6 +97,7 @@ spec:
         retention_enabled: true
         delete_request_store: s3
       limits_config:
+        allow_structured_metadata: false  # The default is "true".
         retention_period: 30d
         max_query_lookback: 30d  # Should be the same as `retention_period`.
     write:
