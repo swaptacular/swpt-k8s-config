@@ -5,7 +5,7 @@ metadata:
   annotations:
     swpt-node-id: SWPT_NODE_ID
   labels:
-    app.kubernetes.io/name: swpt-accounts
+    app.kubernetes.io/name: swpt-accounts-peer
     app.kubernetes.io/component: stomp-client
     app.kubernetes.io/instance: SWPT_NODE_ID
 spec:
@@ -13,13 +13,13 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app.kubernetes.io/name: swpt-accounts
+      app.kubernetes.io/name: swpt-accounts-peer
       app.kubernetes.io/component: stomp-client
       app.kubernetes.io/instance: SWPT_NODE_ID
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: swpt-accounts
+        app.kubernetes.io/name: swpt-accounts-peer
         app.kubernetes.io/component: stomp-client
         app.kubernetes.io/instance: SWPT_NODE_ID
     spec:
