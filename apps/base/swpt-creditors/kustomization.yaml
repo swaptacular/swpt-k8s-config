@@ -21,4 +21,5 @@ resources:
 - ingress-nginx.yaml
 - ingress-rules.yaml
 - acme-cert-issuer.yaml
+- spilo-pod-monitors.yaml
 - web-ui/
