@@ -3,6 +3,7 @@ kind: Kustomization
 
 resources:
 - dragonfly-pdb.yaml
+- dragonfly-pod-monitor.yaml
 - network-policies.yaml
 - web-server.yaml
 - flush-activate-users.yaml

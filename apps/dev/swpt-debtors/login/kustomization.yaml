@@ -187,7 +187,6 @@ secretGenerator:
 resources:
 - postgres-cluster.yaml
 - dragonfly-db.yaml
-- dragonfly-db-pod-monitor.yaml
 - ../../../base/swpt-debtors/login/
 
 patches:
