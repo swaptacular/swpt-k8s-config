@@ -1,0 +1,16 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: patroni-clusters
+  labels:
+    release: prometheus
+    application: spilo
+spec:
+  selector:
+    matchLabels:
+      application: spilo
+  podTargetLabels:
+    - cluster-name
+    - spilo-role
+  podMetricsEndpoints:
+  - portNumber: 8008
