@@ -1,0 +1,16 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: dragonfly-db
+  labels:
+    release: prometheus
+    group: dragonfly
+    app: dragonfly-db
+spec:
+  selector:
+    matchLabels:
+      app: dragonfly-db
+  podTargetLabels:
+    - app
+  podMetricsEndpoints:
+  - port: admin
