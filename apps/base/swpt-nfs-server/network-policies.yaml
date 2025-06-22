@@ -24,6 +24,10 @@ spec:
       namespaceSelector:
         matchLabels:
           app.kubernetes.io/part-of: swpt-nodeset
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          app.kubernetes.io/name: monitoring
 
 ---
 apiVersion: networking.k8s.io/v1
