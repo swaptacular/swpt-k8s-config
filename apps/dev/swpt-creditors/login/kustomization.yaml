@@ -69,8 +69,7 @@ configMapGenerator:
 
   options:
     labels:
-      app.kubernetes.io/name: swpt-creditors
-      app.kubernetes.io/component: login
+      app.kubernetes.io/name: swpt-login
 
     # These annotations are used as sources for convenient Kustomize
     # replacements:
@@ -135,8 +134,7 @@ secretGenerator:
 
   options:
     labels:
-      app.kubernetes.io/name: swpt-creditors
-      app.kubernetes.io/component: login
+      app.kubernetes.io/name: swpt-login
   type: Opaque
 
 - name: postgres.login-db.credentials.postgresql.acid.zalan.do
@@ -147,8 +145,8 @@ secretGenerator:
   options:
     disableNameSuffixHash: true
     labels:
-      app.kubernetes.io/name: swpt-creditors
-      app.kubernetes.io/component: login-db
+      app.kubernetes.io/name: swpt-login
+      app.kubernetes.io/component: database
       application: spilo
       cluster-name: login-db
       team: swpt
@@ -162,8 +160,8 @@ secretGenerator:
   options:
     disableNameSuffixHash: true
     labels:
-      app.kubernetes.io/name: swpt-creditors
-      app.kubernetes.io/component: login-db
+      app.kubernetes.io/name: swpt-login
+      app.kubernetes.io/component: database
       application: spilo
       cluster-name: login-db
       team: swpt
@@ -177,8 +175,8 @@ secretGenerator:
   options:
     disableNameSuffixHash: true
     labels:
-      app.kubernetes.io/name: swpt-creditors
-      app.kubernetes.io/component: login-db
+      app.kubernetes.io/name: swpt-login
+      app.kubernetes.io/component: database
       application: spilo
       cluster-name: login-db
       team: swpt

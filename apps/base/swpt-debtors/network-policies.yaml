@@ -27,8 +27,7 @@ spec:
           app.kubernetes.io/part-of: swpt-debtors
     - podSelector:
         matchLabels:
-          app.kubernetes.io/name: swpt-debtors
-          app.kubernetes.io/component: login
+          app.kubernetes.io/name: swpt-login
   - from:
     - namespaceSelector:
         matchLabels:
