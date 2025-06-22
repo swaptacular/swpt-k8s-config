@@ -10,7 +10,6 @@ spec:
     matchLabels:
       application: spilo
   podTargetLabels:
-    - cluster-name
     - spilo-role
   podMetricsEndpoints:
   - portNumber: 8008
