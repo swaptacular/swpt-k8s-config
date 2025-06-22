@@ -57,7 +57,6 @@ metadata:
   name: isolate-dragonfly-db
   labels:
     app.kubernetes.io/name: swpt-login
-    app.kubernetes.io/component: database
 spec:
   podSelector:
     matchLabels:
@@ -87,7 +86,6 @@ metadata:
   name: allow-dragonfly-db-users
   labels:
     app.kubernetes.io/name: swpt-login
-    app.kubernetes.io/component: database
 spec:
   podSelector:
     matchLabels:
@@ -107,6 +105,9 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: allow-login-web-server-captcha-servers-access
+  labels:
+    app.kubernetes.io/name: swpt-login
+    app.kubernetes.io/component: web-server
 spec:
   podSelector:
     matchLabels:
@@ -125,6 +126,9 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: allow-login-web-server-email-servers-access
+  labels:
+    app.kubernetes.io/name: swpt-login
+    app.kubernetes.io/component: web-server
 spec:
   podSelector:
     matchLabels:
