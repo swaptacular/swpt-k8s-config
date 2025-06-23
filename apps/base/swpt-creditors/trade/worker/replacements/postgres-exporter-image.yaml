@@ -1,0 +1,12 @@
+source:
+  kind: ConfigMap
+  name: trade-workerconfig
+  fieldPath: metadata.annotations.kustomize_postgres_exporter_image
+targets:
+  - select:
+      group: acid.zalan.do
+      version: v1
+      kind: postgresql
+      name: trade-worker-db
+    fieldPaths:
+      - spec.sidecars.[name=exporter].image

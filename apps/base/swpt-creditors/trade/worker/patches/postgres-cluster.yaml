@@ -165,3 +165,30 @@
         name: spilo-env-secret
         key: WALG_S3_CA_CERT_FILE
         optional: true
+
+- op: test
+  path: /spec/sidecars
+  value: null
+- op: add
+  path: /spec/sidecars
+  value:
+  - name: exporter
+    image: postgres-exporter  # Will be automatically replaced.
+    ports:
+      - name: exporter
+        containerPort: 9187
+    env:
+      - name: DATA_SOURCE_URI
+        value: "127.0.0.1:5432"
+      - name: DATA_SOURCE_USER
+        valueFrom:
+          # Here "cluster-name" will be automatically replaced.
+          secretKeyRef:
+            name: postgres.cluster-name.credentials.postgresql.acid.zalan.do
+            key: username
+      - name: DATA_SOURCE_PASS
+        valueFrom:
+          # Here "cluster-name" will be automatically replaced.
+          secretKeyRef:
+            name: postgres.cluster-name.credentials.postgresql.acid.zalan.do
+            key: password

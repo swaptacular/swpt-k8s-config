@@ -69,6 +69,15 @@ configMapGenerator:
       kustomize_transfers_triggerer_cpu_limit: 2000m
       kustomize_transfers_triggerer_memory_request: 92Mi
       kustomize_transfers_triggerer_memory_limit: 1Gi
+      kustomize_postgres_exporter_cpu_request: 1m
+      kustomize_postgres_exporter_cpu_limit: 2000m
+      kustomize_postgres_exporter_memory_request: 13Mi
+      kustomize_postgres_exporter_memory_limit: 1Gi
+
+      # This annotation specifies the container image for the Postgres
+      # exporter sidecar.
+      #
+      kustomize_postgres_exporter_image: quay.io/prometheuscommunity/postgres-exporter:v0.17.1
 
       # Do not change the next two lines!
       kustomize_zalando_top_level_domain: do
@@ -138,6 +147,11 @@ patches:
     version: v1
 
 replacements:
+- path: ../../../../../base/swpt-creditors/trade/worker/replacements/postgres-exporter-image.yaml
+- path: ../../../../../base/swpt-creditors/trade/worker/replacements/postgres-exporter-cpu-request.yaml
+- path: ../../../../../base/swpt-creditors/trade/worker/replacements/postgres-exporter-cpu-limit.yaml
+- path: ../../../../../base/swpt-creditors/trade/worker/replacements/postgres-exporter-memory-request.yaml
+- path: ../../../../../base/swpt-creditors/trade/worker/replacements/postgres-exporter-memory-limit.yaml
 - path: ../../../../../base/swpt-creditors/trade/worker/replacements/secrets-clustername.yaml
 - path: ../../../../../base/swpt-creditors/trade/worker/replacements/secrets-namesuffix.yaml
 - path: ../../../../../base/swpt-creditors/trade/worker/replacements/trade-workerconfig.yaml
