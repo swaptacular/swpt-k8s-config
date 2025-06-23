@@ -177,7 +177,6 @@
     ports:
       - name: exporter
         containerPort: 9187
-    resources: {}  # TODO: use a replacement.
     env:
       - name: DATA_SOURCE_URI
         value: "127.0.0.1:5432"
