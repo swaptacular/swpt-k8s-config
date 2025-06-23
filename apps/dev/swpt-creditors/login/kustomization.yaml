@@ -91,11 +91,19 @@ configMapGenerator:
       kustomize_login_webserver_cpu_limit: 1000m
       kustomize_login_webserver_memory_request: 84Mi
       kustomize_login_webserver_memory_limit: 1Gi
-
       kustomize_login_flush_cpu_request: 1m
       kustomize_login_flush_cpu_limit: 1000m
       kustomize_login_flush_memory_request: 86Mi
       kustomize_login_flush_memory_limit: 1Gi
+      kustomize_postgres_exporter_cpu_request: 1m
+      kustomize_postgres_exporter_cpu_limit: 2000m
+      kustomize_postgres_exporter_memory_request: 13Mi
+      kustomize_postgres_exporter_memory_limit: 1Gi
+
+      # This annotation specifies the container image for the Postgres
+      # exporter sidecar.
+      #
+      kustomize_postgres_exporter_image: quay.io/prometheuscommunity/postgres-exporter:v0.17.1
 
 # The number of replicas for each component. One replica works fine,
 # but to have high-availability, should be at least 2.
@@ -203,6 +211,11 @@ patches:
     version: v1alpha1
 
 replacements:
+- path: ../../../base/swpt-creditors/login/replacements/postgres-exporter-image.yaml
+- path: ../../../base/swpt-creditors/login/replacements/postgres-exporter-cpu-request.yaml
+- path: ../../../base/swpt-creditors/login/replacements/postgres-exporter-cpu-limit.yaml
+- path: ../../../base/swpt-creditors/login/replacements/postgres-exporter-memory-request.yaml
+- path: ../../../base/swpt-creditors/login/replacements/postgres-exporter-memory-limit.yaml
 - path: ../../../base/swpt-creditors/login/replacements/login-webserver-cpu-limit.yaml
 - path: ../../../base/swpt-creditors/login/replacements/login-webserver-cpu-request.yaml
 - path: ../../../base/swpt-creditors/login/replacements/login-webserver-memory-limit.yaml

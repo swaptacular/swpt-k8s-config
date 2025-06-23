@@ -1,0 +1,15 @@
+source:
+  kind: ConfigMap
+  name: swpt-login-config
+  fieldPath: metadata.annotations.kustomize_postgres_exporter_cpu_limit
+targets:
+  - select:
+      group: acid.zalan.do
+      version: v1
+      kind: postgresql
+      name: login-db
+    fieldPaths:
+      - spec.sidecars.[name=exporter].resources.limits.cpu
+    options:
+      create: true
+
