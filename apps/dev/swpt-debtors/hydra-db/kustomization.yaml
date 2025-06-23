@@ -53,3 +53,10 @@ patches:
     kind: postgresql
     name: hydra-db
     version: v1
+
+replacements:
+- path: ../../../base/swpt-debtors/hydra-db/postgres/replacements/postgres-exporter-image.yaml
+- path: ../../../base/swpt-debtors/hydra-db/postgres/replacements/postgres-exporter-cpu-request.yaml
+- path: ../../../base/swpt-debtors/hydra-db/postgres/replacements/postgres-exporter-cpu-limit.yaml
+- path: ../../../base/swpt-debtors/hydra-db/postgres/replacements/postgres-exporter-memory-request.yaml
+- path: ../../../base/swpt-debtors/hydra-db/postgres/replacements/postgres-exporter-memory-limit.yaml

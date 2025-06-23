@@ -1,0 +1,16 @@
+source:
+  group: acid.zalan.do
+  version: v1
+  kind: postgresql
+  name: hydra-db
+  fieldPath: metadata.annotations.kustomize_postgres_exporter_memory_request
+targets:
+  - select:
+      group: acid.zalan.do
+      version: v1
+      kind: postgresql
+      name: hydra-db
+    fieldPaths:
+      - spec.sidecars.[name=exporter].resources.requests.memory
+    options:
+      create: true

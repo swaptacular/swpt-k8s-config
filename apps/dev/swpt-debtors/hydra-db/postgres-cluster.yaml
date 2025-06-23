@@ -2,6 +2,22 @@ apiVersion: "acid.zalan.do/v1"
 kind: postgresql
 metadata:
   name: hydra-db  # must be "hydra-db"
+
+  # These annotations are used as sources for convenient Kustomize
+  # replacements:
+  #
+  annotations:
+    # The container image for the Postgres exporter sidecar.
+    #
+    kustomize_postgres_exporter_image: quay.io/prometheuscommunity/postgres-exporter:v0.17.1
+
+    # Kubernetes memory and CPU requests and limits, for the Postgres
+    # exporter sidecar.
+    kustomize_postgres_exporter_cpu_request: 1m
+    kustomize_postgres_exporter_cpu_limit: 2000m
+    kustomize_postgres_exporter_memory_request: 13Mi
+    kustomize_postgres_exporter_memory_limit: 1Gi
+
 spec:
   # Specifies the "spilo" OCI image to use.
   #
