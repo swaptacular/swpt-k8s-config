@@ -99,6 +99,11 @@ configMapGenerator:
       kustomize_web_server_memory_request: 83Mi
       kustomize_web_server_memory_limit: 1Gi
 
+      # This annotation specifies the container image for the Postgres
+      # exporter sidecar.
+      #
+      kustomize_postgres_exporter_image: quay.io/prometheuscommunity/postgres-exporter:v0.17.1
+
       # Do not change the next two lines!
       kustomize_zalando_top_level_domain: do
       kustomize_zalando_clone_timestamp: "2199-01-01T00:00:00.000+00:00"
@@ -174,6 +179,7 @@ patches:
     version: v1
 
 replacements:
+- path: ../../../../base/swpt-accounts/shard/replacements/postgres-exporter-image.yaml
 - path: ../../../../base/swpt-accounts/shard/replacements/secrets-clustername.yaml
 - path: ../../../../base/swpt-accounts/shard/replacements/secrets-namesuffix.yaml
 - path: ../../../../base/swpt-accounts/shard/replacements/shardconfig.yaml
