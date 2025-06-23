@@ -1,0 +1,12 @@
+source:
+  kind: ConfigMap
+  name: shardconfig
+  fieldPath: metadata.annotations.kustomize_postgres_exporter_image
+targets:
+  - select:
+      group: acid.zalan.do
+      version: v1
+      kind: postgresql
+      name: db
+    fieldPaths:
+      - spec.sidecars.[name=exporter].image
