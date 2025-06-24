@@ -47,7 +47,9 @@
   value:
     - name: minio-ca-certificate
       mountPath: /certs/minio
-      targetContainers: []
+      targetContainers:
+      - postgres
+      - backup-exporter
       volumeSource:
         configMap:
           name: kube-root-ca.crt
