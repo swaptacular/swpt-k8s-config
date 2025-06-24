@@ -104,7 +104,7 @@ configMapGenerator:
       kustomize_postgres_exporter_memory_limit: 1Gi
       kustomize_walg_exporter_cpu_request: 1m
       kustomize_walg_exporter_cpu_limit: 2000m
-      kustomize_walg_exporter_memory_request: 13Mi
+      kustomize_walg_exporter_memory_request: 28Mi
       kustomize_walg_exporter_memory_limit: 1Gi
 
       # This annotation specifies the container image for the Postgres
