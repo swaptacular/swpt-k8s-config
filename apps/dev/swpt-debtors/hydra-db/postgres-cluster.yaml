@@ -8,15 +8,21 @@ metadata:
   #
   annotations:
     # The container image for the Postgres exporter sidecar.
-    #
     kustomize_postgres_exporter_image: quay.io/prometheuscommunity/postgres-exporter:v0.17.1
 
-    # Kubernetes memory and CPU requests and limits, for the Postgres
-    # exporter sidecar.
+    # The container image for the WALG exporter sidecar.
+    kustomize_walg_exporter_image: ghcr.io/thedatabaseme/wal-g-exporter:0.1.0
+
+    # Kubernetes memory and CPU requests and limits, for the exporter
+    # sidecars.
     kustomize_postgres_exporter_cpu_request: 1m
     kustomize_postgres_exporter_cpu_limit: 2000m
     kustomize_postgres_exporter_memory_request: 13Mi
     kustomize_postgres_exporter_memory_limit: 1Gi
+    kustomize_walg_exporter_cpu_request: 1m
+    kustomize_walg_exporter_cpu_limit: 2000m
+    kustomize_walg_exporter_memory_request: 28Mi
+    kustomize_walg_exporter_memory_limit: 1Gi
 
 spec:
   # Specifies the "spilo" OCI image to use.

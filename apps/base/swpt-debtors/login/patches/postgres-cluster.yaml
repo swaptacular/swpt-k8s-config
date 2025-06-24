@@ -48,10 +48,19 @@
   value:
     - name: minio-ca-certificate
       mountPath: /certs/minio
-      targetContainers: []
+      targetContainers:
+      - postgres
+      - backup-exporter
       volumeSource:
         configMap:
           name: kube-root-ca.crt
+    - name: walg
+      mountPath: /run/etc
+      targetContainers:
+      - postgres
+      - backup-exporter
+      volumeSource:
+        emptyDir: {}
 
 - op: add
   path: /spec/env/-
@@ -187,6 +196,26 @@
             name: postgres.login-db.credentials.postgresql.acid.zalan.do
             key: username
       - name: DATA_SOURCE_PASS
+        valueFrom:
+          secretKeyRef:
+            name: postgres.login-db.credentials.postgresql.acid.zalan.do
+            key: password
+  - name: backup-exporter
+    image: walg-exporter  # Will be automatically replaced.
+    ports:
+      - name: backup-exporter
+        containerPort: 9351
+    env:
+      - name: PGHOST
+        value: 127.0.0.1
+      - name: PGPORT
+        value: "5432"
+      - name: PGUSER
+        valueFrom:
+          secretKeyRef:
+            name: postgres.login-db.credentials.postgresql.acid.zalan.do
+            key: username
+      - name: PGPASSWORD
         valueFrom:
           secretKeyRef:
             name: postgres.login-db.credentials.postgresql.acid.zalan.do

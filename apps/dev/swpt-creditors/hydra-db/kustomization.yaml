@@ -60,3 +60,8 @@ replacements:
 - path: ../../../base/swpt-creditors/hydra-db/postgres/replacements/postgres-exporter-cpu-limit.yaml
 - path: ../../../base/swpt-creditors/hydra-db/postgres/replacements/postgres-exporter-memory-request.yaml
 - path: ../../../base/swpt-creditors/hydra-db/postgres/replacements/postgres-exporter-memory-limit.yaml
+- path: ../../../base/swpt-creditors/hydra-db/postgres/replacements/walg-exporter-image.yaml
+- path: ../../../base/swpt-creditors/hydra-db/postgres/replacements/walg-exporter-cpu-request.yaml
+- path: ../../../base/swpt-creditors/hydra-db/postgres/replacements/walg-exporter-cpu-limit.yaml
+- path: ../../../base/swpt-creditors/hydra-db/postgres/replacements/walg-exporter-memory-request.yaml
+- path: ../../../base/swpt-creditors/hydra-db/postgres/replacements/walg-exporter-memory-limit.yaml

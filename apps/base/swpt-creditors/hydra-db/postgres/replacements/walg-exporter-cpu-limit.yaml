@@ -1,0 +1,17 @@
+source:
+  group: acid.zalan.do
+  version: v1
+  kind: postgresql
+  name: hydra-db
+  fieldPath: metadata.annotations.kustomize_walg_exporter_cpu_limit
+targets:
+  - select:
+      group: acid.zalan.do
+      version: v1
+      kind: postgresql
+      name: hydra-db
+    fieldPaths:
+      - spec.sidecars.[name=backup-exporter].resources.limits.cpu
+    options:
+      create: true
+
