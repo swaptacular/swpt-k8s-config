@@ -1,0 +1,14 @@
+source:
+  kind: ConfigMap
+  name: shardconfig
+  fieldPath: metadata.annotations.kustomize_walg_exporter_memory_request
+targets:
+  - select:
+      group: acid.zalan.do
+      version: v1
+      kind: postgresql
+      name: db
+    fieldPaths:
+      - spec.sidecars.[name=backup-exporter].resources.requests.memory
+    options:
+      create: true

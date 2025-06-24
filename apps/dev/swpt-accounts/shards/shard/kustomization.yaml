@@ -102,11 +102,20 @@ configMapGenerator:
       kustomize_postgres_exporter_cpu_limit: 2000m
       kustomize_postgres_exporter_memory_request: 13Mi
       kustomize_postgres_exporter_memory_limit: 1Gi
+      kustomize_walg_exporter_cpu_request: 1m
+      kustomize_walg_exporter_cpu_limit: 2000m
+      kustomize_walg_exporter_memory_request: 13Mi
+      kustomize_walg_exporter_memory_limit: 1Gi
 
       # This annotation specifies the container image for the Postgres
       # exporter sidecar.
       #
       kustomize_postgres_exporter_image: quay.io/prometheuscommunity/postgres-exporter:v0.17.1
+
+      # This annotation specifies the container image for the WALG
+      # exporter sidecar.
+      #
+      kustomize_walg_exporter_image: ghcr.io/thedatabaseme/wal-g-exporter:0.1.0
 
       # Do not change the next two lines!
       kustomize_zalando_top_level_domain: do
@@ -188,6 +197,11 @@ replacements:
 - path: ../../../../base/swpt-accounts/shard/replacements/postgres-exporter-cpu-limit.yaml
 - path: ../../../../base/swpt-accounts/shard/replacements/postgres-exporter-memory-request.yaml
 - path: ../../../../base/swpt-accounts/shard/replacements/postgres-exporter-memory-limit.yaml
+- path: ../../../../base/swpt-accounts/shard/replacements/walg-exporter-image.yaml
+- path: ../../../../base/swpt-accounts/shard/replacements/walg-exporter-cpu-request.yaml
+- path: ../../../../base/swpt-accounts/shard/replacements/walg-exporter-cpu-limit.yaml
+- path: ../../../../base/swpt-accounts/shard/replacements/walg-exporter-memory-request.yaml
+- path: ../../../../base/swpt-accounts/shard/replacements/walg-exporter-memory-limit.yaml
 - path: ../../../../base/swpt-accounts/shard/replacements/secrets-clustername.yaml
 - path: ../../../../base/swpt-accounts/shard/replacements/secrets-namesuffix.yaml
 - path: ../../../../base/swpt-accounts/shard/replacements/shardconfig.yaml
