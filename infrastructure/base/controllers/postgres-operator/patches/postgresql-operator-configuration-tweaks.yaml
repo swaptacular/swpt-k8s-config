@@ -5,7 +5,7 @@ metadata:
 configuration:
   docker_image: ghcr.io/zalando/spilo-17:4.0-p2
   max_instances: 7
-  set_memory_request_to_limit: true
+  set_memory_request_to_limit: false
   kubernetes:
     enable_finalizers: false
     enable_owner_references: true

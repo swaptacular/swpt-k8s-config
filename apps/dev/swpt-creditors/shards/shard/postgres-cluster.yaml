@@ -13,13 +13,14 @@ spec:
   volume:
     size: 1Gi
 
-  # Specifies Kubernetes memory and CPU requests and limits. The
-  # Postgres operator will make sure that the memory request is the
-  # same as the memory limit.
+  # Specifies Kubernetes memory and CPU requests and limits. It is
+  # recommended that the memory request is the same as the memory
+  # limit.
   #
   resources:
     requests:
       cpu: 10m
+      memory: 350Mi
     limits:
       cpu: 500m
       memory: 350Mi
