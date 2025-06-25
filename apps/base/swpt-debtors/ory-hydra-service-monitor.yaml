@@ -1,0 +1,16 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: swpt-hydra
+  labels:
+    release: prometheus
+    application: swpt-hydra
+spec:
+  endpoints:
+  - port: http-admin
+    path: /admin/metrics/prometheus
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: hydra
+      app.kubernetes.io/instance: swpt
+      app.kubernetes.io/component: admin
