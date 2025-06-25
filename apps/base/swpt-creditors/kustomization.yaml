@@ -18,6 +18,7 @@ resources:
 - stomp-server.yaml
 - ory-hydra.yaml
 - ory-hydra-oauth2-clients.yaml
+- ory-hydra-service-monitor.yaml
 - network-policies.yaml
 - ingress-nginx.yaml
 - ingress-rules.yaml
