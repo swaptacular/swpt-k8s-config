@@ -20,6 +20,7 @@ resources:
 - network-policies.yaml
 - ingress-nginx.yaml
 - ingress-rules.yaml
+- ingress-nginx-pod-monitor.yaml
 - acme-cert-issuer.yaml
 - spilo-pod-monitors.yaml
 - web-ui/
