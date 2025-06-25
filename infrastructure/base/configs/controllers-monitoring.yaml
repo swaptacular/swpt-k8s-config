@@ -2,6 +2,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: PodMonitor
 metadata:
   name: rabbitmq-cluster-operator
+  namespace: rabbitmq-system
   labels:
     release: prometheus
 spec:
