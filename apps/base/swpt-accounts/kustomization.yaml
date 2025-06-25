@@ -10,4 +10,4 @@ resources:
 - nfs-pvc.yaml
 - stomp-server.yaml
 - network-policies.yaml
-- spilo-pod-monitors.yaml
+- spilo-pod-monitor.yaml
