@@ -61,6 +61,8 @@ spec:
         ssl-session-tickets: "true"
         allow-snippet-annotations: "false"
         annotations-risk-level: "Critical"
+      metrics:
+        enabled: true
       priorityClassName: smp-receiver
       extraVolumeMounts:
       - name: ssl-session-ticket-key
