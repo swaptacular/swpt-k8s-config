@@ -12,6 +12,7 @@ resources:
 - namespace.yaml
 - broker-pdb.yaml
 - broker-policies.yaml
+- broker-service-monitor.yaml
 - apiproxy.yaml
 - nfs-pvc.yaml
 - stomp-server.yaml
