@@ -160,6 +160,7 @@ spec:
         repository: nginxinc/nginx-unprivileged
         digest: null
       resources: {}
+      verboseLogging: false
     sidecar:
       image:
         # The registry must be included in the "repository" value
