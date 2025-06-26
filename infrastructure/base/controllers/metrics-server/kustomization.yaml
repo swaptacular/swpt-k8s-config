@@ -3,6 +3,7 @@ kind: Kustomization
 
 resources:
 - components.yaml
+- network-policies.yaml
 
 patches:
 - path: patches/metrics-server-deployment.yaml
