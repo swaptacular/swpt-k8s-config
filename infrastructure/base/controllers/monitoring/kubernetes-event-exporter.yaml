@@ -56,6 +56,7 @@ spec:
             namespace: monitoring
             app: kubernetes-event-exporter
             instance: event-exporter
+            component: kubernetes-events
             stream: stdout
           url: http://loki-write:3100/loki/api/v1/push
       - name: dump
