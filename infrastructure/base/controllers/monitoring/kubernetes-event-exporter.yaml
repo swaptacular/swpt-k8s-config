@@ -31,9 +31,19 @@ spec:
       tag: 1.7.0-debian-12-r42
       digest: ""
 
-    priorityClassName: critical-monitoring
     replicaCount: 1  # Normally, 1 replica should be enough even in production.
-    podAntiAffinityPreset: soft  # This might be set to "hard" if replicaCount > 1.
+    priorityClassName: critical-monitoring
+    affinity:
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchLabels:
+              app.kubernetes.io/instance: event-exporter
+              app.kubernetes.io/name: kubernetes-event-exporter
+              app.kubernetes.io/component: kubernetes-event-exporter
+          topologyKey: kubernetes.io/hostname
+          matchLabelKeys:
+          - pod-template-hash
     resources: {}
       # requests:
       #   cpu: 100m
