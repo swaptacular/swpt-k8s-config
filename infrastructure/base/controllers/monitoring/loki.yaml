@@ -110,6 +110,15 @@ spec:
       resources: {}
     read:
       replicas: 1
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchLabels:
+                  app.kubernetes.io/component: read
+              topologyKey: kubernetes.io/hostname
+              matchLabelKeys:
+              - pod-template-hash
       resources: {}
     backend:
       replicas: 1
@@ -156,11 +165,20 @@ spec:
       resources: {}
     gateway:
       replicas: 1
+      verboseLogging: false
       image:
         repository: nginxinc/nginx-unprivileged
         digest: null
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchLabels:
+                  app.kubernetes.io/component: gateway
+              topologyKey: kubernetes.io/hostname
+              matchLabelKeys:
+              - pod-template-hash
       resources: {}
-      verboseLogging: false
     sidecar:
       image:
         # The registry must be included in the "repository" value
