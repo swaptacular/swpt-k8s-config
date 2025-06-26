@@ -15,6 +15,7 @@ spec:
 
   targetNamespace: monitoring
   releaseName: loki
+
   values:
     global:
       image:
