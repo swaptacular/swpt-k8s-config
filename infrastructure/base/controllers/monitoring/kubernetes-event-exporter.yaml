@@ -45,29 +45,22 @@ spec:
       #   memory: 192Mi
 
     config:
-      logLevel: debug
+      logLevel: info
       logFormat: pretty
+      metricsNamePrefix: event_exporter_
       receivers:
       - name: loki
         loki:
           streamLabels:
-            foo: event-exporter
+            job: monitoring/kubernetes-events
+            namespace: monitoring
+            app: kubernetes-event-exporter
+            instance: event-exporter
+            stream: stdout
           url: http://loki-write:3100/loki/api/v1/push
       - name: dump
         file:
           path: "/dev/stdout"
-          ## Example:
-          ## layout:
-          ##   message: "{{ .Message }}"
-          ##   reason: "{{ .Reason }}"
-          ##   type: "{{ .Type }}"
-          ##   count: "{{ .Count }}"
-          ##   kind: "{{ .InvolvedObject.Kind }}"
-          ##   name: "{{ .InvolvedObject.Name }}"
-          ##   namespace: "{{ .Namespace }}"
-          ##   component: "{{ .Source.Component }}"
-          ##   host: "{{ .Source.Host }}"
-          ##
           layout: {}
       route:
         routes:
