@@ -94,7 +94,7 @@ spec:
       querier:
         # Default is 4, if you have enough memory and CPU you can
         # increase, reduce if OOMing.
-        max_concurrent: 2
+        max_concurrent: 4
       compactor:
         retention_enabled: true
         delete_request_store: s3
@@ -163,6 +163,8 @@ spec:
         repository: grafana/loki-canary
         digest: null
       resources: {}
+      extraArgs:
+        - "-log.level=warn"
     gateway:
       replicas: 1
       verboseLogging: false
