@@ -22,7 +22,7 @@ spec:
         registry: null
       extraArgs:
         - "-config.expand-env=true"
-        - "-log.level warn"
+        - "-log.level=warn"
       extraEnvFrom:
         - secretRef:
             name: loki-object-store
