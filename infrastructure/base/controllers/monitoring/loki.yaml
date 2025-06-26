@@ -15,7 +15,6 @@ spec:
 
   targetNamespace: monitoring
   releaseName: loki
-
   values:
     global:
       image:
@@ -95,7 +94,7 @@ spec:
       querier:
         # Default is 4, if you have enough memory and CPU you can
         # increase, reduce if OOMing.
-        max_concurrent: 4
+        max_concurrent: 2
       compactor:
         retention_enabled: true
         delete_request_store: s3
