@@ -31,9 +31,9 @@ spec:
       tag: 1.7.0-debian-12-r42
       digest: ""
 
-    replicaCount: 1  # Normally, 1 replica should be enough even in production.
     priorityClassName: critical-monitoring
-    podAntiAffinityPreset: soft  # can be set to "hard"
+    replicaCount: 1  # Normally, 1 replica should be enough even in production.
+    podAntiAffinityPreset: soft  # This might be set to "hard" if replicaCount > 1.
     resources: {}
       # requests:
       #   cpu: 100m

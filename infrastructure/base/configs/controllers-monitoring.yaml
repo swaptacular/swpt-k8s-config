@@ -48,3 +48,21 @@ spec:
         - webhook
   podMetricsEndpoints:
     - port: http-metrics
+
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: event-exporter-kubernetes-event-exporter
+  namespace: monitoring
+  labels:
+    release: prometheus
+    application: kubernetes-event-exporter
+spec:
+  endpoints:
+  - port: http
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: event-exporter
+      app.kubernetes.io/name: kubernetes-event-exporter
+      app.kubernetes.io/component: metrics
