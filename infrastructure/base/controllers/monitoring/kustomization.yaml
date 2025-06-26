@@ -9,3 +9,4 @@ resources:
 - loki.yaml
 - loki-pdb.yaml
 - network-policies.yaml
+- kubernetes-event-exporter.yaml
