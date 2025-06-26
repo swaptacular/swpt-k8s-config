@@ -101,6 +101,7 @@ spec:
       limits_config:
         retention_period: 30d
         max_query_lookback: 30d  # Should be the same as `retention_period`.
+        volume_enabled: true
     write:
       replicas: 1
       persistence:
