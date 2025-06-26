@@ -163,8 +163,6 @@ spec:
         repository: grafana/loki-canary
         digest: null
       resources: {}
-      extraArgs:
-        - "-log.level=warn"
     gateway:
       replicas: 1
       verboseLogging: false
