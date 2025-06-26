@@ -47,6 +47,50 @@ images:
 
 patches:
 
+# This patch specifies the kubernetes-event-exporter's OCI image. You
+# should set image registry, image repository, and image digest.
+#
+- patch: |
+    - op: replace
+      path: /spec/values/image/registry
+      value: docker.io
+    - op: replace
+      path: /spec/values/image/repository
+      value: bitnami/kubernetes-event-exporter
+    - op: replace
+      path: /spec/values/image/digest
+      value: sha256:03937b1be9fad8702059415e021eee2cba931ba04a607209c3da0e5cec66c223
+  target:
+    group: helm.toolkit.fluxcd.io
+    version: v2
+    kind: HelmRelease
+    name: kubernetes-event-exporter
+    namespace: monitoring
+
+# This patch configures the CPU, memory, and ephemeral-storage
+# requests and limits for the kubernetes-event-exporter pod. The
+# defaults (check the patched HelmRelease object) are good for small
+# clusters, and should be increased for bigger clusters, or decreased
+# for dev clusters.
+- target:
+    group: helm.toolkit.fluxcd.io
+    version: v2
+    kind: HelmRelease
+    name: kubernetes-event-exporter
+    namespace: monitoring
+  patch: |-
+    - op: replace
+      path: /spec/values/resources
+      value:
+        requests:
+          cpu: 1m
+          memory: 29Mi
+          ephemeral-storage: 5Mi
+        limits:
+          cpu: 150m
+          memory: 192Mi
+          ephemeral-storage: 2Gi
+
 # This patch is sometimes needed (in "KinD" clusters for example) in
 # order for the metrics-server to work. It simply adds
 # "--kubelet-insecure-tls" to the list of arguments for the metrics

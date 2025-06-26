@@ -21,12 +21,8 @@ spec:
         allowInsecureImages: true
       imagePullSecrets:
         - name: regcreds
-
-      # # Global image registry to use if it needs to be overridden for some
-      # # specific use cases (e.g local registries, custom images, ...)
-      # imageRegistry: "myregistry.example.com"
-
     image:
+      registry: docker.io
       repository: bitnami/kubernetes-event-exporter
       tag: 1.7.0-debian-12-r42
       digest: ""
@@ -44,15 +40,17 @@ spec:
           topologyKey: kubernetes.io/hostname
           matchLabelKeys:
           - pod-template-hash
-    resources: {}
-      # requests:
-      #   cpu: 100m
-      #   ephemeral-storage: 50Mi
-      #   memory: 128Mi
-      # limits:
-      #   cpu: 150m
-      #   ephemeral-storage: 2Gi
-      #   memory: 192Mi
+    resources:
+      # These defaults are good for small clusters. Should be bigger
+      # for bigger clusters, and can be smaller for dev clusters.
+      requests:
+        cpu: 100m
+        memory: 128Mi
+        ephemeral-storage: 50Mi
+      limits:
+        cpu: 150m
+        memory: 192Mi
+        ephemeral-storage: 2Gi
 
     config:
       logLevel: info
