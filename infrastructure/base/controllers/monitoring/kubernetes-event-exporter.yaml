@@ -33,7 +33,7 @@ spec:
 
     replicaCount: 1  # Normally, 1 replica should be enough even in production.
     priorityClassName: critical-monitoring
-    podAntiAffinityPreset: hard
+    podAntiAffinityPreset: soft  # can be set to "hard"
     resources: {}
       # requests:
       #   cpu: 100m
