@@ -12,10 +12,10 @@
     app.kubernetes.io/component: solver-db
 
 - op: test
-  path: /spec/pod_priority_class_name
+  path: /spec/podPriorityClassName
   value: null
 - op: add
-  path: /spec/pod_priority_class_name
+  path: /spec/podPriorityClassName
   value: trade-solver-database
 
 - op: test
