@@ -365,7 +365,7 @@ images:
   newTag: 2.6.6  # Must be the same as the tag for the "swpt-creditors" image.
 - name: swpt-creditors-ui
   newName: ghcr.io/swaptacular/swpt_creditors_ui
-  newTag: 1.2.2
+  newTag: 1.2.3
 - name: swpt-apiproxy
   newName: ghcr.io/swaptacular/swpt_apiproxy
   newTag: 1.2.2
