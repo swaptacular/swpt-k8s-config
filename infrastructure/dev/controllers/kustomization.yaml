@@ -97,6 +97,12 @@ patches:
         name: memcached:1.6.38-alpine
         newName: docker.io/memcached
         digest: sha256:08b6a6cba188fab22215b24a3d5c1ccc18343bc337268f663f20cd86dbdfffeb
+    - op: add
+      path: /spec/postRenderers/0/kustomize/images/-
+      value:
+        name: prom/memcached-exporter:v0.15.2
+        newName: docker.io/prom/memcached-exporter
+        digest: sha256:4356d5f0d2f0ba1525ad995d72fb83531ccaf85ee5468c02ab1049d4ccabd308
   target:
     group: helm.toolkit.fluxcd.io
     version: v2

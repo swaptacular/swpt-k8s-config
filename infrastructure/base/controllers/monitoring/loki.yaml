@@ -193,7 +193,14 @@ spec:
         tag: 1.30.3
         sha: ""
       resources: {}
+    memcached:
+      image:
+        repository: memcached
+        tag: 1.6.38-alpine
     memcachedExporter:
+      image:
+        repository: prom/memcached-exporter
+        tag: v0.15.3
       resources: {}
     test:
       enabled: true
