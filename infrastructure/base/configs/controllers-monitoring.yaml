@@ -66,9 +66,13 @@ spec:
       # The Gateway does not seem to export metrics.
       - { key: app.kubernetes.io/component, operator: NotIn, values: [gateway] }
   podTargetLabels:
-    - app.kubernetes.io/component
+    - component
   podMetricsEndpoints:
     - port: http-metrics
+      relabelings:
+        - action: replace
+          sourceLabels: [app_kubernetes_io_component]
+          targetLabel: component
 
 ---
 apiVersion: monitoring.coreos.com/v1
