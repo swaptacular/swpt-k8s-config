@@ -100,7 +100,7 @@ patches:
     - op: add
       path: /spec/postRenderers/0/kustomize/images/-
       value:
-        name: prom/memcached-exporter:v0.15.2
+        name: prom/memcached-exporter:v0.15.3
         newName: docker.io/prom/memcached-exporter
         digest: sha256:4356d5f0d2f0ba1525ad995d72fb83531ccaf85ee5468c02ab1049d4ccabd308
   target:

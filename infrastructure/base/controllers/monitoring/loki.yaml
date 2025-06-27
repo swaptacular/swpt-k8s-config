@@ -207,6 +207,3 @@ spec:
       image:
         repository: grafana/loki-helm-test
         digest: null
-    kubectlImage:
-      repository: bitnami/kubectl
-      digest: null
