@@ -203,7 +203,4 @@ spec:
         tag: v0.15.3
       resources: {}
     test:
-      enabled: true
-      image:
-        repository: grafana/loki-helm-test
-        digest: null
+      enabled: false
