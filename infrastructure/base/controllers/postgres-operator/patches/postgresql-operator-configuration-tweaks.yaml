@@ -42,3 +42,5 @@ configuration:
     default_memory_request: 350Mi
   patroni:
     enable_patroni_failsafe_mode: true
+  debug:
+    debug_logging: false
