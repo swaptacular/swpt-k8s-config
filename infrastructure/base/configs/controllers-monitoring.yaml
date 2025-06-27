@@ -73,6 +73,8 @@ spec:
         - action: replace
           sourceLabels: [app_kubernetes_io_component]
           targetLabel: component
+        - action: labeldrop
+          regex: app_kubernetes_io_component
 
 ---
 apiVersion: monitoring.coreos.com/v1
