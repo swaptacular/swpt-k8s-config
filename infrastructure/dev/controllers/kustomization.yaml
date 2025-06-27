@@ -87,7 +87,7 @@ patches:
       path: /spec/values/sidecar/image/repository
       value: docker.io/kiwigrid/k8s-sidecar
     - op: replace
-      path: /spec/values/gateway/image/sha
+      path: /spec/values/sidecar/image/sha
       value: sha256:49dcce269568b1645b0050f296da787c99119647965229919a136614123f0627
 
     - op: add
