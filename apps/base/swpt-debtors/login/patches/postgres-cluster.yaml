@@ -12,10 +12,10 @@
     app.kubernetes.io/component: database
 
 - op: test
-  path: /spec/pod_priority_class_name
+  path: /spec/podPriorityClassName
   value: null
 - op: add
-  path: /spec/pod_priority_class_name
+  path: /spec/podPriorityClassName
   value: login-database
 
 - op: test
