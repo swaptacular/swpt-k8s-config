@@ -15,6 +15,9 @@ spec:
 
   targetNamespace: monitoring
   releaseName: loki
+  postRenderers:
+    - kustomize:
+        images: []
   values:
     global:
       image:
@@ -161,6 +164,7 @@ spec:
     lokiCanary:
       image:
         repository: grafana/loki-canary
+        tag: 3.5.1
         digest: null
       resources: {}
     gateway:
@@ -168,6 +172,7 @@ spec:
       verboseLogging: false
       image:
         repository: nginxinc/nginx-unprivileged
+        tag: 1.28-alpine
         digest: null
       affinity:
         podAntiAffinity:
