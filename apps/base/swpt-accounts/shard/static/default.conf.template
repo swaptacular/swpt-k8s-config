@@ -8,7 +8,7 @@ http {
                     '"$http_user_agent" $request_length $request_time '
                     '[swpt-accounts-web-server] [] '
                     '$upstream_addr $upstream_response_length $upstream_response_time '
-                    '$upstream_status $req_id';
+                    '$upstream_status -';
 
     access_log /dev/stdout main;
 
