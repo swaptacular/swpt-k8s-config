@@ -72,7 +72,7 @@ spec:
       metricRelabelings:
         - action: replace
           sourceLabels: [app_kubernetes_io_component]
-          targetLabel: component
+          targetLabel: service
         - action: labeldrop
           regex: app_kubernetes_io_component
 
