@@ -184,27 +184,6 @@ patches:
         memory: 50Mi
 
 secretGenerator:
-- name: loki-object-store
-  namespace: monitoring
-  files:
-  # The "password" for the S3 service.
-  - AWS_SECRET_ACCESS_KEY=secrets/loki-aws-secret-access-key.encrypted
-
-  literals:
-  # The "username" for the S3 service.
-  - AWS_ACCESS_KEY_ID=console
-
-  # The endpoint for the S3 service.
-  - AWS_ENDPOINT=https://minio.minio-tenant.svc.cluster.local:443
-
-  # When Amazon S3 is used, this specifies the AWS region. In that
-  # case, specifying `AWS_ENDPOINT` should not be necessary.
-  - AWS_REGION=us-east-1
-
-  options:
-    disableNameSuffixHash: true
-  type: Opaque
-
 - name: regcreds
   namespace: cert-manager
   files:
