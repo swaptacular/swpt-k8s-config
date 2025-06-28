@@ -69,25 +69,6 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: allow-loki-s3-access
-  namespace: monitoring
-spec:
-  podSelector:
-    matchLabels:
-      app.kubernetes.io/name: loki
-      app.kubernetes.io/instance: loki
-  policyTypes:
-  - Egress
-  egress:
-  - to:
-    - ipBlock:
-        # This value will be automatically replaced.
-        cidr: 255.255.255.255/32
-
----
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
   name: allow-alertmanager-smtp-access
 spec:
   podSelector:
