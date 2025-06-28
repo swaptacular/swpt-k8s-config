@@ -14,9 +14,8 @@ spec:
     - spilo-role
   podMetricsEndpoints:
   - portNumber: 8008  # Patroni
-    metricRelabelings:
-      - action: replace
-        sourceLabels: [__meta_kubernetes_pod_label_cluster_name]
+    relabelings:
+      - sourceLabels: [__meta_kubernetes_pod_label_cluster_name]
         targetLabel: service
   - port: exporter  # Posgtgres exporter
   - port: backup-exporter  # WALG exporter
