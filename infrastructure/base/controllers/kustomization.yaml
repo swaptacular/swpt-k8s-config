@@ -3,6 +3,7 @@ kind: Kustomization
 resources:
 - monitoring/
 - priority-classes.yaml
+- minio-operator/
 - postgres-operator/
 - rabbitmq-system/
 - dragonfly-operator/
