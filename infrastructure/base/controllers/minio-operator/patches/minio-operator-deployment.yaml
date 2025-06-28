@@ -4,6 +4,7 @@ metadata:
   name: minio-operator
   namespace: minio-operator
 spec:
+  replicas: 1
   template:
     spec:
       priorityClassName: critical-monitoring
