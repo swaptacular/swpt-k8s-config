@@ -21,3 +21,6 @@ resources:
 - crds/
 - service.yaml
 - deployment.yaml
+
+patches:
+- path: patches/minio-operator-deployment.yaml

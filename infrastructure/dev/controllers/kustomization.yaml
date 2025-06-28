@@ -253,5 +253,13 @@ secretGenerator:
     disableNameSuffixHash: true
   type: kubernetes.io/dockerconfigjson
 
+- name: regcreds
+  namespace: minio-operator
+  files:
+  - ".dockerconfigjson=../regcreds.json.encrypted"
+  options:
+    disableNameSuffixHash: true
+  type: kubernetes.io/dockerconfigjson
+
 resources:
 - ../../base/controllers/

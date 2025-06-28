@@ -1,0 +1,11 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: minio-operator
+  namespace: minio-operator
+spec:
+  template:
+    spec:
+      priorityClassName: critical-monitoring
+      imagePullSecrets:
+        - name: regcreds
