@@ -5,7 +5,7 @@ namespace: monitoring
 secretGenerator:
 - name: loki-object-store
   literals:
-  - AWS_ENDPOINT=https://minio:443
+  - AWS_ENDPOINT=https://minio.monitoring.svc.cluster.local:443
   - AWS_REGION=us-east-1
   - AWS_ACCESS_KEY_ID=console
   - AWS_SECRET_ACCESS_KEY=console123
