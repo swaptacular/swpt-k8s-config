@@ -63,18 +63,13 @@ spec:
     matchExpressions:
       - { key: app.kubernetes.io/name, operator: In, values: [loki] }
       - { key: app.kubernetes.io/instance, operator: In, values: [loki] }
-      # The Gateway does not seem to export metrics.
+      # It seems that the Gateway does not export metrics.
       - { key: app.kubernetes.io/component, operator: NotIn, values: [gateway] }
-  podTargetLabels:
-    - app.kubernetes.io/component
   podMetricsEndpoints:
     - port: http-metrics
-      metricRelabelings:
-        - action: replace
-          sourceLabels: [app_kubernetes_io_component]
+      relabelings:
+        - sourceLabels: [__meta_kubernetes_pod_label_app_kubernetes_io_component]
           targetLabel: service
-        - action: labeldrop
-          regex: app_kubernetes_io_component
 
 ---
 apiVersion: monitoring.coreos.com/v1

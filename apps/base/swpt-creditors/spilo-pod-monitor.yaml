@@ -9,10 +9,22 @@ spec:
   selector:
     matchLabels:
       application: spilo
-  podTargetLabels:
-    - cluster-name
-    - spilo-role
+
   podMetricsEndpoints:
-  - portNumber: 8008  # Patroni
-  - port: exporter  # Posgtgres exporter
-  - port: backup-exporter  # WALG exporter
+  # Patroni
+  - portNumber: 8008
+    relabelings:
+      - sourceLabels: [__meta_kubernetes_pod_label_cluster_name]
+        targetLabel: service
+
+  # Posgtgres exporter
+  - port: exporter
+    relabelings:
+      - sourceLabels: [__meta_kubernetes_pod_label_cluster_name]
+        targetLabel: service
+
+  # WALG exporter
+  - port: backup-exporter
+    relabelings:
+      - sourceLabels: [__meta_kubernetes_pod_label_cluster_name]
+        targetLabel: service
