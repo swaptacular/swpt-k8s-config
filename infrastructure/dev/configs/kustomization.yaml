@@ -1,5 +1,35 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
+patches:
+
+# This patch specifies the parameters for the MinIO tenant used by
+# Loki. Once the tenant has been created, the value for
+# `/spec/pools/0/volumeClaimTemplate/spec/resources/requests/storage`
+# can not be changed. Then the only way to increase the capacity is to
+# increase the number of servers (`/spec/pools/0/servers`). The number
+# of servers can be either 1 (for standalone mode) or at least 4 (for
+# distributed mode). Note however, that the operator does not support
+# upgrading from standalone to distributed mode.
+- patch: |
+    - op: replace
+      path: /spec/pools/0/servers
+      value: 1
+    - op: replace
+      path: /spec/pools/0/volumeClaimTemplate/spec/resources/requests/storage
+      value: 1Gi
+    - op: test
+      path: /spec/pools/0/volumeClaimTemplate/spec/storageClassName
+      value: null
+    - op: replace
+      path: /spec/image
+      value: quay.io/minio/minio:RELEASE.2024-10-02T17-50-41Z
+  target:
+    group: minio.min.io
+    version: v2
+    kind: Tenant
+    name: loki-minio-tenant
+    namespace: monitoring
+
 resources:
 - ../../base/configs/
