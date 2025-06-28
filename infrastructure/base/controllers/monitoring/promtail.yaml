@@ -19,5 +19,5 @@ spec:
     config:
     # publish data to loki
       clients:
-        - url: http://loki-gateway/loki/api/v1/push
+        - url: http://loki-write:3100/loki/api/v1/push
           tenant_id: 1
