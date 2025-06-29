@@ -10,16 +10,12 @@ patches:
 # increase the number of servers (`/spec/pools/0/servers`). The number
 # of servers can be either 1 (for standalone mode) or at least 4 (for
 # distributed mode). Note however, that the operator does not support
-# upgrading from standalone to distributed mode. The value of `servers
-# X volumesPerServer` gives the total number of persistent volumes
-# that will be created, and must be at least 4.
+# upgrading from standalone to distributed mode. Also, the total
+# number of created persistent volumes will be 4 X servers.
 - patch: |
     - op: replace
       path: /spec/pools/0/servers
       value: 1
-    - op: replace
-      path: /spec/pools/0/volumesPerServer
-      value: 4
     - op: replace
       path: /spec/pools/0/volumeClaimTemplate/spec/resources/requests/storage
       value: 1Gi
