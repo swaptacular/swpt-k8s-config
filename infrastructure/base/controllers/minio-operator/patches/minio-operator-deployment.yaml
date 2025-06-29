@@ -10,3 +10,15 @@ spec:
       priorityClassName: critical-monitoring
       imagePullSecrets:
         - name: regcreds
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: name
+                    operator: In
+                    values:
+                      - minio-operator
+              topologyKey: kubernetes.io/hostname
+              matchLabelKeys:
+                - pod-template-hash
