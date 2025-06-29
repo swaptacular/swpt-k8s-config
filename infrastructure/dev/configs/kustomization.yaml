@@ -10,11 +10,16 @@ patches:
 # increase the number of servers (`/spec/pools/0/servers`). The number
 # of servers can be either 1 (for standalone mode) or at least 4 (for
 # distributed mode). Note however, that the operator does not support
-# upgrading from standalone to distributed mode.
+# upgrading from standalone to distributed mode. The value of `servers
+# X volumesPerServer` gives the total number of persistent volumes
+# that will be created, and must be at least 4.
 - patch: |
     - op: replace
       path: /spec/pools/0/servers
       value: 1
+    - op: replace
+      path: /spec/pools/0/volumesPerServer
+      value: 4
     - op: replace
       path: /spec/pools/0/volumeClaimTemplate/spec/resources/requests/storage
       value: 1Gi
@@ -23,7 +28,7 @@ patches:
       value: null
     - op: replace
       path: /spec/image
-      value: quay.io/minio/minio:RELEASE.2024-10-02T17-50-41Z
+      value: quay.io/minio/minio@sha256:ea15e53e66f96f63e12f45509d2d2d8fad774808debb490f48508b3130bd22d3
   target:
     group: minio.min.io
     version: v2

@@ -8,42 +8,47 @@ kind: Kustomization
 #
 images:
 
+# Minio operator:
+- name: minio/operator:v6.0.4
+  newName: minio/operator
+  digest: sha256:3b00b4de407a0be25a13d69faf4dc2727064b6bbbd89050c494fc768a433a755
+
 # Postgres operator:
 - name: ghcr.io/zalando/postgres-operator:v1.14.0
   newName: ghcr.io/zalando/postgres-operator
-  newTag: v1.14.0
+  digest: sha256:4f40cfc2283b8389ff2e85c3af17c428dee29963be20ddb28b451ead9984b6a9
 
 # DragonflyDB operator:
 - name: docker.dragonflydb.io/dragonflydb/operator:v1.1.11
   newName: docker.dragonflydb.io/dragonflydb/operator
-  newTag: v1.1.11
+  digest: sha256:11cef45ec1079b9d97930fc99ecd08ba29d4eca55cdb45887cb0ac40ee4e4d24
 - name: quay.io/brancz/kube-rbac-proxy:v0.16.0
   newName: quay.io/brancz/kube-rbac-proxy
-  newTag: v0.16.0
+  digest: sha256:2c8f8c357ff87b8bc5df4d967d5f52a23528c5e9c025f9aaa653a9ef4747585f
 
 # Cert-manager:
 - name: quay.io/jetstack/cert-manager-cainjector:v1.17.2
   newName: quay.io/jetstack/cert-manager-cainjector
-  newTag: v1.17.2
+  digest: sha256:ec56edb1161dbcdcb60b5408dd040c877b9f70161b71270c6439ad185796b5b7
 - name: quay.io/jetstack/cert-manager-controller:v1.17.2
   newName: quay.io/jetstack/cert-manager-controller
-  newTag: v1.17.2
+  digest: sha256:2c314feeb5e8b1a250a93be96542f086abc9df2de8e1a0cd7bd491cc7cc7ac08
 - name: quay.io/jetstack/cert-manager-webhook:v1.17.2
   newName: quay.io/jetstack/cert-manager-webhook
-  newTag: v1.17.2
+  digest: sha256:37b16a9dff004a755e5be11a4369aea4d5dd5895f98e1f7def886adca7f5c7b6
 
 # RabbitMQ operators:
 - name: rabbitmqoperator/cluster-operator:2.12.1
   newName: rabbitmqoperator/cluster-operator
-  newTag: 2.12.1
-- name: rabbitmqoperator/messaging-topology-operator:1.17.0
+  digest: sha256:0a7bd7f368168995b94303df54f246d5da67986cef3f5611884499d5d6abcf1b
+- name: rabbitmqoperator/messaging-topology-operator:1.17.2
   newName: rabbitmqoperator/messaging-topology-operator
-  newTag: 1.17.0
+  digest: sha256:c55bea19b4db1e7c54ae0e4a7aa62a5a33a1bd8ceb906d0e3eecca5f33f14b36
 
 # Metrics server:
 - name: registry.k8s.io/metrics-server/metrics-server:v0.7.2
   newName: registry.k8s.io/metrics-server/metrics-server
-  newTag: v0.7.2
+  digest: sha256:ffcb2bf004d6aa0a17d90e0247cf94f2865c8901dcab4427034c341951c239f9
 
 patches:
 
