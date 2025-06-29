@@ -9,3 +9,4 @@ stringData:
     export MINIO_ROOT_PASSWORD="minio123"
     export MINIO_BROWSER="on"
     export MINIO_PROMETHEUS_AUTH_TYPE="public"
+
