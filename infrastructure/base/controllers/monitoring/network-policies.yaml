@@ -34,6 +34,25 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
+  name: allow-mino-operator-ingress
+  namespace: monitoring
+spec:
+  podSelector:
+    matchLabels:
+      v1.min.io/pool: pool-0
+      v1.min.io/tenant: loki-minio-tenant
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          app.kubernetes.io/name: minio-operator
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
   name: allow-graphana-ingress
   namespace: monitoring
 spec:
