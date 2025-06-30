@@ -186,12 +186,18 @@ patches:
 # This patch specifies the parameters for the MinIO tenant used by
 # Loki. Once the tenant has been created, the value for
 # `/spec/pools/0/volumeClaimTemplate/spec/resources/requests/storage`
-# can not be changed. Then the only way to increase the capacity is to
-# increase the number of servers (`/spec/pools/0/servers`). The number
-# of servers can be either 1 (for standalone mode) or at least 4 (for
-# distributed mode). Note however, that the operator does not support
-# upgrading from standalone to distributed mode. Also, the total
-# number of created persistent volumes will be 4 X servers.
+# can not be changed. Then, the only way to increase the capacity is
+# to increase the number of servers (`/spec/pools/0/servers`). The
+# number of servers can be either 1 (for standalone mode) or at least
+# 4 (for distributed mode). Note however, that the operator does not
+# support upgrading from standalone to distributed mode. The total
+# number of created persistent volumes will be 4 X <number_of_servers>.
+#
+# Here you can also configure the OCI image used for the MinIO tenant
+# container; the resource request and limits for the MinIO tenant
+# container (`/spec/pools/0/resources`); and the resource request and
+# limits for the sidecar containers (`/spec/sideCars`).
+#
 - patch: |
     - op: replace
       path: /spec/pools/0/servers
