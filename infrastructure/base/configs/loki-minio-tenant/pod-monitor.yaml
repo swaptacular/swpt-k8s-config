@@ -1,0 +1,20 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: loki-minio-tenant
+  labels:
+    release: prometheus
+    application: loki
+spec:
+  selector:
+    matchLabels:
+      v1.min.io/tenant: loki-minio-tenant
+  podMetricsEndpoints:
+    - portNumber: 9000
+      scheme: https
+      path: /minio/metrics/v3
+      tlsConfig:
+        insecureSkipVerify: true
+      relabelings:
+        - sourceLabels: [__meta_kubernetes_pod_label_v1_min_io_tenant]
+          targetLabel: service
