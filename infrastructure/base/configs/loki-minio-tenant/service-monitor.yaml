@@ -10,6 +10,11 @@ spec:
   - port: https-minio
     scheme: https
     path: /minio/metrics/v3
+    tlsConfig:
+      ca:
+        configMap:
+          name: kube-root-ca.crt
+          key: ca.crt
   selector:
     matchLabels:
       v1.min.io/tenant: loki-minio-tenant
