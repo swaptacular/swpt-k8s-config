@@ -214,6 +214,16 @@ patches:
         limits:
           cpu: 1000m
           memory: 1000Mi
+    - op: add
+      path: /spec/sideCars
+      value:
+        resources:
+          requests:
+            cpu: 1m
+            memory: 15Mi
+          limits:
+            cpu: 1000m
+            memory: 1000Mi
   target:
     group: minio.min.io
     version: v2

@@ -217,8 +217,8 @@ patches:
 # `/spec/template/spec/containers/0/resources` configures the CPU,
 # memory, and ephemeral-storage requests and limits, and
 # `/spec/template/spec/containers/0/env/-` configures the OCI
-# container image used for tenants' sidecars. The default image is
-# "quay.io/minio/operator-sidecar:v6.0.2".
+# container image used for tenants' sidecars. The default image for
+# the sidecars is "quay.io/minio/operator-sidecar:v6.0.2".
 - target:
     kind: Deployment
     name: minio-operator
