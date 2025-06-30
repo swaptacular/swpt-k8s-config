@@ -3,6 +3,113 @@ kind: Kustomization
 
 patches:
 
+# This patch specifies the OCI images for all Loki-related containers.
+# You may specify your private container image registry (like
+# "registry.example.com") in the `/spec/values/global/image/registry`
+# value.
+#
+# NOTE: The values for `/spec/values/sidecar/image/repository` and
+# `/spec/postRenderers/0/kustomize/images/-/newName` must include the
+# registry name, because for them the "global.image.registry" setting
+# will be ignored. Also, the `/spec/values/sidecar/image/sha` value
+# must not be pretended with "sha256:".
+#
+- patch: |
+    - op: replace
+      path: /spec/values/global/image/registry
+      value: null
+
+    - op: replace
+      path: /spec/values/loki/image/repository
+      value: grafana/loki
+    - op: replace
+      path: /spec/values/loki/image/digest
+      value: sha256:a74594532eec4cc313401beedc4dd2708c43674c032084b1aeb87c14a5be1745
+
+    - op: replace
+      path: /spec/values/lokiCanary/image/repository
+      value: grafana/loki-canary
+    - op: replace
+      path: /spec/values/lokiCanary/image/digest
+      value: sha256:bdec3b1755f6c8ddb0208134e3452b5dad7356963765e75c29375e3ebb8cbb65
+
+    - op: replace
+      path: /spec/values/gateway/image/repository
+      value: nginxinc/nginx-unprivileged
+    - op: replace
+      path: /spec/values/gateway/image/digest
+      value: sha256:40e8efbfcfd6e26a47a73df5415454d7e42158971ee2d0d2746a2ee22df28398
+
+    - op: replace
+      path: /spec/values/sidecar/image/repository
+      value: docker.io/kiwigrid/k8s-sidecar
+    - op: replace
+      path: /spec/values/sidecar/image/sha
+      value: 49dcce269568b1645b0050f296da787c99119647965229919a136614123f0627
+
+    - op: add
+      path: /spec/postRenderers/0/kustomize/images/-
+      value:
+        name: memcached:1.6.38-alpine
+        newName: docker.io/memcached
+        digest: sha256:08b6a6cba188fab22215b24a3d5c1ccc18343bc337268f663f20cd86dbdfffeb
+    - op: add
+      path: /spec/postRenderers/0/kustomize/images/-
+      value:
+        name: prom/memcached-exporter:v0.15.3
+        newName: docker.io/prom/memcached-exporter
+        digest: sha256:4356d5f0d2f0ba1525ad995d72fb83531ccaf85ee5468c02ab1049d4ccabd308
+  target:
+    group: helm.toolkit.fluxcd.io
+    version: v2
+    kind: HelmRelease
+    name: loki
+    namespace: monitoring
+
+# This patch specifies the kubernetes-event-exporter's OCI image. You
+# should set image registry, image repository, and image digest.
+#
+- patch: |
+    - op: replace
+      path: /spec/values/image/registry
+      value: docker.io
+    - op: replace
+      path: /spec/values/image/repository
+      value: bitnami/kubernetes-event-exporter
+    - op: replace
+      path: /spec/values/image/digest
+      value: sha256:03937b1be9fad8702059415e021eee2cba931ba04a607209c3da0e5cec66c223
+  target:
+    group: helm.toolkit.fluxcd.io
+    version: v2
+    kind: HelmRelease
+    name: kubernetes-event-exporter
+    namespace: monitoring
+
+# This patch configures the CPU, memory, and ephemeral-storage
+# requests and limits for the kubernetes-event-exporter pod. The
+# defaults (check the patched HelmRelease object) are good for small
+# clusters, and should be increased for bigger clusters, or decreased
+# for dev clusters.
+- target:
+    group: helm.toolkit.fluxcd.io
+    version: v2
+    kind: HelmRelease
+    name: kubernetes-event-exporter
+    namespace: monitoring
+  patch: |-
+    - op: replace
+      path: /spec/values/resources
+      value:
+        requests:
+          cpu: 1m
+          memory: 29Mi
+          ephemeral-storage: 5Mi
+        limits:
+          cpu: 150m
+          memory: 192Mi
+          ephemeral-storage: 2Gi
+
 # This patch specifies the parameters for the MinIO tenant used by
 # Loki. Once the tenant has been created, the value for
 # `/spec/pools/0/volumeClaimTemplate/spec/resources/requests/storage`

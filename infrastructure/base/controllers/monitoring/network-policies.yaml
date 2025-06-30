@@ -2,7 +2,6 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: forbid-pods-internet-access
-  namespace: monitoring
 spec:
   podSelector: {}
   policyTypes:
@@ -21,7 +20,6 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: namespace-only-ingress
-  namespace: monitoring
 spec:
   policyTypes:
     - Ingress
@@ -34,28 +32,24 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: allow-mino-operator-ingress
-  namespace: monitoring
+  name: allow-alertmanager-smtp-access
 spec:
   podSelector:
     matchLabels:
-      v1.min.io/pool: pool-0
-      v1.min.io/tenant: loki-minio-tenant
+      app.kubernetes.io/name: alertmanager
   policyTypes:
-  - Ingress
-  ingress:
-  - from:
-    - namespaceSelector:
-        matchLabels:
-          app.kubernetes.io/name: operator
-          app.kubernetes.io/created-by: minio-operator
+  - Egress
+  egress:
+  - to:
+    - ipBlock:
+        # This value will be automatically replaced.
+        cidr: 255.255.255.255/32
 
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: allow-graphana-ingress
-  namespace: monitoring
 spec:
   policyTypes:
     - Ingress
@@ -84,20 +78,3 @@ spec:
   - to:
     - ipBlock:
         cidr: 0.0.0.0/0
-
----
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: allow-alertmanager-smtp-access
-spec:
-  podSelector:
-    matchLabels:
-      app.kubernetes.io/name: alertmanager
-  policyTypes:
-  - Egress
-  egress:
-  - to:
-    - ipBlock:
-        # This value will be automatically replaced.
-        cidr: 255.255.255.255/32

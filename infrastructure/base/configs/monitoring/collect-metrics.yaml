@@ -1,0 +1,38 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: loki
+  namespace: monitoring
+  labels:
+    release: prometheus
+    application: loki
+spec:
+  selector:
+    matchExpressions:
+      - { key: app.kubernetes.io/name, operator: In, values: [loki] }
+      - { key: app.kubernetes.io/instance, operator: In, values: [loki] }
+      # It seems that the Gateway does not export metrics.
+      - { key: app.kubernetes.io/component, operator: NotIn, values: [gateway] }
+  podMetricsEndpoints:
+    - port: http-metrics
+      relabelings:
+        - sourceLabels: [__meta_kubernetes_pod_label_app_kubernetes_io_component]
+          targetLabel: service
+
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: event-exporter-kubernetes-event-exporter
+  namespace: monitoring
+  labels:
+    release: prometheus
+    application: kubernetes-event-exporter
+spec:
+  endpoints:
+  - port: http
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: event-exporter
+      app.kubernetes.io/name: kubernetes-event-exporter
+      app.kubernetes.io/component: metrics

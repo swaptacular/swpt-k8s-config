@@ -1,0 +1,22 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: monitoring
+
+secretGenerator:
+- name: loki-object-store
+  literals:
+  - AWS_ENDPOINT=https://minio.monitoring.svc.cluster.local:443
+  - AWS_REGION=us-east-1
+  - AWS_ACCESS_KEY_ID=console
+  - AWS_SECRET_ACCESS_KEY=console123
+  options:
+    disableNameSuffixHash: true
+  type: Opaque
+
+resources:
+- promtail.yaml
+- loki.yaml
+- loki-pdb.yaml
+- kubernetes-event-exporter.yaml
+- collect-metrics.yaml
+- loki-minio-tenant/

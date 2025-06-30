@@ -3,5 +3,5 @@ kind: Kustomization
 
 resources:
 - crd-oauth2clients.yaml
-- controllers-monitoring.yaml
-- loki-minio-tenant/
+- collect-controllers-metrics.yaml
+- monitoring/

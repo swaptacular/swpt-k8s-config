@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-mino-operator-ingress
+spec:
+  podSelector:
+    matchLabels:
+      v1.min.io/pool: pool-0
+      v1.min.io/tenant: loki-minio-tenant
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          app.kubernetes.io/name: operator
+          app.kubernetes.io/created-by: minio-operator
