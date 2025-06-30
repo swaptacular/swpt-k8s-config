@@ -188,6 +188,157 @@ patches:
         cpu: 5m
         memory: 50Mi
 
+# This patch configures the CPU and memory requests and limits for the
+# Postgres operator pod.
+- target:
+    kind: Deployment
+    name: postgres-operator
+    namespace: postgres-operator
+  patch: |-
+    - op: replace
+      path: /spec/template/spec/containers/0/resources
+      value:
+        requests:
+          cpu: 1m
+          memory: 33Mi
+        limits:
+          cpu: 500m
+          memory: 500Mi
+
+# This patch configures the CPU and memory requests and limits for the
+# RabbitMQ cluster operator pod.
+- target:
+    kind: Deployment
+    name: rabbitmq-cluster-operator
+    namespace: rabbitmq-system
+  patch: |-
+    - op: replace
+      path: /spec/template/spec/containers/0/resources
+      value:
+        requests:
+          cpu: 1m
+          memory: 24Mi
+        limits:
+          cpu: 200m
+          memory: 500Mi
+
+# This patch configures the CPU and memory requests and limits for the
+# RabbitMQ messaging topology operator pod.
+- target:
+    kind: Deployment
+    name: messaging-topology-operator
+    namespace: rabbitmq-system
+  patch: |-
+    - op: replace
+      path: /spec/template/spec/containers/0/resources
+      value:
+        requests:
+          cpu: 1m
+          memory: 28Mi
+        limits:
+          cpu: 300m
+          memory: 500Mi
+
+# This patch configures the CPU and memory requests and limits for the
+# Cert-manager's controller pod.
+- target:
+    kind: Deployment
+    name: cert-manager
+    namespace: cert-manager
+  patch: |-
+    - op: add
+      path: /spec/template/spec/containers/0/resources
+      value:
+        requests:
+          cpu: 1m
+          memory: 30Mi
+        limits:
+          cpu: 100m
+          memory: 500Mi
+
+# This patch configures the CPU and memory requests and limits for the
+# Cert-manager's cainjector pod.
+- target:
+    kind: Deployment
+    name: cert-manager-cainjector
+    namespace: cert-manager
+  patch: |-
+    - op: add
+      path: /spec/template/spec/containers/0/resources
+      value:
+        requests:
+          cpu: 1m
+          memory: 39Mi
+        limits:
+          cpu: 100m
+          memory: 500Mi
+
+# This patch configures the CPU and memory requests and limits for the
+# Cert-manager's webhook pod.
+- target:
+    kind: Deployment
+    name: cert-manager-webhook
+    namespace: cert-manager
+  patch: |-
+    - op: add
+      path: /spec/template/spec/containers/0/resources
+      value:
+        requests:
+          cpu: 1m
+          memory: 20Mi
+        limits:
+          cpu: 100m
+          memory: 500Mi
+
+# This patch configures the CPU and memory requests and limits for the
+# DrabonflyDB operator pod. The first container
+# (`/spec/template/spec/containers/0/resources`) is the
+# kube-rbac-proxy sidecar, and the second container
+# (`/spec/template/spec/containers/1/resources`) is the DragonflyDB
+# operator.
+- target:
+    kind: Deployment
+    name: dragonfly-operator-controller-manager
+    namespace: dragonfly-operator-system
+  patch: |-
+    - op: replace
+      path: /spec/template/spec/containers/0/resources
+      value:
+        requests:
+          cpu: 5m
+          memory: 64Mi
+        limits:
+          cpu: 500m
+          memory: 128Mi
+    - op: replace
+      path: /spec/template/spec/containers/1/resources
+      value:
+        requests:
+          cpu: 10m
+          memory: 64Mi
+        limits:
+          cpu: 500m
+          memory: 128Mi
+
+# This patch configures the CPU, memory, and ephemeral-storage
+# requests and limits for the Minio operator pod.
+- target:
+    kind: Deployment
+    name: minio-operator
+    namespace: minio-operator
+  patch: |-
+    - op: replace
+      path: /spec/template/spec/containers/0/resources
+      value:
+        requests:
+          cpu: 1m
+          memory: 24Mi
+          ephemeral-storage: 500Mi
+        limits:
+          cpu: 500m
+          memory: 500Mi
+          ephemeral-storage: 2Gi
+
 secretGenerator:
 - name: regcreds
   namespace: cert-manager
