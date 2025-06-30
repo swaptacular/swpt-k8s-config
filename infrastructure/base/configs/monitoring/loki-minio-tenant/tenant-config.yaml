@@ -9,4 +9,4 @@ stringData:
     export MINIO_ROOT_PASSWORD="minio123"
     export MINIO_BROWSER="on"
     export MINIO_PROMETHEUS_AUTH_TYPE="public"
-
+    export MINIO_OPERATOR_IMAGE="quay.io/minio/operator-sidecar:v6.0.2@sha256:8d99fd33b4934816bef415b1d4a14cd8238d29ba509591a4502ffd95dbf6a9f5"

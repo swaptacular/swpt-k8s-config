@@ -66,6 +66,79 @@ patches:
     name: loki
     namespace: monitoring
 
+# This patch configures the CPU and memory requests and limits for the
+# different Loki components.
+- patch: |-
+    - op: replace
+      path: /spec/values/write/resources
+      value:
+        requests:
+          cpu: 1m
+          memory: 138Mi
+        limits:
+          cpu: 1000m
+          memory: 1000Mi
+    - op: replace
+      path: /spec/values/read/resources
+      value:
+        requests:
+          cpu: 1m
+          memory: 242Mi
+        limits:
+          cpu: 1000m
+          memory: 1000Mi
+    - op: replace
+      path: /spec/values/backend/resources
+      value:
+        requests:
+          cpu: 1m
+          memory: 101Mi
+        limits:
+          cpu: 1000m
+          memory: 1000Mi
+    - op: replace
+      path: /spec/values/sidecar/resources
+      value:
+        requests:
+          cpu: 1m
+          memory: 89Mi
+        limits:
+          cpu: 1000m
+          memory: 1000Mi
+    - op: replace
+      path: /spec/values/memcachedExporter/resources
+      value:
+        requests:
+          cpu: 1m
+          memory: 15Mi
+        limits:
+          cpu: 1000m
+          memory: 1000Mi
+    - op: replace
+      path: /spec/values/gateway/resources
+      value:
+        requests:
+          cpu: 1m
+          memory: 13Mi
+        limits:
+          cpu: 1000m
+          memory: 1000Mi
+    - op: replace
+      path: /spec/values/lokiCanary/resources
+      value:
+        requests:
+          cpu: 1m
+          memory: 32Mi
+        limits:
+          cpu: 1000m
+          memory: 1000Mi
+  target:
+    group: helm.toolkit.fluxcd.io
+    version: v2
+    kind: HelmRelease
+    name: loki
+    namespace: monitoring
+
 # This patch specifies the kubernetes-event-exporter's OCI image. You
 # should set image registry, image repository, and image digest.
 #
@@ -132,6 +205,15 @@ patches:
     - op: replace
       path: /spec/image
       value: quay.io/minio/minio@sha256:ea15e53e66f96f63e12f45509d2d2d8fad774808debb490f48508b3130bd22d3
+    - op: replace
+      path: /spec/pools/0/resources
+      value:
+        requests:
+          cpu: 1m
+          memory: 144Mi
+        limits:
+          cpu: 1000m
+          memory: 1000Mi
   target:
     group: minio.min.io
     version: v2
