@@ -1,0 +1,15 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: loki-minio-tenant
+  labels:
+    release: prometheus
+    application: loki
+spec:
+  endpoints:
+  - port: https-minio
+    scheme: https
+    path: /minio/metrics/v3
+  selector:
+    matchLabels:
+      v1.min.io/tenant: loki-minio-tenant
