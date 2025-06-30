@@ -213,8 +213,12 @@ patches:
           cpu: 500m
           memory: 128Mi
 
-# This patch configures the CPU, memory, and ephemeral-storage
-# requests and limits for the Minio operator pod.
+# This patch configures the Minio operator pod.
+# `/spec/template/spec/containers/0/resources` configures the CPU,
+# memory, and ephemeral-storage requests and limits, and
+# `/spec/template/spec/containers/0/env/-` configures the OCI
+# container image used for tenants' sidecars. The default image is
+# "quay.io/minio/operator-sidecar:v6.0.2".
 - target:
     kind: Deployment
     name: minio-operator
@@ -231,6 +235,11 @@ patches:
           cpu: 500m
           memory: 500Mi
           ephemeral-storage: 2Gi
+    - op: add
+      path: /spec/template/spec/containers/0/env/-
+      value:
+        name: MINIO_OPERATOR_IMAGE
+        value: quay.io/minio/operator-sidecar@sha256:8d99fd33b4934816bef415b1d4a14cd8238d29ba509591a4502ffd95dbf6a9f5
 
 secretGenerator:
 - name: regcreds
