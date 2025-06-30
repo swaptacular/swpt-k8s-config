@@ -238,7 +238,7 @@ patches:
     - op: add
       path: /spec/template/spec/containers/0/env/-
       value:
-        name: MINIO_OPERATOR_IMAGE
+        name: OPERATOR_SIDECAR_IMAGE
         value: quay.io/minio/operator-sidecar@sha256:8d99fd33b4934816bef415b1d4a14cd8238d29ba509591a4502ffd95dbf6a9f5
 
 secretGenerator:
