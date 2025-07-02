@@ -6,7 +6,7 @@ metadata:
     app.kubernetes.io/name: swpt-accounts
     app.kubernetes.io/component: message-broker
 spec:
-  maxUnavailable: 20%
+  maxUnavailable: 1
   unhealthyPodEvictionPolicy: AlwaysAllow
   selector:
     matchLabels:
