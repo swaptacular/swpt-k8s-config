@@ -69,25 +69,21 @@ patches:
 # should be enough for clusters with up to 100 nodes. For clusters of
 # more than 100 nodes, additional: 1m core per node, and 2MiB memory
 # per node should be requested.
-- target:
-    version: v1
-    kind: Deployment
-    name: metrics-server
-    namespace: kube-system
-  patch: |-
+- patch: |-
     - op: replace
       path: /spec/template/spec/containers/0/resources/requests
       value:
         cpu: 5m
         memory: 50Mi
+  target:
+    version: v1
+    kind: Deployment
+    name: metrics-server
+    namespace: kube-system
 
 # This patch configures the CPU and memory requests and limits for the
 # Postgres operator pod.
-- target:
-    kind: Deployment
-    name: postgres-operator
-    namespace: postgres-operator
-  patch: |-
+- patch: |-
     - op: replace
       path: /spec/template/spec/containers/0/resources
       value:
@@ -97,14 +93,14 @@ patches:
         limits:
           cpu: 500m
           memory: 500Mi
+  target:
+    kind: Deployment
+    name: postgres-operator
+    namespace: postgres-operator
 
 # This patch configures the CPU and memory requests and limits for the
 # RabbitMQ cluster operator pod.
-- target:
-    kind: Deployment
-    name: rabbitmq-cluster-operator
-    namespace: rabbitmq-system
-  patch: |-
+- patch: |-
     - op: replace
       path: /spec/template/spec/containers/0/resources
       value:
@@ -114,14 +110,14 @@ patches:
         limits:
           cpu: 200m
           memory: 500Mi
+  target:
+    kind: Deployment
+    name: rabbitmq-cluster-operator
+    namespace: rabbitmq-system
 
 # This patch configures the CPU and memory requests and limits for the
 # RabbitMQ messaging topology operator pod.
-- target:
-    kind: Deployment
-    name: messaging-topology-operator
-    namespace: rabbitmq-system
-  patch: |-
+- patch: |-
     - op: replace
       path: /spec/template/spec/containers/0/resources
       value:
@@ -131,16 +127,16 @@ patches:
         limits:
           cpu: 300m
           memory: 500Mi
+  target:
+    kind: Deployment
+    name: messaging-topology-operator
+    namespace: rabbitmq-system
 
 # This patch configures the Cert-manager's controller pod.
 #
-- target:
-    kind: Deployment
-    name: cert-manager
-    namespace: cert-manager
-  patch: |-
+- patch: |-
     # Configures the OCI image used for performing an ACME "http01"
-    # challenge. This simply replaces one of the parameters passed
+    # challenge. This simply replaces one of the passed parameters
     # when launching the Cert-manager's controller.
     - op: replace
       path: /spec/template/spec/containers/0/args/3
@@ -158,13 +154,14 @@ patches:
           cpu: 100m
           memory: 500Mi
 
+  target:
+    kind: Deployment
+    name: cert-manager
+    namespace: cert-manager
+
 # This patch configures the CPU and memory requests and limits for the
 # Cert-manager's cainjector pod.
-- target:
-    kind: Deployment
-    name: cert-manager-cainjector
-    namespace: cert-manager
-  patch: |-
+- patch: |-
     - op: add
       path: /spec/template/spec/containers/0/resources
       value:
@@ -174,14 +171,14 @@ patches:
         limits:
           cpu: 100m
           memory: 500Mi
+  target:
+    kind: Deployment
+    name: cert-manager-cainjector
+    namespace: cert-manager
 
 # This patch configures the CPU and memory requests and limits for the
 # Cert-manager's webhook pod.
-- target:
-    kind: Deployment
-    name: cert-manager-webhook
-    namespace: cert-manager
-  patch: |-
+- patch: |-
     - op: add
       path: /spec/template/spec/containers/0/resources
       value:
@@ -191,18 +188,16 @@ patches:
         limits:
           cpu: 100m
           memory: 500Mi
+  target:
+    kind: Deployment
+    name: cert-manager-webhook
+    namespace: cert-manager
 
 # This patch configures the CPU and memory requests and limits for the
-# DrabonflyDB operator pod. The first container
-# (`/spec/template/spec/containers/0/resources`) is the
-# kube-rbac-proxy sidecar, and the second container
-# (`/spec/template/spec/containers/1/resources`) is the DragonflyDB
-# operator.
-- target:
-    kind: Deployment
-    name: dragonfly-operator-controller-manager
-    namespace: dragonfly-operator-system
-  patch: |-
+# DrabonflyDB operator pod.
+#
+- patch: |-
+    # Resources for the "kube-rbac-proxy" sidecar container.
     - op: replace
       path: /spec/template/spec/containers/0/resources
       value:
@@ -212,6 +207,8 @@ patches:
         limits:
           cpu: 500m
           memory: 128Mi
+
+    # Resources for the DragonflyDB operator container.
     - op: replace
       path: /spec/template/spec/containers/1/resources
       value:
@@ -222,13 +219,14 @@ patches:
           cpu: 500m
           memory: 128Mi
 
+  target:
+    kind: Deployment
+    name: dragonfly-operator-controller-manager
+    namespace: dragonfly-operator-system
+
 # This patch configures the Minio operator pod.
 #
-- target:
-    kind: Deployment
-    name: minio-operator
-    namespace: minio-operator
-  patch: |-
+- patch: |-
     # Configures the CPU, memory, and ephemeral-storage requests and
     # limits.
     - op: replace
@@ -250,6 +248,11 @@ patches:
       value:
         name: OPERATOR_SIDECAR_IMAGE
         value: quay.io/minio/operator-sidecar@sha256:8d99fd33b4934816bef415b1d4a14cd8238d29ba509591a4502ffd95dbf6a9f5
+
+  target:
+    kind: Deployment
+    name: minio-operator
+    namespace: minio-operator
 
 secretGenerator:
 - name: regcreds
