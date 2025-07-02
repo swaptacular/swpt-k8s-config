@@ -132,17 +132,22 @@ patches:
           cpu: 300m
           memory: 500Mi
 
-# This patch configures the OCI image for the Cert-manager's ACME
-# "http01" solver, and the CPU and memory requests and limits for the
-# Cert-manager's controller pod.
+# This patch configures the Cert-manager's controller pod.
+#
 - target:
     kind: Deployment
     name: cert-manager
     namespace: cert-manager
   patch: |-
+    # Configures the OCI image used for performing an ACME "http01"
+    # challenge. This simply replaces one of the parameters passed
+    # when launching the Cert-manager's controller.
     - op: replace
       path: /spec/template/spec/containers/0/args/3
       value: --acme-http01-solver-image=quay.io/jetstack/cert-manager-acmesolver@sha256:f8a908ed92874a8c50d573f95abcc157903dc04b8e86ecd7b6532fd99baed0b5
+
+    # Configures CPU and memory requests and limits for the
+    # Cert-manager's controller pod.
     - op: add
       path: /spec/template/spec/containers/0/resources
       value:
@@ -218,16 +223,14 @@ patches:
           memory: 128Mi
 
 # This patch configures the Minio operator pod.
-# `/spec/template/spec/containers/0/resources` configures the CPU,
-# memory, and ephemeral-storage requests and limits, and
-# `/spec/template/spec/containers/0/env/-` configures the OCI
-# container image used for tenants' sidecars. The default image for
-# the sidecars is "quay.io/minio/operator-sidecar:v6.0.2".
+#
 - target:
     kind: Deployment
     name: minio-operator
     namespace: minio-operator
   patch: |-
+    # Configures the CPU, memory, and ephemeral-storage requests and
+    # limits.
     - op: replace
       path: /spec/template/spec/containers/0/resources
       value:
@@ -239,6 +242,9 @@ patches:
           cpu: 500m
           memory: 500Mi
           ephemeral-storage: 2Gi
+
+    # Configures the OCI container image used for tenants' sidecars.
+    # The default image is "quay.io/minio/operator-sidecar:v6.0.2".
     - op: add
       path: /spec/template/spec/containers/0/env/-
       value:
