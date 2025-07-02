@@ -60,7 +60,7 @@ patches:
       value: null
 
     # Configures the "read" service. The number of configured replicas
-    # should be at least 2 in production. Could be 1 for testing.
+    # should be at least 3 in production. Could be less for testing.
     - op: replace
       path: /spec/values/read/replicas
       value: 1
