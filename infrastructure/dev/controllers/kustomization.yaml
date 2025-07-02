@@ -57,6 +57,7 @@ patches:
 # "--kubelet-insecure-tls" to the list of arguments for the metrics
 # server process. Comment this section out if this does not apply to
 # your cluster.
+#
 - target:
     version: v1
     kind: Deployment
@@ -69,12 +70,14 @@ patches:
 # should be enough for clusters with up to 100 nodes. For clusters of
 # more than 100 nodes, additional: 1m core per node, and 2MiB memory
 # per node should be requested.
+#
 - patch: |-
     - op: replace
       path: /spec/template/spec/containers/0/resources/requests
       value:
         cpu: 5m
         memory: 50Mi
+
   target:
     version: v1
     kind: Deployment
@@ -83,6 +86,7 @@ patches:
 
 # This patch configures the CPU and memory requests and limits for the
 # Postgres operator pod.
+#
 - patch: |-
     - op: replace
       path: /spec/template/spec/containers/0/resources
@@ -93,6 +97,7 @@ patches:
         limits:
           cpu: 500m
           memory: 500Mi
+
   target:
     kind: Deployment
     name: postgres-operator
@@ -100,6 +105,7 @@ patches:
 
 # This patch configures the CPU and memory requests and limits for the
 # RabbitMQ cluster operator pod.
+#
 - patch: |-
     - op: replace
       path: /spec/template/spec/containers/0/resources
@@ -110,6 +116,7 @@ patches:
         limits:
           cpu: 200m
           memory: 500Mi
+
   target:
     kind: Deployment
     name: rabbitmq-cluster-operator
@@ -117,6 +124,7 @@ patches:
 
 # This patch configures the CPU and memory requests and limits for the
 # RabbitMQ messaging topology operator pod.
+#
 - patch: |-
     - op: replace
       path: /spec/template/spec/containers/0/resources
@@ -127,6 +135,7 @@ patches:
         limits:
           cpu: 300m
           memory: 500Mi
+
   target:
     kind: Deployment
     name: messaging-topology-operator
@@ -161,6 +170,7 @@ patches:
 
 # This patch configures the CPU and memory requests and limits for the
 # Cert-manager's cainjector pod.
+#
 - patch: |-
     - op: add
       path: /spec/template/spec/containers/0/resources
@@ -171,6 +181,7 @@ patches:
         limits:
           cpu: 100m
           memory: 500Mi
+
   target:
     kind: Deployment
     name: cert-manager-cainjector
@@ -178,6 +189,7 @@ patches:
 
 # This patch configures the CPU and memory requests and limits for the
 # Cert-manager's webhook pod.
+#
 - patch: |-
     - op: add
       path: /spec/template/spec/containers/0/resources
@@ -188,6 +200,7 @@ patches:
         limits:
           cpu: 100m
           memory: 500Mi
+
   target:
     kind: Deployment
     name: cert-manager-webhook
