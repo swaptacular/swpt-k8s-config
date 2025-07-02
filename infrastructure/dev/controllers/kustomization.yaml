@@ -27,15 +27,15 @@ images:
   digest: sha256:2c8f8c357ff87b8bc5df4d967d5f52a23528c5e9c025f9aaa653a9ef4747585f
 
 # Cert-manager:
-- name: quay.io/jetstack/cert-manager-cainjector:v1.17.2
+- name: quay.io/jetstack/cert-manager-cainjector:v1.17.3
   newName: quay.io/jetstack/cert-manager-cainjector
-  digest: sha256:ec56edb1161dbcdcb60b5408dd040c877b9f70161b71270c6439ad185796b5b7
-- name: quay.io/jetstack/cert-manager-controller:v1.17.2
+  digest: sha256:27241e76402b04684bdc878b504e17652be717c6c96b146cf3a5c26529ca58ad
+- name: quay.io/jetstack/cert-manager-controller:v1.17.3
   newName: quay.io/jetstack/cert-manager-controller
-  digest: sha256:2c314feeb5e8b1a250a93be96542f086abc9df2de8e1a0cd7bd491cc7cc7ac08
-- name: quay.io/jetstack/cert-manager-webhook:v1.17.2
+  digest: sha256:9738af4e97b2d58b21f16a016428723f5fa5d5b1be5aa7e4252c71086069632f
+- name: quay.io/jetstack/cert-manager-webhook:v1.17.3
   newName: quay.io/jetstack/cert-manager-webhook
-  digest: sha256:37b16a9dff004a755e5be11a4369aea4d5dd5895f98e1f7def886adca7f5c7b6
+  digest: sha256:3d24fdef1f56ba30dc4d89a0636334eef15c399cd99834955449fe349dd9c447
 
 # RabbitMQ operators:
 - name: rabbitmqoperator/cluster-operator:2.12.1
@@ -132,13 +132,17 @@ patches:
           cpu: 300m
           memory: 500Mi
 
-# This patch configures the CPU and memory requests and limits for the
+# This patch configures the OCI image for the Cert-manager's ACME
+# "http01" solver, and the CPU and memory requests and limits for the
 # Cert-manager's controller pod.
 - target:
     kind: Deployment
     name: cert-manager
     namespace: cert-manager
   patch: |-
+    - op: replace
+      path: /spec/template/spec/containers/0/args/3
+      value: --acme-http01-solver-image=quay.io/jetstack/cert-manager-acmesolver@sha256:f8a908ed92874a8c50d573f95abcc157903dc04b8e86ecd7b6532fd99baed0b5
     - op: add
       path: /spec/template/spec/containers/0/resources
       value:
