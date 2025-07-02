@@ -139,6 +139,32 @@ patches:
     name: loki
     namespace: monitoring
 
+# This patch specifies the OCI image, and the CPU and memory requests
+# and limits for the Promtail containers.
+#
+- patch: |
+    - op: add
+      path: /spec/postRenderers/0/kustomize/images/-
+      value:
+        name: docker.io/grafana/promtail:3.5.1
+        newName: docker.io/grafana/promtail
+        digest: sha256:65bfae480b572854180c78f7dc567a4ad2ba548b0c410e696baa1e0fa6381299
+    - op: replace
+      path: /spec/values/resources
+      value:
+        requests:
+          cpu: 1m
+          memory: 83Mi
+        limits:
+          cpu: 200m
+          memory: 128Mi
+  target:
+    group: helm.toolkit.fluxcd.io
+    version: v2
+    kind: HelmRelease
+    name: promtail
+    namespace: monitoring
+    
 # This patch specifies the kubernetes-event-exporter's OCI image. You
 # should set image registry, image repository, and image digest.
 #

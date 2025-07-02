@@ -14,9 +14,20 @@ spec:
 
   targetNamespace: monitoring
   releaseName: promtail
+  postRenderers:
+    - kustomize:
+        images: []
   values:
+    priorityClassName: critical-monitoring
+    imagePullSecrets:
+      - name: regcreds
+    image:
+      # Do not change these. Use "postRenderers/kustomize/images" instead.
+      registry: docker.io
+      repository: grafana/promtail
+      tag: "3.5.1"
+    resources: {}
     config:
-    # publish data to loki
       clients:
         - url: http://loki-write:3100/loki/api/v1/push
           tenant_id: 1
