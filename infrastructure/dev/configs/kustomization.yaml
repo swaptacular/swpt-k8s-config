@@ -3,22 +3,150 @@ kind: Kustomization
 
 patches:
 
-# This patch specifies the OCI images for all Loki-related containers.
-# You may specify your private container image registry (like
-# "registry.example.com") in the `/spec/values/global/image/registry`
-# value.
-#
-# NOTE: The values for `/spec/values/sidecar/image/repository` and
-# `/spec/postRenderers/0/kustomize/images/-/newName` must include the
-# registry name, because for them the "global.image.registry" setting
-# will be ignored. Also, the `/spec/values/sidecar/image/sha` value
-# must not be pretended with "sha256:".
+# This patch configures the various Loki components.
 #
 - patch: |
+    # Normally this value should not be changed. The default is 3.
+    # Could be 1 for testing.
+    - op: replace
+      path: /spec/values/loki/commonConfig/replication_factor
+      value: 1
+
+    # https://grafana.com/blog/2021/02/16/the-essential-config-settings-you-should-use-so-you-wont-drop-logs-in-loki/
+    # suggest that `heartbeat_timeout` should be increased to 10
+    # miniutes (the default is 1m).
+    - op: replace
+      path: /spec/values/loki/ingester/lifecycler/ring/heartbeat_timeout
+      value: 10m
+
+    # Maximum memory size the WAL may use during replay. After hitting
+    # this, it will flush data to storage before continuing. A unit
+    # suffix (KB, MB, GB) may be applied. The default is 4GB.
+    # Normally, this should be about 75% of the memory request for the
+    # ingester pods (see `/spec/values/write/resources` bellow).
+    - op: replace
+      path: /spec/values/loki/ingester/wal/replay_memory_ceiling
+      value: 100MB
+
+    # The maximum number of concurrent queries. The default is 4, if
+    # you have enough memory and CPU you can increase, reduce if
+    # OOMing.
+    - op: replace
+      path: /spec/values/loki/querier/max_concurrent
+      value: 1
+
+    # These two settings configure the period for which Loki keeps the
+    # logs. Both settings must be set to the same value.
+    - op: replace
+      path: /spec/values/loki/limits_config/retention_period
+      value: 3d
+    - op: replace
+      path: /spec/values/loki/limits_config/max_query_lookback
+      value: 3d
+
+    # Configures the "write" service. The number of configured
+    # replicas must grater or equal than the value set for
+    # `/spec/values/loki/commonConfig/replication_factor`. The
+    # configured persistent storage size should be at least 10Gi in
+    # production, probably quite a bit more. Can be less for testing.
+    - op: replace
+      path: /spec/values/write/replicas
+      value: 1
+    - op: replace
+      path: /spec/values/write/persistence/size
+      value: 1Gi
+    - op: replace
+      path: /spec/values/write/persistence/storageClass
+      value: null
+
+    # Configures the "read" service. The number of configured replicas
+    # should be at least 2 in production. Could be 1 for testing.
+    - op: replace
+      path: /spec/values/read/replicas
+      value: 1
+
+    # Configures the "backend" service. The number of configured
+    # replicas should be at least 3 in production. Could be 1 for
+    # testing. The configured persistent storage size should be at
+    # least 10Gi in production, probably quite a bit more. Can be less
+    # for testing.
+    - op: replace
+      path: /spec/values/backend/replicas
+      value: 1
+    - op: replace
+      path: /spec/values/backend/persistence/size
+      value: 1Gi
+    - op: replace
+      path: /spec/values/backend/persistence/storageClass
+      value: null
+
+    # Configures the "gateway" service. The number of configured
+    # replicas should be at least 2 in production. Could be 1 for
+    # testing.
+    - op: replace
+      path: /spec/values/gateway/replicas
+      value: 1
+
+    # Configures the "chunksCache" service. If this service is down,
+    # Loki can still fetch chunks directly from object storage.
+    # Therefore, the number of configured replicas could be 1 even in
+    # production. The value for `allocatedMemory` is in megabytes.
+    # Note that pods' memory requests will be adjusted automatically
+    # to accommodate the allocated memory. The configured persistent
+    # storage will be used to "extend" the allocated memory (although,
+    # the disk is much slower).
+    - op: replace
+      path: /spec/values/chunksCache/replicas
+      value: 1
+    - op: replace
+      path: /spec/values/chunksCache/allocatedMemory
+      value: 128
+    - op: replace
+      path: /spec/values/chunksCache/persistence/storageSize
+      value: 2Gi
+    - op: replace
+      path: /spec/values/chunksCache/persistence/storageClass
+      value: null
+
+    # Configures the "resultsCache" service. If this service is down,
+    # Loki can still query the object storage directly. Therefore, the
+    # number of configured replicas could be 1 even in production. The
+    # value for `allocatedMemory` is in megabytes. Note that pods'
+    # memory requests will be adjusted automatically to accommodate
+    # the allocated memory. The configured persistent storage will be
+    # used to "extend" the allocated memory (although, the disk is
+    # much slower).
+    - op: replace
+      path: /spec/values/resultsCache/replicas
+      value: 1
+    - op: replace
+      path: /spec/values/resultsCache/allocatedMemory
+      value: 64
+    - op: replace
+      path: /spec/values/resultsCache/persistence/storageSize
+      value: 2Gi
+    - op: replace
+      path: /spec/values/resultsCache/persistence/storageClass
+      value: null
+
+  target:
+    group: helm.toolkit.fluxcd.io
+    version: v2
+    kind: HelmRelease
+    name: loki
+    namespace: monitoring
+
+# This patch specifies the OCI images for the Loki-related containers.
+#
+- patch: |
+    # Sets a global registry. You may specify your private container
+    # image registry (like "registry.example.com") here. The default
+    # is `null`.
     - op: replace
       path: /spec/values/global/image/registry
       value: null
 
+    # "grafana/loki". Uses the global registry, if set.
     - op: replace
       path: /spec/values/loki/image/repository
       value: grafana/loki
@@ -26,6 +154,7 @@ patches:
       path: /spec/values/loki/image/digest
       value: sha256:a74594532eec4cc313401beedc4dd2708c43674c032084b1aeb87c14a5be1745
 
+    # "grafana/loki-canary". Uses the global registry, if set.
     - op: replace
       path: /spec/values/lokiCanary/image/repository
       value: grafana/loki-canary
@@ -33,6 +162,8 @@ patches:
       path: /spec/values/lokiCanary/image/digest
       value: sha256:bdec3b1755f6c8ddb0208134e3452b5dad7356963765e75c29375e3ebb8cbb65
 
+    # "nginxinc/nginx-unprivileged" (used by the gateway service).
+    # Uses the global registry, if set.
     - op: replace
       path: /spec/values/gateway/image/repository
       value: nginxinc/nginx-unprivileged
@@ -40,6 +171,34 @@ patches:
       path: /spec/values/gateway/image/digest
       value: sha256:40e8efbfcfd6e26a47a73df5415454d7e42158971ee2d0d2746a2ee22df28398
 
+    # "memcached" (used by chunksCache and resultsCache services).
+    # Uses the global registry, if set.
+    - op: add
+      path: /spec/postRenderers/0/kustomize/images/-
+      value:
+        name: memcached:1.6.38-alpine
+        newName: docker.io/memcached
+        digest: sha256:08b6a6cba188fab22215b24a3d5c1ccc18343bc337268f663f20cd86dbdfffeb
+
+    # "prom/memcached-exporter" (used to export metrics from the
+    # chunksCache and resultsCache services).
+    #
+    # NOTE: The value for `newName` MUST include the registry name,
+    # because the global registry, even if it is set, will be ignored.
+    - op: add
+      path: /spec/postRenderers/0/kustomize/images/-
+      value:
+        name: prom/memcached-exporter:v0.15.3
+        newName: docker.io/prom/memcached-exporter
+        digest: sha256:4356d5f0d2f0ba1525ad995d72fb83531ccaf85ee5468c02ab1049d4ccabd308
+
+    # "kiwigrid/k8s-sidecar" (used for container sidecars).
+    #
+    # NOTE: The value for `/spec/values/sidecar/image/repository` MUST
+    # include the registry name, because the global registry, even if
+    # it is set, will be ignored. Also, note that the value for
+    # `/spec/values/sidecar/image/sha` MUST NOT be prefixed with
+    # "sha256:".
     - op: replace
       path: /spec/values/sidecar/image/repository
       value: docker.io/kiwigrid/k8s-sidecar
@@ -47,18 +206,6 @@ patches:
       path: /spec/values/sidecar/image/sha
       value: 49dcce269568b1645b0050f296da787c99119647965229919a136614123f0627
 
-    - op: add
-      path: /spec/postRenderers/0/kustomize/images/-
-      value:
-        name: memcached:1.6.38-alpine
-        newName: docker.io/memcached
-        digest: sha256:08b6a6cba188fab22215b24a3d5c1ccc18343bc337268f663f20cd86dbdfffeb
-    - op: add
-      path: /spec/postRenderers/0/kustomize/images/-
-      value:
-        name: prom/memcached-exporter:v0.15.3
-        newName: docker.io/prom/memcached-exporter
-        digest: sha256:4356d5f0d2f0ba1525ad995d72fb83531ccaf85ee5468c02ab1049d4ccabd308
   target:
     group: helm.toolkit.fluxcd.io
     version: v2
@@ -68,7 +215,9 @@ patches:
 
 # This patch configures the CPU and memory requests and limits for the
 # different Loki components.
+#
 - patch: |-
+    # Loki "write" pods.
     - op: replace
       path: /spec/values/write/resources
       value:
@@ -78,6 +227,8 @@ patches:
         limits:
           cpu: 1000m
           memory: 1000Mi
+
+    # Loki "read" pods.
     - op: replace
       path: /spec/values/read/resources
       value:
@@ -87,6 +238,8 @@ patches:
         limits:
           cpu: 1000m
           memory: 1000Mi
+
+    # Loki "backend" pods.
     - op: replace
       path: /spec/values/backend/resources
       value:
@@ -96,24 +249,8 @@ patches:
         limits:
           cpu: 1000m
           memory: 1000Mi
-    - op: replace
-      path: /spec/values/sidecar/resources
-      value:
-        requests:
-          cpu: 1m
-          memory: 89Mi
-        limits:
-          cpu: 1000m
-          memory: 1000Mi
-    - op: replace
-      path: /spec/values/memcachedExporter/resources
-      value:
-        requests:
-          cpu: 1m
-          memory: 15Mi
-        limits:
-          cpu: 1000m
-          memory: 1000Mi
+
+    # Loki "gateway" pods.
     - op: replace
       path: /spec/values/gateway/resources
       value:
@@ -123,6 +260,8 @@ patches:
         limits:
           cpu: 1000m
           memory: 1000Mi
+
+    # Loki "canary" pods.
     - op: replace
       path: /spec/values/lokiCanary/resources
       value:
@@ -132,6 +271,29 @@ patches:
         limits:
           cpu: 1000m
           memory: 1000Mi
+
+    # Loki sidecar containers.
+    - op: replace
+      path: /spec/values/sidecar/resources
+      value:
+        requests:
+          cpu: 1m
+          memory: 89Mi
+        limits:
+          cpu: 1000m
+          memory: 1000Mi
+
+    # Memcached exporter sidecars.
+    - op: replace
+      path: /spec/values/memcachedExporter/resources
+      value:
+        requests:
+          cpu: 1m
+          memory: 15Mi
+        limits:
+          cpu: 1000m
+          memory: 1000Mi
+
   target:
     group: helm.toolkit.fluxcd.io
     version: v2
@@ -139,80 +301,9 @@ patches:
     name: loki
     namespace: monitoring
 
-# This patch specifies the OCI image, and the CPU and memory requests
-# and limits for the Promtail containers.
-#
-- patch: |
-    - op: add
-      path: /spec/postRenderers/0/kustomize/images/-
-      value:
-        name: docker.io/grafana/promtail:3.5.1
-        newName: docker.io/grafana/promtail
-        digest: sha256:65bfae480b572854180c78f7dc567a4ad2ba548b0c410e696baa1e0fa6381299
-    - op: replace
-      path: /spec/values/resources
-      value:
-        requests:
-          cpu: 1m
-          memory: 83Mi
-        limits:
-          cpu: 200m
-          memory: 128Mi
-  target:
-    group: helm.toolkit.fluxcd.io
-    version: v2
-    kind: HelmRelease
-    name: promtail
-    namespace: monitoring
-    
-# This patch specifies the kubernetes-event-exporter's OCI image. You
-# should set image registry, image repository, and image digest.
-#
-- patch: |
-    - op: replace
-      path: /spec/values/image/registry
-      value: docker.io
-    - op: replace
-      path: /spec/values/image/repository
-      value: bitnami/kubernetes-event-exporter
-    - op: replace
-      path: /spec/values/image/digest
-      value: sha256:03937b1be9fad8702059415e021eee2cba931ba04a607209c3da0e5cec66c223
-  target:
-    group: helm.toolkit.fluxcd.io
-    version: v2
-    kind: HelmRelease
-    name: kubernetes-event-exporter
-    namespace: monitoring
-
-# This patch configures the CPU, memory, and ephemeral-storage
-# requests and limits for the kubernetes-event-exporter pod. The
-# defaults (check the patched HelmRelease object) are good for small
-# clusters, and should be increased for bigger clusters, or decreased
-# for dev clusters.
-- target:
-    group: helm.toolkit.fluxcd.io
-    version: v2
-    kind: HelmRelease
-    name: kubernetes-event-exporter
-    namespace: monitoring
-  patch: |-
-    - op: replace
-      path: /spec/values/resources
-      value:
-        requests:
-          cpu: 1m
-          memory: 29Mi
-          ephemeral-storage: 5Mi
-        limits:
-          cpu: 150m
-          memory: 192Mi
-          ephemeral-storage: 2Gi
 
 # This patch specifies the parameters for the MinIO tenant used by
-# Loki. Once the tenant has been created, the value for
-# `/spec/pools/0/volumeClaimTemplate/spec/resources/requests/storage`
-# can not be changed. Then, the only way to increase the capacity is
+# Loki.  Then, the only way to increase the capacity is
 # to increase the number of servers (`/spec/pools/0/servers`). The
 # number of servers can be either 1 (for standalone mode) or at least
 # 4 (for distributed mode). Note however, that the operator does not
@@ -225,18 +316,30 @@ patches:
 # limits for the sidecar containers (`/spec/sideCars`).
 #
 - patch: |
-    - op: replace
-      path: /spec/pools/0/servers
-      value: 1
+    # Configures the size of the persistent volumes used by the
+    # tenant. The size of the volumes can not be changed after the
+    # tenant has been created. The total number of created persistent
+    # volumes will be 4 X <the_number_of_servers>.
     - op: replace
       path: /spec/pools/0/volumeClaimTemplate/spec/resources/requests/storage
       value: 1Gi
-    - op: test
-      path: /spec/pools/0/volumeClaimTemplate/spec/storageClassName
-      value: null
+
+    # The number of servers to run in parallel. Once the tenant has
+    # been created, the only way to increase the capacity of the
+    # tenant is to increase the number of servers. The number of
+    # servers can be either 1 (for standalone mode) or at least 4 (for
+    # distributed mode). Note however, that the operator does not
+    # support upgrading from standalone to distributed mode.
+    - op: replace
+      path: /spec/pools/0/servers
+      value: 1
+
+    # Set the OCI image used for the MinIO tenant containers.
     - op: replace
       path: /spec/image
       value: quay.io/minio/minio@sha256:ea15e53e66f96f63e12f45509d2d2d8fad774808debb490f48508b3130bd22d3
+
+    # Resource request and limits for the MinIO tenant containers.
     - op: replace
       path: /spec/pools/0/resources
       value:
@@ -246,6 +349,8 @@ patches:
         limits:
           cpu: 1000m
           memory: 1000Mi
+
+    # Resource request and limits for the sidecar containers.
     - op: add
       path: /spec/sideCars
       value:
@@ -256,11 +361,81 @@ patches:
           limits:
             cpu: 1000m
             memory: 1000Mi
+
   target:
     group: minio.min.io
     version: v2
     kind: Tenant
     name: loki-minio-tenant
+    namespace: monitoring
+
+# This patch specifies the OCI image, and the CPU and memory requests
+# and limits for the Promtail containers.
+#
+- patch: |
+    - op: add
+      path: /spec/postRenderers/0/kustomize/images/-
+      value:
+        name: docker.io/grafana/promtail:3.5.1
+        newName: docker.io/grafana/promtail
+        digest: sha256:65bfae480b572854180c78f7dc567a4ad2ba548b0c410e696baa1e0fa6381299
+
+    - op: replace
+      path: /spec/values/resources
+      value:
+        requests:
+          cpu: 1m
+          memory: 83Mi
+        limits:
+          cpu: 200m
+          memory: 128Mi
+
+  target:
+    group: helm.toolkit.fluxcd.io
+    version: v2
+    kind: HelmRelease
+    name: promtail
+    namespace: monitoring
+    
+# This patch configures kubernetes-event-exporter.
+#
+- patch: |
+    # The OCI container image to use. You should set separately the
+    # image registry, the image repository, and the image digest.
+    - op: replace
+      path: /spec/values/image/registry
+      value: docker.io
+    - op: replace
+      path: /spec/values/image/repository
+      value: bitnami/kubernetes-event-exporter
+    - op: replace
+      path: /spec/values/image/digest
+      value: sha256:03937b1be9fad8702059415e021eee2cba931ba04a607209c3da0e5cec66c223
+
+    # CPU, memory, and ephemeral-storage requests and limits for the
+    # kubernetes-event-exporter pod. The defaults
+    # (requests: cpu: 100m, memory: 128Mi, ephemeral-storage: 50Mi;
+    #    limits: cpu: 150m, memory: 192Mi, ephemeral-storage: 2Gi)
+    # are good for small clusters, and should be increased for bigger
+    # clusters, or decreased for dev clusters.
+    #
+    - op: replace
+      path: /spec/values/resources
+      value:
+        requests:
+          cpu: 1m
+          memory: 29Mi
+          ephemeral-storage: 5Mi
+        limits:
+          cpu: 150m
+          memory: 192Mi
+          ephemeral-storage: 2Gi
+
+  target:
+    group: helm.toolkit.fluxcd.io
+    version: v2
+    kind: HelmRelease
+    name: kubernetes-event-exporter
     namespace: monitoring
 
 resources:

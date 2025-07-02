@@ -20,7 +20,6 @@ spec:
   values:
     global:
       image:
-        # Overrides the container registry globally for all images.
         registry: null
       extraArgs:
         - "-config.expand-env=true"
@@ -45,7 +44,7 @@ spec:
         digest: null
       auth_enabled: false
       commonConfig:
-        replication_factor: 1  # This is 3 by default, and should be 3 in production.
+        replication_factor: 3
       schemaConfig:
         configs:
           - from: "2024-04-01"
@@ -76,14 +75,10 @@ spec:
       ingester:
         lifecycler:
           ring:
-            # https://grafana.com/blog/2021/02/16/the-essential-config-settings-you-should-use-so-you-wont-drop-logs-in-loki/
-            # suggest that `heartbeat_timeout` should be increased to
-            # 10 miniutes (the default is 1m). Note that the similar
-            # setting `ingester.lifecycler.heartbeat_timeout` seems to
-            # be deprecated, but this is not mentioned in the docs.
-            # However, ChatGPT "claims" that 3m is a sweet spot when
-            # using memberlist kvstore with non-HA control plane.
-            heartbeat_timeout: 3m
+            # The default is 1 minute. Note that the similar setting
+            # `ingester.lifecycler.heartbeat_timeout` seems to be
+            # deprecated, but this is not mentioned in the docs.
+            heartbeat_timeout: 1m
         chunk_idle_period: 1h
         chunk_encoding: snappy
         wal:
@@ -92,7 +87,7 @@ spec:
           # continuing. A unit suffix (KB, MB, GB) may be applied. The
           # default is 4GB. Normally, this should be about 75% of the
           # memory request for the ingester pods.
-          replay_memory_ceiling: 100MB
+          replay_memory_ceiling: 4GB
       querier:
         # Default is 4, if you have enough memory and CPU you can
         # increase, reduce if OOMing.
@@ -105,9 +100,9 @@ spec:
         max_query_lookback: 30d  # Should be the same as `retention_period`.
         volume_enabled: true
     write:
-      replicas: 1
+      replicas: 3
       persistence:
-        size: 1Gi  # Should be at least 10Gi in production, probably quite a bit more.
+        size: 10Gi
         storageClass: null
       resources: {}
     read:
@@ -125,17 +120,16 @@ spec:
     backend:
       replicas: 1
       persistence:
-        size: 1Gi  # The default is 10Gi.
+        size: 10Gi
         storageClass: null
       resources: {}
     chunksCache:
       replicas: 1
-      allocatedMemory: 128  # in megabytes, the default is 8192. Pods'
-                            # memory request will be adjusted automatically.
+      allocatedMemory: 8192
       priorityClassName: critical-monitoring
       persistence:
         enabled: true
-        storageSize: 2Gi  # Will be used to "extend" the `allocatedMemory`.
+        storageSize: 20Gi
         storageClass: null
       affinity:
         podAntiAffinity:
@@ -146,12 +140,11 @@ spec:
             topologyKey: kubernetes.io/hostname
     resultsCache:
       replicas: 1
-      allocatedMemory: 64  # in megabytes, the default is 1024. Pods'
-                           # memory request will be adjusted automatically.
+      allocatedMemory: 1024
       priorityClassName: critical-monitoring
       persistence:
         enabled: true
-        storageSize: 2Gi  # Will be used to "extend" the `allocatedMemory`.
+        storageSize: 5Gi
         storageClass: null
       affinity:
         podAntiAffinity:
