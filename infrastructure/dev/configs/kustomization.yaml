@@ -303,17 +303,7 @@ patches:
 
 
 # This patch specifies the parameters for the MinIO tenant used by
-# Loki.  Then, the only way to increase the capacity is
-# to increase the number of servers (`/spec/pools/0/servers`). The
-# number of servers can be either 1 (for standalone mode) or at least
-# 4 (for distributed mode). Note however, that the operator does not
-# support upgrading from standalone to distributed mode. The total
-# number of created persistent volumes will be 4 X <number_of_servers>.
-#
-# Here you can also configure the OCI image used for the MinIO tenant
-# container; the resource request and limits for the MinIO tenant
-# container (`/spec/pools/0/resources`); and the resource request and
-# limits for the sidecar containers (`/spec/sideCars`).
+# Loki.
 #
 - patch: |
     # Configures the size of the persistent volumes used by the
@@ -418,7 +408,6 @@ patches:
     #    limits: cpu: 150m, memory: 192Mi, ephemeral-storage: 2Gi)
     # are good for small clusters, and should be increased for bigger
     # clusters, or decreased for dev clusters.
-    #
     - op: replace
       path: /spec/values/resources
       value:
