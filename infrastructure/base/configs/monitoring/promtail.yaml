@@ -66,41 +66,41 @@ spec:
           - match:
               selector: '{meta_log_format="json",meta_log_client="python-logger"}'
               stages:
-                - labelallow:
-                    - level
+                # - labelallow:
+                #     - level
 
-                # # Try to parse the log message as JSON.
-                # - json:
-                #     expressions:
-                #       asctime: asctime
-                #       loggername: name
-                #       levelname: levelname
-                #       message: message
-                #     drop_malformed: false
+                # Try to parse the log message as JSON.
+                - json:
+                    expressions:
+                      asctime: asctime
+                      loggername: name
+                      levelname: levelname
+                      message: message
+                    drop_malformed: false
 
-                # # Lowercase the parsed "levelname" field. Make it a label.
-                # - template:
-                #     source: levelname
-                #     template: '{{ ToLower .Value }}'
-                # - labels:
-                #     level: levelname
+                # Lowercase the parsed "levelname" field. Make it a label.
+                - template:
+                    source: levelname
+                    template: '{{ ToLower .Value }}'
+                - labels:
+                    level: levelname
 
-                # # For JSON messages: Set the timestamp and make them more readable.
-                # - match:
-                #     selector: '{level!=""}'
-                #     stages:
-                #       - timestamp:
-                #           source: asctime
-                #           format: 2006-01-02T15:04:05-0700
-                #       - template:
-                #           source: message
-                #           template: logger="{{ .loggername }}" msg="{{ .Value }}"
-                #       - output:
-                #           source: message
+                # For JSON messages: Set the timestamp and make them more readable.
+                - match:
+                    selector: '{level!=""}'
+                    stages:
+                      - timestamp:
+                          source: asctime
+                          format: 2006-01-02T15:04:05-0700
+                      - template:
+                          source: message
+                          template: logger="{{ .loggername }}" msg="{{ .Value }}"
+                      - output:
+                          source: message
 
-                # # For plain text messages: Assign an "error" level.
-                # - match:
-                #     selector: '{level=""}'
-                #     stages:
-                #       - static_labels:
-                #           level: 'error'
+                # For plain text messages: Assign an "error" level.
+                - match:
+                    selector: '{level=""}'
+                    stages:
+                      - static_labels:
+                          level: 'error'
