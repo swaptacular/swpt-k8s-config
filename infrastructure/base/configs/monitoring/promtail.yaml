@@ -35,44 +35,27 @@ spec:
       snippets:
         extraRelabelConfigs:
           - source_labels:
-              - __meta_kubernetes_pod_label_log_format
+              - __meta_kubernetes_pod_label_log_pipeline
             action: replace
-            target_label: meta_log_format
-          - source_labels:
-              - __meta_kubernetes_pod_label_log_client
-            action: replace
-            target_label: meta_log_client
-          - source_labels:
-              - __meta_kubernetes_pod_label_log_oathkeeper
-            action: replace
-            target_label: meta_log_oathkeeper
+            target_label: meta_log_pipeline
 
         pipelineStages:
           # This is always needed.
           - cri: {}
 
-          # Drop empty lines.
-          - drop:
-              expression: '^$'
-
-          # Remove Oathkeeper welcome messages if necessary.
+          # The "swpt-python-logging" log pipeline:
           - match:
-              selector: '{meta_log_oathkeeper="true"}'
+              selector: '{meta_log_pipeline="swpt-python-logging",container!~"^await-migrations|configure$"}'
               stages:
+                # Remove Oathkeeper welcome messages.
                 - drop:
-                    expression: '^Thank you for using ORY Oathkeeper|Take security seriously and subscribe to the ORY Security Newsletter|>> Subscribe now: \S+ <<'
+                    expression: '^($|Thank you for using ORY Oathkeeper|Take security seriously and subscribe to the ORY Security Newsletter|>> Subscribe now: \S+ <<)'
 
-          # Apply special rules for Python JSON loggers.
-          - match:
-              selector: '{meta_log_format="json",meta_log_client="python-logger"}'
-              stages:
                 # Try to parse the log message as JSON.
                 - json:
                     expressions:
                       asctime: asctime
-                      loggername: name
                       levelname: levelname
-                      message: message
                     drop_malformed: false
 
                 # Lowercase the parsed "levelname" field. Make it a label.
@@ -82,33 +65,21 @@ spec:
                 - labels:
                     level: levelname
 
-                # For JSON messages: Set the timestamp and make them more readable.
+                # For JSON messages: Set the timestamp.
                 - match:
                     selector: '{level!=""}'
                     stages:
                       - timestamp:
                           source: asctime
                           format: 2006-01-02T15:04:05-0700
-                      - template:
-                          source: message
-                          template: logger="{{ .loggername }}" msg="{{ .Value }}"
-                      - output:
-                          source: message
 
-                # For plain text messages: Assign a level.
+                # For plain text messages: Assign an "error" level.
                 - match:
                     selector: '{level=""}'
                     stages:
                       - static_labels:
                           level: 'error'
-                      - match:
-                          selector: '{container=~"^await-migrations|configure$"}'
-                          stages:
-                            - static_labels:
-                                level: 'info'
 
           # Remove extra labels.
           - labeldrop:
-              - meta_log_format
-              - meta_log_client
-              - meta_log_oathkeeper
+              - meta_log_pipeline
