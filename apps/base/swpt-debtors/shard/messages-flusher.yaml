@@ -13,6 +13,8 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/component: messages-flusher
+        log.format: json
+        log.client: python-logger
     spec:
       affinity:
         podAntiAffinity:
