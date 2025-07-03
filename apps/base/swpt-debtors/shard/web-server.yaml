@@ -15,7 +15,7 @@ spec:
         app.kubernetes.io/component: web-server
         log.format: json
         log.client: python-logger
-        log.oathkeeper: "true"
+        # log.oathkeeper: "true"
     spec:
       affinity:
         podAntiAffinity:
