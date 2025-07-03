@@ -8,7 +8,7 @@ targets:
       name: tasks-processor
     fieldPaths:
       - spec.template.spec.containers.[name=tasks-processor].resources.limits.memory
-      - spec.template.spec.initContainers.[name=init].resources.limits.memory
+      - spec.template.spec.initContainers.[name=configure].resources.limits.memory
     options:
       create: true
 
