@@ -16,6 +16,7 @@ spec:
         log.format: json
         log.client: python-logger
         log.oathkeeper: "true"
+
     spec:
       affinity:
         podAntiAffinity:
