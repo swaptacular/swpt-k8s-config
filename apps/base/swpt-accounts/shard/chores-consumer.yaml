@@ -13,6 +13,7 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/component: chores-consumer
+        log.pipeline: swpt-python-logging
     spec:
       affinity:
         podAntiAffinity:
