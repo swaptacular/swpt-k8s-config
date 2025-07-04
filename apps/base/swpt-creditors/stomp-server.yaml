@@ -16,6 +16,7 @@ spec:
       labels:
         app.kubernetes.io/name: swpt-creditors
         app.kubernetes.io/component: stomp-server
+        log.pipeline: swpt-python-logging
     spec:
       affinity:
         podAntiAffinity:

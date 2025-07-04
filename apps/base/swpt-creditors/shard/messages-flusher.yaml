@@ -13,6 +13,7 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/component: messages-flusher
+        log.pipeline: swpt-python-logging
     spec:
       affinity:
         podAntiAffinity:

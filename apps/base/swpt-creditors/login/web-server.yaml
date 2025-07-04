@@ -16,6 +16,7 @@ spec:
       labels:
         app.kubernetes.io/name: swpt-login
         app.kubernetes.io/component: web-server
+        log.pipeline: swpt-python-logging
     spec:
       affinity:
         podAntiAffinity:

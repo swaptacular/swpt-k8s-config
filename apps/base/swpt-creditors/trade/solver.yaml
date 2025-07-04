@@ -20,6 +20,7 @@ spec:
       labels:
         app.kubernetes.io/name: swpt-trade
         app.kubernetes.io/component: solver
+        log.pipeline: swpt-python-logging
         app: solver
     spec:
       priorityClassName: trade-solver

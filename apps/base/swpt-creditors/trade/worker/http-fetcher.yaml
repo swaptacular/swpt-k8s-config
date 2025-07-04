@@ -13,6 +13,7 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/component: http-fetcher
+        log.pipeline: swpt-python-logging
     spec:
       affinity:
         podAntiAffinity:
