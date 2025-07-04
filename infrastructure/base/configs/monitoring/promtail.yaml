@@ -73,13 +73,20 @@ spec:
                 # Label the log with a pipeline name and a level. Note
                 # that we remove the "meta_log_pipeline" label here so
                 # that it is not included into the exported custom
-                # metrics.
+                # metrics. Also, we make sure only "critical",
+                # "error", and "warning" severity levels gets labelled
+                # (and therefore indexed).
                 - static_labels:
                     log_pipeline: swpt-python-logging
-                - labels:
-                    level: levelname
                 - labeldrop:
                     - meta_log_pipeline
+                - labels:
+                    level: levelname
+                - match:
+                    selector: '{level!~"^(critical|error|warning)$"}'
+                    stages:
+                      - labeldrop:
+                          - level
 
                 # Export custom metrics.
                 - metrics:
