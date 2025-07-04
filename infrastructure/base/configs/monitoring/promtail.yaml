@@ -52,7 +52,7 @@ spec:
 
           # The "swpt-python-logging" log pipeline:
           - match:
-              selector: '{meta_log_pipeline="swpt-python-logging",container!~"^await-migrations|configure$"}'
+              selector: '{meta_log_pipeline="swpt-python-logging",container!~"^(await-migrations|configure(-.*)?)$"}'
               stages:
                 # Remove Oathkeeper welcome messages.
                 - drop:
