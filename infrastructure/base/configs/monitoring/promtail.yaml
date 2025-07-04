@@ -83,32 +83,13 @@ spec:
 
                 # Export custom metrics.
                 - metrics:
-                    swpt_python_logging_criticals:
+                    swpt_python_logging_lines:
                       type: Counter
-                      description: "total number of swpt-python-logging critical errors"
+                      description: "total number of log lines from the swpt-python-logging pipeline"
                       prefix: promtail_custom_
                       max_idle_duration: 24h
-                      source: levelname
                       config:
-                        value: critical
-                        action: inc
-                    swpt_python_logging_errors:
-                      type: Counter
-                      description: "total number of swpt-python-logging errors"
-                      prefix: promtail_custom_
-                      max_idle_duration: 24h
-                      source: levelname
-                      config:
-                        value: error
-                        action: inc
-                    swpt_python_logging_warnings:
-                      type: Counter
-                      description: "total number of swpt-python-logging warnings"
-                      prefix: promtail_custom_
-                      max_idle_duration: 24h
-                      source: levelname
-                      config:
-                        value: warning
+                        match_all: true
                         action: inc
 
           # Remove extra labels.
