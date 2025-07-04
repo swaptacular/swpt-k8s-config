@@ -70,11 +70,16 @@ spec:
                     source: levelname
                     template: '{{ lower (default "ERROR" .Value) }}'
 
-                # Label the log with a pipeline name and a level.
+                # Label the log with a pipeline name and a level. Note
+                # that we remove the "meta_log_pipeline" label here so
+                # that it is not included into the exported custom
+                # metrics.
                 - static_labels:
                     log_pipeline: swpt-python-logging
                 - labels:
                     level: levelname
+                - labeldrop:
+                    - meta_log_pipeline
 
                 # Export custom metrics.
                 - metrics:
