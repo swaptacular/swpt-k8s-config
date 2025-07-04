@@ -86,7 +86,7 @@ spec:
                     swpt_python_logging_lines:
                       type: Counter
                       description: "total number of log lines from the swpt-python-logging pipeline"
-                      prefix: promtail_custom_
+                      prefix: promtail_pipeline_
                       max_idle_duration: 24h
                       config:
                         match_all: true
