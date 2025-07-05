@@ -333,7 +333,7 @@ patches:
       path: /spec/values/alertmanager/alertmanagerSpec/replicas
       value: 1
 
-    # Specifies the size of the persistent volume used mounted on each
+    # Specifies the size of the persistent volume mounted on each
     # alertmanager replica. 1 or 2Gi should be enough for most
     # clusters.
     - op: replace
@@ -423,6 +423,23 @@ patches:
         limits:
           cpu: 1000m
           memory: 1Gi
+
+    # Specifies the number of days for which the Prometheus server
+    # will keep the collected metrics. The default is 10d, which is
+    # reasonable. Can be lower for testing.
+    - op: replace
+      path: /spec/values/prometheus/prometheusSpec/retention
+      value: 2d
+
+    # Specifies the size of the persistent volume mounted on the
+    # Prometheus server. The needed disk space depends on the number
+    # of scrape targets, the number of time series, the metrics
+    # cardinality, the scraping interval, and the retention period.
+    # Most probably should be in the range from 10Gi to 100Gi. Can be
+    # lower for testing.
+    - op: replace
+      path: /spec/values/prometheus/prometheusSpec/storageSpec/volumeClaimTemplate/spec/resources/requests/storage
+      value: 1Gi
 
   target:
     group: helm.toolkit.fluxcd.io
