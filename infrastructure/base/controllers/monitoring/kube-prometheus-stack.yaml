@@ -30,7 +30,6 @@ spec:
           repository: prometheus/alertmanager
           sha: ""
         replicas: 1
-        retention: 120h
         storage:
           volumeClaimTemplate:
             spec:
@@ -53,7 +52,7 @@ spec:
       podDisruptionBudget:
         enabled: true
         minAvailable: null
-        maxUnavailable: 50%
+        maxUnavailable: 30%
         unhealthyPodEvictionPolicy: AlwaysAllow
 
     prometheusOperator:
