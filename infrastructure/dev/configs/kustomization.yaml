@@ -66,10 +66,10 @@ patches:
       value: 1
 
     # Configures the "backend" service. The number of configured
-    # replicas should be at least 3 in production. Could be 1 for
-    # testing. The configured persistent storage size should be at
-    # least 10Gi in production, probably quite a bit more. Can be less
-    # for testing.
+    # replicas must grater or equal than the value set for
+    # `/spec/values/loki/commonConfig/replication_factor`. The
+    # configured persistent storage size should be at least 10Gi in
+    # production, probably quite a bit more. Can be less for testing.
     - op: replace
       path: /spec/values/backend/replicas
       value: 1
