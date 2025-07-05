@@ -161,6 +161,8 @@ spec:
                 matchLabels:
                   {{- include "kube-state-metrics.selectorLabels" . | indent 10 }}
               topologyKey: kubernetes.io/hostname
+              matchLabelKeys:
+              - pod-template-hash
       priorityClassName: critical-monitoring
       resources:
         limits:
@@ -170,13 +172,13 @@ spec:
          cpu: 10m
          memory: 32Mi
       podDisruptionBudget:
-        maxUnavailable: 50%
+        maxUnavailable: 30%
         unhealthyPodEvictionPolicy: AlwaysAllow
 
     prometheus-node-exporter:
       image:
         repository: prometheus/node-exporter
-        tag: ""
+        digest: ""
       priorityClassName: critical-monitoring
       resources:
         limits:

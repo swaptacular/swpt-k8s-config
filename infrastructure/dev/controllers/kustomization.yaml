@@ -313,7 +313,7 @@ patches:
           memory: 37Mi
         limits:
           cpu: 200m
-          memory: 200Mi
+          memory: 50Mi
 
     # Specifies the "kube-webhook-certgen" OCI image. This image is
     # used by the Prometheus operator to set up Kubernetes admission
@@ -326,7 +326,7 @@ patches:
       path: /spec/values/prometheusOperator/admissionWebhooks/patch/image/sha
       value: 7a38cf0f8480775baaee71ab519c7465fd1dfeac66c421f28f087786e631456e
 
-    # Specifies the number of alert manager replicas to run. Should be
+    # Specifies the number of alertmanager replicas to run. Should be
     # 2 or 3 in production (HA). 2 is probably good enough for most
     # clusters. May be 1 (no HA) for testing.
     - op: replace
@@ -334,14 +334,14 @@ patches:
       value: 1
 
     # Specifies the size of the persistent volume used mounted on each
-    # alert manager replica. 1 or 2Gi should be enough for most
+    # alertmanager replica. 1 or 2Gi should be enough for most
     # clusters.
     - op: replace
       path: /spec/values/alertmanager/alertmanagerSpec/storage/volumeClaimTemplate/spec/resources/requests/storage
       value: 1Gi
 
     # Specifies OCI image and CPU and memory requests and limits for
-    # the alert manager pods. Note that the `sha` value MUST NOT be
+    # the alertmanager pods. Note that the `sha` value MUST NOT be
     # prefixed with "sha256:".
     - op: replace
       path: /spec/values/alertmanager/alertmanagerSpec/image/repository
@@ -358,6 +358,52 @@ patches:
         limits:
           cpu: 200m
           memory: 200Mi
+
+    # Specifies the number of kube-state-metrics replicas to run.
+    # Should be at least 2 in production (HA). May be 1 (no HA) for
+    # testing.
+    - op: replace
+      path: /spec/values/kube-state-metrics/replicas
+      value: 1
+
+    # Specifies OCI image and CPU and memory requests and limits for
+    # the kube-state-metrics pods. Note that the `sha` value MUST NOT
+    # be prefixed with "sha256:".
+    - op: replace
+      path: /spec/values/alertmanager/alertmanagerSpec/image/repository
+      value: kube-state-metrics/kube-state-metrics
+    - op: replace
+      path: /spec/values/alertmanager/alertmanagerSpec/image/sha
+      value: db384bf43222b066c378e77027a675d4cd9911107adba46c2922b3a55e10d6fb
+    - op: replace
+      path: /spec/values/alertmanager/alertmanagerSpec/resources
+      value:
+        requests:
+          cpu: 1m
+          memory: 27Mi
+        limits:
+          cpu: 100m
+          memory: 64Mi
+
+    # Specifies OCI image and CPU and memory requests and limits for
+    # the Prometheus node-exporter pod. Note that the value for
+    # `/spec/values/prometheus-node-exporter/image/digest` MUST be
+    # prefixed with "sha256:".
+    - op: replace
+      path: /spec/values/prometheus-node-exporter/image/repository
+      value: prometheus/node-exporter
+    - op: replace
+      path: /spec/values/prometheus-node-exporter/image/digest
+      value: sha256:d00a542e409ee618a4edc67da14dd48c5da66726bbd5537ab2af9c1dfc442c8a
+    - op: replace
+      path: /spec/values/prometheus-node-exporter/resources
+      value:
+        requests:
+          cpu: 1m
+          memory: 19Mi
+        limits:
+          cpu: 200m
+          memory: 50Mi
 
   target:
     group: helm.toolkit.fluxcd.io
