@@ -16,6 +16,11 @@ spec:
   targetNamespace: monitoring
   releaseName: prometheus
   values:
+    test:
+      # IMPORTANT NOTE: The tests download container images from
+      # third-party repositories, which could be insecure.
+      enable: false
+
     global:
       imagePullSecrets:
         - name: regcreds
@@ -46,7 +51,7 @@ spec:
           requests:
             cpu: 100m
             memory: 100Mi
-        podAntiAffinity: "hard"  # can also be "soft" or ""
+        podAntiAffinity: "hard"
       networkPolicy:
         enabled: false
       podDisruptionBudget:
@@ -108,7 +113,7 @@ spec:
           requests:
             cpu: 100m
             memory: 500Mi
-        podAntiAffinity: "hard"  # can also be "soft" or ""
+        podAntiAffinity: "hard"
       networkPolicy:
         enabled: false
       podDisruptionBudget:
