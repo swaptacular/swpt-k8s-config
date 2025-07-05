@@ -370,13 +370,13 @@ patches:
     # the kube-state-metrics pods. Note that the `sha` value MUST NOT
     # be prefixed with "sha256:".
     - op: replace
-      path: /spec/values/alertmanager/alertmanagerSpec/image/repository
+      path: /spec/values/kube-state-metrics/image/repository
       value: kube-state-metrics/kube-state-metrics
     - op: replace
-      path: /spec/values/alertmanager/alertmanagerSpec/image/sha
+      path: /spec/values/kube-state-metrics/image/sha
       value: db384bf43222b066c378e77027a675d4cd9911107adba46c2922b3a55e10d6fb
     - op: replace
-      path: /spec/values/alertmanager/alertmanagerSpec/resources
+      path: /spec/values/kube-state-metrics/resources
       value:
         requests:
           cpu: 1m
