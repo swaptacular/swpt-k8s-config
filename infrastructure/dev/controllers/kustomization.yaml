@@ -405,6 +405,25 @@ patches:
           cpu: 200m
           memory: 50Mi
 
+    # Specifies OCI image and CPU and memory requests and limits for
+    # the Prometheus server. Note that the `sha` value MUST NOT be
+    # prefixed with "sha256:".
+    - op: replace
+      path: /spec/values/prometheus/prometheusSpec/image/repository
+      value: prometheus/prometheus
+    - op: replace
+      path: /spec/values/prometheus/prometheusSpec/image/sha
+      value: 3b1d5be5c3eef4f027665ddaa3b1a7de8a58d96a0a6de5dd45629afd267ecaf0
+    - op: replace
+      path: /spec/values/prometheus/prometheusSpec/resources
+      value:
+        requests:
+          cpu: 1m
+          memory: 200Mi
+        limits:
+          cpu: 10001m
+          memory: 1Gi
+
   target:
     group: helm.toolkit.fluxcd.io
     version: v2

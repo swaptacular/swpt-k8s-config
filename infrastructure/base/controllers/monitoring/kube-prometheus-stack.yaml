@@ -88,6 +88,7 @@ spec:
       prometheusSpec:
         image:
           repository: prometheus/prometheus
+          tag: v3.4.2
           sha: ""
         replicas: 1
         retention: 10d
