@@ -267,6 +267,91 @@ patches:
     name: minio-operator
     namespace: minio-operator
 
+# This patch configures Prometheus-related services.
+#
+- patch: |-
+    # Sets a global registry. You may specify your private container
+    # image registry (like "registry.example.com") here. The default
+    # is `null`.
+    - op: replace
+      path: /spec/values/global/imageRegistry
+      value: null
+
+    # Specifies OCI image and CPU and memory requests and limits for
+    # the Prometheus operator pod. Note that the `sha` value MUST NOT
+    # be prefixed with "sha256:".
+    - op: replace
+      path: /spec/values/prometheusOperator/image/repository
+      value: prometheus-operator/prometheus-operator
+    - op: replace
+      path: /spec/values/prometheusOperator/image/sha
+      value: b6a89b8ec08f4cca759b2d579e8545f97ffb897973fcd68148c153f2e936c8b3
+    - op: replace
+      path: /spec/values/prometheusOperator/resources
+      value:
+        requests:
+          cpu: 1m
+          memory: 37Mi
+        limits:
+          cpu: 200m
+          memory: 200Mi
+
+    # Specifies OCI image and CPU and memory requests and limits for
+    # Prometheus's configuration reloader sidecar containers. Note
+    # that the `sha` value MUST NOT be prefixed with "sha256:".
+    - op: replace
+      path: /spec/values/prometheusOperator/prometheusConfigReloader/image/repository
+      value: prometheus-operator/prometheus-config-reloader
+    - op: replace
+      path: /spec/values/prometheusOperator/prometheusConfigReloader/image/sha
+      value: 78aec597d87aa2b4ba947ab9190538dae93a58a67b8e930aefea1086534b02ef
+    - op: replace
+      path: /spec/values/prometheusOperator/prometheusConfigReloader/resources
+      value:
+        requests:
+          cpu: 1m
+          memory: 37Mi
+        limits:
+          cpu: 200m
+          memory: 200Mi
+
+    # Specifies the "kube-webhook-certgen" OCI image. This image is
+    # used by the Prometheus operator to set up Kubernetes admission
+    # webhooks for the resources managed by the controller. Note that
+    # the `sha` value MUST NOT be prefixed with "sha256:".
+    - op: replace
+      path: /spec/values/prometheusOperator/admissionWebhooks/patch/image/repository
+      value: ingress-nginx/kube-webhook-certgen
+    - op: replace
+      path: /spec/values/prometheusOperator/admissionWebhooks/patch/image/sha
+      value: 7a38cf0f8480775baaee71ab519c7465fd1dfeac66c421f28f087786e631456e
+
+    # Specifies OCI image and CPU and memory requests and limits for
+    # alert manager pods. Note that the `sha` value MUST NOT be
+    # prefixed with "sha256:".
+    - op: replace
+      path: /spec/values/alertmanager/alertmanagerSpec/image/repository
+      value: prometheus/alertmanager
+    - op: replace
+      path: /spec/values/alertmanager/alertmanagerSpec/image/sha
+      value: 27c475db5fb156cab31d5c18a4251ac7ed567746a2483ff264516437a39b15ba
+    - op: replace
+      path: /spec/values/alertmanager/alertmanagerSpec/resources
+      value:
+        requests:
+          cpu: 1m
+          memory: 35Mi
+        limits:
+          cpu: 200m
+          memory: 200Mi
+
+  target:
+    group: helm.toolkit.fluxcd.io
+    version: v2
+    kind: HelmRelease
+    name: kube-prometheus-stack
+    namespace: monitoring
+
 secretGenerator:
 - name: regcreds
   namespace: cert-manager

@@ -20,9 +20,9 @@ spec:
       imagePullSecrets:
         - name: regcreds
 
-      # # Global image registry to use if it needs to be overridden for some
-      # # specific use cases (e.g local registries, custom images, ...)
-      # imageRegistry: "myregistry.example.com"
+      # Global image registry to use if it needs to be overridden for
+      # some specific use cases (e.g local registries, custom images)
+      imageRegistry: null
 
     alertmanager:
       alertmanagerSpec:
@@ -31,7 +31,6 @@ spec:
           sha: ""
         replicas: 1
         retention: 120h
-        logFormat: json
         storage:
           volumeClaimTemplate:
             spec:
@@ -61,7 +60,6 @@ spec:
       image:
         repository: prometheus-operator/prometheus-operator
         sha: ""
-      logFormat: json
       priorityClassName: critical-operator
       resources:
         limits:
@@ -93,7 +91,6 @@ spec:
           repository: prometheus/prometheus
           sha: ""
         replicas: 1
-        logFormat: json
         retention: 10d
         storageSpec:
           volumeClaimTemplate:
