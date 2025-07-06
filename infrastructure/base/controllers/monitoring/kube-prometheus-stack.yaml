@@ -127,6 +127,8 @@ spec:
       persistence:
         enabled: true
         size: 5Gi
+      initChownData:
+        enabled: false
       sidecar:
         image:
           repository: kiwigrid/k8s-sidecar
