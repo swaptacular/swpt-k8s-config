@@ -465,7 +465,7 @@ patches:
       value:
         requests:
           cpu: 1m
-          memory: 154Mi
+          memory: 153Mi
         limits:
           cpu: 500m
           memory: 1000Mi

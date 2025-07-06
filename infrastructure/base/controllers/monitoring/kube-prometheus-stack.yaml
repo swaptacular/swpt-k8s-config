@@ -139,8 +139,6 @@ spec:
           limits:
             cpu: 100m
             memory: 128Mi
-      testFramework:
-        enabled: false
       service:
         type: LoadBalancer  # ClusterIP
       priorityClassName: critical-monitoring
@@ -154,6 +152,8 @@ spec:
       podDisruptionBudget:
         maxUnavailable: 50%
         unhealthyPodEvictionPolicy: AlwaysAllow
+      testFramework:
+        enabled: false
 
     kube-state-metrics:
       image:
