@@ -127,8 +127,12 @@ spec:
       persistence:
         enabled: true
         size: 5Gi
-      initChownData:
-        enabled: false
+      additionalDataSources:
+        - name: Loki
+          type: loki
+          uid: loki
+          access: proxy
+          url: http://loki-gateway.monitoring.svc.cluster.local
       sidecar:
         image:
           repository: kiwigrid/k8s-sidecar
@@ -154,6 +158,8 @@ spec:
       podDisruptionBudget:
         maxUnavailable: 50%
         unhealthyPodEvictionPolicy: AlwaysAllow
+      initChownData:
+        enabled: false
       testFramework:
         enabled: false
 
