@@ -16,11 +16,6 @@ spec:
   targetNamespace: monitoring
   releaseName: prometheus
   values:
-    test:
-      # IMPORTANT NOTE: The tests download container images from
-      # third-party repositories, which could be insecure.
-      enable: false
-
     global:
       imagePullSecrets:
         - name: regcreds
