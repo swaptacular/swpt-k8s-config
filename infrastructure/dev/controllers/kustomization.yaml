@@ -454,12 +454,12 @@ patches:
     # Specifies OCI image and CPU and memory requests and limits for
     # the Grafana pod. Note that the `sha` value MUST NOT be prefixed
     # with "sha256:".
-    - op: replace
-      path: /spec/values/grafana/image/repository
-      value: grafana/grafana
-    - op: replace
-      path: /spec/values/grafana/image/sha
-      value: b5b59bfc7561634c2d7b136c4543d702ebcc94a3da477f21ff26f89ffd4214fa
+    # - op: replace
+    #   path: /spec/values/grafana/image/repository
+    #   value: grafana/grafana
+    # - op: replace
+    #   path: /spec/values/grafana/image/sha
+    #   value: b5b59bfc7561634c2d7b136c4543d702ebcc94a3da477f21ff26f89ffd4214fa
     - op: replace
       path: /spec/values/grafana/resources
       value:
