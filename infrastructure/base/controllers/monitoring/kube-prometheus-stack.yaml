@@ -19,7 +19,7 @@ spec:
     test:
       # IMPORTANT NOTE: The tests download container images from
       # third-party repositories, which could be insecure.
-      enable: true
+      enable: false
 
     global:
       imagePullSecrets:
