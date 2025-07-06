@@ -132,7 +132,7 @@ spec:
           type: loki
           uid: loki
           access: proxy
-          url: http://loki-gateway.monitoring.svc.cluster.local
+          url: http://loki-gateway.monitoring
       sidecar:
         image:
           repository: kiwigrid/k8s-sidecar
