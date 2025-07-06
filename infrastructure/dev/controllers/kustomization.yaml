@@ -497,6 +497,28 @@ patches:
     namespace: monitoring
 
 secretGenerator:
+- name: prometheus-grafana-admin
+  namespace: monitoring
+
+  literals:
+  # The username for the Grafana admin.
+  - admin-user=admin
+
+  files:
+  # A SOPS-encrypted file containing the password for the Grafana
+  # admin. To SOPS-encrypt your chosen password, you may use this
+  # command:
+  #
+  # $ echo -n 'YOUR_SECRET_PASSWORD' > grafana-admin-password
+  # $ sops encrypt grafana-admin-password > grafana-admin-password.encrypted
+  # $ shred -z grafana-admin-password
+  # $ rm grafana-admin-password
+  - admin-password=secrets/grafana-admin-password.encrypted
+
+  options:
+    disableNameSuffixHash: true
+  type: Opaque
+
 - name: regcreds
   namespace: cert-manager
   files:
