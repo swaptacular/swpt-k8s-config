@@ -129,6 +129,10 @@ spec:
       persistence:
         enabled: true
         size: 5Gi
+      admin:
+        existingSecret: "prometheus-grafana-admin"
+        userKey: admin-user
+        passwordKey: admin-password
       additionalDataSources:
         - name: Loki
           type: loki
