@@ -447,9 +447,9 @@ patches:
     # dashboards and configuration, and therefore not that much space
     # is needed. Most probably should be in the range from 5Gi to
     # 10Gi. Can be lower for testing.
-    - op: replace
-      path: /spec/values/grafana/persistence/size
-      value: 1Gi
+    # - op: replace
+    #   path: /spec/values/grafana/persistence/size
+    #   value: 1Gi
 
     # Specifies OCI image and CPU and memory requests and limits for
     # the Grafana pod. Note that the `sha` value MUST NOT be prefixed

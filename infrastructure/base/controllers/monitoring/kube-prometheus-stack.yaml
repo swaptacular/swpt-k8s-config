@@ -129,9 +129,9 @@ spec:
         tag: 12.0.1
         sha: ""
       replicas: 1
-      persistence:
-        enabled: true
-        size: 5Gi
+      # persistence:
+      #   enabled: true
+      #   size: 5Gi
       sidecar:
         image:
           repository: kiwigrid/k8s-sidecar
