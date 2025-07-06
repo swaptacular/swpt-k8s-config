@@ -145,7 +145,7 @@ spec:
             cpu: 100m
             memory: 128Mi
       testFramework:
-        enabled: true
+        enabled: false
       service:
         type: LoadBalancer  # ClusterIP
       priorityClassName: critical-monitoring
