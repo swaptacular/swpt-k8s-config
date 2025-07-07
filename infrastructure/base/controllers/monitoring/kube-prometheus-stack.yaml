@@ -139,6 +139,12 @@ spec:
           uid: loki
           access: proxy
           url: http://loki-gateway.monitoring
+      grafana.ini:
+        plugins:
+          plugin_admin_enabled: false
+      plugins:
+        - grafana-lokiexplore-app
+        - grafana-metricsdrilldown-app
       sidecar:
         image:
           repository: kiwigrid/k8s-sidecar
