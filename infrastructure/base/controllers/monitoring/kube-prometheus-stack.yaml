@@ -143,6 +143,7 @@ spec:
         plugins:
           plugin_admin_enabled: false
           public_key_retrieval_disabled: true
+          plugin_catalog_url: ""
           disable_plugins: "grafana-pyroscope-app grafana-exploretraces-app"
         log:
           level: warn
@@ -157,8 +158,6 @@ spec:
         snapshots:
           external_enabled: false
       plugins:
-        # - https://grafana.com/api/plugins/grafana-lokiexplore-app/versions/1.0.20/download;grafana-lokiexplore-app
-        # - https://grafana.com/api/plugins/grafana-metricsdrilldown-app/versions/1.0.4/download;grafana-metricsdrilldown-app
         - http://prometheus-grafana-plugins.monitoring/grafana-lokiexplore-app-1.0.20.zip;grafana-lokiexplore-app
         - http://prometheus-grafana-plugins.monitoring/grafana-metricsdrilldown-app-1.0.4.zip;grafana-metricsdrilldown-app
       sidecar:
