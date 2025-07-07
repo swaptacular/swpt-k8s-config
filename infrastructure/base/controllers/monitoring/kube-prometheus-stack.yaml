@@ -145,8 +145,8 @@ spec:
         log:
           level: warn
       plugins:
-        - grafana-lokiexplore-app
-        - grafana-metricsdrilldown-app
+        - https://grafana.com/api/plugins/grafana-lokiexplore-app/versions/1.0.20/download;grafana-lokiexplore-app
+        - https://grafana.com/api/plugins/grafana-metricsdrilldown-app/versions/1.0.4/download;grafana-metricsdrilldown-app
       sidecar:
         image:
           repository: kiwigrid/k8s-sidecar
