@@ -179,6 +179,9 @@ spec:
             memory: 128Mi
       service:
         type: LoadBalancer  # ClusterIP
+      serviceMonitor:
+        labels:
+          release: prometheus
       priorityClassName: critical-monitoring
       resources:
         requests:
