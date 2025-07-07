@@ -143,7 +143,7 @@ spec:
         plugins:
           plugin_admin_enabled: false
           public_key_retrieval_disabled: true
-          plugin_catalog_url: ""
+          plugin_catalog_url: "invalid"
           disable_plugins: "grafana-pyroscope-app grafana-exploretraces-app"
         log:
           level: warn
