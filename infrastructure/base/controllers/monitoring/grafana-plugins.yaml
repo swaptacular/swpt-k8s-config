@@ -1,0 +1,84 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafana-plugins
+  labels:
+    app.kubernetes.io/name: swpt-http-server
+    app.kubernetes.io/instance: prometheus
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: swpt-http-server
+      app.kubernetes.io/instance: prometheus
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: swpt-http-server
+        app.kubernetes.io/instance: prometheus
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                app.kubernetes.io/name: swpt-http-server
+                app.kubernetes.io/instance: prometheus
+            topologyKey: kubernetes.io/hostname
+            matchLabelKeys:
+            - pod-template-hash
+      priorityClassName: critical-monitoring
+      imagePullSecrets:
+        - name: regcreds
+      containers:
+        - name: grafana-plugins
+          image: swpt-http-server
+          ports:
+            - name: http
+              containerPort: 80
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 5
+          resources:
+            limits:
+              cpu: "1"
+              memory: 32Mi
+            requests:
+              cpu: 10m
+              memory: 32Mi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana-plugins
+  labels:
+    app.kubernetes.io/name: swpt-http-server
+    app.kubernetes.io/instance: prometheus
+spec:
+  selector:
+    app.kubernetes.io/name: swpt-http-server
+    app.kubernetes.io/instance: prometheus
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: http
+
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: grafana-plugins
+  labels:
+    app.kubernetes.io/name: swpt-http-server
+    app.kubernetes.io/instance: prometheus
+spec:
+  maxUnavailable: 30%
+  unhealthyPodEvictionPolicy: AlwaysAllow
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: swpt-http-server
+      app.kubernetes.io/instance: prometheus

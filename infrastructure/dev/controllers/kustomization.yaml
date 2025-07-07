@@ -50,6 +50,11 @@ images:
   newName: registry.k8s.io/metrics-server/metrics-server
   digest: sha256:ffcb2bf004d6aa0a17d90e0247cf94f2865c8901dcab4427034c341951c239f9
 
+# The server which server the Grafana plugins:
+- name: swpt-http-server
+  newName: ghcr.io/swaptacular/swpt_http_server
+  digest: sha256:f4c12ebca1acac14fa7aef6c7d7cb8583ee58a29d509545cb381ae0c1d6771e8
+
 patches:
 
 # This patch is sometimes needed (in "KinD" clusters for example) in
