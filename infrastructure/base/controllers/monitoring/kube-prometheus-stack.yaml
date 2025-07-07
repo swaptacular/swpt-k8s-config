@@ -142,6 +142,8 @@ spec:
       grafana.ini:
         plugins:
           plugin_admin_enabled: false
+        log:
+          level: warn
       plugins:
         - grafana-lokiexplore-app
         - grafana-metricsdrilldown-app
