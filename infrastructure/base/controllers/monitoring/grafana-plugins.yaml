@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: grafana-plugins
+  name: prometheus-grafana-plugins
   labels:
     app.kubernetes.io/name: swpt-http-server
     app.kubernetes.io/instance: prometheus
@@ -31,7 +31,7 @@ spec:
       imagePullSecrets:
         - name: regcreds
       containers:
-        - name: grafana-plugins
+        - name: server
           image: swpt-http-server
           ports:
             - name: http
@@ -53,7 +53,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: grafana-plugins
+  name: prometheus-grafana-plugins
   labels:
     app.kubernetes.io/name: swpt-http-server
     app.kubernetes.io/instance: prometheus
@@ -71,7 +71,7 @@ spec:
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: grafana-plugins
+  name: prometheus-grafana-plugins
   labels:
     app.kubernetes.io/name: swpt-http-server
     app.kubernetes.io/instance: prometheus
