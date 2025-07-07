@@ -142,8 +142,19 @@ spec:
       grafana.ini:
         plugins:
           plugin_admin_enabled: false
+          public_key_retrieval_disabled: true
         log:
           level: warn
+        analytics:
+          enabled: false
+          reporting_enabled: false
+          check_for_updates: false
+          check_for_plugin_updates: false
+          feedback_links_enabled: false
+        security:
+          disable_gravatar: true
+        snapshots:
+          external_enabled: false
       # plugins:
       #   - https://grafana.com/api/plugins/grafana-lokiexplore-app/versions/1.0.20/download;grafana-lokiexplore-app
       #   - https://grafana.com/api/plugins/grafana-metricsdrilldown-app/versions/1.0.4/download;grafana-metricsdrilldown-app
