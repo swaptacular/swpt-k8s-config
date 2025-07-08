@@ -42,12 +42,12 @@ spec:
               port: http
             initialDelaySeconds: 5
           resources:
-            limits:
-              cpu: "1"
-              memory: 16Mi
             requests:
               cpu: 10m
               memory: 16Mi
+            limits:
+              cpu: "1"
+              memory: 32Mi
 
 ---
 apiVersion: v1
