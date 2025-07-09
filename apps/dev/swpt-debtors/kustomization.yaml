@@ -389,7 +389,7 @@ patches:
       value: registry.k8s.io/ingress-nginx/kube-webhook-certgen
     - op: add
       path: /spec/values/controller/admissionWebhooks/patch/image/digest
-      value: sha256:e8825994b7a2c7497375a9b945f386506ca6a3eda80b89b74ef2db743f66a5ea
+      value: sha256:7a38cf0f8480775baaee71ab519c7465fd1dfeac66c421f28f087786e631456e
 
     # Specifies the number of Nginx servers' replicas. One replica
     # works fine, but to have high-availability, should be at least 2.

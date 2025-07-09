@@ -31,7 +31,7 @@ spec:
               memory: 1Gi
             requests:
               cpu: 100m
-              memory: 64Mi
+              memory: 128Mi
           volumeMounts:
             - mountPath: "/srv/git/"
               name: git-repositories
@@ -57,6 +57,13 @@ spec:
               value: "http://prometheus-grafana.monitoring.svc.cluster.local"
             - name: NGINX_ENTRYPOINT_QUIET_LOGS
               value: "1"
+          resources:
+            limits:
+              cpu: "1"
+              memory: 128Mi
+            requests:
+              cpu: 100m
+              memory: 64Mi
           volumeMounts:
             - name: nginx-ssl-certificate
               mountPath: "/etc/nginx/ssl"

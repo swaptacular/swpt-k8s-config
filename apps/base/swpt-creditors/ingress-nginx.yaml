@@ -26,10 +26,14 @@ spec:
     tcp:
       "1234": "namespace/stomp-server:stomp"
     controller:
-      image: {}
+      image:
+        image: ingress-nginx/controller
+        tag: v1.12.1
       admissionWebhooks:
         patch:
-          image: {}
+          image:
+            image: ingress-nginx/kube-webhook-certgen
+            tag: v1.5.4
       replicaCount: 2
       maxUnavailable: 30%
       unhealthyPodEvictionPolicy: AlwaysAllow
