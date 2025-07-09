@@ -97,16 +97,33 @@ The key fingerprint is:
 SHA256:V5z4od4LmSBF3MyXsTzPBjt+yYOKLJQqrZS2ULerNyM johndoe@mycomputer
 The key's randomart image is:
 +---[RSA 3072]----+
-|       ..+  .o   |
-|       .. ++oo   |
-|        . ..X    |
-|       .   + B   |
-|  . . ..S o + +  |
-| . o .o. + = = . |
-|. +..o    = + =  |
-| +E.*... . o o . |
-|  +*.o .o . .    |
+|+oo+=o...o=.    =|
+| + oo+o .. + o *o|
+|. . ..+.  E + O +|
+|   .   + o   = *o|
+|      . S + + . =|
+|         o + . + |
+|            o . .|
+|             =   |
+|              o  |
 +----[SHA256]-----+
+........+...+..+.+..+...+....+.........+..+.......+........+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*........+..+...+...+....+......+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*.............+......+......+..............+...+......+......+......+...+............+....+.........+.........+......+......+.....+....+......+........+.+.....+..........+...........+...+.+..+....+........+.............+...+..+...+............+....+...+.....+..........+...+.....+...+.+...+...+........+.+.........+......+.....+.+.........+...........+..........+.........+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+...+.+...........+.......+.....+..........+..+......+...+.+......+............+..+....+..............+......+......+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*.+..........+...+...+.....+.+.........+......+........+...+..........+..+.......+..............+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*........+...+.......+.....+.+.....+.+...+...+..................+.....+......+...+.+..+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+-----
+You are about to be asked to enter information that will be incorporated
+into your certificate request.
+What you are about to enter is what is called a Distinguished Name or a DN.
+There are quite a few fields but you can leave some blank
+For some fields there will be a default value,
+If you enter '.', the field will be left blank.
+-----
+Country Name (2 letter code) [AU]:
+State or Province Name (full name) [Some-State]:
+Locality Name (eg, city) []:
+Organization Name (eg, company) [Internet Widgits Pty Ltd]:
+Organizational Unit Name (eg, section) []:
+Common Name (e.g. server FQDN or YOUR name) []:
+Email Address []:
 
 ****************************************************************
 * IMPORTANT: Do not forget to run the "delete-secret-files.sh" *

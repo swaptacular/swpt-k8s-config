@@ -21,6 +21,13 @@ secretGenerator:
     options:
       disableNameSuffixHash: true
     type: kubernetes.io/dockerconfigjson
+  - name: nginx-ssl-certificate
+    files:
+    - cert.pem=secret-files/cert.pem
+    - key.pem=secret-files/key.pem
+    options:
+      disableNameSuffixHash: true
+    type: Opaque
 
 resources:
   - base/

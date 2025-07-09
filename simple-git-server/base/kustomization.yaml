@@ -13,10 +13,3 @@ configMapGenerator:
   files:
   - nginx.conf=static/nginx.conf
   - default.conf.template=static/default.conf.template
-
-secretGenerator:
-- name: nginx-ssl-certificate
-  files:
-  - cert.pem=static/cert.pem
-  - key.pem=static/key.pem
-  type: Opaque
