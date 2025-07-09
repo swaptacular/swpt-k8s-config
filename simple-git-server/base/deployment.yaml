@@ -47,6 +47,25 @@ spec:
               subPath: ssh_host_rsa_key.pub
             - mountPath: "/tmp/host-keys/"
               name: host-keys
+        - name: nginx
+          image: nginx
+          ports:
+            - name: https
+              containerPort: 443
+          env:
+            - name: PROXY_UPSTREAM_URL
+              value: "http://prometheus-grafana.monitoring.svc.cluster.local"
+            - name: NGINX_ENTRYPOINT_QUIET_LOGS
+              value: "1"
+          volumeMounts:
+            - name: nginx-ssl-certificate
+              mountPath: "/etc/nginx/ssl"
+            - name: nginx-config
+              mountPath: "/etc/nginx/nginx.conf"
+              subPath: nginx.conf
+            - name: nginx-config
+              mountPath: "/etc/nginx/templates/default.conf.template"
+              subPath: default.conf.template
       imagePullSecrets:
         - name: regcreds
       volumes:
@@ -59,3 +78,9 @@ spec:
         - name: host-keys
           secret:
             secretName: host-keys
+        - name: nginx-ssl-certificate
+          secret:
+            secretName: nginx-ssl-certificate
+        - name: nginx-config
+          configMap:
+            name: nginx-config
