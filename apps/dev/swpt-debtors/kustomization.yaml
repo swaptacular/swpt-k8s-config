@@ -368,86 +368,59 @@ images:
   newTag: 1.26.3-alpine3.20
 
 patches:
-# This patch specifies the ingress-nginx controller's OCI image. You
-# should set image repository and image digest.
+# This patch configures the ingress-nginx controller.
 #
 - patch: |
+    # Specifies the ingress-nginx controller's OCI image. You should
+    # set image repository and image digest.
     - op: add
       path: /spec/values/controller/image/repository
       value: registry.k8s.io/ingress-nginx/controller
     - op: add
       path: /spec/values/controller/image/digest
       value: sha256:d2fbc4ec70d8aa2050dd91a91506e998765e86c96f32cffb56c503c9c34eed5b
-  target:
-    group: helm.toolkit.fluxcd.io
-    version: v2
-    kind: HelmRelease
-    name: ingress-nginx
 
-# This patch specifies the "kube-webhook-certgen" OCI image. This
-# image is used by the ingress-nginx controller to set up Kubernetes
-# admission webhooks for the resources managed by the controller. You
-# should set image repository and image digest.
-#
-- patch: |
+    # Specifies the "kube-webhook-certgen" OCI image. This image is
+    # used by the ingress-nginx controller to set up Kubernetes
+    # admission webhooks for the resources managed by the controller.
+    # You should set image repository and image digest.
     - op: add
       path: /spec/values/controller/admissionWebhooks/patch/image/repository
       value: registry.k8s.io/ingress-nginx/kube-webhook-certgen
     - op: add
       path: /spec/values/controller/admissionWebhooks/patch/image/digest
       value: sha256:e8825994b7a2c7497375a9b945f386506ca6a3eda80b89b74ef2db743f66a5ea
-  target:
-    group: helm.toolkit.fluxcd.io
-    version: v2
-    kind: HelmRelease
-    name: ingress-nginx
 
-# This patch changes the number of Nginx servers' replicas. One
-# replica works fine, but to have high-availability, should be at
-# least 2.
-#
-- patch: |
+    # Specifies the number of Nginx servers' replicas. One replica
+    # works fine, but to have high-availability, should be at least 2.
     - op: replace
       path: /spec/values/controller/replicaCount
       value: 1
-  target:
-    group: helm.toolkit.fluxcd.io
-    version: v2
-    kind: HelmRelease
-    name: ingress-nginx
 
-# This patch sets the correct reference to the stomp-server service.
-# The format is "namespace/service-name:port[:PROXY]". Where:
-#
-# * "namespace" must be the same as the current namespace. That is:
-#   the name of the directory that contains this `kustomization.yaml`
-#   file;
-#
-# * "service-name" must be "stomp-server"; "port" must be "stomp";
-#
-# * If the optional ":PROXY" is appended to the value, this means that
-#   PROXY protocol parsing will be applied to the incoming STOMP
-#   connections.
-#
-- patch: |
+    # Sets the correct reference to the stomp-server service. The
+    # format is "namespace/service-name:port[:PROXY]". Where:
+    #
+    # * "namespace" must be the same as the current namespace. That is:
+    #   the name of the directory that contains this `kustomization.yaml`
+    #   file;
+    #
+    # * "service-name" must be "stomp-server"; "port" must be "stomp";
+    #
+    # * If the optional ":PROXY" is appended to the value, this means that
+    #   PROXY protocol parsing will be applied to the incoming STOMP
+    #   connections.
     - op: replace
       path: /spec/values/tcp/1234
       value: swpt-debtors/stomp-server:stomp
-  target:
-    group: helm.toolkit.fluxcd.io
-    version: v2
-    kind: HelmRelease
-    name: ingress-nginx
 
-# This patch enables or disables the PROXY protocol parsing for the
-# incoming HTTP and HTTPS connections. To enable PROXY protocol
-# parsing, set the value to "true". To disable PROXY protocol parsing,
-# set the value to "false".
-#
-- patch: |
+    # Enables or disables the PROXY protocol parsing for the incoming
+    # HTTP and HTTPS connections. To enable PROXY protocol parsing,
+    # set the value to "true". To disable PROXY protocol parsing, set
+    # the value to "false".
     - op: replace
       path: /spec/values/controller/config/use-proxy-protocol
       value: "false"
+
   target:
     group: helm.toolkit.fluxcd.io
     version: v2
