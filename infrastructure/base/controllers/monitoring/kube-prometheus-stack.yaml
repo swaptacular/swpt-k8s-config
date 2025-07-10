@@ -26,7 +26,6 @@ spec:
               version: v1
               kind: ClusterRole
               name: prometheus-grafana-clusterrole
-              namespace: monitoring
             patch: |
               - op: replace
                 path: /rules/0/resources
