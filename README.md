@@ -61,7 +61,7 @@ If you DO NOT want to use a private container image registry, you may
 skip the previous steps, and start installing the Git server:
 
 ``` console
-$ sed -i -E '/^([^#].*)?$/d' trusted_user_ca_keys  # Removes existing trusted CA keys, preserves comments.
+$ cp static/trusted_user_ca_keys .
 
 $ export ROOT_CA_CRT_FILE=~/swpt_ca_scripts/root-ca.crt  # the path to your Swaptacular node's self-signed root-CA certificate
 $ openssl x509 -in "$ROOT_CA_CRT_FILE" -pubkey -noout > CERT.tmp
