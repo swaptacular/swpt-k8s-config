@@ -15,6 +15,22 @@ spec:
 
   targetNamespace: monitoring
   releaseName: prometheus
+  postRenderers:
+    - kustomize:
+        patches:
+          # Giving Grafana access to all secrets (which is the chart's
+          # default) does not look like a good idea. This patch gives
+          # Grafana access only to configmaps.
+          - target:
+              group: rbac.authorization.k8s.io
+              version: v1
+              kind: ClusterRole
+              name: prometheus-grafana-clusterrole
+              namespace: monitoring
+            patch: |
+              - op: replace
+                path: /rules/0/resources
+                value: ["configmaps"]
   values:
     global:
       imagePullSecrets:
@@ -170,6 +186,10 @@ spec:
           repository: kiwigrid/k8s-sidecar
           tag: 1.30.3
           sha: ""
+        dashboards:
+          resource: configmap
+        datasources:
+          resource: configmap
         resources:
           requests:
             cpu: 10m
