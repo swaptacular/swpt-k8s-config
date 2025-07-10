@@ -18,6 +18,10 @@ spec:
         cidr: 192.168.0.0/16
 
 ---
+# Grafana's egress is restricted only to the monitoring namespace, and
+# the standard cluster services (like the DNS-resolver). Hopefully,
+# this is a good enough protection against malicious proxy requests
+# coming from Grafana.
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
