@@ -7,8 +7,6 @@ configMapGenerator:
   files:
     - sshd_config=static/sshd_config
     - trusted_user_ca_keys=trusted_user_ca_keys
-  options:
-    disableNameSuffixHash: true
 - name: nginx-config
   files:
   - nginx.conf=static/nginx.conf
