@@ -1,3 +1,21 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: simple-git-server
+
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: git-repositories
+spec:
+  accessModes:
+    - ReadWriteOncePod
+  resources:
+    requests:
+      storage: 1Gi
+
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -91,3 +109,53 @@ spec:
         - name: nginx-config
           configMap:
             name: nginx-config
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: git-server
+spec:
+  selector:
+    app: simple-git-server
+  ports:
+    - name: ssh
+      port: 2222
+      protocol: TCP
+      appProtocol: ssh
+      targetPort: 22
+    - name: https
+      port: 443
+      protocol: TCP
+      targetPort: 443
+  type: LoadBalancer
+
+  # When "externalTrafficPolicy" is "Cluster", the client IPs will be
+  # unknown to the service. To preserve the client IPs, this should be
+  # set to "Local", in which case most providers will preserve the
+  # client IPs. However, for some providers this will not be enough.
+  # Digital Ocean, for example, requires you to also add this
+  # annotation to the service:
+  # `service.beta.kubernetes.io/do-loadbalancer-enable-proxy-protocol: "true"`,
+  # and then change/configure the server to use "Proxy protocol" (see
+  # https://seriousben.com/posts/2020-02-exploring-the-proxy-protocol/).
+  #
+  externalTrafficPolicy: Cluster
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: forbid-pods-internet-access
+spec:
+  podSelector: {}
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 10.0.0.0/8
+    - ipBlock:
+        cidr: 172.16.0.0/12
+    - ipBlock:
+        cidr: 192.168.0.0/16
