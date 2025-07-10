@@ -2,6 +2,7 @@
 .direnv/
 
 simple-git-server/secret-files/
+simple-git-server/trusted_user_ca_keys
 
 # Emacs files
 TAGS
