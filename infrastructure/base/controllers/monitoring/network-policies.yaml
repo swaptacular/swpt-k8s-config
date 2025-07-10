@@ -1,11 +1,41 @@
+# Pods in the monitoring namespace only need to be able to connect to
+# pods in the same namespace, plus of course, the standard cluster
+# services (like the API server the DNS resolver). The only exception
+# from this rule are Prometheus's pods.
+#
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: forbid-pods-internet-access
+  name: namespace-only-egress
 spec:
   podSelector:
     matchExpressions:
-      - { key: app.kubernetes.io/name, operator: NotIn, values: [grafana] }
+      - key: app.kubernetes.io/name
+        operator: NotIn
+        values: [prometheus, kube-prometheus-stack-prometheus-operator]
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - podSelector: {}
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+
+---
+# To scrape metrics, Prometheus pods need to be able to connect to
+# each pod in the cluster.
+#
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-prometheus-clusterwide-egress
+spec:
+  podSelector:
+    matchExpressions:
+      - key: app.kubernetes.io/name
+        operator: In
+        values: [prometheus, kube-prometheus-stack-prometheus-operator]
   policyTypes:
   - Egress
   egress:
@@ -18,41 +48,8 @@ spec:
         cidr: 192.168.0.0/16
 
 ---
-# Grafana's egress is restricted only to the monitoring namespace, and
-# the standard cluster services (like the DNS-resolver). Hopefully,
-# this is a good enough protection against malicious proxy requests
-# coming from Grafana.
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: namespace-only-grafana-egress
-spec:
-  podSelector:
-    matchExpressions:
-      - { key: app.kubernetes.io/name, operator: In, values: [grafana] }
-  policyTypes:
-  - Egress
-  egress:
-  - to:
-    - podSelector: {}
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: kube-system
-
----
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: namespace-only-ingress
-spec:
-  policyTypes:
-    - Ingress
-  podSelector: {}
-  ingress:
-    - from:
-        - podSelector: {}
-
----
+# The alert manager needs to be able send email to an SMTP server.
+#
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -70,6 +67,25 @@ spec:
         cidr: 255.255.255.255/32
 
 ---
+# Pods in the monitoring namespace only need to be able to receive
+# connections from pods in the same namespace. The only exception from
+# this rule are Grafana's pods.
+#
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: namespace-only-ingress
+spec:
+  policyTypes:
+    - Ingress
+  podSelector: {}
+  ingress:
+    - from:
+        - podSelector: {}
+
+---
+# Grafana's HTTP port must be exposed to everybody.
+#
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
