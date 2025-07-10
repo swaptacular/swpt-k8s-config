@@ -19,7 +19,7 @@ spec:
           kubernetes.io/metadata.name: kube-system
 
 ---
-# To scrape metrics, Prometheus pods need to be able to connect to
+# To scrape metrics, Prometheus's pods need to be able to connect to
 # each pod in the cluster.
 #
 apiVersion: networking.k8s.io/v1
@@ -44,7 +44,8 @@ spec:
         cidr: 192.168.0.0/16
 
 ---
-# The alert manager needs to be able send emails to an SMTP server.
+# The Alertmanager's pods need to be able send emails to an SMTP
+# server.
 #
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -80,7 +81,7 @@ spec:
         - podSelector: {}
 
 ---
-# Grafana's HTTP port must be exposed to everybody.
+# Grafana's HTTP port is exposed to everybody in the cluster.
 #
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
