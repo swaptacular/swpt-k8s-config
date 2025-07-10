@@ -40,7 +40,7 @@ images:
 - name: docker.io/rockstorm/git-server:2.47
   newName: docker.io/rockstorm/git-server
   digest: sha256:0b2f02446b2e3824f1fe17b8ba57f7d732b8ad440f7c248f007e6fc38b5d8935
-- name: nginx
+- name: nginx:1.26.3-alpine3.20
   newName: docker.io/nginx
   digest: sha256:1eadbb07820339e8bbfed18c771691970baee292ec4ab2558f1453d26153e22d
 
