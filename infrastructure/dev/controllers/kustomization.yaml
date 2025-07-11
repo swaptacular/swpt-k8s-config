@@ -506,7 +506,7 @@ patches:
 # should be the SMTP server's network.
 - patch: |-
     - op: replace
-      path: /spec/egress/0/to/0/ipBlock
+      path: /spec/egress/0/to/0/ipBlock/cidr
       value: 0.0.0.0/0
 
   target:
