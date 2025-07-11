@@ -27,6 +27,7 @@ secretGenerator:
 - name: nginx-basic-auth
   files:
     - alertmanager=alertmanager_viewers
+    - prometheus=prometheus_viewers
   type: Opaque
 - name: host-keys
   files:
