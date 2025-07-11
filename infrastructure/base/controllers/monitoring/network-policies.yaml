@@ -66,7 +66,7 @@ spec:
 ---
 # Pods in the monitoring namespace only need to be able to receive
 # connections from pods in the same namespace. The only exception from
-# this rule are Grafana's pods.
+# this rule are Grafana's and Alertmanager's pods.
 #
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -81,7 +81,7 @@ spec:
         - podSelector: {}
 
 ---
-# Grafana's HTTP port is exposed to everybody in the cluster.
+# Grafana's HTTP port is exposed to simple-git-server's proxy.
 #
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -98,3 +98,30 @@ spec:
     - ports:
         - port: grafana
           protocol: TCP
+      from:
+        namespaceSelector:
+          matchLabels:
+            app.kubernetes.io/name: simple-git-server
+
+---
+# Alertmanager's HTTP port is exposed to simple-git-server's proxy.
+#
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-alertmanager-ingress
+spec:
+  policyTypes:
+    - Ingress
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/instance: prometheus-kube-prometheus-alertmanager
+      app.kubernetes.io/name: alertmanager
+  ingress:
+    - ports:
+        - port: http-web
+          protocol: TCP
+      from:
+        namespaceSelector:
+          matchLabels:
+            app.kubernetes.io/name: simple-git-server
