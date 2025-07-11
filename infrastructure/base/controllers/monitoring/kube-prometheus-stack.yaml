@@ -65,6 +65,8 @@ spec:
           repository: prometheus/alertmanager
           sha: ""
         replicas: 1
+        externalUrl: https://172.18.0.4/alertmanager/
+        routePrefix: /alertmanager/
         storage:
           volumeClaimTemplate:
             spec:
