@@ -43,7 +43,7 @@ spec:
       config:
         global:
           smtp_smarthost: mailhog.mailhog.svc.cluster.local:1025
-          smtp_from: 'from@example.com'
+          smtp_from: 'fromme@example.com'
           smtp_require_tls: false
           # auth_username: 'username'
           # auth_password: 'password'
@@ -51,7 +51,7 @@ spec:
         receivers:
           - name: email
             email_configs:
-              - to: 'to@example.com'
+              - to: 'tome@example.com'
                 send_resolved: true
       alertmanagerSpec:
         image:
