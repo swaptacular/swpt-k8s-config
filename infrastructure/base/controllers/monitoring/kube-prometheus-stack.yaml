@@ -53,6 +53,13 @@ spec:
             email_configs:
               - to: 'to@example.com'
                 send_resolved: true
+          - name: 'null'
+        route:
+          receiver: email
+          routes:
+            - receiver: email
+              matchers:
+                - alertname = "Watchdog"
       alertmanagerSpec:
         image:
           repository: prometheus/alertmanager
