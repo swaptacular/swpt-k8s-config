@@ -99,9 +99,9 @@ spec:
         - port: grafana
           protocol: TCP
       from:
-        namespaceSelector:
-          matchLabels:
-            app.kubernetes.io/name: simple-git-server
+        - namespaceSelector:
+            matchLabels:
+              app.kubernetes.io/name: simple-git-server
 
 ---
 # Alertmanager's HTTP port is exposed to simple-git-server's proxy.
@@ -122,6 +122,6 @@ spec:
         - port: http-web
           protocol: TCP
       from:
-        namespaceSelector:
-          matchLabels:
-            app.kubernetes.io/name: simple-git-server
+        - namespaceSelector:
+            matchLabels:
+              app.kubernetes.io/name: simple-git-server
