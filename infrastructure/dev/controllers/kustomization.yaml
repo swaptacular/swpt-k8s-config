@@ -501,6 +501,21 @@ patches:
     name: kube-prometheus-stack
     namespace: monitoring
 
+# This patch configures the range of IP addresses that Prometheus's
+# Alertmanager is allowed to initiate connections to. Usually, this
+# should be the SMTP server's network.
+- patch: |-
+    - op: replace
+      path: /spec/egress/0/to/0/ipBlock
+      value: 0.0.0.0/0
+
+  target:
+    group: networking.k8s.io
+    version: v1
+    kind: NetworkPolicy
+    name: allow-alertmanager-smtp-access
+    namespace: monitoring
+
 # This patch configures the CPU and memory requests and limits for the
 # Nginx server which serves the Grafana plugins.
 #
