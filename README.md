@@ -73,21 +73,12 @@ $ cat trusted_user_ca_keys  # Shows the trusted CA keys, one key per line.
 ...
 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCJfDWvw+LxOW1ECcpoHdFw+ygG4XSeVrB9JFVdIcrrVHqIXDPjvJKXrQ2TadeaTA2i1XUv+XwJr2ZN3OZ6dGLxddPQD4ZG6ciT4iK4TOjAiauE8gQPHR1uzShoK2TGfuYXma2lOnB4s/w5Tif+an5NzHRuDzAwXHPVfVeb9kgIO4A761CztwdTPyEM0jocpoz03Ch4DgYvwf2r+P+1x2Hm5htipNigkhdwtdw5yjUuTR3ylFIeokwcIZomYcGGO66i7EWGYzhr811uApgLJH5YtqeFnD054ia+AbOdCXEr1ZXvpol1Vqo6p/R015zBjMQ8wcdzd+PMSzHvXMLMjG6POhRvQ2yy3cmDpPPIzMHOcNxXhdarVLKDt8/SJlo4O+buAbHdib0pRXpqbPS6rjFwArB93H7TOcY+xl3EGAsjz+1wRPlbi1TN9XNRyQKxLK21QpYql4iYoD8Wac6iWQDDKNaTr88YFUu+MMUfZuQ+0MmXQ1yA/wfqyC9pjm4tkc0=
 
-$ git add trusted_user_ca_keys
-$ git commit -m 'Update simple-git-server/trusted_user_ca_keys'
-[master 2f1bd3c] Update simple-git-server/trusted_user_ca_keys
- 1 file changed, 1 insertion(+), 1 deletion(-)
+$ echo "alertmanager:$(openssl passwd)" > alertmanager_viewers
+Password: <enter your chosen password>
+Verifying - Password: <enter your chosen password again>
 
-$ git push origin master  # Pushes the trusted CA keys to the GitOps repository.
-Enumerating objects: 11, done.
-Counting objects: 100% (11/11), done.
-Delta compression using up to 4 threads
-Compressing objects: 100% (7/7), done.
-Writing objects: 100% (7/7), 1.94 KiB | 662.00 KiB/s, done.
-Total 7 (delta 5), reused 0 (delta 0), pack-reused 0
-remote: Resolving deltas: 100% (5/5), completed with 4 local objects.
-To github.com:johndoe/swpt-k8s-config.git
-   dca1e7a..175b62a  master -> master
+$ cat alertmanager_viewers  # Shows Alertmanager's viewers usernames and encrypted passwords.
+alertmanager:$1$2gwQXkVy$An9E0C66KIGsgQ/KhPWoD.
 
 $ ./generate-secret-files.sh  # Generates an SSH private/public key pair.
 Generating public/private rsa key pair.

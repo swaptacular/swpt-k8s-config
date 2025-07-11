@@ -3,6 +3,7 @@
 
 simple-git-server/secret-files/
 simple-git-server/trusted_user_ca_keys
+simple-git-server/alertmanager_viewers
 
 # Emacs files
 TAGS

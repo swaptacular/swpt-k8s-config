@@ -2,6 +2,8 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: simple-git-server
+  labels:
+    app.kubernetes.io/name: simple-git-server
 
 ---
 kind: PersistentVolumeClaim
@@ -71,8 +73,10 @@ spec:
             - name: https
               containerPort: 443
           env:
-            - name: PROXY_UPSTREAM_URL
+            - name: GRAFANA_UPSTREAM_URL
               value: "http://prometheus-grafana.monitoring.svc.cluster.local"
+            - name: ALERTMANAGER_UPSTREAM_URL
+              value: "http://prometheus-kube-prometheus-alertmanager.monitoring.svc.cluster.local:9093"
             - name: NGINX_ENTRYPOINT_QUIET_LOGS
               value: "1"
           resources:
@@ -91,6 +95,9 @@ spec:
             - name: nginx-config
               mountPath: "/etc/nginx/templates/default.conf.template"
               subPath: default.conf.template
+            - name: nginx-basic-auth
+              mountPath: "/etc/nginx/basic-auth/alertmanager"
+              subPath: alertmanager
       imagePullSecrets:
         - name: regcreds
       volumes:
@@ -109,6 +116,9 @@ spec:
         - name: nginx-config
           configMap:
             name: nginx-config
+        - name: nginx-basic-auth
+          secret:
+            secretName: nginx-basic-auth
 
 ---
 apiVersion: v1
