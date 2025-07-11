@@ -80,6 +80,13 @@ Verifying - Password: <enter your chosen password again>
 $ cat alertmanager_viewers  # Shows Alertmanager's viewers usernames and encrypted passwords.
 alertmanager:$1$2gwQXkVy$An9E0C66KIGsgQ/KhPWoD.
 
+$ echo "prometheus:$(openssl passwd)" > prometheus_viewers
+Password: <enter your chosen password>
+Verifying - Password: <enter your chosen password again>
+
+$ cat prometheus_viewers  # Shows Prometheus's viewers usernames and encrypted passwords.
+prometheus:$1$2gwQXkVy$An9E0C66KIGsgQ/KhPWoD.
+
 $ ./generate-secret-files.sh  # Generates an SSH private/public key pair.
 Generating public/private rsa key pair.
 Your identification has been saved in secret-files/ssh_host_rsa_key

@@ -129,6 +129,8 @@ spec:
           sha: ""
         replicas: 1  # must be exactly 1
         retention: 10d
+        externalUrl: https://172.18.0.4/prometheus/
+        routePrefix: /prometheus/
         storageSpec:
           volumeClaimTemplate:
             spec:

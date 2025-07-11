@@ -10,9 +10,19 @@ server {
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     }
     location /alertmanager/ {
-        auth_basic "Restricted";
+        auth_basic "Alertmanager";
         auth_basic_user_file /etc/nginx/basic-auth/alertmanager;
         proxy_pass ${ALERTMANAGER_UPSTREAM_URL}/alertmanager/;
+        proxy_redirect default;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-Port $server_port;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+    location /prometheus/ {
+        auth_basic "Prometheus";
+        auth_basic_user_file /etc/nginx/basic-auth/prometheus;
+        proxy_pass ${PROMETHEUS_UPSTREAM_URL}/prometheus/;
         proxy_redirect default;
         proxy_set_header Host $host;
         proxy_set_header X-Forwarded-Port $server_port;

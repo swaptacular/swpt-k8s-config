@@ -77,6 +77,8 @@ spec:
               value: "http://prometheus-grafana.monitoring.svc.cluster.local"
             - name: ALERTMANAGER_UPSTREAM_URL
               value: "http://prometheus-kube-prometheus-alertmanager.monitoring.svc.cluster.local:9093"
+            - name: PROMETHEUS_UPSTREAM_URL
+              value: "http://prometheus-kube-prometheus-prometheus.monitoring.svc.cluster.local:9090"
             - name: NGINX_ENTRYPOINT_QUIET_LOGS
               value: "1"
           resources:
@@ -98,6 +100,9 @@ spec:
             - name: nginx-basic-auth
               mountPath: "/etc/nginx/basic-auth/alertmanager"
               subPath: alertmanager
+            - name: nginx-basic-auth
+              mountPath: "/etc/nginx/basic-auth/prometheus"
+              subPath: prometheus
       imagePullSecrets:
         - name: regcreds
       volumes:
