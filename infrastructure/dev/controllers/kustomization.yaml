@@ -331,7 +331,28 @@ patches:
       path: /spec/values/prometheusOperator/admissionWebhooks/patch/image/sha
       value: 7a38cf0f8480775baaee71ab519c7465fd1dfeac66c421f28f087786e631456e
 
-    # Specifies the number of alertmanager replicas to run. Should be
+    # Configures the connection to the email server (smarthost) that
+    # Alertmanager uses to send emails.
+    - op: replace
+      path: /spec/values/alertmanager/config/global
+      value:
+        smtp_smarthost: mailhog.mailhog.svc.cluster.local:1025
+        smtp_from: 'from@example.com'
+        smtp_require_tls: false
+        # auth_username: 'username'
+        # auth_password: 'password'
+        # smtp_auth_password_file: '/etc/secrets/smtp-password'
+
+    # Configures the email addresses that will receive alerts from
+    # Alertmanager. The "send_resolved" flag specifies whether emails
+    # for resolved alerts should be sent.
+    - op: replace
+      path: /spec/values/alertmanager/config/receivers/0/email_configs
+      value:
+        - to: 'to@example.com'
+          send_resolved: true
+
+    # Specifies the number of Alertmanager replicas to run. Should be
     # 2 or 3 in production (HA). 2 is probably good enough for most
     # clusters. May be 1 (no HA) for testing.
     - op: replace
@@ -339,14 +360,14 @@ patches:
       value: 1
 
     # Specifies the size of the persistent volume mounted on each
-    # alertmanager replica. 1 or 2Gi should be enough for most
+    # Alertmanager replica. 1 or 2Gi should be enough for most
     # clusters.
     - op: replace
       path: /spec/values/alertmanager/alertmanagerSpec/storage/volumeClaimTemplate/spec/resources/requests/storage
       value: 1Gi
 
     # Specifies OCI image and CPU and memory requests and limits for
-    # the alertmanager pods. Note that the `sha` value MUST NOT be
+    # the Alertmanager pods. Note that the `sha` value MUST NOT be
     # prefixed with "sha256:".
     - op: replace
       path: /spec/values/alertmanager/alertmanagerSpec/image/repository
@@ -556,6 +577,18 @@ secretGenerator:
 
   options:
     disableNameSuffixHash: true
+
+    # These annotations are used as sources for convenient Kustomize
+    # replacements:
+    #
+    annotations:
+      # Grafana's, Alertmanager's, and Prometheus's UIs are publicly
+      # exposed via an HTTP reverse proxy server in the
+      # "simple-git-server" namespace. Here, the IP address of the
+      # load balancer for this proxy server should be specified.
+      #
+      kustomize_simple_git_server_ip_address: 172.18.0.4
+
   type: Opaque
 
 - name: regcreds
@@ -616,3 +649,6 @@ secretGenerator:
 
 resources:
 - ../../base/controllers/
+
+replacements:
+- path: ../../base/controllers/monitoring/replacements/simple-git-server-ip-address.yaml
