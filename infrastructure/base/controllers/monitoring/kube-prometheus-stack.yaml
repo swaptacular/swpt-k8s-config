@@ -57,7 +57,7 @@ spec:
         image:
           repository: prometheus/alertmanager
           sha: ""
-        replicas: 1
+        replicas: 1  # must be exactly 1
         externalUrl: https://127.0.0.1/alertmanager/  # The IP address will be automatically replaced.
         routePrefix: /alertmanager/
         volumes:
