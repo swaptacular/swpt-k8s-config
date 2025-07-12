@@ -59,6 +59,14 @@ spec:
         replicas: 1
         externalUrl: https://127.0.0.1/alertmanager/  # The IP address will be automatically replaced.
         routePrefix: /alertmanager/
+        volumes:
+          - name: smtp-password
+            secret:
+              secretName: alertmanager-prometheus-kube-prometheus-alertmanager-smtp-password
+        volumeMounts:
+          - mountPath: /etc/secrets/smtp-password
+            name: smtp-password
+            subPath: password
         storage:
           volumeClaimTemplate:
             spec:

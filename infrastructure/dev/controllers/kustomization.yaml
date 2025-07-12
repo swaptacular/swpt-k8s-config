@@ -557,6 +557,24 @@ patches:
     namespace: monitoring
 
 secretGenerator:
+- name: alertmanager-prometheus-kube-prometheus-alertmanager-smtp-password
+  namespace: monitoring
+
+  files:
+  # A SOPS-encrypted file containing the password for the email server
+  # that Alertmanager uses to send emails. To SOPS-encrypt your
+  # password, you may use this command:
+  #
+  # $ echo -n 'YOUR_SECRET_PASSWORD' > alertmanager-smtp-password
+  # $ sops encrypt alertmanager-smtp-password > alertmanager-smtp-password.encrypted
+  # $ shred -z alertmanager-smtp-password
+  # $ rm alertmanager-smtp-password
+  - password=secrets/alertmanager-smtp-password.encrypted
+
+  options:
+    disableNameSuffixHash: true
+  type: Opaque
+
 - name: prometheus-grafana-admin
   namespace: monitoring
 
