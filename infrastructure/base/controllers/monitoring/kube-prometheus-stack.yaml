@@ -84,7 +84,7 @@ spec:
           requests:
             cpu: 100m
             memory: 100Mi
-        podAntiAffinity: "hard"
+        podAntiAffinity: "soft" # "hard"
       networkPolicy:
         enabled: false
       podDisruptionBudget:
