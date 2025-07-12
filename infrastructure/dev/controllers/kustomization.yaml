@@ -337,6 +337,8 @@ patches:
     # is an empty string, Alertmanager doesn't authenticate to the
     # SMTP server. `/spec/values/alertmanager/config/global/smtp_from`
     # specifies the email address that will be sending the alerts.
+    # `/spec/values/alertmanager/config/global/smtp_require_tls`
+    # should normally be "true" (it may be "false" for testing).
     - op: add
       path: /spec/values/alertmanager/config/global/smtp_smarthost
       value: mailhog.mailhog.svc.cluster.local:1025
@@ -346,6 +348,9 @@ patches:
     - op: add
       path: /spec/values/alertmanager/config/global/smtp_from
       value: from@example.com
+    - op: add
+      path: /spec/values/alertmanager/config/global/smtp_require_tls
+      value: false
 
     # Configures the email addresses that will receive alerts from
     # Alertmanager. The "send_resolved" flag specifies whether emails

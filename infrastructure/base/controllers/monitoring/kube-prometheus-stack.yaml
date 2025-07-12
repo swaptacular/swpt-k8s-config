@@ -42,7 +42,6 @@ spec:
     alertmanager:
       config:
         global:
-          smtp_require_tls: true
           smtp_auth_password_file: /etc/secrets/smtp-password
         receivers:
           - name: email
