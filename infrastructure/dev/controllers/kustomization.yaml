@@ -361,15 +361,8 @@ patches:
         - to: 'to@example.com'
           send_resolved: true
 
-    # Specifies the number of Alertmanager replicas to run. Should be
-    # 3 in production (HA). May be 1 (no HA) for testing.
-    - op: replace
-      path: /spec/values/alertmanager/alertmanagerSpec/replicas
-      value: 3
-
-    # Specifies the size of the persistent volume mounted on each
-    # Alertmanager replica. 1 or 2Gi should be enough for most
-    # clusters.
+    # Specifies the size of the persistent volume for the
+    # Alertmanager. 1 or 2Gi should be enough for most clusters.
     - op: replace
       path: /spec/values/alertmanager/alertmanagerSpec/storage/volumeClaimTemplate/spec/resources/requests/storage
       value: 1Gi
