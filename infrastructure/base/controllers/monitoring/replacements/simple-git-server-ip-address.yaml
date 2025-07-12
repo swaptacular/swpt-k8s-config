@@ -1,0 +1,19 @@
+source:
+  kind: Secret
+  name: prometheus-grafana-admin
+  namespace: monitoring
+  fieldPath: metadata.annotations.kustomize_simple_git_server_ip_address
+targets:
+  - select:
+      group: helm.toolkit.fluxcd.io
+      version: v2
+      kind: HelmRelease
+      name: kube-prometheus-stack
+      namespace: monitoring
+    fieldPaths:
+      - spec.values.alertmanager.alertmanagerSpec.externalUrl
+      - spec.values.prometheus.prometheusSpec.externalUrl
+    options:
+      delimiter: "/"
+      index: 2
+
