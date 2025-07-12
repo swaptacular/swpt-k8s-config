@@ -331,17 +331,21 @@ patches:
       path: /spec/values/prometheusOperator/admissionWebhooks/patch/image/sha
       value: 7a38cf0f8480775baaee71ab519c7465fd1dfeac66c421f28f087786e631456e
 
-    # Configures the connection to the email server (smarthost) that
-    # Alertmanager uses to send emails. If "smtp_auth_username" is
-    # empty, Alertmanager doesn't authenticate to the SMTP server.
-    - op: replace
-      path: /spec/values/alertmanager/config/global
-      value:
-        smtp_smarthost: mailhog.mailhog.svc.cluster.local:1025
-        smtp_from: 'from@example.com'
-        smtp_require_tls: true
-        smtp_auth_username: ''
-        smtp_auth_password_file: '/etc/secrets/smtp-password'
+    # Configures the connection to the email server (smtp_smarthost)
+    # that Alertmanager uses to send emails. Note that when the value
+    # for `/spec/values/alertmanager/config/global/smtp_auth_username`
+    # is an empty string, Alertmanager doesn't authenticate to the
+    # SMTP server. `/spec/values/alertmanager/config/global/smtp_from`
+    # specifies the email address that will be sending the alerts.
+    - op: add
+      path: /spec/values/alertmanager/config/global/smtp_smarthost
+      value: mailhog.mailhog.svc.cluster.local:1025
+    - op: add
+      path: /spec/values/alertmanager/config/global/smtp_auth_username
+      value: ''
+    - op: add
+      path: /spec/values/alertmanager/config/global/smtp_from
+      value: from@example.com
 
     # Configures the email addresses that will receive alerts from
     # Alertmanager. The "send_resolved" flag specifies whether emails
