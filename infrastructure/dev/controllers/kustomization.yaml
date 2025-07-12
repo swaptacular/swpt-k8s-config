@@ -332,16 +332,16 @@ patches:
       value: 7a38cf0f8480775baaee71ab519c7465fd1dfeac66c421f28f087786e631456e
 
     # Configures the connection to the email server (smarthost) that
-    # Alertmanager uses to send emails.
+    # Alertmanager uses to send emails. If "smtp_auth_username" is
+    # empty, Alertmanager doesn't authenticate to the SMTP server.
     - op: replace
       path: /spec/values/alertmanager/config/global
       value:
         smtp_smarthost: mailhog.mailhog.svc.cluster.local:1025
         smtp_from: 'from@example.com'
-        smtp_require_tls: false
-        # auth_username: 'username'
-        # auth_password: 'password'
-        # smtp_auth_password_file: '/etc/secrets/smtp-password'
+        smtp_require_tls: true
+        smtp_auth_username: ''
+        smtp_auth_password_file: '/etc/secrets/smtp-password'
 
     # Configures the email addresses that will receive alerts from
     # Alertmanager. The "send_resolved" flag specifies whether emails
