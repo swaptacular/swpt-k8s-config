@@ -366,7 +366,7 @@ patches:
     # clusters. May be 1 (no HA) for testing.
     - op: replace
       path: /spec/values/alertmanager/alertmanagerSpec/replicas
-      value: 1
+      value: 2
 
     # Specifies the size of the persistent volume mounted on each
     # Alertmanager replica. 1 or 2Gi should be enough for most
