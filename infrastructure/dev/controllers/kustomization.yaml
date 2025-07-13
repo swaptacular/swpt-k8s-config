@@ -15,7 +15,7 @@ images:
 
 # Postgres operator:
 - name: ghcr.io/zalando/postgres-operator:v1.14.0
-  newName: ghcr.io/zalando/postgres-operator
+  newName: ghcr.io/swaptacular/postgres-operator
   digest: sha256:4f40cfc2283b8389ff2e85c3af17c428dee29963be20ddb28b451ead9984b6a9
 
 # DragonflyDB operator:
