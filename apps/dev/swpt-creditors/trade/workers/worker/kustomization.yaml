@@ -80,11 +80,11 @@ configMapGenerator:
 
       # This annotation specifies the container image for the Postgres
       # exporter sidecar.
-      kustomize_postgres_exporter_image: quay.io/prometheuscommunity/postgres-exporter:v0.17.1
+      kustomize_postgres_exporter_image: ghcr.io/swaptacular/postgres-exporter@sha256:38606faa38c54787525fb0ff2fd6b41b4cfb75d455c1df294927c5f611699b17
 
       # This annotation specifies the container image for the WALG
       # exporter sidecar.
-      kustomize_walg_exporter_image: ghcr.io/thedatabaseme/wal-g-exporter:0.1.0
+      kustomize_walg_exporter_image: ghcr.io/swaptacular/wal-g-exporter@sha256:5f842526cdf313a3746acb8c991abc6e9243b6dc902bbf21638588e7b38803ad
 
       # Do not change the next two lines!
       kustomize_zalando_top_level_domain: do

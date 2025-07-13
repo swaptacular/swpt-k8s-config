@@ -8,10 +8,10 @@ metadata:
   #
   annotations:
     # The container image for the Postgres exporter sidecar.
-    kustomize_postgres_exporter_image: quay.io/prometheuscommunity/postgres-exporter:v0.17.1
+    kustomize_postgres_exporter_image: ghcr.io/swaptacular/postgres-exporter@sha256:38606faa38c54787525fb0ff2fd6b41b4cfb75d455c1df294927c5f611699b17
 
     # The container image for the WALG exporter sidecar.
-    kustomize_walg_exporter_image: ghcr.io/thedatabaseme/wal-g-exporter:0.1.0
+    kustomize_walg_exporter_image: ghcr.io/swaptacular/wal-g-exporter@sha256:5f842526cdf313a3746acb8c991abc6e9243b6dc902bbf21638588e7b38803ad
 
     # Kubernetes memory and CPU requests and limits, for the exporter
     # sidecars.
@@ -27,7 +27,7 @@ metadata:
 spec:
   # Specifies the "spilo" OCI image to use.
   #
-  dockerImage: ghcr.io/zalando/spilo-17:4.0-p2
+  dockerImage: ghcr.io/swaptacular/spilo-17@sha256:23861da069941ff5345e6a97455e60a63fc2f16c97857da8f85560370726cbe7
 
   # Specifies the disk space allocated for the database. The value
   # must not be decreased.
