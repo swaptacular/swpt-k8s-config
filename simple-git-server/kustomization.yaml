@@ -13,22 +13,16 @@ images:
   newName: docker.io/nginx
   digest: sha256:1eadbb07820339e8bbfed18c771691970baee292ec4ab2558f1453d26153e22d
 
-configMapGenerator:
-- name: sshd-config
-  files:
-    - sshd_config=static/sshd_config
-    - trusted_user_ca_keys=trusted_user_ca_keys
-- name: nginx-config
-  files:
-  - nginx.conf=static/nginx.conf
-  - default.conf.template=static/default.conf.template
-
 secretGenerator:
 - name: nginx-basic-auth
   files:
     - alertmanager=alertmanager_viewers
     - prometheus=prometheus_viewers
   type: Opaque
+
+# IMPORTANT NOTE: Once the secret-files/ directory has been removed,
+# if you want to execute `kubectl apply -k simple-git-server/` again,
+# you will have to comment out the following block:
 - name: host-keys
   files:
     - secret-files/ssh_host_rsa_key.pub
@@ -49,6 +43,16 @@ secretGenerator:
   options:
     disableNameSuffixHash: true
   type: Opaque
+
+configMapGenerator:
+- name: sshd-config
+  files:
+    - sshd_config=static/sshd_config
+    - trusted_user_ca_keys=trusted_user_ca_keys
+- name: nginx-config
+  files:
+  - nginx.conf=static/nginx.conf
+  - default.conf.template=static/default.conf.template
 
 resources:
 - manifests.yaml
