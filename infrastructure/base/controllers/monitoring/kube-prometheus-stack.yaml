@@ -170,7 +170,7 @@ spec:
         enabled: true
         size: 5Gi
       admin:
-        existingSecret: "prometheus-grafana-admin"
+        existingSecret: prometheus-grafana-admin
         userKey: admin-user
         passwordKey: admin-password
       additionalDataSources:

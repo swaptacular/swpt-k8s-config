@@ -1,0 +1,12 @@
+nameReference:
+- kind: Secret
+  version: v1
+  fieldSpecs:
+  - group: helm.toolkit.fluxcd.io
+    version: v2
+    kind: HelmRelease
+    path: /spec/values/alertmanager/alertmanagerSpec/volumes/secret/secretName
+  - group: helm.toolkit.fluxcd.io
+    version: v2
+    kind: HelmRelease
+    path: /spec/values/grafana/admin/existingSecret

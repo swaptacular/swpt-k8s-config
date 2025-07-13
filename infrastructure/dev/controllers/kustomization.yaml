@@ -572,8 +572,6 @@ secretGenerator:
   # $ rm alertmanager-smtp-password
   - password=secrets/alertmanager-smtp-password.encrypted
 
-  options:
-    disableNameSuffixHash: true
   type: Opaque
 
 - name: prometheus-grafana-admin
@@ -595,8 +593,6 @@ secretGenerator:
   - admin-password=secrets/grafana-admin-password.encrypted
 
   options:
-    disableNameSuffixHash: true
-
     # These annotations are used as sources for convenient Kustomize
     # replacements:
     #

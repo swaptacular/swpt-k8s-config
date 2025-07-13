@@ -7,3 +7,6 @@ resources:
 - kube-prometheus-stack.yaml
 - grafana-plugins.yaml
 - network-policies.yaml
+
+configurations:
+- kustomization-config.yaml
