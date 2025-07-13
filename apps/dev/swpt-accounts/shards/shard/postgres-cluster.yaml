@@ -5,7 +5,7 @@ metadata:
 spec:
   # Specifies the "spilo" OCI image to use.
   #
-  dockerImage: ghcr.io/zalando/spilo-17:4.0-p2
+  dockerImage: ghcr.io/swaptacular/spilo-17@sha256:23861da069941ff5345e6a97455e60a63fc2f16c97857da8f85560370726cbe7
 
   # Specifies the disk space allocated for the database. The value
   # must not be decreased.
