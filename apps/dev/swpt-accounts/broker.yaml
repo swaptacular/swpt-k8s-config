@@ -5,7 +5,7 @@ metadata:
 spec:
   # Specifies the "RabbitMQ" OCI image to use.
   #
-  image: docker.io/rabbitmq:4.0.7-alpine
+  image: ghcr.io/swaptacular/rabbitmq@sha256:971ca2ba19fbcd01d0b8ecdb553ff05da58f652b09b26d6e8df86b6694cf38a7
 
   rabbitmq:
     # Specifies additional RabbitMQ plugins that need to be enabled.
