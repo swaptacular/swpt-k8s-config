@@ -10,7 +10,7 @@ images:
 
 # Minio operator:
 - name: minio/operator:v6.0.4
-  newName: minio/operator
+  newName: ghcr.io/swaptacular/minio-operator
   digest: sha256:3b00b4de407a0be25a13d69faf4dc2727064b6bbbd89050c494fc768a433a755
 
 # Postgres operator:
