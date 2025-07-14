@@ -39,10 +39,10 @@ images:
 
 # RabbitMQ operators:
 - name: rabbitmqoperator/cluster-operator:2.12.1
-  newName: ghcr.io/swaptacular/cluster-operator
+  newName: ghcr.io/swaptacular/rabbitmq-cluster-operator
   digest: sha256:0a7bd7f368168995b94303df54f246d5da67986cef3f5611884499d5d6abcf1b
 - name: rabbitmqoperator/messaging-topology-operator:1.17.2
-  newName: ghcr.io/swaptacular/messaging-topology-operator
+  newName: ghcr.io/swaptacular/rabbitmq-messaging-topology-operator
   digest: sha256:c55bea19b4db1e7c54ae0e4a7aa62a5a33a1bd8ceb906d0e3eecca5f33f14b36
 
 # Metrics server:
