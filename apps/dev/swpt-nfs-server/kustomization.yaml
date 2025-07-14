@@ -86,7 +86,7 @@ configMapGenerator:
 images:
 - name: swpt-nfs-server
   newName: ghcr.io/swaptacular/swpt_nfs_server
-  newTag: 0.1.6
+  digest: sha256:f3674f3a027e961d6c4be308094e1ec129859fda1aafac85e5920edb0c9bdb7f
 
 namespace: swpt-nfs-server
 
