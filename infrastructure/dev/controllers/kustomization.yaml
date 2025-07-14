@@ -20,10 +20,10 @@ images:
 
 # DragonflyDB operator:
 - name: docker.dragonflydb.io/dragonflydb/operator:v1.1.11
-  newName: docker.dragonflydb.io/dragonflydb/operator
+  newName: ghcr.io/swaptacular/dragonflydb-operator
   digest: sha256:11cef45ec1079b9d97930fc99ecd08ba29d4eca55cdb45887cb0ac40ee4e4d24
 - name: quay.io/brancz/kube-rbac-proxy:v0.16.0
-  newName: quay.io/brancz/kube-rbac-proxy
+  newName: ghcr.io/swaptacular/kube-rbac-proxy
   digest: sha256:2c8f8c357ff87b8bc5df4d967d5f52a23528c5e9c025f9aaa653a9ef4747585f
 
 # Cert-manager:
