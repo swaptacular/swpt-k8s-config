@@ -324,10 +324,10 @@ patches:
       path: /spec/pools/0/servers
       value: 1
 
-    # # Set the OCI image used for the MinIO tenant containers.
-    # - op: replace
-    #   path: /spec/image
-    #   value: quay.io/minio/minio@sha256:ea15e53e66f96f63e12f45509d2d2d8fad774808debb490f48508b3130bd22d3
+    # Set the OCI image used for the MinIO tenant containers.
+    - op: replace
+      path: /spec/image
+      value: ghcr.io/swaptacular/minio@sha256:064117214caceaa8d8a90ef7caa58f2b2aeb316b5156afe9ee8da5b4d83e12c8
 
     # Resource request and limits for the MinIO tenant containers.
     - op: replace
