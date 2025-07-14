@@ -48,9 +48,9 @@ spec:
       service:
         externalTrafficPolicy: "Local"
         annotations: {}
-      customTemplate:
-        configMapName: ingress-nginx-tmpl
-        configMapKey: nginx.tmpl
+      # customTemplate:
+      #   configMapName: ingress-nginx-tmpl
+      #   configMapKey: nginx.tmpl
       config:
         use-proxy-protocol: "false"
         client-header-timeout: "5"
