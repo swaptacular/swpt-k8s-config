@@ -260,12 +260,11 @@ patches:
           ephemeral-storage: 2Gi
 
     # Configures the OCI container image used for tenants' sidecars.
-    # The default image is "quay.io/minio/operator-sidecar:v6.0.2".
     - op: add
       path: /spec/template/spec/containers/0/env/-
       value:
         name: OPERATOR_SIDECAR_IMAGE
-        value: quay.io/minio/operator-sidecar@sha256:8d99fd33b4934816bef415b1d4a14cd8238d29ba509591a4502ffd95dbf6a9f5
+        value: ghcr.io/swaptacular/minio-operator-sidecar@sha256:8d99fd33b4934816bef415b1d4a14cd8238d29ba509591a4502ffd95dbf6a9f5
 
   target:
     kind: Deployment

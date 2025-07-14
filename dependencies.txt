@@ -20,4 +20,5 @@ quay.io/jetstack/cert-manager-webhook:v1.17.4
 quay.io/jetstack/cert-manager-acmesolver:v1.17.4
 registry.k8s.io/metrics-server/metrics-server:v0.7.2
 docker.io/minio/operator:v6.0.4
+quay.io/minio/operator-sidecar:v6.0.2
 quay.io/minio/minio:RELEASE.2025-06-13T11-33-47Z
