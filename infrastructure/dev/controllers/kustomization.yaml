@@ -326,7 +326,7 @@ patches:
     # the `sha` value MUST NOT be prefixed with "sha256:".
     - op: replace
       path: /spec/values/prometheusOperator/admissionWebhooks/patch/image/repository
-      value: ghcr.io/swaptacular/kube-webhook-certgen
+      value: ingress-nginx/kube-webhook-certgen
     - op: replace
       path: /spec/values/prometheusOperator/admissionWebhooks/patch/image/sha
       value: 7a38cf0f8480775baaee71ab519c7465fd1dfeac66c421f28f087786e631456e
