@@ -47,7 +47,7 @@ images:
 
 # Metrics server:
 - name: registry.k8s.io/metrics-server/metrics-server:v0.7.2
-  newName: registry.k8s.io/metrics-server/metrics-server
+  newName: ghcr.io/swaptacular/metrics-server
   digest: sha256:ffcb2bf004d6aa0a17d90e0247cf94f2865c8901dcab4427034c341951c239f9
 
 # The Nginx server which serves the Grafana plugins:
