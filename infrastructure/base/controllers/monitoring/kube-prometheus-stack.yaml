@@ -109,6 +109,7 @@ spec:
         patch:
           image:
             repository: ingress-nginx/kube-webhook-certgen
+            tag: v1.5.4
             sha: ""
       prometheusConfigReloader:
         image:

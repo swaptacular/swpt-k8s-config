@@ -404,7 +404,7 @@ patches:
     # You should set image repository and image digest.
     - op: add
       path: /spec/values/controller/admissionWebhooks/patch/image/repository
-      value: registry.k8s.io/ingress-nginx/kube-webhook-certgen
+      value: ghcr.io/swaptacular/kube-webhook-certgen
     - op: add
       path: /spec/values/controller/admissionWebhooks/patch/image/digest
       value: sha256:7a38cf0f8480775baaee71ab519c7465fd1dfeac66c421f28f087786e631456e
