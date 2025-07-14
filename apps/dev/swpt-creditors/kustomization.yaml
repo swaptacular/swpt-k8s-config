@@ -396,7 +396,7 @@ patches:
       value: registry.k8s.io/ingress-nginx/controller
     - op: add
       path: /spec/values/controller/image/digest
-      value: sha256:d2fbc4ec70d8aa2050dd91a91506e998765e86c96f32cffb56c503c9c34eed5b
+      value: sha256:05890cb25d37aa5cfe086614104f798f55e1eeec8dda26d9fd6f6acf0e1554a0
 
     # Specifies the "kube-webhook-certgen" OCI image. This image is
     # used by the ingress-nginx controller to set up Kubernetes

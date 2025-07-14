@@ -28,7 +28,7 @@ spec:
     controller:
       image:
         image: ingress-nginx/controller
-        tag: v1.12.1
+        tag: v1.12.4
       admissionWebhooks:
         patch:
           image:
