@@ -36,7 +36,7 @@ spec:
     spec:
       priorityClassName: system-cluster-critical
       containers:
-        - image: docker.io/rockstorm/git-server:2.47
+        - image: rockstorm/git-server
           name: git-server
           ports:
             - containerPort: 22
@@ -68,7 +68,7 @@ spec:
             - mountPath: "/tmp/host-keys/"
               name: host-keys
         - name: nginx
-          image: nginx:1.26.3-alpine3.20
+          image: nginx
           ports:
             - name: https
               containerPort: 443
