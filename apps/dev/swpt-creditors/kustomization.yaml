@@ -393,7 +393,7 @@ patches:
     # set image repository and image digest.
     - op: add
       path: /spec/values/controller/image/repository
-      value: registry.k8s.io/ingress-nginx/controller
+      value: ghcr.io/swaptacular/ingress-nginx-controller
     - op: add
       path: /spec/values/controller/image/digest
       value: sha256:05890cb25d37aa5cfe086614104f798f55e1eeec8dda26d9fd6f6acf0e1554a0
