@@ -376,11 +376,11 @@ images:
   newName: ghcr.io/swaptacular/swpt_nfs_server
   newTag: 0.1.6
 - name: oryd-hydra-maester
-  newName: docker.io/oryd/hydra-maester
-  newTag: v0.0.36
+  newName: ghcr.io/swaptacular/hydra-maester
+  digest: sha256:470e314ad0c3803dc4b221e05709002b1d2f28c274a6504ab3430e61920e3f6b
 - name: oryd-hydra
-  newName: docker.io/oryd/hydra
-  newTag: v2.3.0
+  newName: ghcr.io/swaptacular/hydra
+  digest: sha256:b94007e19a1f7f78157e7f4ea340da8a55b5f104a0f1198755c256f38ef32b4b
 - name: nginx
   newName: ghcr.io/swaptacular/nginx
   digest: sha256:65645c7bb6a0661892a8b03b89d0743208a18dd2f3f17a54ef4b76fb8e2f2a10

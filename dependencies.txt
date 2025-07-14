@@ -10,3 +10,5 @@ docker.io/rabbitmqoperator/messaging-topology-operator:1.17.2
 docker.dragonflydb.io/dragonflydb/dragonfly:v1.31.0
 docker.dragonflydb.io/dragonflydb/operator:v1.1.11
 quay.io/brancz/kube-rbac-proxy:v0.16.0
+docker.io/oryd/hydra:v2.3.0
+docker.io/oryd/hydra-maester:v0.0.36
