@@ -188,32 +188,32 @@ patches:
     # is `null`.
     - op: replace
       path: /spec/values/global/image/registry
-      value: null
+      value: ghcr.io
 
     # "grafana/loki". Uses the global registry, if set.
     - op: replace
       path: /spec/values/loki/image/repository
-      value: grafana/loki
+      value: swaptacular/loki
     - op: replace
       path: /spec/values/loki/image/digest
-      value: sha256:a74594532eec4cc313401beedc4dd2708c43674c032084b1aeb87c14a5be1745
+      value: sha256:d0a95e651bb7d0a5a6468035c5b49c52f4678d90d598f853c06716bca102686b
 
     # "grafana/loki-canary". Uses the global registry, if set.
     - op: replace
       path: /spec/values/lokiCanary/image/repository
-      value: grafana/loki-canary
+      value: swaptacular/loki-canary
     - op: replace
       path: /spec/values/lokiCanary/image/digest
-      value: sha256:bdec3b1755f6c8ddb0208134e3452b5dad7356963765e75c29375e3ebb8cbb65
+      value: sha256:7aaab5151d46428a608d9ff76ce7e1baacb6e017d0a5a43aad528f0289d85f29
 
     # "nginxinc/nginx-unprivileged" (used by the gateway service).
     # Uses the global registry, if set.
     - op: replace
       path: /spec/values/gateway/image/repository
-      value: nginxinc/nginx-unprivileged
+      value: swaptacular/nginx-unprivileged
     - op: replace
       path: /spec/values/gateway/image/digest
-      value: sha256:40e8efbfcfd6e26a47a73df5415454d7e42158971ee2d0d2746a2ee22df28398
+      value: sha256:c601e560be72033d37b03336df86d9284e41b24bb4c6aa46bd17b576d1c41f36
 
     # "memcached" (used by chunksCache and resultsCache services).
     # Uses the global registry, if set.
@@ -221,8 +221,8 @@ patches:
       path: /spec/postRenderers/0/kustomize/images/-
       value:
         name: memcached:1.6.38-alpine
-        newName: docker.io/memcached
-        digest: sha256:08b6a6cba188fab22215b24a3d5c1ccc18343bc337268f663f20cd86dbdfffeb
+        newName: ghcr.io/swaptacular/memcached
+        digest: sha256:5ac71d3889701bd0750d35b06762ab7efc873ef29d7a43848ef5b0dc30a0dad4
 
     # "prom/memcached-exporter" (used to export metrics from the
     # chunksCache and resultsCache services).
@@ -233,7 +233,7 @@ patches:
       path: /spec/postRenderers/0/kustomize/images/-
       value:
         name: prom/memcached-exporter:v0.15.3
-        newName: docker.io/prom/memcached-exporter
+        newName: ghcr.io/swaptacular/memcached-exporter
         digest: sha256:4356d5f0d2f0ba1525ad995d72fb83531ccaf85ee5468c02ab1049d4ccabd308
 
     # "kiwigrid/k8s-sidecar" (used for container sidecars).
@@ -245,7 +245,7 @@ patches:
     # "sha256:".
     - op: replace
       path: /spec/values/sidecar/image/repository
-      value: docker.io/kiwigrid/k8s-sidecar
+      value: ghcr.io/swaptacular/k8s-sidecar
     - op: replace
       path: /spec/values/sidecar/image/sha
       value: 49dcce269568b1645b0050f296da787c99119647965229919a136614123f0627
@@ -410,9 +410,9 @@ patches:
     - op: add
       path: /spec/postRenderers/0/kustomize/images/-
       value:
-        name: docker.io/grafana/promtail:3.5.1
-        newName: docker.io/grafana/promtail
-        digest: sha256:65bfae480b572854180c78f7dc567a4ad2ba548b0c410e696baa1e0fa6381299
+        name: docker.io/grafana/promtail:3.5.2
+        newName: ghcr.io/swaptacular/promtail
+        digest: sha256:15dcebad41596201c6e6df8cbf9d48daa1d2e9f2752ecde5d6a53cab32c982bf
 
     - op: replace
       path: /spec/values/resources
@@ -438,10 +438,10 @@ patches:
     # image registry, the image repository, and the image digest.
     - op: replace
       path: /spec/values/image/registry
-      value: docker.io
+      value: ghcr.io
     - op: replace
       path: /spec/values/image/repository
-      value: bitnami/kubernetes-event-exporter
+      value: swaptacular/kubernetes-event-exporter
     - op: replace
       path: /spec/values/image/digest
       value: sha256:03937b1be9fad8702059415e021eee2cba931ba04a607209c3da0e5cec66c223

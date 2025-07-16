@@ -40,7 +40,7 @@ spec:
     loki:
       image:
         repository: grafana/loki
-        tag: 3.5.1
+        tag: 3.5.2
         digest: null
       auth_enabled: false
       commonConfig:
@@ -156,7 +156,7 @@ spec:
     lokiCanary:
       image:
         repository: grafana/loki-canary
-        tag: 3.5.1
+        tag: 3.5.2
         digest: null
       resources: {}
     gateway:

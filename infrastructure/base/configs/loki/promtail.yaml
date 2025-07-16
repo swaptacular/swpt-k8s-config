@@ -25,7 +25,7 @@ spec:
       # Do not change these! Use "postRenderers/kustomize/images" instead.
       registry: docker.io
       repository: grafana/promtail
-      tag: "3.5.1"
+      tag: "3.5.2"
     resources: {}
     config:
       logLevel: info
