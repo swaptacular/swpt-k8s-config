@@ -203,6 +203,8 @@ spec:
           disable_gravatar: true
         snapshots:
           external_enabled: false
+        dataproxy:
+          timeout: 600
       plugins:
         - http://prometheus-grafana-plugins.monitoring/grafana-lokiexplore-app-1.0.20.zip;grafana-lokiexplore-app
         - http://prometheus-grafana-plugins.monitoring/grafana-metricsdrilldown-app-1.0.4.zip;grafana-metricsdrilldown-app
