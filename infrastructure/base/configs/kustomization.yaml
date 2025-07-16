@@ -4,5 +4,5 @@ kind: Kustomization
 resources:
 - crd-oauth2clients.yaml
 - collect-controllers-metrics.yaml
-- monitoring/
+- loki/
 - metrics-server/

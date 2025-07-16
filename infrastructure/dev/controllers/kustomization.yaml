@@ -628,4 +628,4 @@ resources:
 - ../../base/controllers/
 
 replacements:
-- path: ../../base/controllers/monitoring/replacements/simple-git-server-ip-address.yaml
+- path: ../../base/controllers/kube-prometheus-stack/replacements/simple-git-server-ip-address.yaml
