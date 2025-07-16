@@ -22,3 +22,11 @@ registry.k8s.io/metrics-server/metrics-server:v0.7.2
 docker.io/minio/operator:v6.0.4
 quay.io/minio/operator-sidecar:v6.0.2
 quay.io/minio/minio:RELEASE.2025-06-13T11-33-47Z
+quay.io/prometheus-operator/prometheus-operator:v0.83.0
+quay.io/prometheus-operator/prometheus-config-reloader:v0.83.0
+quay.io/prometheus/alertmanager:v0.28.1
+registry.k8s.io/kube-state-metrics/kube-state-metrics:v2.16.0
+quay.io/prometheus/node-exporter:v1.9.1
+quay.io/prometheus/prometheus:v3.4.2
+docker.io/grafana/grafana:12.0.2
+docker.io/kiwigrid/k8s-sidecar:1.30.3
