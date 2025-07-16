@@ -45,49 +45,12 @@ images:
   newName: ghcr.io/swaptacular/rabbitmq-messaging-topology-operator
   digest: sha256:c55bea19b4db1e7c54ae0e4a7aa62a5a33a1bd8ceb906d0e3eecca5f33f14b36
 
-# Metrics server:
-- name: registry.k8s.io/metrics-server/metrics-server:v0.7.2
-  newName: ghcr.io/swaptacular/metrics-server
-  digest: sha256:ffcb2bf004d6aa0a17d90e0247cf94f2865c8901dcab4427034c341951c239f9
-
 # The Nginx server which serves the Grafana plugins:
 - name: swpt-http-server
   newName: ghcr.io/swaptacular/swpt_http_server
   digest: sha256:f4c12ebca1acac14fa7aef6c7d7cb8583ee58a29d509545cb381ae0c1d6771e8
 
 patches:
-
-# This patch is sometimes needed (in "KinD" clusters for example) in
-# order for the metrics-server to work. It simply adds
-# "--kubelet-insecure-tls" to the list of arguments for the metrics
-# server process. Comment this section out if this does not apply to
-# your cluster.
-#
-- target:
-    version: v1
-    kind: Deployment
-    name: metrics-server
-    namespace: kube-system
-  path: ../../base/controllers/metrics-server/patches/kubelet-insecure-tls.yaml
-
-# This patch configures the CPU and memory requests for the metrics
-# server pod. The default is cpu: 100m, and memory: 200Mi, which
-# should be enough for clusters with up to 100 nodes. For clusters of
-# more than 100 nodes, additional: 1m core per node, and 2MiB memory
-# per node should be requested.
-#
-- patch: |-
-    - op: replace
-      path: /spec/template/spec/containers/0/resources/requests
-      value:
-        cpu: 5m
-        memory: 50Mi
-
-  target:
-    version: v1
-    kind: Deployment
-    name: metrics-server
-    namespace: kube-system
 
 # This patch configures the CPU and memory requests and limits for the
 # Postgres operator pod.

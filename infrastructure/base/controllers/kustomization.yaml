@@ -8,4 +8,3 @@ resources:
 - rabbitmq-system/
 - dragonfly-operator/
 - cert-manager/
-- metrics-server/

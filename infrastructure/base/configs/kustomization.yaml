@@ -5,3 +5,4 @@ resources:
 - crd-oauth2clients.yaml
 - collect-controllers-metrics.yaml
 - monitoring/
+- metrics-server/
