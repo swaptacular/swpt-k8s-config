@@ -53,9 +53,9 @@ $ cat secret-files/regcreds.json  # contains the "image pull secret"
 }
 ```
 
-You will also need to change the `simple-git-server/kustomization.yaml`
-file to use your private container image registry for the Git server's
-image.
+You will also need to change the
+`simple-git-server/kustomization.yaml` file to use your private
+container image registry for the Git server's and Nginx's images.
 
 If you DO NOT want to use a private container image registry, you may
 skip the previous steps, and start installing the Git server:

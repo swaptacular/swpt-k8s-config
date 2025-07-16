@@ -98,7 +98,12 @@ spec:
       limits_config:
         retention_period: 30d
         max_query_lookback: 30d  # Should be the same as `retention_period`.
+        ingestion_rate_mb: 20
+        ingestion_burst_size_mb: 30
         volume_enabled: true
+      server:
+        grpc_server_max_recv_msg_size: 104857600  # ~100 MiB
+        grpc_server_max_send_msg_size: 104857600  # ~100 MiB
     write:
       replicas: 3
       persistence:
