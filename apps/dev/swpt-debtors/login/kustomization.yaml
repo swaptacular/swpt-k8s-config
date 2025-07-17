@@ -124,7 +124,7 @@ replicas:
 images:
 - name: swpt-login
   newName: ghcr.io/swaptacular/swpt_login
-  newTag: 0.16.5
+  digest: sha256:26bf9819fe43726743db479c7baae6be9315ab82db997e85698e57a7457050c8
 
 secretGenerator:
 - name: swpt-login-captcha-keys

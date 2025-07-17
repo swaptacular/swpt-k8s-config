@@ -336,27 +336,29 @@ replicas:
 - name: swpt-debtors-ui
   count: 1
 
-# OCI images to use for the different containers:
+# OCI images to use for the different containers. Note that the digest
+# for the "swpt-debtors-swagger-ui" image must be referring to the
+# same tag as the digest for the "swpt-debtors" image.
 #
 images:
 - name: swpt-debtors
   newName: ghcr.io/swaptacular/swpt_debtors
-  newTag: 2.3.5
+  digest: sha256:5957246531b7658176b81ba696cf119cb5bd15696c5ec24f9d1b7744ceece663
 - name: swpt-debtors-swagger-ui
   newName: ghcr.io/swaptacular/swpt_debtors_swagger_ui
-  newTag: 2.3.5  # Must be the same as the tag for the "swpt-debtors" image.
+  digest: sha256:07176ac85eb2485ef2b75e445e60362906e7cdb698687b98f4406584f635a299
 - name: swpt-debtors-ui
   newName: ghcr.io/swaptacular/swpt_debtors_ui
-  newTag: 1.2.7
+  digest: sha256:79a3a99aaa0fffefd5f721ddbfbc5c9846301d13a6c33db7e2c3e8b6731bd782
 - name: swpt-apiproxy
   newName: ghcr.io/swaptacular/swpt_apiproxy
-  newTag: 1.2.2
+  digest: sha256:7a396d200c4c023f5cf46a3dc45d202917df4ef184e33580c3177a70c4a3675b
 - name: swpt-stomp
   newName: ghcr.io/swaptacular/swpt_stomp
-  newTag: 2.3.0
+  digest: sha256:9ca8d559eb5482e85593df07edacea1268aa6881878609e03778f8bfc4c7cd93
 - name: swpt-nfs-server
   newName: ghcr.io/swaptacular/swpt_nfs_server
-  newTag: 0.1.6
+  digest: sha256:f3674f3a027e961d6c4be308094e1ec129859fda1aafac85e5920edb0c9bdb7f
 - name: oryd-hydra-maester
   newName: ghcr.io/swaptacular/hydra-maester
   digest: sha256:470e314ad0c3803dc4b221e05709002b1d2f28c274a6504ab3430e61920e3f6b
