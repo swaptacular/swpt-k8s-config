@@ -508,13 +508,13 @@ secretGenerator:
     disableNameSuffixHash: true
   type: kubernetes.io/dockerconfigjson
 
-- name: regcreds
-  namespace: rabbitmq-system
-  files:
-  - ".dockerconfigjson=../regcreds.json.encrypted"
-  options:
-    disableNameSuffixHash: true
-  type: kubernetes.io/dockerconfigjson
+# - name: regcreds
+#   namespace: rabbitmq-system
+#   files:
+#   - ".dockerconfigjson=../regcreds.json.encrypted"
+#   options:
+#     disableNameSuffixHash: true
+#   type: kubernetes.io/dockerconfigjson
 
 - name: regcreds
   namespace: monitoring
