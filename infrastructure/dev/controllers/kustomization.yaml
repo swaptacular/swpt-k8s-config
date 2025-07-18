@@ -443,105 +443,105 @@ patches:
     name: prometheus-grafana-plugins
     namespace: monitoring
 
-# secretGenerator:
-# - name: alertmanager-prometheus-kube-prometheus-alertmanager-smtp-password
-#   namespace: monitoring
+secretGenerator:
+- name: alertmanager-prometheus-kube-prometheus-alertmanager-smtp-password
+  namespace: monitoring
 
-#   files:
-#   # A SOPS-encrypted file containing the password for the email server
-#   # that Alertmanager uses to send emails. To SOPS-encrypt your
-#   # password, you may use this command:
-#   #
-#   # $ echo -n 'YOUR_SECRET_PASSWORD' > alertmanager-smtp-password
-#   # $ sops encrypt alertmanager-smtp-password > alertmanager-smtp-password.encrypted
-#   # $ shred -z alertmanager-smtp-password
-#   # $ rm alertmanager-smtp-password
-#   - password=secrets/alertmanager-smtp-password.encrypted
+  files:
+  # A SOPS-encrypted file containing the password for the email server
+  # that Alertmanager uses to send emails. To SOPS-encrypt your
+  # password, you may use this command:
+  #
+  # $ echo -n 'YOUR_SECRET_PASSWORD' > alertmanager-smtp-password
+  # $ sops encrypt alertmanager-smtp-password > alertmanager-smtp-password.encrypted
+  # $ shred -z alertmanager-smtp-password
+  # $ rm alertmanager-smtp-password
+  - password=secrets/alertmanager-smtp-password.encrypted
 
-#   type: Opaque
+  type: Opaque
 
-# - name: prometheus-grafana-admin
-#   namespace: monitoring
+- name: prometheus-grafana-admin
+  namespace: monitoring
 
-#   literals:
-#   # The username for the Grafana admin.
-#   - admin-user=admin
+  literals:
+  # The username for the Grafana admin.
+  - admin-user=admin
 
-#   files:
-#   # A SOPS-encrypted file containing the password for the Grafana
-#   # admin. To SOPS-encrypt your chosen password, you may use this
-#   # command:
-#   #
-#   # $ echo -n 'YOUR_SECRET_PASSWORD' > grafana-admin-password
-#   # $ sops encrypt grafana-admin-password > grafana-admin-password.encrypted
-#   # $ shred -z grafana-admin-password
-#   # $ rm grafana-admin-password
-#   - admin-password=secrets/grafana-admin-password.encrypted
+  files:
+  # A SOPS-encrypted file containing the password for the Grafana
+  # admin. To SOPS-encrypt your chosen password, you may use this
+  # command:
+  #
+  # $ echo -n 'YOUR_SECRET_PASSWORD' > grafana-admin-password
+  # $ sops encrypt grafana-admin-password > grafana-admin-password.encrypted
+  # $ shred -z grafana-admin-password
+  # $ rm grafana-admin-password
+  - admin-password=secrets/grafana-admin-password.encrypted
 
-#   options:
-#     # These annotations are used as sources for convenient Kustomize
-#     # replacements:
-#     #
-#     annotations:
-#       # Grafana's, Alertmanager's, and Prometheus's UIs are publicly
-#       # exposed via an HTTP reverse proxy server in the
-#       # "simple-git-server" namespace. Here, the public IP address of
-#       # the load balancer for this proxy server should be specified.
-#       #
-#       kustomize_simple_git_server_ip_address: 172.18.0.4
+  options:
+    # These annotations are used as sources for convenient Kustomize
+    # replacements:
+    #
+    annotations:
+      # Grafana's, Alertmanager's, and Prometheus's UIs are publicly
+      # exposed via an HTTP reverse proxy server in the
+      # "simple-git-server" namespace. Here, the public IP address of
+      # the load balancer for this proxy server should be specified.
+      #
+      kustomize_simple_git_server_ip_address: 172.18.0.4
 
-#   type: Opaque
+  type: Opaque
 
-# - name: regcreds
-#   namespace: dragonfly-operator-system
-#   files:
-#   - ".dockerconfigjson=../regcreds.json.encrypted"
-#   options:
-#     disableNameSuffixHash: true
-#   type: kubernetes.io/dockerconfigjson
+- name: regcreds
+  namespace: dragonfly-operator-system
+  files:
+  - ".dockerconfigjson=../regcreds.json.encrypted"
+  options:
+    disableNameSuffixHash: true
+  type: kubernetes.io/dockerconfigjson
 
-# - name: regcreds
-#   namespace: postgres-operator
-#   files:
-#   - ".dockerconfigjson=../regcreds.json.encrypted"
-#   options:
-#     disableNameSuffixHash: true
-#   type: kubernetes.io/dockerconfigjson
+- name: regcreds
+  namespace: postgres-operator
+  files:
+  - ".dockerconfigjson=../regcreds.json.encrypted"
+  options:
+    disableNameSuffixHash: true
+  type: kubernetes.io/dockerconfigjson
 
-# - name: regcreds
-#   namespace: rabbitmq-system
-#   files:
-#   - ".dockerconfigjson=../regcreds.json.encrypted"
-#   options:
-#     disableNameSuffixHash: true
-#   type: kubernetes.io/dockerconfigjson
+- name: regcreds
+  namespace: rabbitmq-system
+  files:
+  - ".dockerconfigjson=../regcreds.json.encrypted"
+  options:
+    disableNameSuffixHash: true
+  type: kubernetes.io/dockerconfigjson
 
-# - name: regcreds
-#   namespace: monitoring
-#   files:
-#   - ".dockerconfigjson=../regcreds.json.encrypted"
-#   options:
-#     disableNameSuffixHash: true
-#   type: kubernetes.io/dockerconfigjson
+- name: regcreds
+  namespace: monitoring
+  files:
+  - ".dockerconfigjson=../regcreds.json.encrypted"
+  options:
+    disableNameSuffixHash: true
+  type: kubernetes.io/dockerconfigjson
 
-# - name: regcreds
-#   namespace: kube-system
-#   files:
-#   - ".dockerconfigjson=../regcreds.json.encrypted"
-#   options:
-#     disableNameSuffixHash: true
-#   type: kubernetes.io/dockerconfigjson
+- name: regcreds
+  namespace: kube-system
+  files:
+  - ".dockerconfigjson=../regcreds.json.encrypted"
+  options:
+    disableNameSuffixHash: true
+  type: kubernetes.io/dockerconfigjson
 
-# - name: regcreds
-#   namespace: minio-operator
-#   files:
-#   - ".dockerconfigjson=../regcreds.json.encrypted"
-#   options:
-#     disableNameSuffixHash: true
-#   type: kubernetes.io/dockerconfigjson
+- name: regcreds
+  namespace: minio-operator
+  files:
+  - ".dockerconfigjson=../regcreds.json.encrypted"
+  options:
+    disableNameSuffixHash: true
+  type: kubernetes.io/dockerconfigjson
 
-# resources:
-# - ../../base/controllers/
+resources:
+- ../../base/controllers/
 
-# replacements:
-# - path: ../../base/controllers/kube-prometheus-stack/replacements/simple-git-server-ip-address.yaml
+replacements:
+- path: ../../base/controllers/kube-prometheus-stack/replacements/simple-git-server-ip-address.yaml
