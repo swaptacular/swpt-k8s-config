@@ -7,4 +7,3 @@ resources:
 - postgres-operator/
 - rabbitmq-system/
 - dragonfly-operator/
-- cert-manager/
