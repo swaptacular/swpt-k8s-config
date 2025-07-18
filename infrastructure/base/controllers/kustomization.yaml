@@ -5,6 +5,6 @@ resources:
 - minio-operator/
 - kube-prometheus-stack/
 - postgres-operator/
-# - rabbitmq-system/
+- rabbitmq-system/
 - dragonfly-operator/
 - cert-manager/
