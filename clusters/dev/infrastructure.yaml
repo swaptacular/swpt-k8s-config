@@ -62,3 +62,4 @@ spec:
     name: flux-system
   path: ./infrastructure/dev/configs
   prune: true
+  wait: true
