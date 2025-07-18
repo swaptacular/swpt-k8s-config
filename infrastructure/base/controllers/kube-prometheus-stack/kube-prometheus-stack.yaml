@@ -285,4 +285,3 @@ spec:
         requests:
           cpu: 10m
           memory: 30Mi
-
