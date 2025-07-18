@@ -471,5 +471,5 @@ patches:
     name: kubernetes-event-exporter
     namespace: monitoring
 
-resources:
-- ../../base/configs/
+# resources:
+# - ../../base/configs/

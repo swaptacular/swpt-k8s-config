@@ -540,8 +540,8 @@ secretGenerator:
     disableNameSuffixHash: true
   type: kubernetes.io/dockerconfigjson
 
-resources:
-- ../../base/controllers/
+# resources:
+# - ../../base/controllers/
 
-replacements:
-- path: ../../base/controllers/kube-prometheus-stack/replacements/simple-git-server-ip-address.yaml
+# replacements:
+# - path: ../../base/controllers/kube-prometheus-stack/replacements/simple-git-server-ip-address.yaml
