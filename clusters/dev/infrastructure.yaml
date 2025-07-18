@@ -15,7 +15,7 @@ spec:
     kind: GitRepository
     name: flux-system
   path: ./infrastructure/dev/cert-manager
-  prune: true
+  prune: false
   wait: true
 
 ---
@@ -38,7 +38,7 @@ spec:
     kind: GitRepository
     name: flux-system
   path: ./infrastructure/dev/controllers
-  prune: true
+  prune: false
   wait: true
 
 ---
