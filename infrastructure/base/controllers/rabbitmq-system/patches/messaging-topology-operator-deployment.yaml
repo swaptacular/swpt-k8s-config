@@ -4,6 +4,8 @@ metadata:
   namespace: rabbitmq-system
   name: messaging-topology-operator
 spec:
+  strategy:
+    type: "Recreate"
   template:
     spec:
       priorityClassName: critical-operator

@@ -4,6 +4,8 @@ metadata:
   namespace: dragonfly-operator-system
   name: dragonfly-operator-controller-manager
 spec:
+  strategy:
+    type: "Recreate"
   template:
     spec:
       priorityClassName: critical-operator

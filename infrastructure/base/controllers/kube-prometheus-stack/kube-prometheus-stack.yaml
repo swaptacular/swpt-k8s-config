@@ -98,6 +98,8 @@ spec:
         repository: prometheus-operator/prometheus-operator
         sha: ""
       priorityClassName: critical-operator
+      strategy:
+        type: "Recreate"
       resources:
         limits:
           cpu: 200m

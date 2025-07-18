@@ -4,6 +4,8 @@ metadata:
   namespace: cert-manager
   name: cert-manager-cainjector
 spec:
+  strategy:
+    type: "Recreate"
   template:
     spec:
       priorityClassName: critical-operator
