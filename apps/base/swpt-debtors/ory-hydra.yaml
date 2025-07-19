@@ -224,6 +224,7 @@ spec:
           image: nginx
           command: ["wget"]
           args:
+            - --output-file=/dev/null
             - http://swpt-hydra-admin:4445/admin/clients
           resources:
             limits:
