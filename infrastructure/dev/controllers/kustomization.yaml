@@ -272,13 +272,6 @@ patches:
           cpu: 200m
           memory: 200Mi
 
-    # Specifies the number of kube-state-metrics replicas to run.
-    # Should be at least 2 in production (HA). May be 1 (no HA) for
-    # testing.
-    - op: replace
-      path: /spec/values/kube-state-metrics/replicas
-      value: 1
-
     # Specifies OCI image and CPU and memory requests and limits for
     # the kube-state-metrics pods. Note that the value for
     # `/spec/values/kube-state-metrics/image/sha` MUST be prefixed

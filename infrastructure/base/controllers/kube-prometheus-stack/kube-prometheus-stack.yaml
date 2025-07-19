@@ -251,7 +251,7 @@ spec:
       image:
         repository: kube-state-metrics/kube-state-metrics
         sha: ""
-      replicas: 1
+      replicas: 1  # Normally, 1 replica should be enough.
       affinity: |
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
