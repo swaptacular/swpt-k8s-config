@@ -219,6 +219,21 @@ spec:
               level: s0:c123,c456
             seccompProfile:
               type: RuntimeDefault
+      initContainers:
+        - name: await-hydra-server
+          image: nginx
+          command: ["wget"]
+          args:
+            - -q
+            - --output-document=/dev/null
+            - http://swpt-hydra-admin:4445/admin/clients
+          resources:
+            limits:
+              cpu: 100m
+              memory: 128Mi
+            requests:
+              cpu: 10m
+              memory: 20Mi
       serviceAccountName: swpt-hydra-maester-account
       automountServiceAccountToken: true
       securityContext:
