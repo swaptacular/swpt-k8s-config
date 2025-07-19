@@ -2,6 +2,8 @@ apiVersion: hydra.ory.sh/v1alpha1
 kind: OAuth2Client
 metadata:
   name: creditors-webapp
+  annotations:
+    kustomize.toolkit.fluxcd.io/prune: disabled
 spec:
   clientName: "Creditors Agent UI"
   grantTypes:
@@ -24,6 +26,8 @@ apiVersion: hydra.ory.sh/v1alpha1
 kind: OAuth2Client
 metadata:
   name: swagger-ui
+  annotations:
+    kustomize.toolkit.fluxcd.io/prune: disabled
 spec:
   clientName: "Swagger UI"
   grantTypes:
@@ -46,6 +50,8 @@ apiVersion: hydra.ory.sh/v1alpha1
 kind: OAuth2Client
 metadata:
   name: creditors-supervisor
+  annotations:
+    kustomize.toolkit.fluxcd.io/prune: disabled
 spec:
   clientName: "This is the creditors supervisor."
   grantTypes:
@@ -64,6 +70,8 @@ apiVersion: hydra.ory.sh/v1alpha1
 kind: OAuth2Client
 metadata:
   name: creditors-superuser
+  annotations:
+    kustomize.toolkit.fluxcd.io/prune: disabled
 spec:
   clientName: "This is the creditors superuser."
   grantTypes:
