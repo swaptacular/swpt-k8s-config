@@ -198,17 +198,14 @@ The next step is to bootstraps FluxCD from the Git server on your
 Kubernetes cluster.
 
 If you want to use a private container image registry for the FluxCD
-images, you will need to add the following options to the `flux
-bootstrap` command:
+images, you will need to specify your private registry in the
+`--registry` option of the `flux bootstrap` command (the default is
+"ghcr.io/swaptacular"), and also add the following options:
 
-1. Specify your private registry with the `--registry
-   registry.example.com/johndoe` option (the default is
-   "ghcr.io/fluxcd")
-
-2. Give the username and the password for your private registry with
+1. Give the username and the password for your private registry with
    the `--registry-creds username:password` option.
 
-3. Specify the name of the image pull secret with the
+2. Specify the name of the image pull secret with the
    `--image-pull-secret regcreds` option. The name must be "regcreds".
 
 ``` console
@@ -223,7 +220,7 @@ $ cat /etc/hosts  # The internal name of the Git-server has been added to your h
 $ export CLUSTER_NAME=dev  # one of the subdirectories in the "./clusters/" directory
 $ export CLUSTER_DIR=clusters/$CLUSTER_NAME
 
-$ flux bootstrap git --url=ssh://git@git-server.simple-git-server.svc.cluster.local:2222/srv/git/fluxcd.git --branch=master --private-key-file=secret-files/ssh_host_rsa_key --path=$CLUSTER_DIR
+$ flux bootstrap git --url=ssh://git@git-server.simple-git-server.svc.cluster.local:2222/srv/git/fluxcd.git --branch=master --private-key-file=secret-files/ssh_host_rsa_key --path=$CLUSTER_DIR --registry ghcr.io/swaptacular
 ...
 ...
 Configuring the cluster to synchronize with the repository

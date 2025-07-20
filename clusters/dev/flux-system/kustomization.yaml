@@ -7,15 +7,15 @@ resources:
 # You may edit the following lines to specify image digests instead of
 # image tags for the FluxCD images.
 images:
-- name: ghcr.io/fluxcd/source-controller:v1.6.2
+- name: ghcr.io/swaptacular/source-controller:v1.6.2
   newName: ghcr.io/swaptacular/source-controller
   digest: sha256:11c8e14df885eff86586533d9941293ec8a1e9fff71bacf119edc79fdf3c63e3
-- name: ghcr.io/fluxcd/kustomize-controller:v1.6.1
+- name: ghcr.io/swaptacular/kustomize-controller:v1.6.1
   newName: ghcr.io/swaptacular/kustomize-controller
   digest: sha256:1a50730537bafb7827365b9af95c4eb71ca3d9b0bed9bc9bc765880e976972ef
-- name: ghcr.io/fluxcd/helm-controller:v1.3.0
+- name: ghcr.io/swaptacular/helm-controller:v1.3.0
   newName: ghcr.io/swaptacular/helm-controller
   digest: sha256:db55d9d9f9b5106acd8c21da6916b8e285fcfc5572f214361ececd1a8571a4f0
-- name: ghcr.io/fluxcd/notification-controller:v1.6.0
+- name: ghcr.io/swaptacular/notification-controller:v1.6.0
   newName: ghcr.io/swaptacular/notification-controller
   digest: sha256:80174ff676407af7a6feff67b0c2f100de9f7f89df4c26fc871e4d4c4006544d
