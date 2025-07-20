@@ -186,7 +186,6 @@ git> exit
 Connection to 127.0.0.1 closed.
 
 $ git remote add k8s-repo ssh://git@$CLUSTER_EXTERNAL_IP:2222/srv/git/fluxcd.git
-
 $ git push k8s-repo master  # Copies the GitOps repo to the just created empty repository.
 Enumerating objects: 81, done.
 Counting objects: 100% (81/81), done.
@@ -289,8 +288,8 @@ creation_rules:
     pgp: ${KEY_FP}
   - pgp: ${KEY_FP}
 EOF
-$ git add $CLUSTER_DIR/.sops.yaml  # Stores an example SOPS configuration file in the repo.
 
+$ git add $CLUSTER_DIR/.sops.yaml  # Stores an example SOPS configuration file in the repo.
 $ git commit -m 'Share PGP public key for secrets generation'
 [master 1c50aeb] Share PGP public key for secrets generation
  2 files changed, 63 insertions(+)
