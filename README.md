@@ -220,7 +220,7 @@ $ cat /etc/hosts  # The internal name of the Git-server has been added to your h
 $ export CLUSTER_NAME=dev  # one of the subdirectories in the "./clusters/" directory
 $ export CLUSTER_DIR=clusters/$CLUSTER_NAME
 
-$ flux bootstrap git --url=ssh://git@git-server.simple-git-server.svc.cluster.local:2222/srv/git/fluxcd.git --branch=master --private-key-file=secret-files/ssh_host_rsa_key --path=$CLUSTER_DIR --registry ghcr.io/swaptacular
+$ flux bootstrap git --url=ssh://git@git-server.simple-git-server.svc.cluster.local:2222/srv/git/fluxcd.git --branch=master --private-key-file=secret-files/ssh_host_rsa_key --path=$CLUSTER_DIR --version v2.6.4 --registry ghcr.io/swaptacular
 ...
 ...
 Configuring the cluster to synchronize with the repository
