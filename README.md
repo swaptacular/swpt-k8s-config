@@ -41,7 +41,7 @@ $ cat ~/.docker/config.json
 $ cd simple-git-server/
 $ pwd
 /home/johndoe/swpt-k8s-config/simple-git-server
-
+$ mkdir secret-files
 $ cp ~/.docker/config.json secret-files/regcreds.json
 $ cat secret-files/regcreds.json  # contains the "image pull secret"
 {
@@ -51,6 +51,7 @@ $ cat secret-files/regcreds.json  # contains the "image pull secret"
 		}
 	}
 }
+$ docker logout registry.example.com  # Removes the password from /home/johndoe/.docker/config.json.
 ```
 
 You will also need to change the
@@ -58,7 +59,8 @@ You will also need to change the
 container image registry for the Git server's and Nginx's images.
 
 If you DO NOT want to use a private container image registry, you may
-skip the previous steps, and start installing the Git server:
+skip the previous steps, and start installing the Git server right
+away:
 
 ``` console
 $ cp static/trusted_user_ca_keys .
@@ -73,18 +75,18 @@ $ cat trusted_user_ca_keys  # Shows the trusted CA keys, one key per line.
 ...
 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCJfDWvw+LxOW1ECcpoHdFw+ygG4XSeVrB9JFVdIcrrVHqIXDPjvJKXrQ2TadeaTA2i1XUv+XwJr2ZN3OZ6dGLxddPQD4ZG6ciT4iK4TOjAiauE8gQPHR1uzShoK2TGfuYXma2lOnB4s/w5Tif+an5NzHRuDzAwXHPVfVeb9kgIO4A761CztwdTPyEM0jocpoz03Ch4DgYvwf2r+P+1x2Hm5htipNigkhdwtdw5yjUuTR3ylFIeokwcIZomYcGGO66i7EWGYzhr811uApgLJH5YtqeFnD054ia+AbOdCXEr1ZXvpol1Vqo6p/R015zBjMQ8wcdzd+PMSzHvXMLMjG6POhRvQ2yy3cmDpPPIzMHOcNxXhdarVLKDt8/SJlo4O+buAbHdib0pRXpqbPS6rjFwArB93H7TOcY+xl3EGAsjz+1wRPlbi1TN9XNRyQKxLK21QpYql4iYoD8Wac6iWQDDKNaTr88YFUu+MMUfZuQ+0MmXQ1yA/wfqyC9pjm4tkc0=
 
-$ echo "viewer:$(openssl passwd)" > alertmanager_viewers
+$ echo "viewer:$(openssl passwd)" > secret-files/alertmanager_viewers
 Password: <enter your chosen password>
 Verifying - Password: <enter your chosen password again>
 
-$ cat alertmanager_viewers  # Shows Alertmanager's viewers usernames and encrypted passwords.
+$ cat secret-files/alertmanager_viewers  # Shows Alertmanager's viewers usernames and encrypted passwords.
 viewer:$1$2gwQXkVy$An9E0C66KIGsgQ/KhPWoD.
 
-$ echo "viewer:$(openssl passwd)" > prometheus_viewers
+$ echo "viewer:$(openssl passwd)" > secret-files/prometheus_viewers
 Password: <enter your chosen password>
 Verifying - Password: <enter your chosen password again>
 
-$ cat prometheus_viewers  # Shows Prometheus's viewers usernames and encrypted passwords.
+$ cat secret-files/prometheus_viewers  # Shows Prometheus's viewers usernames and encrypted passwords.
 viewer:$1$2gwQXkVy$An9E0C66KIGsgQ/KhPWoD.
 
 $ ./generate-secret-files.sh  # Generates an SSH private/public key pair.
