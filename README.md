@@ -65,9 +65,13 @@ skip the previous steps, and start installing the Git server right
 away:
 
 ``` console
-$ cp static/trusted_user_ca_keys .
-$ echo NOTE: You should execute the next 5 commands for each Swaptacular node that you want to run on your Kubernetes cluster.
-NOTE: You should execute the next 5 commands for each Swaptacular node that you want to run on your Kubernetes cluster.
+$ cp static/trusted_user_ca_keys .  # You should add the CA key for each Swaptacular node that you will run on the Kubernetes cluster, to the "trusted_user_ca_keys" file.
+$ ls -F ~/swpt_ca_scripts
+certs/                generate-serverkey*  private/           root-ca.conf.template
+create-infobundle*    init-ca*             README.md          root-ca.crt
+creditors-subnet.txt  my-infobundle.zip    reconfigure-peer*  sign-peercert*
+db/                   nodeinfo/            register-peer*     sign-servercert*
+generate-masterkey*   peers/               root-ca.conf
 
 $ export ROOT_CA_CRT_FILE=~/swpt_ca_scripts/root-ca.crt  # the path to your Swaptacular node's self-signed root-CA certificate
 $ openssl x509 -in "$ROOT_CA_CRT_FILE" -pubkey -noout > CERT.tmp
