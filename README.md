@@ -155,7 +155,6 @@ need to issue an SSH certificate to yourself:
 
 ``` console
 $ export ROOT_CA_PRIVATE_KEY_FILE=~/swpt_ca_scripts/private/root-ca.key  # the path to your Swaptacular node's private key
-
 $ ls ~/.ssh  # Inspect the SSH keys installed on your computer:
 id_rsa  id_rsa.pub  known_hosts
 
@@ -173,7 +172,6 @@ GitOps repo into it:
 
 ``` console
 $ export CLUSTER_EXTERNAL_IP=127.0.0.1  # the public IP of your Kubernetes cluster
-
 $ ssh git@$CLUSTER_EXTERNAL_IP -p 2222  # Create an empty repository:
 Welcome to the restricted login shell for Git!
 Run 'help' for help, or 'exit' to leave.  Available commands:
