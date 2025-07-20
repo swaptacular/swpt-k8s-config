@@ -48,3 +48,25 @@ spec:
         - webhook
   podMetricsEndpoints:
     - port: http-metrics
+
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: flux-system
+  namespace: flux-system
+  labels:
+    release: prometheus
+spec:
+  jobLabel: app
+  selector:
+    matchExpressions:
+      - key: app
+        operator: In
+        values:
+        - source-controller
+        - kustomize-controller
+        - helm-controller
+        - notification-controller
+  podMetricsEndpoints:
+    - port: http-prom
