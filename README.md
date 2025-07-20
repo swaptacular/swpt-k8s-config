@@ -65,7 +65,7 @@ skip the previous steps, and start installing the Git server right
 away:
 
 ``` console
-$ cp static/trusted_user_ca_keys .  # You should add the CA key for each Swaptacular node that you will run on the Kubernetes cluster, to the "trusted_user_ca_keys" file.
+$ cp static/trusted_user_ca_keys .  # You should add the CA's public key for each Swaptacular node that you will run on the Kubernetes cluster, to the "trusted_user_ca_keys" file.
 $ ls -F ~/swpt_ca_scripts
 certs/                generate-serverkey*  private/           root-ca.conf.template
 create-infobundle*    init-ca*             README.md          root-ca.crt
