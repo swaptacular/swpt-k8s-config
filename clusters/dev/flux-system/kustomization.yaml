@@ -19,3 +19,26 @@ images:
 - name: ghcr.io/swaptacular/notification-controller:v1.6.0
   newName: ghcr.io/swaptacular/notification-controller
   digest: sha256:80174ff676407af7a6feff67b0c2f100de9f7f89df4c26fc871e4d4c4006544d
+
+patches:
+
+# This patch denies Internet access to all pods in the "flux-system"
+# namespace.
+#
+- patch: |-
+    - op: replace
+      path: /spec/egress
+      value:
+        - to:
+          - ipBlock:
+              cidr: 10.0.0.0/8
+          - ipBlock:
+              cidr: 172.16.0.0/12
+          - ipBlock:
+              cidr: 192.168.0.0/16
+  target:
+    group: networking.k8s.io
+    version: v1
+    kind: NetworkPolicy
+    name: allow-egress
+    namespace: flux-system
