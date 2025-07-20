@@ -41,6 +41,7 @@ $ cat ~/.docker/config.json
 $ cd simple-git-server/
 $ pwd
 /home/johndoe/swpt-k8s-config/simple-git-server
+
 $ mkdir secret-files
 $ cp ~/.docker/config.json secret-files/regcreds.json
 $ cat secret-files/regcreds.json  # contains the "image pull secret"
@@ -51,11 +52,12 @@ $ cat secret-files/regcreds.json  # contains the "image pull secret"
 		}
 	}
 }
+
 $ docker logout registry.example.com  # Removes the password from /home/johndoe/.docker/config.json.
 ```
 
 You will also need to change the
-`simple-git-server/kustomization.yaml` file to use your private
+`simple-git-server/kustomization.yaml` file so as to use your private
 container image registry for the Git server's and Nginx's images.
 
 If you DO NOT want to use a private container image registry, you may
@@ -222,7 +224,6 @@ $ cat /etc/hosts  # The internal name of the Git-server has been added to your h
 
 $ export CLUSTER_NAME=dev  # one of the subdirectories in the "./clusters/" directory
 $ export CLUSTER_DIR=clusters/$CLUSTER_NAME
-
 $ flux bootstrap git --url=ssh://git@git-server.simple-git-server.svc.cluster.local:2222/srv/git/fluxcd.git --branch=master --private-key-file=secret-files/ssh_host_rsa_key --path=$CLUSTER_DIR --version v2.6.4 --registry ghcr.io/swaptacular
 ...
 ...
@@ -257,7 +258,6 @@ uid           [ultimate] Swaptacular clusters/dev (flux secrets)
 ssb   rsa4096 2025-02-05 [SEA]
 
 $ export KEY_FP=2ED21ED3DBBF5A37898D9D316225432F3481C8E0  # the PGP key fingerprint
-
 $ gpg --export-secret-keys --armor "${KEY_FP}" | kubectl create secret generic sops-gpg --namespace=flux-system --from-file=sops.asc=/dev/stdin  # Creates a Kubernetes secret with the PGP private key.
 secret/sops-gpg created
 
@@ -282,7 +282,6 @@ gpg> quit
 
 $ gpg --export --armor "${KEY_FP}" > $CLUSTER_DIR/.sops.pub.asc
 $ git add $CLUSTER_DIR/.sops.pub.asc  # Stores the PGP public key in the repo.
-
 $ cat <<EOF > $CLUSTER_DIR/.sops.yaml
 creation_rules:
   - path_regex: .*.yaml
@@ -328,7 +327,6 @@ chose to protect the PGP private key:
 
 ``` console
 $ gpg --export-secret-key --armor "${KEY_FP}" > /mnt/backup/sops.private.asc
-
 $ cat /mnt/backup/sops.private.asc  # a password-protected backup copy of the PGP private key
 -----BEGIN PGP PRIVATE KEY BLOCK-----
 
