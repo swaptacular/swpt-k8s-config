@@ -201,14 +201,15 @@ Kubernetes cluster.
 
 If you want to use a private container image registry for the FluxCD
 images, you will need to specify your private registry in the
-`--registry` option of the `flux bootstrap` command (the default is
+`--registry` option of the `flux bootstrap` command (instead of
 "ghcr.io/swaptacular"), and also add the following options:
 
 1. Give the username and the password for your private registry with
    the `--registry-creds username:password` option.
 
-2. Specify the name of the image pull secret with the
-   `--image-pull-secret regcreds` option. The name must be "regcreds".
+2. Specify the name of the image pull secret that FluxCD will create,
+   with the `--image-pull-secret regcreds` option. The name must be
+   "regcreds".
 
 ``` console
 $ sudo sh -c "sed -i '/git-server.simple-git-server.svc.cluster.local/d' /etc/hosts"
