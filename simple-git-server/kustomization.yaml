@@ -13,15 +13,16 @@ images:
   newName: ghcr.io/swaptacular/nginx
   digest: sha256:65645c7bb6a0661892a8b03b89d0743208a18dd2f3f17a54ef4b76fb8e2f2a10
 
-# IMPORTANT NOTE: Once the secret-files/ directory has been removed,
-# if you want to execute `kubectl apply -k simple-git-server/` again,
-# you will have to comment out the following block:
 secretGenerator:
 - name: nginx-basic-auth
   files:
-    - alertmanager=secret-files/alertmanager_viewers
-    - prometheus=secret-files/prometheus_viewers
+    - alertmanager=alertmanager_viewers
+    - prometheus=prometheus_viewers
   type: Opaque
+
+# IMPORTANT NOTE: Once the secret-files/ directory has been removed,
+# if you want to execute `kubectl apply -k simple-git-server/` again,
+# you will have to comment out the following block:
 - name: host-keys
   files:
     - secret-files/ssh_host_rsa_key.pub
