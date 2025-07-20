@@ -231,6 +231,11 @@ $ flux bootstrap git --url=ssh://git@git-server.simple-git-server.svc.cluster.lo
 ...
 Configuring the cluster to synchronize with the repository
 Flux controllers installed and configured successfully
+
+$ git pull k8s-repo master  # Check for changes in the repo made during the bootstrapping.
+From ssh://git-server.simple-git-server.svc.cluster.local:2222/srv/git/fluxcd
+ * branch            master     -> FETCH_HEAD
+Already up to date.
 ```
 
 The only remaining task is to configure secrets management with
