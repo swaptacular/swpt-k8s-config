@@ -7,7 +7,7 @@ execute:
 $ sudo sysctl fs.inotify.max_user_instances=8192
 ```
 
-## Clone this repository
+## Fork and clone this repository
 
 First you need to create a fork of this repository, and then clone it
 locally:
@@ -136,7 +136,7 @@ $ cat simple-git-server/secret-files/regcreds.json  # contains the "image pull s
 	}
 }
 
-$ docker logout registry.example.com  # Removes the password from /home/johndoe/.docker/config.json.
+$ docker logout registry.example.com  # Removes the password from ~/.docker/config.json.
 ```
 
 You will also need to change the
@@ -534,9 +534,9 @@ QbIgaiHj7aTsupibdTde
 ```
 
 If you do not plan to use SOPS to decrypt secrets on this machine,
-consider deleting the PGP private key from the machine. If you need
-it, you can always import the secret decryption key from your backup
-copy:
+consider deleting the PGP private key from the machine. If you need it
+later, you can always import the secret decryption key from your
+backup copy:
 
 ``` console
 $ gpg --delete-secret-keys "${KEY_FP}"  # Delete the private key.
