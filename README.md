@@ -601,7 +601,7 @@ To github.com:johndoe/swpt-k8s-config.git
    dca1e7a..175b62a  master -> master
 ```
 
-# Delete unencrypted secrets from you local machine
+## Delete unencrypted secrets from you local machine
 
 Finally, do not forget to delete the unencrypted secrets from the
 `simple-git-server` directory:
