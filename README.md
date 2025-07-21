@@ -1,4 +1,4 @@
-# Swaptacular GitOps repo for deploying Kubernetes clusters
+# Swaptacular GitOps repo for deploying in Kubernetes clusters
 
 **Note:** When running KinD (Kubernetes in Docker), you may need to
 execute:
@@ -9,7 +9,8 @@ $ sudo sysctl fs.inotify.max_user_instances=8192
 
 ## Clone this repository
 
-First you need to create a fork of this repository, and then clone it:
+First you need to create a fork of this repository, and then clone it
+locally:
 
 **Note**: In this example, the name of the user is `johndoe`.
 
@@ -59,11 +60,13 @@ want to run in your Kubernetes cluster:
     [creditors agent
     node](https://github.com/swaptacular/swpt_creditors).
 
-In this example we will presume that you want to run an accounting
-authority node, but the difference is really only in the name of the
-`apps/example` sub-directory (`swpt-accounts`, `swpt-debtors`, or
-`swpt-creditors`). You can also run more than one type of Swaptacluar
-nodes in the same Kubernetes cluster.
+You can run more than one type of Swaptacluar node in the same
+Kubernetes cluster. You can even run two instances of the same node
+type, but then you have to change the name of the node's
+sub-directory. In this example we will presume that you want to run an
+accounting authority node, but the difference really is only in the
+name of the sub-directory (`swpt-accounts`, `swpt-debtors`, or
+`swpt-creditors`).
 
 Once you have sorted all this out, commit and push your changes to the
 GitOps repository:
