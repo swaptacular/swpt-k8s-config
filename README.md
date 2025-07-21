@@ -34,7 +34,7 @@ needs. Also, note that the `secrets/` sub-directories contain
 encrypted secrets, which you can not use directly, but should generate
 yourself. Another very important directory is the `node-data/`
 sub-directory (`apps/dev/swpt-debtors/node-data/`,
-`apps/dev/swpt-creditors/node-data/`,
+`apps/dev/swpt-creditors/node-data/`, and
 `apps/dev/swpt-accounts/node-data/`). This sub-directory contains
 information about the Swaptacular node, and its peers. The
 `node-data/` sub-directory must start as a copy of the [Swaptacular
@@ -43,7 +43,7 @@ repository](https://github.com/swaptacular/swpt_ca_scripts), and
 continue evolving from there.
 
 You should always include a copy of the `apps/dev/swpt-nfs-server/`
-directory in your cluster. (In our example this would be
+directory in your cluster. (In our example, this would be
 `apps/prod/swpt-nfs-server/`.) However, among the other
 sub-directories in `apps/dev/`, you should copy only those which are
 responsible for running the types of Swaptacular nodes that you want
@@ -151,7 +151,7 @@ images:
 ...
 
 $ git add simple-git-server/kustomization.yaml
-$ git commit -m 'Edit simple-git-server/kustomization.yaml'
+$ git commit -m 'Edited simple-git-server/kustomization.yaml'
 ```
 
 If you DO NOT want to use a private container image registry, you may
