@@ -1,5 +1,4 @@
-# swpt-k8s-config
-Swaptacular GitOps repo for deploying Kubernetes clusters
+# Swaptacular GitOps repo for deploying Kubernetes clusters
 
 **Note:** When running KinD (Kubernetes in Docker), you may need to
 execute:
@@ -43,11 +42,10 @@ repository](https://github.com/swaptacular/swpt_ca_scripts), and
 continue evolving from there.
 
 You should always include a copy of the `apps/dev/swpt-nfs-server/`
-directory in your cluster. (In our example, this would be
-`apps/prod/swpt-nfs-server/`.) However, among the other
-sub-directories in `apps/dev/`, you should copy only those which are
-responsible for running the types of Swaptacular nodes that you want
-to run in your Kubernetes cluster:
+directory in your cluster (`apps/prod/swpt-nfs-server/` for example).
+However, among the other sub-directories in `apps/dev/`, you should
+copy only those which are responsible for running the types of
+Swaptacular nodes that you want to run in your Kubernetes cluster:
 
   * `apps/dev/swpt-accounts/` is responsible for running an
     [accounting authority
@@ -76,6 +74,11 @@ remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
 To github.com:epandurski/swpt-k8s-config.git
    205a82e..fbe45cc  master -> master
 ```
+
+If you want to deploy an experimental cluster, instead of choosing
+your own cluster name (`prod` for example), you may use the already
+available `dev` cluster name. In this tutorial we will use the `dev`
+cluster name, however, if you have created your own, use that instead.
 
 The next thing is to install a Git server to your Kubernetes cluster,
 which will contain a copy of your GitOps repository.
