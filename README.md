@@ -174,9 +174,9 @@ If you DO NOT want to use a private container image registry, you may
 skip the previous steps, and start installing the Git server right
 away.
 
-## Installing a simple Git server in your Kubernetes cluster
+## Install a simple Git server in your Kubernetes cluster
 
-The next thing is to install a Git server to your Kubernetes cluster,
+The next step is to install a Git server in your Kubernetes cluster,
 which will contain a copy of your GitOps repository. But before you
 can do this, you need to add the root-CA public key for each one of
 your Swaptacular nodes, to the
@@ -252,8 +252,9 @@ The key's randomart image is:
 |             =   |
 |              o  |
 +----[SHA256]-----+
-........+...+..+.+..+...+....+.........+..+.......+........+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*........+..+...+...+....+......+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*.............+......+......+..............+...+......+......+......+...+............+....+.........+.........+......+......+.....+....+......+........+.+.....+..........+...........+...+.+..+....+........+.............+...+..+...+............+....+...+.....+..........+...+.....+...+.+...+...+........+.+.........+......+.....+.+.........+...........+..........+.........+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-...+.+...........+.......+.....+..........+..+......+...+.+......+............+..+....+..............+......+......+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*.+..........+...+...+.....+.+.........+......+........+...+..........+..+.......+..............+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*........+...+.......+.....+.+.....+.+...+...+..................+.....+......+...+.+..+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+........+...+..+.+..+...+....+.........+..+.......+........++++++++++++
+...
+...
 -----
 You are about to be asked to enter information that will be incorporated
 into your certificate request.
