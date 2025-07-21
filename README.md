@@ -36,20 +36,25 @@ yourself. Another very important directory is the `node-data/`
 sub-directory (in `apps/dev/swpt-debtors/`,
 `apps/dev/swpt-creditors/`, and `apps/dev/swpt-accounts/`). This
 sub-directory contains information about your Swaptacular node, and
-its peers. The `node-data/` directory must start as a copy of the
+its peers. The `node-data/` sub-directory must start as a copy of the
 [Swaptacular certificate authority scripts
-repo](https://github.com/swaptacular/swpt_ca_scripts), and continue
-evolving from there.
+repository](https://github.com/swaptacular/swpt_ca_scripts), and
+continue evolving from there.
 
 You should always include a copy of the `apps/dev/swpt-nfs-server`
 directory in your installation (`apps/prod/swpt-nfs-server` in this
 example). However, among the other sub-directories in `apps/dev/`, you
-should copy only those responsible for running the node types which
-you want to run on your Kubernetes cluster:
+should copy only those which are responsible for running the node
+types you want to run on your Kubernetes cluster:
 
-* `apps/dev/swpt-accounts/` runs an [accounting authority node](https://github.com/swaptacular/swpt_accounts)
-* `apps/dev/swpt-debtors/` runs a [debtors agent node](https://github.com/swaptacular/swpt_debtors)
-* `apps/dev/swpt-creditors/` runs a [creditors agent node](https://github.com/swaptacular/swpt_creditors)
+* `apps/dev/swpt-accounts/` is responsible for running an [accounting
+  authority node](https://github.com/swaptacular/swpt_accounts).
+
+* `apps/dev/swpt-debtors/` is responsible for running a [debtors agent
+  node](https://github.com/swaptacular/swpt_debtors).
+
+* `apps/dev/swpt-creditors/` is responsible for running a [creditors
+  agent node](https://github.com/swaptacular/swpt_creditors).
 
 Once you have sorted all this out, you need to install a Git server to
 your Kubernetes cluster, which will contain a copy of your GitOps
