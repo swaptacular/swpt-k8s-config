@@ -82,7 +82,7 @@ images:
 ...
 ...
 
-$ sed -i 's/ghcr.io\/swaptacular/registry.example.com\/repository/' simple-git-server/kustomization.yaml  # Here you should enter your image repository.
+$ sed -i 's/ghcr.io\/swaptacular/registry.example.com\/repository/' simple-git-server/kustomization.yaml  # Here you should enter your image registry and repository.
 $ cat simple-git-server/kustomization.yaml
 ...
 ...
@@ -155,6 +155,10 @@ viewer:$1$2gwQXkVy$An9E0C66KIGsgQ/KhPWoD.
 ```
 
 And automatically generate some secrets:
+
+**Note**: You will be asked to enter information about a self-signed
+SSL certificate. You may enter anything you like, including hitting
+"Enter" several times.
 
 ``` console
 $ ./generate-secret-files.sh  # Generates an SSH private/public key pair.
