@@ -158,32 +158,27 @@ If you DO NOT want to use a private container image registry, you may
 skip the previous steps, and start installing the Git server right
 away.
 
-**Important note**: You need to create a [Swaptacular certificate
-authority](https://github.com/swaptacular/swpt_ca_scripts) for each
-Swaptacular node which you want to run on the Kubernetes cluster.
-
 Before installing the Git server, you need to add the root-CA public
 key for each one of your Swaptacular nodes, to the
 `trusted_user_ca_keys` file:
 
 ``` console
-$ cd simple-git-server/
 $ pwd
-/home/johndoe/src/swpt-k8s-config/simple-git-server
+/home/johndoe/src/swpt-k8s-config
 
-$ cp static/trusted_user_ca_keys .
-$ ls -F ~/swpt_ca_scripts  # See https://github.com/swaptacular/swpt_ca_scripts
+$ cp simple-git-server/static/trusted_user_ca_keys simple-git-server/
+$ ls -F apps/dev/swpt-accounts/node-data/  # See https://github.com/swaptacular/swpt_ca_scripts
 certs/                generate-serverkey*  private/           root-ca.conf.template
 create-infobundle*    init-ca*             README.md          root-ca.crt
 creditors-subnet.txt  my-infobundle.zip    reconfigure-peer*  sign-peercert*
 db/                   nodeinfo/            register-peer*     sign-servercert*
 generate-masterkey*   peers/               root-ca.conf
 
-$ export ROOT_CA_CRT_FILE=~/swpt_ca_scripts/root-ca.crt  # the path to your Swaptacular node's self-signed root-CA certificate
+$ export ROOT_CA_CRT_FILE=apps/dev/swpt-accounts/node-data/root-ca.crt  # the path to your Swaptacular node's self-signed root-CA certificate
 $ openssl x509 -in "$ROOT_CA_CRT_FILE" -pubkey -noout > CERT.tmp
-$ ssh-keygen -f CERT.tmp -i -m PKCS8 >> trusted_user_ca_keys
+$ ssh-keygen -f CERT.tmp -i -m PKCS8 >> simple-git-server/trusted_user_ca_keys
 $ rm CERT.tmp
-$ cat trusted_user_ca_keys  # Shows the trusted root-CA keys, one key per line.
+$ cat simple-git-server/trusted_user_ca_keys  # Shows the trusted root-CA keys, one key per line.
 ...
 ...
 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCJfDWvw+LxOW1ECcpoHdFw+ygG4XSeVrB9JFVdIcrrVHqIXDPjvJKXrQ2TadeaTA2i1XUv+XwJr2ZN3OZ6dGLxddPQD4ZG6ciT4iK4TOjAiauE8gQPHR1uzShoK2TGfuYXma2lOnB4s/w5Tif+an5NzHRuDzAwXHPVfVeb9kgIO4A761CztwdTPyEM0jocpoz03Ch4DgYvwf2r+P+1x2Hm5htipNigkhdwtdw5yjUuTR3ylFIeokwcIZomYcGGO66i7EWGYzhr811uApgLJH5YtqeFnD054ia+AbOdCXEr1ZXvpol1Vqo6p/R015zBjMQ8wcdzd+PMSzHvXMLMjG6POhRvQ2yy3cmDpPPIzMHOcNxXhdarVLKDt8/SJlo4O+buAbHdib0pRXpqbPS6rjFwArB93H7TOcY+xl3EGAsjz+1wRPlbi1TN9XNRyQKxLK21QpYql4iYoD8Wac6iWQDDKNaTr88YFUu+MMUfZuQ+0MmXQ1yA/wfqyC9pjm4tkc0=
@@ -193,6 +188,10 @@ Also, you need to choose the passwords for viewing Alertmanager's and
 Prometheus's UIs:
 
 ``` console
+$ cd simple-git-server/
+$ pwd
+/home/johndoe/src/swpt-k8s-config/simple-git-server
+
 $ echo "viewer:$(openssl passwd)" > alertmanager_viewers
 Password: <enter your chosen password>
 Verifying - Password: <enter your chosen password again>
