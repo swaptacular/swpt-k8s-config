@@ -88,15 +88,12 @@ To github.com:epandurski/swpt-k8s-config.git
    205a82e..fbe45cc  master -> master
 ```
 
-## Bootstrapping the GitOps
+## Using private container image registry (optional)
 
-The next thing is to install a Git server to your Kubernetes cluster,
-which will contain a copy of your GitOps repository.
-
-However, if you want to use a private container image registry
-(recommended for production deployments), you will have to prepare an
-"image pull secret" containing the credentials for pulling from your
-private registry. Here is how to do this:
+If you want to use a private container image registry (recommended for
+production deployments), you will have to prepare an "image pull
+secret" containing the credentials for pulling from your private
+registry. Here is how to do this:
 
 ``` console
 $ docker login registry.example.com  # Enter the name of your private registry here.
@@ -171,9 +168,13 @@ If you DO NOT want to use a private container image registry, you may
 skip the previous steps, and start installing the Git server right
 away.
 
-Before installing the Git server, you need to add the root-CA public
-key for each one of your Swaptacular nodes, to the
-`trusted_user_ca_keys` file:
+## Installing a simple Git server in your Kubernetes cluster
+
+The next thing is to install a Git server to your Kubernetes cluster,
+which will contain a copy of your GitOps repository. But before you
+can do this, you need to add the root-CA public key for each one of
+your Swaptacular nodes, to the
+`simple-git-server/trusted_user_ca_keys` file:
 
 ``` console
 $ pwd
@@ -285,6 +286,8 @@ persistentvolumeclaim/git-repositories configured
 deployment.apps/simple-git-server configured
 ```
 
+## Copy the GitOps repo to the just installed Git server
+
 In order to authenticate to the just installed Git server, you need to
 issue an SSH certificate to yourself. (That is: generate a
 `id_rsa-cert.pub` file in your `~/.ssh` directory.):
@@ -339,6 +342,8 @@ To ssh://127.0.0.1:2222/srv/git/fluxcd.git
    59b1758..b019dfe  master -> master
 ```
 
+## Bootstrap FluxCD
+
 The next step is to bootstraps [FluxCD](https://fluxcd.io/) from the
 Git server on your Kubernetes cluster.
 
@@ -376,6 +381,8 @@ From ssh://git-server.simple-git-server.svc.cluster.local:2222/srv/git/fluxcd
  * branch            master     -> FETCH_HEAD
 Already up to date.
 ```
+
+## Generate PGP keys and configure SOPS
 
 The only remaining task is to configure secrets management with
 [SOPS](https://github.com/getsops/sops) and
@@ -468,6 +475,8 @@ gpg:              unchanged: 1
 $ cp $CLUSTER_DIR/.sops.yaml .  # Creates a local SOPS configuration file.
 ```
 
+## Backup you PGP private key
+
 It is **highly recommended** that you create a backup copy of the PGP
 private key. Make sure you do not forget the password(s) which you
 chose to protect the PGP private key:
@@ -514,6 +523,8 @@ gpg:       secret keys read: 1
 gpg:  secret keys unchanged: 1
 ```
 
+## Encrypt your image pull secret (optional)
+
 Now that you have configured SOPS, if you use a private container
 image registry, you will have to encrypt your "image pull secret"
 file. Skip this step if you DO NOT use a private container image
@@ -550,6 +561,8 @@ remote: Resolving deltas: 100% (5/5), completed with 4 local objects.
 To github.com:johndoe/swpt-k8s-config.git
    dca1e7a..175b62a  master -> master
 ```
+
+# Delete unencrypted secrets from you local machine
 
 Finally, do not forget to delete the unencrypted secrets from the
 `simple-git-server` directory:
