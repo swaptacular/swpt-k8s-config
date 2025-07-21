@@ -46,15 +46,16 @@ You should always include a copy of the `apps/dev/swpt-nfs-server/`
 directory in your installation. (In our example this would be
 `apps/prod/swpt-nfs-server/`.) However, among the other
 sub-directories in `apps/dev/`, you should copy only those which are
-responsible for running the types of nodes that you want to run on
-your Kubernetes cluster:
+responsible for running the types of Swaptacular nodes that you want
+to run on your Kubernetes cluster:
 
-* `apps/dev/swpt-accounts/` is responsible for running an [accounting
-  authority node](https://github.com/swaptacular/swpt_accounts).
-* `apps/dev/swpt-debtors/` is responsible for running a [debtors agent
-  node](https://github.com/swaptacular/swpt_debtors).
-* `apps/dev/swpt-creditors/` is responsible for running a [creditors
-  agent node](https://github.com/swaptacular/swpt_creditors).
+  * `apps/dev/swpt-accounts/` is responsible for running an
+    [accounting authority
+    node](https://github.com/swaptacular/swpt_accounts).
+  * `apps/dev/swpt-debtors/` is responsible for running a [debtors
+    agent node](https://github.com/swaptacular/swpt_debtors).
+  * `apps/dev/swpt-creditors/` is responsible for running a [creditors
+    agent node](https://github.com/swaptacular/swpt_creditors).
 
 Once you have sorted all this out, you need to install a Git server to
 your Kubernetes cluster, which will contain a copy of your GitOps
