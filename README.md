@@ -115,7 +115,7 @@ $ pwd
 /home/johndoe/src/swpt-k8s-config/simple-git-server
 
 $ cp static/trusted_user_ca_keys .
-$ ls -F ~/swpt_ca_scripts
+$ ls -F ~/swpt_ca_scripts  # See https://github.com/swaptacular/swpt_ca_scripts
 certs/                generate-serverkey*  private/           root-ca.conf.template
 create-infobundle*    init-ca*             README.md          root-ca.crt
 creditors-subnet.txt  my-infobundle.zip    reconfigure-peer*  sign-peercert*
