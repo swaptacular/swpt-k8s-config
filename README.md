@@ -7,9 +7,9 @@ execute:
 $ sudo sysctl fs.inotify.max_user_instances=8192
 ```
 
-## Bootstrapping the GitOps
+## Clone this repository
 
-First you need to clone this repository:
+First you need to create a fork of this repository, and then clone it:
 
 **Note**: In this example, the name of the user is `johndoe`.
 
@@ -17,16 +17,18 @@ First you need to clone this repository:
 $ cd ~
 $ mkdir src  # You may use other directory, if that is more convenient.
 $ cd src
-$ git clone git@github.com:swaptacular/swpt-k8s-config.git
+$ git clone git@github.com:johndoe/swpt-k8s-config.git
 $ cd swpt-k8s-config/
 $ pwd
 /home/johndoe/src/swpt-k8s-config
 ```
 
-Once you have chosen a name for your cluster (`prod` for example), you
+## Choose and create a cluster name
+
+Once you have chosen a name for your cluster (`dev` for example), you
 need to create sub-directories with this name in the `clusters/`,
 `infrastructure/`, and `apps/` directories. In these directories,
-there are already sub-directories named `dev` -- use them as a
+there are already sub-directories named `example` -- use them as a
 template. Pay close attention to the comments in the various
 `kustomization.yaml` files, and adapt these files according to your
 needs. Also, note that the `secrets/` sub-directories contain
@@ -41,26 +43,34 @@ certificate authority scripts
 repository](https://github.com/swaptacular/swpt_ca_scripts), and
 continue evolving from there.
 
-You should always include a copy of the `apps/dev/swpt-nfs-server/`
-directory in your cluster (`apps/prod/swpt-nfs-server/` for example).
-However, among the other sub-directories in `apps/dev/`, you should
-copy only those which are responsible for running the types of
-Swaptacular nodes that you want to run in your Kubernetes cluster:
+You should always include a copy of the
+`apps/example/swpt-nfs-server/` directory in your cluster
+(`apps/dev/swpt-nfs-server/` for example). However, among the other
+sub-directories in `apps/example/`, you should copy only those which
+are responsible for running the types of Swaptacular nodes that you
+want to run in your Kubernetes cluster:
 
-  * `apps/dev/swpt-accounts/` is responsible for running an
+  * `apps/example/swpt-accounts/` is responsible for running an
     [accounting authority
     node](https://github.com/swaptacular/swpt_accounts).
-  * `apps/dev/swpt-debtors/` is responsible for running a [debtors
+  * `apps/example/swpt-debtors/` is responsible for running a [debtors
     agent node](https://github.com/swaptacular/swpt_debtors).
-  * `apps/dev/swpt-creditors/` is responsible for running a [creditors
-    agent node](https://github.com/swaptacular/swpt_creditors).
+  * `apps/example/swpt-creditors/` is responsible for running a
+    [creditors agent
+    node](https://github.com/swaptacular/swpt_creditors).
+
+In this example we will presume that you want to run an accounting
+authority node, but the difference is really only in the name of the
+`apps/example` sub-directory (`swpt-accounts`, `swpt-debtors`, or
+`swpt-creditors`). You can also run more than one type of Swaptacluar
+nodes in the same Kubernetes cluster.
 
 Once you have sorted all this out, commit and push your changes to the
 GitOps repository:
 
 ``` console
-$ git commit -am "Added prod/ cluster"
-[master fbe45cc] Added prod/ cluster
+$ git commit -am "Added dev/ cluster"
+[master fbe45cc] Added dev/ cluster
  1 file changed, 9 insertions(+), 2 deletions(-)
 
 $ git push origin master
@@ -75,10 +85,7 @@ To github.com:epandurski/swpt-k8s-config.git
    205a82e..fbe45cc  master -> master
 ```
 
-If you want to deploy an experimental cluster, instead of choosing
-your own cluster name (`prod` for example), you may use the already
-available `dev` cluster name. In this tutorial we will use the `dev`
-cluster name, however, if you have created your own, use that instead.
+## Bootstrapping the GitOps
 
 The next thing is to install a Git server to your Kubernetes cluster,
 which will contain a copy of your GitOps repository.

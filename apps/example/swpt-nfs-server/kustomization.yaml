@@ -54,7 +54,7 @@ configMapGenerator:
   # The relative path in the GitOps Git repository, to the
   # sub-directory containing the applications' Kustomize overlay that
   # will be running in the Kubernetes cluster.
-  - OVERLAY_SUBDIR=apps/dev
+  - OVERLAY_SUBDIR=apps/example
 
   options:
     # These annotations are used as sources for convenient Kustomize

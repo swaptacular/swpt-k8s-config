@@ -14,7 +14,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./infrastructure/dev/cert-manager
+  path: ./infrastructure/example/cert-manager
   prune: false
   wait: true
 
@@ -37,7 +37,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./infrastructure/dev/controllers
+  path: ./infrastructure/example/controllers
   prune: false
   wait: true
 
@@ -60,6 +60,6 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./infrastructure/dev/configs
+  path: ./infrastructure/example/configs
   prune: true
   wait: true

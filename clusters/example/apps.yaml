@@ -16,6 +16,6 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./apps/dev
+  path: ./apps/example
   prune: true
   wait: false
