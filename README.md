@@ -9,27 +9,39 @@ $ sudo sysctl fs.inotify.max_user_instances=8192
 
 ## Bootstrapping the GitOps
 
-First you need to install a Git server to your Kubernetes cluster,
-which will contain a copy of your GitOps repository.
-
-If you want to use a private container image registry (recommended for
-production deployments), you will have to prepare an "image pull
-secret" containing the credentials for pulling from your private
-registry. Here is how to do this:
+First you need to clone this repository:
 
 **Note**: In this example, the name of the user is `johndoe`.
 
 ``` console
+$ cd ~
+$ mkdir src  # You may use other directory, if that is more convenient.
+$ cd src
+$ git clone git@github.com:swaptacular/swpt-k8s-config.git
+$ cd swpt-k8s-config/
+$ pwd
+/home/johndoe/src/swpt-k8s-config
+```
+
+Then you need to install a Git server to your Kubernetes cluster,
+which will contain a copy of your GitOps repository.
+
+However, if you want to use a private container image registry
+(recommended for production deployments), you will have to prepare an
+"image pull secret" containing the credentials for pulling from your
+private registry. Here is how to do this:
+
+``` console
 $ docker login registry.example.com  # Enter the name of your private registry here.
 Username: johndoe
-Password:
+Password: <enter you password here>
 WARNING! Your password will be stored unencrypted in /home/johndoe/.docker/config.json.
 Configure a credential helper to remove this warning. See
 https://docs.docker.com/engine/reference/commandline/login/#credentials-store
 
 Login Succeeded
 
-$ cat ~/.docker/config.json
+$ cat ~/.docker/config.json  # This file contains your password unencrypted!
 {
 	"auths": {
 		"registry.example.com": {
@@ -38,13 +50,9 @@ $ cat ~/.docker/config.json
 	}
 }
 
-$ cd simple-git-server/
-$ pwd
-/home/johndoe/swpt-k8s-config/simple-git-server
-
-$ mkdir secret-files
-$ cp ~/.docker/config.json secret-files/regcreds.json
-$ cat secret-files/regcreds.json  # contains the "image pull secret"
+$ mkdir simple-git-server/secret-files
+$ cp ~/.docker/config.json simple-git-server/secret-files/regcreds.json
+$ cat simple-git-server/secret-files/regcreds.json  # contains the "image pull secret"
 {
 	"auths": {
 		"registry.example.com": {
@@ -57,14 +65,57 @@ $ docker logout registry.example.com  # Removes the password from /home/johndoe/
 ```
 
 You will also need to change the
-`simple-git-server/kustomization.yaml` file so as to use your private
-container image registry for the Git server's and Nginx's images.
+`simple-git-server/kustomization.yaml` file, so as to use your private
+container image registry for the Git server's and Nginx's images:
+
+``` console
+$ cat simple-git-server/kustomization.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: simple-git-server
+
+# You may edit the following lines to specify a different container
+# image repository. Also, it is recommended to specify an image digest
+# instead of an image tag.
+images:
+- name: rockstorm/git-server
+  newName: ghcr.io/swaptacular/git-server
+  digest: sha256:77a0476d8e63e32153c3b446c3c2739004558168dd92b83252d9a4aa0b49deaa
+- name: nginx
+  newName: ghcr.io/swaptacular/nginx
+  digest: sha256:65645c7bb6a0661892a8b03b89d0743208a18dd2f3f17a54ef4b76fb8e2f2a10
+...
+...
+
+$ sed -i 's/ghcr.io\/swaptacular/registry.example.com\/repo/' simple-git-server/kustomization.yaml  # You should enter your image repository.
+$ cat simple-git-server/kustomization.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: simple-git-server
+
+# You may edit the following lines to specify a different container
+# image repository. Also, it is recommended to specify an image digest
+# instead of an image tag.
+images:
+- name: rockstorm/git-server
+  newName: registry.example.com/repo/git-server
+  digest: sha256:77a0476d8e63e32153c3b446c3c2739004558168dd92b83252d9a4aa0b49deaa
+- name: nginx
+  newName: registry.example.com/repo/nginx
+  digest: sha256:65645c7bb6a0661892a8b03b89d0743208a18dd2f3f17a54ef4b76fb8e2f2a10
+...
+...
+```
 
 If you DO NOT want to use a private container image registry, you may
 skip the previous steps, and start installing the Git server right
 away:
 
 ``` console
+$ cd simple-git-server/
+$ pwd
+/home/johndoe/src/swpt-k8s-config/simple-git-server
+
 $ cp static/trusted_user_ca_keys .  # You must add the root-CA public key for each one of your Swaptacular nodes, to the "trusted_user_ca_keys" file.
 $ ls -F ~/swpt_ca_scripts
 certs/                generate-serverkey*  private/           root-ca.conf.template
