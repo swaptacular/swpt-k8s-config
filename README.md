@@ -99,18 +99,22 @@ images:
 
 If you DO NOT want to use a private container image registry, you may
 skip the previous steps, and start installing the Git server right
-away:
+away.
 
-**Note**: You need to create a [Swaptacular certificate
+**Important note**: You need to create a [Swaptacular certificate
 authority](https://github.com/swaptacular/swpt_ca_scripts) for each
 Swaptacular node which you want to run on the Kubernetes cluster.
+
+Before installing the Git server, you need to add the root-CA public
+key for each one of your Swaptacular nodes, to the
+`trusted_user_ca_keys` file:
 
 ``` console
 $ cd simple-git-server/
 $ pwd
 /home/johndoe/src/swpt-k8s-config/simple-git-server
 
-$ cp static/trusted_user_ca_keys .  # You must add the root-CA public key for each one of your Swaptacular nodes, to the "trusted_user_ca_keys" file.
+$ cp static/trusted_user_ca_keys .
 $ ls -F ~/swpt_ca_scripts
 certs/                generate-serverkey*  private/           root-ca.conf.template
 create-infobundle*    init-ca*             README.md          root-ca.crt
@@ -126,7 +130,12 @@ $ cat trusted_user_ca_keys  # Shows the trusted root-CA keys, one key per line.
 ...
 ...
 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCJfDWvw+LxOW1ECcpoHdFw+ygG4XSeVrB9JFVdIcrrVHqIXDPjvJKXrQ2TadeaTA2i1XUv+XwJr2ZN3OZ6dGLxddPQD4ZG6ciT4iK4TOjAiauE8gQPHR1uzShoK2TGfuYXma2lOnB4s/w5Tif+an5NzHRuDzAwXHPVfVeb9kgIO4A761CztwdTPyEM0jocpoz03Ch4DgYvwf2r+P+1x2Hm5htipNigkhdwtdw5yjUuTR3ylFIeokwcIZomYcGGO66i7EWGYzhr811uApgLJH5YtqeFnD054ia+AbOdCXEr1ZXvpol1Vqo6p/R015zBjMQ8wcdzd+PMSzHvXMLMjG6POhRvQ2yy3cmDpPPIzMHOcNxXhdarVLKDt8/SJlo4O+buAbHdib0pRXpqbPS6rjFwArB93H7TOcY+xl3EGAsjz+1wRPlbi1TN9XNRyQKxLK21QpYql4iYoD8Wac6iWQDDKNaTr88YFUu+MMUfZuQ+0MmXQ1yA/wfqyC9pjm4tkc0=
+```
 
+Also, you need to choose the passwords for viewing Alertmanager's and
+Prometheus's UIs:
+
+``` console
 $ echo "viewer:$(openssl passwd)" > alertmanager_viewers
 Password: <enter your chosen password>
 Verifying - Password: <enter your chosen password again>
@@ -140,7 +149,11 @@ Verifying - Password: <enter your chosen password again>
 
 $ cat prometheus_viewers  # Shows Prometheus's viewers usernames and encrypted passwords, one viewer per line.
 viewer:$1$2gwQXkVy$An9E0C66KIGsgQ/KhPWoD.
+```
 
+And automatically generate some secrets:
+
+``` console
 $ ./generate-secret-files.sh  # Generates an SSH private/public key pair.
 Generating public/private rsa key pair.
 Your identification has been saved in secret-files/ssh_host_rsa_key
@@ -182,8 +195,12 @@ Email Address []:
 * script once you have successfully bootstrapped your          *
 * Kubernetes cluster!                                          *
 ****************************************************************
+```
 
-$ kubectl apply -k .  # Installs a simple Git server to your Kubernetes cluster.
+Then you can install a simple Git server to your Kubernetes cluster:
+
+``` console
+$ kubectl apply -k .
 ...
 ...
 namespace/simple-git-server configured
@@ -195,8 +212,9 @@ persistentvolumeclaim/git-repositories configured
 deployment.apps/simple-git-server configured
 ```
 
-In order to authenticate to the just installed Git server, you will
-need to issue an SSH certificate to yourself:
+In order to authenticate to the just installed Git server, you need to
+issue an SSH certificate to yourself. (That is: generate a
+`id_rsa-cert.pub` file in your `~/.ssh` directory.):
 
 ``` console
 $ export ROOT_CA_PRIVATE_KEY_FILE=~/swpt_ca_scripts/private/root-ca.key  # the path to your Swaptacular node's private key
@@ -204,7 +222,7 @@ $ ls ~/.ssh  # Inspect the SSH keys installed on your computer:
 id_rsa  id_rsa.pub  known_hosts
 
 $ ssh-keygen -s "$ROOT_CA_PRIVATE_KEY_FILE" -I johndoe -n git ~/.ssh/id_rsa.pub  # Issues a certificate for the "id_rsa.pub" key.
-Enter passphrase:
+Enter passphrase: <Enter your passphrase here>
 Signed user key /home/johndoe/.ssh/id_rsa-cert.pub: id "johndoe" serial 0 for git valid forever
 
 $ ls ~/.ssh
@@ -215,8 +233,11 @@ Then you need to connect to the Git server, create a new
 `/srv/git/fluxcd.git` repository, and copy the whole content of the
 GitOps repo into it:
 
+**Important note**: You need the obtain the public IP address of the
+Git server's load balancer in your Kubernetes cluster.
+
 ``` console
-$ export CLUSTER_EXTERNAL_IP=127.0.0.1  # the public IP of your Kubernetes cluster
+$ export CLUSTER_EXTERNAL_IP=127.0.0.1  # the public IP of the Git server's load balancer
 $ ssh git@$CLUSTER_EXTERNAL_IP -p 2222  # Create an empty repository:
 Welcome to the restricted login shell for Git!
 Run 'help' for help, or 'exit' to leave.  Available commands:
