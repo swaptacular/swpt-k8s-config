@@ -1,7 +1,8 @@
 # swpt-k8s-config
 Swaptacular GitOps repo for deploying Kubernetes clusters
 
-*NOTE:* When running KinD (Kubernetes in Docker), you may need to execute:
+**Note:** When running KinD (Kubernetes in Docker), you may need to
+execute:
 
 ``` console
 $ sudo sysctl fs.inotify.max_user_instances=8192
@@ -31,14 +32,24 @@ template. Pay close attention to the comments in the various
 `kustomization.yaml` files, and adapt those files according to your
 needs. Also, note that the `secrets/` sub-directories contain
 encrypted secrets, which you can not use directly, but should generate
-yourself. Another very important directory is the `node-data`
+yourself. Another very important directory is the `node-data/`
 sub-directory (in `apps/dev/swpt-debtors/`,
 `apps/dev/swpt-creditors/`, and `apps/dev/swpt-accounts/`). This
 sub-directory contains information about your Swaptacular node, and
-its peers. The `node-data` directory must start as a copy of the
+its peers. The `node-data/` directory must start as a copy of the
 [Swaptacular certificate authority scripts
 repo](https://github.com/swaptacular/swpt_ca_scripts), and continue
 evolving from there.
+
+You should always include a copy of the `apps/dev/swpt-nfs-server`
+directory in your installation (`apps/prod/swpt-nfs-server` in this
+example). However, among the other sub-directories in `apps/dev/`, you
+should copy only those responsible for running the node types which
+you want to run on your Kubernetes cluster:
+
+* `apps/dev/swpt-accounts/` runs an [accounting authority node](https://github.com/swaptacular/swpt_accounts)
+* `apps/dev/swpt-debtors/` runs a [debtors agent node](https://github.com/swaptacular/swpt_debtors)
+* `apps/dev/swpt-creditors/` runs a [creditors agent node](https://github.com/swaptacular/swpt_creditors)
 
 Once you have sorted all this out, you need to install a Git server to
 your Kubernetes cluster, which will contain a copy of your GitOps
