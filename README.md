@@ -93,7 +93,7 @@ To github.com:epandurski/swpt-k8s-config.git
    205a82e..fbe45cc  master -> master
 ```
 
-## Using private container image registry (optional)
+## Use private container image registry (optional)
 
 If you want to use a private container image registry (recommended for
 production deployments), you will have to prepare an "image pull
@@ -134,8 +134,9 @@ $ docker logout registry.example.com  # Removes the password from /home/johndoe/
 ```
 
 You will also need to change the
-`simple-git-server/kustomization.yaml` file, so as to use your private
-container image registry for the Git server's and Nginx's images:
+`simple-git-server/kustomization.yaml` file, so that it uses your
+private container image registry for the Git server's and Nginx's
+images:
 
 ``` console
 $ cat simple-git-server/kustomization.yaml
