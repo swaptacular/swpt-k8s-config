@@ -45,6 +45,7 @@ spec:
           volumeMounts:
             - name: node-data
               mountPath: "/var/lib/swpt"
+              readOnly: true
             - name: server-certificate
               mountPath: "/etc/swpt"
           envFrom:
