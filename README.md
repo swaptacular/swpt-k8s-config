@@ -29,23 +29,24 @@ need to create sub-directories with this name in the `clusters/`,
 `infrastructure/`, and `apps/` directories. In these directories,
 there are already sub-directories named `dev` -- use them as a
 template. Pay close attention to the comments in the various
-`kustomization.yaml` files, and adapt those files according to your
+`kustomization.yaml` files, and adapt these files according to your
 needs. Also, note that the `secrets/` sub-directories contain
 encrypted secrets, which you can not use directly, but should generate
 yourself. Another very important directory is the `node-data/`
-sub-directory (in `apps/dev/swpt-debtors/`,
-`apps/dev/swpt-creditors/`, and `apps/dev/swpt-accounts/`). This
-sub-directory contains information about your Swaptacular node, and
-its peers. The `node-data/` sub-directory must start as a copy of the
-[Swaptacular certificate authority scripts
+sub-directory (`apps/dev/swpt-debtors/node-data/`,
+`apps/dev/swpt-creditors/node-data/`,
+`apps/dev/swpt-accounts/node-data/`). This sub-directory contains
+information about the Swaptacular node, and its peers. The
+`node-data/` sub-directory must start as a copy of the [Swaptacular
+certificate authority scripts
 repository](https://github.com/swaptacular/swpt_ca_scripts), and
 continue evolving from there.
 
 You should always include a copy of the `apps/dev/swpt-nfs-server`
-directory in your installation (`apps/prod/swpt-nfs-server` in this
-example). However, among the other sub-directories in `apps/dev/`, you
-should copy only those which are responsible for running the node
-types you want to run on your Kubernetes cluster:
+directory in your installation. (In our example this would be
+`apps/prod/swpt-nfs-server`.) However, among the other sub-directories
+in `apps/dev/`, you should copy only those which are responsible for
+running the node types you want to run on your Kubernetes cluster:
 
 * `apps/dev/swpt-accounts/` is responsible for running an [accounting
   authority node](https://github.com/swaptacular/swpt_accounts).
