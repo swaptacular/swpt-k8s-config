@@ -72,9 +72,14 @@ Once you have sorted all this out, commit and push your changes to the
 GitOps repository:
 
 ``` console
-$ git commit -am "Added dev/ cluster"
-[master fbe45cc] Added dev/ cluster
- 1 file changed, 9 insertions(+), 2 deletions(-)
+$ git add clusters/dev infrastructure/dev apps/dev
+$ git commit -m "Added dev cluster"
+[master fbe45cc] Added dev cluster
+ 12 files changed, 1157 insertions(+)
+ create mode 100644 infrastructure/dev/cert-manager/kustomization.yaml
+ create mode 100644 infrastructure/dev/configs/kustomization.yaml
+...
+...
 
 $ git push origin master
 Enumerating objects: 5, done.
