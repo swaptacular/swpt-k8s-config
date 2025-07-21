@@ -82,16 +82,16 @@ images:
 ...
 ...
 
-$ sed -i 's/ghcr.io\/swaptacular/registry.example.com\/repo/' simple-git-server/kustomization.yaml  # Here you should enter your image repository.
+$ sed -i 's/ghcr.io\/swaptacular/registry.example.com\/repository/' simple-git-server/kustomization.yaml  # Here you should enter your image repository.
 $ cat simple-git-server/kustomization.yaml
 ...
 ...
 images:
 - name: rockstorm/git-server
-  newName: registry.example.com/repo/git-server
+  newName: registry.example.com/repository/git-server
   digest: sha256:77a0476d8e63e32153c3b446c3c2739004558168dd92b83252d9a4aa0b49deaa
 - name: nginx
-  newName: registry.example.com/repo/nginx
+  newName: registry.example.com/repository/nginx
   digest: sha256:65645c7bb6a0661892a8b03b89d0743208a18dd2f3f17a54ef4b76fb8e2f2a10
 ...
 ...
@@ -100,6 +100,10 @@ images:
 If you DO NOT want to use a private container image registry, you may
 skip the previous steps, and start installing the Git server right
 away:
+
+**Note**: You need to create a [Swaptacular certificate
+authority](https://github.com/swaptacular/swpt_ca_scripts) for each
+Swaptacular node which you want to run on the Kubernetes cluster.
 
 ``` console
 $ cd simple-git-server/
