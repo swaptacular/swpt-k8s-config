@@ -62,6 +62,19 @@ GitOps repository:
 
 ``` console
 $ git commit -am "Added prod/ cluster"
+[master fbe45cc] Added prod/ cluster
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+
+$ git push origin master
+Enumerating objects: 5, done.
+Counting objects: 100% (5/5), done.
+Delta compression using up to 4 threads
+Compressing objects: 100% (3/3), done.
+Writing objects: 100% (3/3), 1.06 KiB | 1.06 MiB/s, done.
+Total 3 (delta 2), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
+To github.com:epandurski/swpt-k8s-config.git
+   205a82e..fbe45cc  master -> master
 ```
 
 you need to install a Git server to
