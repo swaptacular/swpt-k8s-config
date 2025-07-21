@@ -60,13 +60,13 @@ want to run in your Kubernetes cluster:
     [creditors agent
     node](https://github.com/swaptacular/swpt_creditors).
 
-You can run more than one type of Swaptacluar node in the same
-Kubernetes cluster. You can even run two instances of the same node
-type, but then you have to change the name of the node's
-sub-directory. In this example we will presume that you want to run an
-accounting authority node, but the difference really is only in the
-name of the sub-directory (`swpt-accounts`, `swpt-debtors`, or
-`swpt-creditors`).
+You can run more than one Swaptacluar node type in the same Kubernetes
+cluster. You can even run multiple instances of the same node type,
+but then you need to make sure that the name of each node's
+sub-directory is unique. In this example, we will presume that you
+want to run an accounting authority node, but the difference really is
+only in the name of the sub-directory (`swpt-accounts`,
+`swpt-debtors`, or `swpt-creditors`).
 
 Once you have sorted all this out, commit and push your changes to the
 GitOps repository:
