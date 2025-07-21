@@ -72,6 +72,9 @@ Once you have sorted all this out, commit and push your changes to the
 GitOps repository:
 
 ``` console
+$ pwd
+/home/johndoe/src/swpt-k8s-config
+
 $ git add clusters/dev infrastructure/dev apps/dev
 $ git commit -m "Added dev cluster"
 [master fbe45cc] Added dev cluster
@@ -93,7 +96,7 @@ To github.com:epandurski/swpt-k8s-config.git
    205a82e..fbe45cc  master -> master
 ```
 
-## Use private container image registry (optional)
+## Use a private container image registry (optional)
 
 If you want to use a private container image registry (recommended for
 production deployments), you will have to prepare an "image pull
@@ -101,6 +104,9 @@ secret" containing the credentials for pulling from your private
 registry. Here is how to do this:
 
 ``` console
+$ pwd
+/home/johndoe/src/swpt-k8s-config
+
 $ docker login registry.example.com  # Enter the name of your private registry here.
 Username: johndoe
 Password: <enter you password here>
@@ -139,6 +145,9 @@ private container image registry for the Git server's and Nginx's
 images:
 
 ``` console
+$ pwd
+/home/johndoe/src/swpt-k8s-config
+
 $ cat simple-git-server/kustomization.yaml
 ...
 ...
@@ -230,10 +239,15 @@ viewer:$1$2gwQXkVy$An9E0C66KIGsgQ/KhPWoD.
 And automatically generate some secrets:
 
 **Note**: You will be asked to enter information about a self-signed
-SSL certificate. You may enter anything you like, including hitting
-"Enter" several times.
+SSL certificate. This certificate will be used by the Nginx reverse
+proxy that gives access to Alertmanager's and Prometheus's UIs. You
+may enter anything you like, including hitting "Enter" as many times
+as needed.
 
 ``` console
+$ pwd
+/home/johndoe/src/swpt-k8s-config/simple-git-server
+
 $ ./generate-secret-files.sh  # Generates an SSH private/public key pair.
 Generating public/private rsa key pair.
 Your identification has been saved in secret-files/ssh_host_rsa_key
@@ -281,6 +295,9 @@ Email Address []:
 Then you can install a simple Git server in your Kubernetes cluster:
 
 ``` console
+$ pwd
+/home/johndoe/src/swpt-k8s-config/simple-git-server
+
 $ kubectl apply -k .
 ...
 ...
@@ -300,7 +317,10 @@ issue an SSH certificate to yourself. (That is: generate a
 `id_rsa-cert.pub` file in your `~/.ssh` directory.):
 
 ``` console
-$ export ROOT_CA_PRIVATE_KEY_FILE=~/swpt_ca_scripts/private/root-ca.key  # the path to your Swaptacular node's private key
+$ pwd
+/home/johndoe/src/swpt-k8s-config/simple-git-server
+
+$ export ROOT_CA_PRIVATE_KEY_FILE=../apps/dev/swpt-accounts/node-data/private/root-ca.key  # the path to your Swaptacular node's private key
 $ ls ~/.ssh  # Inspect the SSH keys installed on your computer:
 id_rsa  id_rsa.pub  known_hosts
 
@@ -320,6 +340,9 @@ GitOps repo into it:
 Git server's load balancer in your Kubernetes cluster.
 
 ``` console
+$ pwd
+/home/johndoe/src/swpt-k8s-config/simple-git-server
+
 $ export CLUSTER_EXTERNAL_IP=127.0.0.1  # the public IP of the Git server's load balancer
 $ ssh git@$CLUSTER_EXTERNAL_IP -p 2222  # Create an empty repository:
 Welcome to the restricted login shell for Git!
@@ -352,7 +375,7 @@ To ssh://127.0.0.1:2222/srv/git/fluxcd.git
 ## Bootstrap FluxCD
 
 The next step is to bootstraps [FluxCD](https://fluxcd.io/) from the
-Git server on your Kubernetes cluster.
+Git server installed in your Kubernetes cluster.
 
 If you want to use a private container image registry for the FluxCD
 images, you will need to specify your private registry in the
@@ -367,6 +390,9 @@ images, you will need to specify your private registry in the
    "regcreds".
 
 ``` console
+$ pwd
+/home/johndoe/src/swpt-k8s-config/simple-git-server
+
 $ sudo sh -c "sed -i '/git-server.simple-git-server.svc.cluster.local/d' /etc/hosts"
 $ sudo sh -c "echo $CLUSTER_EXTERNAL_IP git-server.simple-git-server.svc.cluster.local >> /etc/hosts"
 $ cat /etc/hosts  # The internal name of the Git-server has been added to your hosts file.
@@ -391,14 +417,14 @@ Already up to date.
 
 ## Generate PGP keys and configure SOPS
 
-The only remaining task is to configure secrets management with
-[SOPS](https://github.com/getsops/sops) and
-[GnuPG / PGP](https://www.gnupg.org/):
+The next task is to configure secrets management with
+[SOPS](https://github.com/getsops/sops) and [GnuPG /
+PGP](https://www.gnupg.org/):
 
 ``` console
 $ cd ..
 $ pwd
-/home/johndoe/swpt-k8s-config
+/home/johndoe/src/swpt-k8s-config
 
 $ gpg --batch --full-generate-key <<EOF
 %no-protection
@@ -474,6 +500,9 @@ clone the GitOps repository, they will be able to import the public
 PGP key, and create their local SOPS configuration file. Like this:
 
 ``` console
+$ pwd
+/home/johndoe/src/swpt-k8s-config
+
 $ gpg --import $CLUSTER_DIR/.sops.pub.asc  # Imports the public PGP key.
 gpg: key 9F85AF312DC6F642: "clusters/dev (flux secrets)" not changed
 gpg: Total number processed: 1
@@ -538,6 +567,9 @@ file. Skip this step if you DO NOT use a private container image
 registry:
 
 ``` console
+$ pwd
+/home/johndoe/src/swpt-k8s-config
+
 $ sops encrypt --input-type binary simple-git-server/secret-files/regcreds.json > apps/$CLUSTER_NAME/regcreds.json.encrypted
 $ sops encrypt --input-type binary simple-git-server/secret-files/regcreds.json > infrastructure/$CLUSTER_NAME/regcreds.json.encrypted
 $ git add apps/$CLUSTER_NAME/regcreds.json.encrypted
@@ -576,5 +608,8 @@ Finally, do not forget to delete the unencrypted secrets from the
 
 ``` console
 $ cd simple-git-server
+$ pwd
+/home/johndoe/src/swpt-k8s-config/simple-git-server
+
 $ ./delete-secret-files.sh  # The secrets have already been copied to the cluster.
 ```
