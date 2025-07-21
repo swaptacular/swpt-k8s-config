@@ -23,8 +23,26 @@ $ pwd
 /home/johndoe/src/swpt-k8s-config
 ```
 
-Then you need to install a Git server to your Kubernetes cluster,
-which will contain a copy of your GitOps repository.
+Once you have chosen a name for your cluster (`prod` for example), you
+need to create sub-directories with this name in the `clusters/`,
+`infrastructure/`, and `apps/` directories. In these directories,
+there are already sub-directories named `dev` -- use them as a
+template. Pay close attention to the comments in the various
+`kustomization.yaml` files, and adapt those files according to your
+needs. Also, note that the `secrets/` sub-directories contain
+encrypted secrets, which you can not use directly, but should generate
+yourself. Another very important directory is the `node-data`
+sub-directory (in `apps/dev/swpt-debtors/`,
+`apps/dev/swpt-creditors/`, and `apps/dev/swpt-accounts/`). This
+sub-directory contains information about your Swaptacular node, and
+its peers. The `node-data` directory must start as a copy of the
+[Swaptacular certificate authority scripts
+repo](https://github.com/swaptacular/swpt_ca_scripts), and continue
+evolving from there.
+
+Once you have sorted all this out, you need to install a Git server to
+your Kubernetes cluster, which will contain a copy of your GitOps
+repository.
 
 However, if you want to use a private container image registry
 (recommended for production deployments), you will have to prepare an
