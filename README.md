@@ -331,13 +331,13 @@ Name-Comment: flux secrets
 Name-Real: Swaptacular ${CLUSTER_DIR}
 EOF
 
-$ gpg --list-secret-keys $CLUSTER_DIR
+$ gpg --list-secret-keys $CLUSTER_DIR  # Show the PGP key fingerprint (2ED21ED3DBBF5A37898D9D316225432F3481C8E0 in this example).
 sec   rsa4096 2025-02-05 [SCEA]
       2ED21ED3DBBF5A37898D9D316225432F3481C8E0
 uid           [ultimate] Swaptacular clusters/dev (flux secrets)
 ssb   rsa4096 2025-02-05 [SEA]
 
-$ export KEY_FP=2ED21ED3DBBF5A37898D9D316225432F3481C8E0  # the PGP key fingerprint
+$ export KEY_FP=2ED21ED3DBBF5A37898D9D316225432F3481C8E0  # Save the PGP key fingerprint.
 $ gpg --export-secret-keys --armor "${KEY_FP}" | kubectl create secret generic sops-gpg --namespace=flux-system --from-file=sops.asc=/dev/stdin  # Creates a Kubernetes secret with the PGP private key.
 secret/sops-gpg created
 
@@ -370,7 +370,7 @@ creation_rules:
   - pgp: ${KEY_FP}
 EOF
 
-$ git add $CLUSTER_DIR/.sops.yaml  # Stores an example SOPS configuration file in the repo.
+$ git add $CLUSTER_DIR/.sops.yaml  # Stores the SOPS configuration file in the repo.
 $ git commit -m 'Share PGP public key for secrets generation'
 [master 1c50aeb] Share PGP public key for secrets generation
  2 files changed, 63 insertions(+)
@@ -389,8 +389,9 @@ To github.com:johndoe/swpt-k8s-config.git
    c46b496..1c50aeb  master -> master
 ```
 
-Now, when team members clone the GitOps repository, they will be able
-to import the public PGP key, and create a SOPS configuration file:
+After these changes to the GitOps repository, when your team members
+clone the GitOps repository, they will be able to import the public
+PGP key, and create their local SOPS configuration file. Like this:
 
 ``` console
 $ gpg --import $CLUSTER_DIR/.sops.pub.asc  # Imports the public PGP key.
@@ -398,7 +399,7 @@ gpg: key 9F85AF312DC6F642: "clusters/dev (flux secrets)" not changed
 gpg: Total number processed: 1
 gpg:              unchanged: 1
 
-$ cp $CLUSTER_DIR/.sops.yaml .  # Creates a SOPS configuration file.
+$ cp $CLUSTER_DIR/.sops.yaml .  # Creates a local SOPS configuration file.
 ```
 
 It is **highly recommended** that you create a backup copy of the PGP
