@@ -47,7 +47,7 @@ directory in your installation. (In our example this would be
 `apps/prod/swpt-nfs-server/`.) However, among the other
 sub-directories in `apps/dev/`, you should copy only those which are
 responsible for running the types of Swaptacular nodes that you want
-to run on your Kubernetes cluster:
+to run in your Kubernetes cluster:
 
   * `apps/dev/swpt-accounts/` is responsible for running an
     [accounting authority
@@ -57,7 +57,14 @@ to run on your Kubernetes cluster:
   * `apps/dev/swpt-creditors/` is responsible for running a [creditors
     agent node](https://github.com/swaptacular/swpt_creditors).
 
-Once you have sorted all this out, you need to install a Git server to
+Once you have sorted all this out, commit and push your changes to the
+GitOps repository:
+
+``` console
+$ git commit -am "Added prod/ cluster"
+```
+
+you need to install a Git server to
 your Kubernetes cluster, which will contain a copy of your GitOps
 repository.
 
