@@ -70,13 +70,8 @@ container image registry for the Git server's and Nginx's images:
 
 ``` console
 $ cat simple-git-server/kustomization.yaml
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-namespace: simple-git-server
-
-# You may edit the following lines to specify a different container
-# image repository. Also, it is recommended to specify an image digest
-# instead of an image tag.
+...
+...
 images:
 - name: rockstorm/git-server
   newName: ghcr.io/swaptacular/git-server
@@ -87,15 +82,10 @@ images:
 ...
 ...
 
-$ sed -i 's/ghcr.io\/swaptacular/registry.example.com\/repo/' simple-git-server/kustomization.yaml  # You should enter your image repository.
+$ sed -i 's/ghcr.io\/swaptacular/registry.example.com\/repo/' simple-git-server/kustomization.yaml  # Here you should enter your image repository.
 $ cat simple-git-server/kustomization.yaml
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-namespace: simple-git-server
-
-# You may edit the following lines to specify a different container
-# image repository. Also, it is recommended to specify an image digest
-# instead of an image tag.
+...
+...
 images:
 - name: rockstorm/git-server
   newName: registry.example.com/repo/git-server
