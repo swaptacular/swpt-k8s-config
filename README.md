@@ -43,7 +43,7 @@ repository](https://github.com/swaptacular/swpt_ca_scripts), and
 continue evolving from there.
 
 You should always include a copy of the `apps/dev/swpt-nfs-server/`
-directory in your installation. (In our example this would be
+directory in your cluster. (In our example this would be
 `apps/prod/swpt-nfs-server/`.) However, among the other
 sub-directories in `apps/dev/`, you should copy only those which are
 responsible for running the types of Swaptacular nodes that you want
@@ -77,9 +77,8 @@ To github.com:epandurski/swpt-k8s-config.git
    205a82e..fbe45cc  master -> master
 ```
 
-you need to install a Git server to
-your Kubernetes cluster, which will contain a copy of your GitOps
-repository.
+The next thing is to install a Git server to your Kubernetes cluster,
+which will contain a copy of your GitOps repository.
 
 However, if you want to use a private container image registry
 (recommended for production deployments), you will have to prepare an
