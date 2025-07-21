@@ -95,6 +95,9 @@ images:
   digest: sha256:65645c7bb6a0661892a8b03b89d0743208a18dd2f3f17a54ef4b76fb8e2f2a10
 ...
 ...
+
+$ git add simple-git-server/kustomization.yaml
+$ git commit -m 'Edit simple-git-server/kustomization.yaml'
 ```
 
 If you DO NOT want to use a private container image registry, you may
@@ -197,7 +200,7 @@ Email Address []:
 ****************************************************************
 ```
 
-Then you can install a simple Git server to your Kubernetes cluster:
+Then you can install a simple Git server in your Kubernetes cluster:
 
 ``` console
 $ kubectl apply -k .
@@ -266,8 +269,8 @@ To ssh://127.0.0.1:2222/srv/git/fluxcd.git
    59b1758..b019dfe  master -> master
 ```
 
-The next step is to bootstraps FluxCD from the Git server on your
-Kubernetes cluster.
+The next step is to bootstraps [FluxCD](https://fluxcd.io/) from the
+Git server on your Kubernetes cluster.
 
 If you want to use a private container image registry for the FluxCD
 images, you will need to specify your private registry in the
