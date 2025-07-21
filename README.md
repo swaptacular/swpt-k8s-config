@@ -51,10 +51,8 @@ your Kubernetes cluster:
 
 * `apps/dev/swpt-accounts/` is responsible for running an [accounting
   authority node](https://github.com/swaptacular/swpt_accounts).
-
 * `apps/dev/swpt-debtors/` is responsible for running a [debtors agent
   node](https://github.com/swaptacular/swpt_debtors).
-
 * `apps/dev/swpt-creditors/` is responsible for running a [creditors
   agent node](https://github.com/swaptacular/swpt_creditors).
 
