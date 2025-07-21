@@ -42,11 +42,12 @@ certificate authority scripts
 repository](https://github.com/swaptacular/swpt_ca_scripts), and
 continue evolving from there.
 
-You should always include a copy of the `apps/dev/swpt-nfs-server`
+You should always include a copy of the `apps/dev/swpt-nfs-server/`
 directory in your installation. (In our example this would be
-`apps/prod/swpt-nfs-server`.) However, among the other sub-directories
-in `apps/dev/`, you should copy only those which are responsible for
-running the node types you want to run on your Kubernetes cluster:
+`apps/prod/swpt-nfs-server/`.) However, among the other
+sub-directories in `apps/dev/`, you should copy only those which are
+responsible for running the types of nodes that you want to run on
+your Kubernetes cluster:
 
 * `apps/dev/swpt-accounts/` is responsible for running an [accounting
   authority node](https://github.com/swaptacular/swpt_accounts).
