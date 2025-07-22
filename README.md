@@ -63,7 +63,7 @@ ssb   rsa4096 2025-02-05 [SEA]
 $ export KEY_FP=$(gpg --list-secret-keys --with-colons $CLUSTER_DIR | awk -F: '/^fpr:/ {print $10; exit}')  # Extract the PGP key fingerprint.
 $ mkdir simple-git-server/secret-files
 $ gpg --export-secret-keys --armor "${KEY_FP}" > simple-git-server/secret-files/sops.asc  # Write the PGP key to a temporary file.
-$ gpg --edit-key "${KEY_FP}"  # Protect the PGP private key with strong password(s):
+$ gpg --edit-key "${KEY_FP}"  # Protect the PGP private key with strong passwords:
 gpg (GnuPG) 2.2.40; Copyright (C) 2022 g10 Code GmbH
 This is free software: you are free to change and redistribute it.
 There is NO WARRANTY, to the extent permitted by law.
@@ -130,8 +130,8 @@ $ cp $CLUSTER_DIR/.sops.yaml .  # Creates a local SOPS configuration file.
 ## Backup your PGP private key (optional)
 
 It is **highly recommended** that you create a backup copy of the PGP
-private key. Make sure you do not forget the password(s) which you
-chose to protect the PGP private key:
+private key. Make sure you do not forget the passwords which you chose
+to protect the PGP private key:
 
 ``` console
 $ gpg --export-secret-key --armor "${KEY_FP}" > /mnt/backup/sops.private.asc
