@@ -149,7 +149,7 @@ QbIgaiHj7aTsupibdTde
 -----END PGP PRIVATE KEY BLOCK-----
 ```
 
-## Choose and create a cluster name
+## Create sub-directories for your cluster name
 
 Once you have chosen a name for your cluster (`dev` for example), you
 need to create sub-directories with this name in the `clusters/`,
@@ -234,7 +234,7 @@ To github.com:epandurski/swpt-k8s-config.git
 
 If you want to use a private container image registry (recommended for
 production deployments), you will have to prepare an "image pull
-secret" containing the credentials for pulling from your private
+secret" file, containing the credentials for pulling from your private
 registry. Here is how to do this:
 
 ``` console
@@ -251,7 +251,7 @@ https://docs.docker.com/engine/reference/commandline/login/#credentials-store
 Login Succeeded
 
 $ cp ~/.docker/config.json simple-git-server/secret-files/regcreds.json
-$ cat simple-git-server/secret-files/regcreds.json  # This file contains the unencrypted "image pull secret". Edit the file if necessary.
+$ cat simple-git-server/secret-files/regcreds.json  # This file contains the unencrypted "image pull secret". If necessary, you may edit the file.
 {
 	"auths": {
 		"registry.example.com": {
