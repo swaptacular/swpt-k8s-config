@@ -1,0 +1,189 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+configMapGenerator:
+- name: swpt-trade-config
+  literals:
+  # Determiene when new trading turns will be started.
+  - TURN_PERIOD=1d
+  - TURN_PERIOD_OFFSET=2h
+  - TURN_PHASE1_DURATION=10m
+  - TURN_PHASE2_DURATION=1h
+  - TURN_CHECK_INTERVAL=60s
+
+  # In order to be traded, currencies must be pegged to other
+  # currencies, thus forming a "peg-tree". At the root of the peg-tree
+  # sits the "base currency". The base currency is specified by its
+  # "debtor info locator" and its debtor ID ("BASE_DEBTOR_ID" and
+  # "BASE_DEBTOR_INFO_LOCATOR"). Currencies with distance to the root
+  # bigger than "MAX_DISTANCE_TO_BASE" will be ignored.
+  - BASE_DEBTOR_INFO_LOCATOR=https://debtors.swaptacular.org/840
+  - BASE_DEBTOR_ID=840
+  - MAX_DISTANCE_TO_BASE=10
+
+  # The amount of every arranged trade must rounded to an integer
+  # number. For this reason, trading small amounts may result in
+  # signifficant rounding errors. To avoid this, trades for amounts
+  # smaller than "MIN_TRADE_AMOUNT" will be not be arranged.
+  - MIN_TRADE_AMOUNT=1000
+
+  # Collector accounts are used for arranging circular trades. All
+  # collector accounts will have their creditor IDs between
+  # "MIN_COLLECTOR_ID" and "MAX_COLLECTOR_ID". Normally, you would not
+  # need this interval to contain more than a few thousand IDs.
+  #
+  # Note that the creditors agent is responsible only for creditor IDs
+  # which start with the hexadecimal prefix specified in the
+  # `../../../node-data/creditors-subnet.txt` file, and only the first
+  # 0xffffffff creditor IDs are reserved for collector accounts.
+  #
+  # For example, if the `./node-data/creditors-subnet.txt` file
+  # contains the string "000001", then:
+  # 1) `MIN_COLLECTOR_ID` must be set to "0x0000010000000000";
+  # 2) `MAX_COLLECTOR_ID` must be a bit larger, say "0x00000100000007ff".
+  #
+  - MIN_COLLECTOR_ID=0x0000010000000000
+  - MAX_COLLECTOR_ID=0x00000100000007ff
+
+  # When the outgouing transfers are committed, a deadline for each
+  # transfer should be specified. This allows the "Circular Trade"
+  # service to make a resonable estimate for the maximum possible
+  # losses coming form negative interest rates. This variable
+  # specifies the period during which it is highly likely that all
+  # scheduled outgoing transfers will be successfully performed. As a
+  # rule of thumb, this period should be twice as big as the
+  # TURN_PHASE2_DURATION period.
+  - TRANSFERS_HEALTHY_MAX_COMMIT_DELAY=2h
+
+  # For each arranged transfer, a very small portion of the
+  # transferred amount will be seized as a reward for performing a
+  # transaction that is beneficial for all the participants (and as a
+  # safety-margin as well). This variable specifies how big the seized
+  # portion is. For example, "1e-3", would mean that 0.1% of the
+  # amount will be seized.
+  - TRANSFERS_AMOUNT_CUT=1e-3
+
+  # Whether to verify the SSL certificates of digital coin URLs.
+  # Normally, this should be "true". Setting it to "false" is useful
+  # only for testing.
+  - APP_VERIFY_SSL_CERTS=false
+
+  # The number of seconds between to polls of the solver's database
+  # for new or progressed turns. The default is 60 seconds, which
+  # normally should be OK, but when turns are started every few
+  # minutes (like during testing), this value should be decreased.
+  - APP_ROLL_WORKER_TURNS_WAIT=60.0
+
+  options:
+    labels:
+      app.kubernetes.io/name: swpt-trade
+
+    # These annotations are used as sources for convenient Kustomize
+    # replacements:
+    #
+    annotations:
+      # Kubernetes memory and CPU requests and limits, for various
+      # containers.
+      #
+      kustomize_trade_solver_cpu_request: 1m
+      kustomize_trade_solver_cpu_limit: 4000m
+      kustomize_trade_solver_memory_request: 94Mi
+      kustomize_trade_solver_memory_limit: 1Gi
+      kustomize_postgres_exporter_cpu_request: 1m
+      kustomize_postgres_exporter_cpu_limit: 2000m
+      kustomize_postgres_exporter_memory_request: 13Mi
+      kustomize_postgres_exporter_memory_limit: 1Gi
+      kustomize_walg_exporter_cpu_request: 1m
+      kustomize_walg_exporter_cpu_limit: 2000m
+      kustomize_walg_exporter_memory_request: 28Mi
+      kustomize_walg_exporter_memory_limit: 1Gi
+
+      # This annotation specifies the container image for the solver
+      # database's Postgres exporter sidecar.
+      kustomize_postgres_exporter_image: ghcr.io/swaptacular/postgres-exporter@sha256:38606faa38c54787525fb0ff2fd6b41b4cfb75d455c1df294927c5f611699b17
+
+      # This annotation specifies the container image for the solver
+      # database's WALG exporter sidecar.
+      kustomize_walg_exporter_image: ghcr.io/swaptacular/wal-g-exporter@sha256:5f842526cdf313a3746acb8c991abc6e9243b6dc902bbf21638588e7b38803ad
+
+# OCI images to use for the different containers:
+#
+images:
+- name: swpt-trade
+  newName: ghcr.io/swaptacular/swpt_trade
+  digest: sha256:3b96c019d5862bf946eba49963bda9dff7f79da2cfc1ce806b1f9b144a2834e4
+
+secretGenerator:
+- name: postgres.trade-solver-db.credentials.postgresql.acid.zalan.do
+  files:
+  - password=../secrets/postgres-cluster-password.encrypted
+  literals:
+  - username=postgres
+  options:
+    disableNameSuffixHash: true
+    labels:
+      app.kubernetes.io/name: swpt-trade
+      app.kubernetes.io/component: solver-db
+      application: spilo
+      cluster-name: trade-solver-db
+      team: swpt
+  type: Opaque
+
+- name: standby.trade-solver-db.credentials.postgresql.acid.zalan.do
+  files:
+  - password=../secrets/postgres-cluster-password.encrypted
+  literals:
+  - username=standby
+  options:
+    disableNameSuffixHash: true
+    labels:
+      app.kubernetes.io/name: swpt-trade
+      app.kubernetes.io/component: solver-db
+      application: spilo
+      cluster-name: trade-solver-db
+      team: swpt
+  type: Opaque
+
+- name: db-owner.trade-solver-db.credentials.postgresql.acid.zalan.do
+  files:
+  - password=../secrets/postgres-cluster-password.encrypted
+  literals:
+  - username=db_owner
+  options:
+    disableNameSuffixHash: true
+    labels:
+      app.kubernetes.io/name: swpt-trade
+      app.kubernetes.io/component: solver-db
+      application: spilo
+      cluster-name: trade-solver-db
+      team: swpt
+  type: Opaque
+  
+resources:
+- postgres-cluster.yaml
+- workers/
+- ../../../base/swpt-creditors/trade/
+
+patches:
+- path: ../../../base/swpt-creditors/trade/patches/postgres-cluster.yaml
+  target:
+    group: acid.zalan.do
+    kind: postgresql
+    name: trade-solver-db
+    version: v1
+
+replacements:
+- path: ../../../base/swpt-creditors/trade/replacements/postgres-exporter-image.yaml
+- path: ../../../base/swpt-creditors/trade/replacements/postgres-exporter-cpu-request.yaml
+- path: ../../../base/swpt-creditors/trade/replacements/postgres-exporter-cpu-limit.yaml
+- path: ../../../base/swpt-creditors/trade/replacements/postgres-exporter-memory-request.yaml
+- path: ../../../base/swpt-creditors/trade/replacements/postgres-exporter-memory-limit.yaml
+- path: ../../../base/swpt-creditors/trade/replacements/walg-exporter-image.yaml
+- path: ../../../base/swpt-creditors/trade/replacements/walg-exporter-cpu-request.yaml
+- path: ../../../base/swpt-creditors/trade/replacements/walg-exporter-cpu-limit.yaml
+- path: ../../../base/swpt-creditors/trade/replacements/walg-exporter-memory-request.yaml
+- path: ../../../base/swpt-creditors/trade/replacements/walg-exporter-memory-limit.yaml
+- path: ../../../base/swpt-creditors/trade/replacements/trade-solver-cpu-limit.yaml
+- path: ../../../base/swpt-creditors/trade/replacements/trade-solver-cpu-request.yaml
+- path: ../../../base/swpt-creditors/trade/replacements/trade-solver-memory-limit.yaml
+- path: ../../../base/swpt-creditors/trade/replacements/trade-solver-memory-request.yaml

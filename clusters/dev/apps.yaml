@@ -16,6 +16,6 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./apps/example  # Substitute "example" with the name of your cluster.
+  path: ./apps/dev
   prune: true
   wait: false

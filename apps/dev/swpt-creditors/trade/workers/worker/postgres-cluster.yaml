@@ -1,0 +1,54 @@
+apiVersion: "acid.zalan.do/v1"
+kind: postgresql
+metadata:
+  name: trade-worker-db  # must be "trade-worker-db"
+spec:
+  # Specifies the "spilo" OCI image to use.
+  #
+  dockerImage: ghcr.io/swaptacular/spilo-17@sha256:23861da069941ff5345e6a97455e60a63fc2f16c97857da8f85560370726cbe7
+
+  # Specifies the disk space allocated for the database. The value
+  # must not be decreased.
+  #
+  volume:
+    size: 1Gi
+
+  # Specifies Kubernetes memory and CPU requests and limits. It is
+  # recommended that the memory request is the same as the memory
+  # limit.
+  #
+  resources:
+    requests:
+      cpu: 10m
+      memory: 350Mi
+    limits:
+      cpu: 500m
+      memory: 350Mi
+
+  # Specifies the number of PosgreSQL server instances in the cluster.
+  # Must be between 1 and 3. It is recommended to be at least 2.
+  #
+  numberOfInstances: 1
+
+  env:
+  # You can change the value of this variable to trigger a restart of
+  # the PosgreSQL cluster.
+  #
+  - name: pg_cluster_restart_attempt
+    value: attempt-0
+
+  # # Uncomment the next lines to create a standby cluster from the S3
+  # # backup. Change the path accordingly. Once the standby cluster has
+  # # been sycnronized, comment the lines again to detach the standby
+  # # cluster from the primary cluster.
+  # #
+  # standby:
+  #   s3_wal_path: "s3://swpt/spilo/swpt-creditors-trade-worker-db-01/wal/17"
+
+  teamId: swpt
+  postgresql:
+    version: "17"
+  users:
+    db_owner: []
+  databases:
+    db: db_owner

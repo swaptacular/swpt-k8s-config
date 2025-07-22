@@ -1,0 +1,67 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+secretGenerator:
+- name: postgres.hydra-db.credentials.postgresql.acid.zalan.do
+  files:
+  - password=../secrets/postgres-cluster-password.encrypted
+  literals:
+  - username=postgres
+  options:
+    disableNameSuffixHash: true
+    labels:
+      app.kubernetes.io/name: hydra-db
+      application: spilo
+      cluster-name: hydra-db
+      team: swpt
+  type: Opaque
+- name: standby.hydra-db.credentials.postgresql.acid.zalan.do
+  files:
+  - password=../secrets/postgres-cluster-password.encrypted
+  literals:
+  - username=standby
+  options:
+    disableNameSuffixHash: true
+    labels:
+      app.kubernetes.io/name: hydra-db
+      application: spilo
+      cluster-name: hydra-db
+      team: swpt
+  type: Opaque
+- name: db-owner.hydra-db.credentials.postgresql.acid.zalan.do
+  files:
+  - password=../secrets/postgres-cluster-password.encrypted
+  literals:
+  - username=db_owner
+  options:
+    disableNameSuffixHash: true
+    labels:
+      app.kubernetes.io/name: hydra-db
+      application: spilo
+      cluster-name: hydra-db
+      team: swpt
+  type: Opaque
+
+resources:
+- postgres-cluster.yaml
+- ../../../base/swpt-creditors/hydra-db/postgres/network-policies.yaml
+
+patches:
+- path: ../../../base/swpt-creditors/hydra-db/postgres/patches/postgres-cluster.yaml
+  target:
+    group: acid.zalan.do
+    kind: postgresql
+    name: hydra-db
+    version: v1
+
+replacements:
+- path: ../../../base/swpt-creditors/hydra-db/postgres/replacements/postgres-exporter-image.yaml
+- path: ../../../base/swpt-creditors/hydra-db/postgres/replacements/postgres-exporter-cpu-request.yaml
+- path: ../../../base/swpt-creditors/hydra-db/postgres/replacements/postgres-exporter-cpu-limit.yaml
+- path: ../../../base/swpt-creditors/hydra-db/postgres/replacements/postgres-exporter-memory-request.yaml
+- path: ../../../base/swpt-creditors/hydra-db/postgres/replacements/postgres-exporter-memory-limit.yaml
+- path: ../../../base/swpt-creditors/hydra-db/postgres/replacements/walg-exporter-image.yaml
+- path: ../../../base/swpt-creditors/hydra-db/postgres/replacements/walg-exporter-cpu-request.yaml
+- path: ../../../base/swpt-creditors/hydra-db/postgres/replacements/walg-exporter-cpu-limit.yaml
+- path: ../../../base/swpt-creditors/hydra-db/postgres/replacements/walg-exporter-memory-request.yaml
+- path: ../../../base/swpt-creditors/hydra-db/postgres/replacements/walg-exporter-memory-limit.yaml

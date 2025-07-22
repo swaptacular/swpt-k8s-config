@@ -1,0 +1,75 @@
+apiVersion: "acid.zalan.do/v1"
+kind: postgresql
+metadata:
+  name: hydra-db  # must be "hydra-db"
+
+  # These annotations are used as sources for convenient Kustomize
+  # replacements:
+  #
+  annotations:
+    # The container image for the Postgres exporter sidecar.
+    kustomize_postgres_exporter_image: ghcr.io/swaptacular/postgres-exporter@sha256:38606faa38c54787525fb0ff2fd6b41b4cfb75d455c1df294927c5f611699b17
+
+    # The container image for the WALG exporter sidecar.
+    kustomize_walg_exporter_image: ghcr.io/swaptacular/wal-g-exporter@sha256:5f842526cdf313a3746acb8c991abc6e9243b6dc902bbf21638588e7b38803ad
+
+    # Kubernetes memory and CPU requests and limits, for the exporter
+    # sidecars.
+    kustomize_postgres_exporter_cpu_request: 1m
+    kustomize_postgres_exporter_cpu_limit: 2000m
+    kustomize_postgres_exporter_memory_request: 13Mi
+    kustomize_postgres_exporter_memory_limit: 1Gi
+    kustomize_walg_exporter_cpu_request: 1m
+    kustomize_walg_exporter_cpu_limit: 2000m
+    kustomize_walg_exporter_memory_request: 28Mi
+    kustomize_walg_exporter_memory_limit: 1Gi
+
+spec:
+  # Specifies the "spilo" OCI image to use.
+  #
+  dockerImage: ghcr.io/swaptacular/spilo-17@sha256:23861da069941ff5345e6a97455e60a63fc2f16c97857da8f85560370726cbe7
+
+  # Specifies the disk space allocated for the database. The value
+  # must not be decreased.
+  #
+  volume:
+    size: 1Gi
+
+  # Specifies Kubernetes memory and CPU requests and limits. It is
+  # recommended that the memory request is the same as the memory
+  # limit.
+  #
+  resources:
+    requests:
+      cpu: 10m
+      memory: 350Mi
+    limits:
+      cpu: 500m
+      memory: 350Mi
+
+  # Specifies the number of PosgreSQL server instances in the cluster.
+  # Must be between 1 and 3. It is recommended to be at least 2.
+  #
+  numberOfInstances: 1
+
+  env:
+  # You can change the value of this variable to trigger a restart of
+  # the PosgreSQL cluster.
+  #
+  - name: pg_cluster_restart_attempt
+    value: attempt-0
+
+  # # Uncomment the these lines to recover from the S3 backup. Once the
+  # # data has been recovered successfully, the lines can be commented
+  # # again.
+  # clone:
+  #   cluster: hydra-db
+  #   timestamp: "2199-01-01T00:00:00.000+00:00"
+
+  teamId: swpt
+  postgresql:
+    version: "17"
+  users:
+    db_owner: []
+  databases:
+    db: db_owner

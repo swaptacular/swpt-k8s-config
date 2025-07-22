@@ -1,0 +1,231 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# The name of the namespace could be changed. However, the name of the
+# namespace and the name of the directory that contains this
+# `kustomization.yaml` file MUST always be the same!
+namespace: swpt-accounts
+
+secretGenerator:
+- name: spilo-env-secret
+  files:
+  # Run `openssl rand -base64 32` to generate a random encryption key.
+  - WALG_LIBSODIUM_KEY=secrets/spilo-walg-libsodium-key.encrypted
+
+  # The "password" for the S3 service.
+  - AWS_SECRET_ACCESS_KEY=secrets/spilo-aws-secret-access-key.encrypted
+
+  literals:
+  # The "username" for the S3 service.
+  - AWS_ACCESS_KEY_ID=console
+
+  # The endpoint for the S3 service.
+  - AWS_ENDPOINT=https://minio.minio-tenant.svc.cluster.local:443
+
+  # When Amazon S3 is used, this specifies the AWS region. In that
+  # case, specifying `AWS_ENDPOINT` should not be necessary.
+  - AWS_REGION=us-east-1
+
+  # This specifies the trusted CA for the local MinIO S3 server. This
+  # should not be necessary for "proper" S3 providers.
+  - WALG_S3_CA_CERT_FILE=/certs/minio/ca.crt
+
+  options:
+    disableNameSuffixHash: true
+    labels:
+      app.kubernetes.io/name: swpt-accounts
+      application: spilo
+      team: swpt
+
+    # These annotations are used as sources for convenient Kustomize
+    # replacements:
+    #
+    annotations:
+      # For security reasons, by default pods are not allowed egress
+      # traffic outside of the Kubernetes cluster. However, S3 backups
+      # require initiating connections to S3 servers that are usually
+      # not in the Kubernetes cluster. Here you must specify the range
+      # of IPs which the "spilo" pods will be allowed to connect to.
+      #
+      kustomize_s3_ip_block: 10.0.0.0/8
+
+  type: Opaque
+
+- name: db-owner-credentials
+  files:
+  # A SOPS-encrypted file containing the password for the "db_owner"
+  # user on all Postgres clusters which this application will create.
+  # Once created, the password must not be changed.
+  - password=secrets/postgres-cluster-password.encrypted
+
+  literals:
+  - username=db_owner
+
+  options:
+    disableNameSuffixHash: true
+    labels:
+      app.kubernetes.io/name: swpt-accounts
+  type: Opaque
+
+- name: server-certificate
+  files:
+  # The server certificate PEM file. This certificate will be used to
+  # authenticate before peer nodes. On how to generate a server
+  # certificate, check https://github.com/swaptacular/swpt_ca_scripts
+  - server.crt=server.crt
+
+  # A SOPS-encrypted file containing the private key for the server
+  # certificate. This private key will be used to authenticate before
+  # peer nodes. (See the previous comment.)
+  #
+  # To SOPS-encrypt the private key, you may use this command:
+  #
+  # $ sops encrypt server.key > server.key.encrypted
+  - server.key=server.key.encrypted
+
+  options:
+    labels:
+      app.kubernetes.io/name: swpt-accounts
+  type: Opaque
+
+- name: regcreds
+  files:
+  - ".dockerconfigjson=../regcreds.json.encrypted"
+  options:
+    disableNameSuffixHash: true
+  type: kubernetes.io/dockerconfigjson
+
+configMapGenerator:
+- name: stomp-config
+  literals:
+  # The number of SMP messages that STOMP servers and STOMP clients
+  # will buffer in memory.
+  - SWPT_SERVER_BUFFER=100
+  - SWPT_CLIENT_BUFFER=100
+
+  # The number of worker threads that STOMP servers will use for file
+  # access to the NFS server.
+  - APP_FILE_READ_THREADS=10
+
+  options:
+    labels:
+      app.kubernetes.io/name: swpt-accounts
+
+    # These annotations are used as sources for convenient Kustomize
+    # replacements:
+    #
+    annotations:
+      # The static cluster IP address of the
+      # "nfs-server.swpt-nfs-server.svc.cluster.local" service.
+      kustomize_nfs_service_cluster_ip: 10.96.0.4
+
+      # Each Swaptacular node runs its own STOMP server. This is the
+      # port at which the node's STOMP server will be running.
+      kustomize_stomp_server_port: "1234"
+
+      # Kubernetes memory and CPU requests and limits, for the STOMP
+      # server containers.
+      #
+      kustomize_stomp_server_cpu_request: 1m
+      kustomize_stomp_server_cpu_limit: 1000m
+      kustomize_stomp_server_memory_request: 24Mi
+      kustomize_stomp_server_memory_limit: 1Gi
+
+- name: apiproxy-config
+  files:
+  # The configuration file for the "apiproxy".
+  #
+  # Each line in the configuration file should start with a route
+  # specifier, followed by at least one space, followed by a web
+  # server URL (only "http://" server URLs are supported). Route
+  # specifiers consist of zero or more 0s or 1s, separated by dots,
+  # ending with a hash symbol ("#"). An example configuration file:
+  #
+  # 0.# http://http-cache-0
+  # 1.# http://http-cache-1
+  #
+  # or, for a sigle server:
+  #
+  # # http://http-cache
+  #
+  # Note that the route specifiers in the configuration file must
+  # cover all possible bit masks. For example, the following
+  # configuration file is invalid:
+  #
+  # 0.# http://http-cache-0
+  #
+  # because it does not cover sharding keys starting with a
+  # binary "1".
+  - apiproxy.conf=apiproxy.conf
+
+  options:
+    labels:
+      app.kubernetes.io/name: swpt-accounts
+
+    # These annotations are used as sources for convenient Kustomize
+    # replacements:
+    #
+    annotations:
+      # Kubernetes memory and CPU requests and limits, for the
+      # apiproxy server containers.
+      #
+      kustomize_apiproxy_cpu_request: 1m
+      kustomize_apiproxy_cpu_limit: 1000m
+      kustomize_apiproxy_memory_request: 19Mi
+      kustomize_apiproxy_memory_limit: 1Gi
+
+# The number of replicas for each component. One replica works fine,
+# but to have high-availability, should be at least 2.
+#
+replicas:
+- name: apiproxy
+  count: 1
+- name: stomp-server
+  count: 1
+
+# OCI images to use for the different containers:
+#
+images:
+- name: swpt-accounts
+  newName: ghcr.io/swaptacular/swpt_accounts
+  digest: sha256:c565838754e132764f8d0208d9451c8d40d3c28cb3e09ee6ebdabe30cd56544e
+- name: swpt-apiproxy
+  newName: ghcr.io/swaptacular/swpt_apiproxy
+  digest: sha256:7a396d200c4c023f5cf46a3dc45d202917df4ef184e33580c3177a70c4a3675b
+- name: swpt-stomp
+  newName: ghcr.io/swaptacular/swpt_stomp
+  digest: sha256:9ca8d559eb5482e85593df07edacea1268aa6881878609e03778f8bfc4c7cd93
+- name: nginx
+  newName: ghcr.io/swaptacular/nginx
+  digest: sha256:65645c7bb6a0661892a8b03b89d0743208a18dd2f3f17a54ef4b76fb8e2f2a10
+- name: swpt-nfs-server
+  newName: ghcr.io/swaptacular/swpt_nfs_server
+  digest: sha256:f3674f3a027e961d6c4be308094e1ec129859fda1aafac85e5920edb0c9bdb7f
+
+resources:
+- ../../base/swpt-accounts/
+- broker.yaml
+- shards/
+- node-data/peers/
+
+patches:
+- path: ../../base/swpt-accounts/patches/broker.yaml
+  target:
+    group: rabbitmq.com
+    kind: RabbitmqCluster
+    name: broker
+    version: v1beta1
+
+replacements:
+- path: ../../base/swpt-accounts/replacements/nfs-cluster-ip.yaml
+- path: ../../base/swpt-accounts/replacements/nfs-pv-name.yaml
+- path: ../../base/swpt-accounts/replacements/stomp-server-port.yaml
+- path: ../../base/swpt-accounts/replacements/apiproxy-cpu-limit.yaml
+- path: ../../base/swpt-accounts/replacements/apiproxy-cpu-request.yaml
+- path: ../../base/swpt-accounts/replacements/apiproxy-memory-limit.yaml
+- path: ../../base/swpt-accounts/replacements/apiproxy-memory-request.yaml
+- path: ../../base/swpt-accounts/replacements/stomp-server-cpu-limit.yaml
+- path: ../../base/swpt-accounts/replacements/stomp-server-cpu-request.yaml
+- path: ../../base/swpt-accounts/replacements/stomp-server-memory-limit.yaml
+- path: ../../base/swpt-accounts/replacements/stomp-server-memory-request.yaml
+- path: ../../base/swpt-accounts/replacements/s3-ip-block.yaml

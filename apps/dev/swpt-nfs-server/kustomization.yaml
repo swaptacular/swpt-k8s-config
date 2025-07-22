@@ -55,7 +55,7 @@ configMapGenerator:
   # sub-directory containing the applications' Kustomize overlay that
   # will be running in the Kubernetes cluster. That is: You should
   # substitute "example" with the name of your cluster.
-  - OVERLAY_SUBDIR=apps/example
+  - OVERLAY_SUBDIR=apps/dev
 
   options:
     # These annotations are used as sources for convenient Kustomize

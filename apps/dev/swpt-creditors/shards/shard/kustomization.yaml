@@ -1,0 +1,191 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# This must be either an empty string, or a string starting with '-',
+# and followed by 0s or 1s. "-101" for example.
+#
+nameSuffix: ""
+
+labels:
+- includeSelectors: true
+  pairs:
+    # The value for the label must correspond to the "nameSuffix"
+    # value. For example, if "nameSuffix" is "-101", the value for the
+    # label must be "shard-101". If "nameSuffix" is "", the value for
+    # the label must be "shard".
+    #
+    app.kubernetes.io/instance: shard
+
+configMapGenerator:
+- name: shardconfig
+  literals:
+  # The routing key must correspond to the "nameSuffix" value. For
+  # example, if "nameSuffix" is "-101", the routing key must be
+  # "1.0.1.#". If "nameSuffix" is "", the routing key must be "#".
+  #
+  - PROTOCOL_BROKER_QUEUE_ROUTING_KEY=#
+
+  # Shard configuration settings which you may want to change:
+  #
+  - PROTOCOL_BROKER_PROCESSES=1
+  - PROTOCOL_BROKER_THREADS=1
+  - PROTOCOL_BROKER_PREFETCH_COUNT=10
+  - WEBSERVER_PROCESSES=1
+  - WEBSERVER_THREADS=3
+  - FLUSH_PROCESSES=1
+  - FLUSH_PERIOD=1.5
+  - PROCESS_LOG_ADDITIONS_THREADS=1
+  - PROCESS_LEDGER_UPDATES_THREADS=1
+  - DELETE_PARENT_SHARD_RECORDS=false
+
+  options:
+    annotations:
+      # These annotations are used as sources for convenient Kustomize
+      # replacements. They specify Kubernetes memory and CPU requests
+      # and limits, for different shard container types.
+      #
+      kustomize_messages_consumer_cpu_request: 1m
+      kustomize_messages_consumer_cpu_limit: 2000m
+      kustomize_messages_consumer_memory_request: 80Mi
+      kustomize_messages_consumer_memory_limit: 1Gi
+      kustomize_messages_flusher_cpu_request: 1m
+      kustomize_messages_flusher_cpu_limit: 2000m
+      kustomize_messages_flusher_memory_request: 84Mi
+      kustomize_messages_flusher_memory_limit: 1Gi
+      kustomize_tasks_processor_cpu_request: 1m
+      kustomize_tasks_processor_cpu_limit: 2000m
+      kustomize_tasks_processor_memory_request: 688Mi
+      kustomize_tasks_processor_memory_limit: 1000Mi
+      kustomize_web_server_cpu_request: 1m
+      kustomize_web_server_cpu_limit: 2000m
+      kustomize_web_server_memory_request: 130Mi
+      kustomize_web_server_memory_limit: 200Mi
+      kustomize_postgres_exporter_cpu_request: 1m
+      kustomize_postgres_exporter_cpu_limit: 2000m
+      kustomize_postgres_exporter_memory_request: 13Mi
+      kustomize_postgres_exporter_memory_limit: 1Gi
+      kustomize_walg_exporter_cpu_request: 1m
+      kustomize_walg_exporter_cpu_limit: 2000m
+      kustomize_walg_exporter_memory_request: 28Mi
+      kustomize_walg_exporter_memory_limit: 1Gi
+
+      # This annotation specifies the container image for the Postgres
+      # exporter sidecar.
+      kustomize_postgres_exporter_image: ghcr.io/swaptacular/postgres-exporter@sha256:38606faa38c54787525fb0ff2fd6b41b4cfb75d455c1df294927c5f611699b17
+
+      # This annotation specifies the container image for the WALG
+      # exporter sidecar.
+      kustomize_walg_exporter_image: ghcr.io/swaptacular/wal-g-exporter@sha256:5f842526cdf313a3746acb8c991abc6e9243b6dc902bbf21638588e7b38803ad
+
+      # Do not change the next two lines!
+      kustomize_zalando_top_level_domain: do
+      kustomize_zalando_clone_timestamp: "2199-01-01T00:00:00.000+00:00"
+
+# The number of replicas for each component. One replica works fine,
+# but to have high-availability, should be at least 2.
+#
+replicas:
+- name: web-server
+  count: 1
+- name: messages-flusher
+  count: 1
+- name: messages-consumer
+  count: 1
+
+secretGenerator:
+- name: postgres.cluster-name.credentials.postgresql.acid.zalan.do
+  files:
+  - password=../../secrets/postgres-cluster-password.encrypted
+  literals:
+  - username=postgres
+  options:
+    disableNameSuffixHash: true
+    labels:
+      application: spilo
+      cluster-name: cluster-name
+      team: swpt
+  type: Opaque
+- name: standby.cluster-name.credentials.postgresql.acid.zalan.do
+  files:
+  - password=../../secrets/postgres-cluster-password.encrypted
+  literals:
+  - username=standby
+  options:
+    disableNameSuffixHash: true
+    labels:
+      application: spilo
+      cluster-name: cluster-name
+      team: swpt
+  type: Opaque
+- name: db-owner.cluster-name.credentials.postgresql.acid.zalan.do
+  files:
+  - password=../../secrets/postgres-cluster-password.encrypted
+  literals:
+  - username=db_owner
+  options:
+    disableNameSuffixHash: true
+    labels:
+      application: spilo
+      cluster-name: cluster-name
+      team: swpt
+  type: Opaque
+
+resources:
+- ../../../../base/swpt-creditors/shard/
+- postgres-cluster.yaml
+
+patches:
+- path: ../../../../base/swpt-creditors/shard/patches/postgres-cluster.yaml
+  target:
+    group: acid.zalan.do
+    kind: postgresql
+    name: db
+    version: v1
+
+replacements:
+- path: ../../../../base/swpt-creditors/shard/replacements/postgres-exporter-image.yaml
+- path: ../../../../base/swpt-creditors/shard/replacements/postgres-exporter-cpu-request.yaml
+- path: ../../../../base/swpt-creditors/shard/replacements/postgres-exporter-cpu-limit.yaml
+- path: ../../../../base/swpt-creditors/shard/replacements/postgres-exporter-memory-request.yaml
+- path: ../../../../base/swpt-creditors/shard/replacements/postgres-exporter-memory-limit.yaml
+- path: ../../../../base/swpt-creditors/shard/replacements/walg-exporter-image.yaml
+- path: ../../../../base/swpt-creditors/shard/replacements/walg-exporter-cpu-request.yaml
+- path: ../../../../base/swpt-creditors/shard/replacements/walg-exporter-cpu-limit.yaml
+- path: ../../../../base/swpt-creditors/shard/replacements/walg-exporter-memory-request.yaml
+- path: ../../../../base/swpt-creditors/shard/replacements/walg-exporter-memory-limit.yaml
+- path: ../../../../base/swpt-creditors/shard/replacements/secrets-clustername.yaml
+- path: ../../../../base/swpt-creditors/shard/replacements/secrets-namesuffix.yaml
+- path: ../../../../base/swpt-creditors/shard/replacements/shardconfig.yaml
+- path: ../../../../base/swpt-creditors/shard/replacements/messages-consumer-cpu-request.yaml
+- path: ../../../../base/swpt-creditors/shard/replacements/messages-consumer-cpu-limit.yaml
+- path: ../../../../base/swpt-creditors/shard/replacements/messages-consumer-memory-request.yaml
+- path: ../../../../base/swpt-creditors/shard/replacements/messages-consumer-memory-limit.yaml
+- path: ../../../../base/swpt-creditors/shard/replacements/messages-flusher-cpu-request.yaml
+- path: ../../../../base/swpt-creditors/shard/replacements/messages-flusher-cpu-limit.yaml
+- path: ../../../../base/swpt-creditors/shard/replacements/messages-flusher-memory-request.yaml
+- path: ../../../../base/swpt-creditors/shard/replacements/messages-flusher-memory-limit.yaml
+- path: ../../../../base/swpt-creditors/shard/replacements/tasks-processor-cpu-request.yaml
+- path: ../../../../base/swpt-creditors/shard/replacements/tasks-processor-cpu-limit.yaml
+- path: ../../../../base/swpt-creditors/shard/replacements/tasks-processor-memory-request.yaml
+- path: ../../../../base/swpt-creditors/shard/replacements/tasks-processor-memory-limit.yaml
+- path: ../../../../base/swpt-creditors/shard/replacements/web-server-cpu-request.yaml
+- path: ../../../../base/swpt-creditors/shard/replacements/web-server-cpu-limit.yaml
+- path: ../../../../base/swpt-creditors/shard/replacements/web-server-memory-request.yaml
+- path: ../../../../base/swpt-creditors/shard/replacements/web-server-memory-limit.yaml
+
+# # Uncomment the these lines to recover from the S3 backup. Once the
+# # data has been recovered successfully, the lines can be commented
+# # again. Uncommenting these lines will add a clone section in the
+# # shard's Postgres cluster manifest. Like this:
+# # ---
+# # apiVersion: "acid.zalan.do/v1"
+# # kind: postgresql
+# # metadata:
+# #   name: <cluster-name>
+# # spec:
+# #   clone:
+# #     cluster: <cluster-name>
+# #     timestamp: "2199-01-01T00:00:00.000+00:00"
+# #
+# - path: ../../../../base/swpt-creditors/shard/replacements/clone-clustername.yaml
+# - path: ../../../../base/swpt-creditors/shard/replacements/clone-timestamp.yaml

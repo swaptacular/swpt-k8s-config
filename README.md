@@ -32,10 +32,13 @@ need to create sub-directories with this name in the `clusters/`,
 there are already sub-directories named `example` -- use them as a
 template. Pay close attention to the comments in the various
 `kustomization.yaml` files, and adapt these files according to your
-needs. Also, note that the `secrets/` sub-directories contain
-encrypted secrets, which you can not use directly, but should generate
-yourself. Another very important directory is the `node-data/`
-sub-directory (`apps/dev/swpt-debtors/node-data/`,
+needs. Note that in several files you will have to change the
+references to `clusters/example`, `infrastructure/example`, and
+`apps/example`, so that they instead refer to your chosen cluster
+name. Also, note that the `secrets/` sub-directories contain encrypted
+secrets, which you can not use directly, but should generate yourself.
+Another very important directory is the `node-data/` sub-directory
+(`apps/dev/swpt-debtors/node-data/`,
 `apps/dev/swpt-creditors/node-data/`, and
 `apps/dev/swpt-accounts/node-data/`). This sub-directory contains
 information about the Swaptacular node, and its peers. The
@@ -45,11 +48,12 @@ repository](https://github.com/swaptacular/swpt_ca_scripts), and
 continue evolving from there.
 
 You should always include a copy of the
-`apps/example/swpt-nfs-server/` directory in your cluster
-(`apps/dev/swpt-nfs-server/` for example). However, among the other
-sub-directories in `apps/example/`, you should copy only those which
-are responsible for running the types of Swaptacular nodes that you
-want to run in your Kubernetes cluster:
+`apps/example/regcreds.json.encrypted` file, and the
+`apps/example/swpt-nfs-server/` directory in your cluster (`apps/dev/`
+for example). However, among the other sub-directories in
+`apps/example/`, you should copy only those which are responsible for
+running the types of Swaptacular nodes that you want to run in your
+Kubernetes cluster:
 
   * `apps/example/swpt-accounts/` is responsible for running an
     [accounting authority
@@ -67,6 +71,10 @@ sub-directory is unique. In this example, we will presume that you
 want to run an accounting authority node, but the difference really is
 only in the name of the sub-directory (`swpt-accounts`,
 `swpt-debtors`, or `swpt-creditors`).
+
+Note that in production, you will not need the `mailhog.yaml`,
+`minio.yaml`, and `pebble.yaml` files in the `clusters/example/`
+directory. They are useful only for testing.
 
 Once you have sorted all this out, commit and push your changes to the
 GitOps repository:
@@ -511,7 +519,7 @@ gpg:              unchanged: 1
 $ cp $CLUSTER_DIR/.sops.yaml .  # Creates a local SOPS configuration file.
 ```
 
-## Backup you PGP private key
+## Backup you PGP private key (optional)
 
 It is **highly recommended** that you create a backup copy of the PGP
 private key. Make sure you do not forget the password(s) which you

@@ -1,0 +1,540 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# You may edit this section to specify different OCI images to use for
+# the controllers. Also, it is recommended to specify an image digest
+# instead of an image tag ("digest: <DIGEST>", instead of "newTag:
+# <TAG>").
+#
+images:
+
+# Minio operator:
+- name: minio/operator:v6.0.4
+  newName: ghcr.io/swaptacular/minio-operator
+  digest: sha256:3b00b4de407a0be25a13d69faf4dc2727064b6bbbd89050c494fc768a433a755
+
+# Postgres operator:
+- name: ghcr.io/zalando/postgres-operator:v1.14.0
+  newName: ghcr.io/swaptacular/postgres-operator
+  digest: sha256:4f40cfc2283b8389ff2e85c3af17c428dee29963be20ddb28b451ead9984b6a9
+
+# DragonflyDB operator:
+- name: docker.dragonflydb.io/dragonflydb/operator:v1.1.11
+  newName: ghcr.io/swaptacular/dragonflydb-operator
+  digest: sha256:11cef45ec1079b9d97930fc99ecd08ba29d4eca55cdb45887cb0ac40ee4e4d24
+- name: quay.io/brancz/kube-rbac-proxy:v0.16.0
+  newName: ghcr.io/swaptacular/kube-rbac-proxy
+  digest: sha256:2c8f8c357ff87b8bc5df4d967d5f52a23528c5e9c025f9aaa653a9ef4747585f
+
+# RabbitMQ operators:
+- name: rabbitmqoperator/cluster-operator:2.12.1
+  newName: ghcr.io/swaptacular/rabbitmq-cluster-operator
+  digest: sha256:0a7bd7f368168995b94303df54f246d5da67986cef3f5611884499d5d6abcf1b
+- name: rabbitmqoperator/messaging-topology-operator:1.17.2
+  newName: ghcr.io/swaptacular/rabbitmq-messaging-topology-operator
+  digest: sha256:c55bea19b4db1e7c54ae0e4a7aa62a5a33a1bd8ceb906d0e3eecca5f33f14b36
+
+# The Nginx server which serves the Grafana plugins:
+- name: swpt-http-server
+  newName: ghcr.io/swaptacular/swpt_http_server
+  digest: sha256:f4c12ebca1acac14fa7aef6c7d7cb8583ee58a29d509545cb381ae0c1d6771e8
+
+patches:
+
+# This patch configures the CPU and memory requests and limits for the
+# Postgres operator pod.
+#
+- patch: |-
+    - op: replace
+      path: /spec/template/spec/containers/0/resources
+      value:
+        requests:
+          cpu: 1m
+          memory: 33Mi
+        limits:
+          cpu: 500m
+          memory: 500Mi
+
+  target:
+    kind: Deployment
+    name: postgres-operator
+    namespace: postgres-operator
+
+# This patch configures the CPU and memory requests and limits for the
+# RabbitMQ cluster operator pod.
+#
+- patch: |-
+    - op: replace
+      path: /spec/template/spec/containers/0/resources
+      value:
+        requests:
+          cpu: 1m
+          memory: 24Mi
+        limits:
+          cpu: 200m
+          memory: 500Mi
+
+  target:
+    kind: Deployment
+    name: rabbitmq-cluster-operator
+    namespace: rabbitmq-system
+
+# This patch configures the CPU and memory requests and limits for the
+# RabbitMQ messaging topology operator pod.
+#
+- patch: |-
+    - op: replace
+      path: /spec/template/spec/containers/0/resources
+      value:
+        requests:
+          cpu: 1m
+          memory: 28Mi
+        limits:
+          cpu: 300m
+          memory: 500Mi
+
+  target:
+    kind: Deployment
+    name: messaging-topology-operator
+    namespace: rabbitmq-system
+
+# This patch configures the CPU and memory requests and limits for the
+# DrabonflyDB operator pod.
+#
+- patch: |-
+    # Resources for the "kube-rbac-proxy" sidecar container.
+    - op: replace
+      path: /spec/template/spec/containers/0/resources
+      value:
+        requests:
+          cpu: 5m
+          memory: 64Mi
+        limits:
+          cpu: 500m
+          memory: 128Mi
+
+    # Resources for the DragonflyDB operator container.
+    - op: replace
+      path: /spec/template/spec/containers/1/resources
+      value:
+        requests:
+          cpu: 10m
+          memory: 64Mi
+        limits:
+          cpu: 500m
+          memory: 128Mi
+
+  target:
+    kind: Deployment
+    name: dragonfly-operator-controller-manager
+    namespace: dragonfly-operator-system
+
+# This patch configures the Minio operator pod.
+#
+- patch: |-
+    # Configures the CPU, memory, and ephemeral-storage requests and
+    # limits.
+    - op: replace
+      path: /spec/template/spec/containers/0/resources
+      value:
+        requests:
+          cpu: 1m
+          memory: 24Mi
+          ephemeral-storage: 500Mi
+        limits:
+          cpu: 500m
+          memory: 500Mi
+          ephemeral-storage: 2Gi
+
+    # Configures the OCI container image used for tenants' sidecars.
+    - op: add
+      path: /spec/template/spec/containers/0/env/-
+      value:
+        name: OPERATOR_SIDECAR_IMAGE
+        value: ghcr.io/swaptacular/minio-operator-sidecar@sha256:8d99fd33b4934816bef415b1d4a14cd8238d29ba509591a4502ffd95dbf6a9f5
+
+  target:
+    kind: Deployment
+    name: minio-operator
+    namespace: minio-operator
+
+# This patch configures Prometheus-related services.
+#
+- patch: |-
+    # Sets a global registry. You may specify your private container
+    # image registry (like "registry.example.com") here. The default
+    # is `null`.
+    - op: replace
+      path: /spec/values/global/imageRegistry
+      value: ghcr.io
+
+    # Specifies OCI image and CPU and memory requests and limits for
+    # the Prometheus operator pod. Note that the `sha` value MUST NOT
+    # be prefixed with "sha256:".
+    - op: replace
+      path: /spec/values/prometheusOperator/image/repository
+      value: swaptacular/prometheus-operator
+    - op: replace
+      path: /spec/values/prometheusOperator/image/sha
+      value: b6a89b8ec08f4cca759b2d579e8545f97ffb897973fcd68148c153f2e936c8b3
+    - op: replace
+      path: /spec/values/prometheusOperator/resources
+      value:
+        requests:
+          cpu: 1m
+          memory: 37Mi
+        limits:
+          cpu: 200m
+          memory: 200Mi
+
+    # Specifies OCI image and CPU and memory requests and limits for
+    # Prometheus's configuration reloader sidecar containers. Note
+    # that the `sha` value MUST NOT be prefixed with "sha256:".
+    - op: replace
+      path: /spec/values/prometheusOperator/prometheusConfigReloader/image/repository
+      value: swaptacular/prometheus-config-reloader
+    - op: replace
+      path: /spec/values/prometheusOperator/prometheusConfigReloader/image/sha
+      value: 78aec597d87aa2b4ba947ab9190538dae93a58a67b8e930aefea1086534b02ef
+    - op: replace
+      path: /spec/values/prometheusOperator/prometheusConfigReloader/resources
+      value:
+        requests:
+          cpu: 1m
+          memory: 37Mi
+        limits:
+          cpu: 200m
+          memory: 50Mi
+
+    # Specifies the "kube-webhook-certgen" OCI image. This image is
+    # used by the Prometheus operator to set up Kubernetes admission
+    # webhooks for the resources managed by the controller. Note that
+    # the `sha` value MUST NOT be prefixed with "sha256:".
+    - op: replace
+      path: /spec/values/prometheusOperator/admissionWebhooks/patch/image/repository
+      value: swaptacular/kube-webhook-certgen
+    - op: replace
+      path: /spec/values/prometheusOperator/admissionWebhooks/patch/image/sha
+      value: 7a38cf0f8480775baaee71ab519c7465fd1dfeac66c421f28f087786e631456e
+
+    # Configures the connection to the email server (smtp_smarthost)
+    # that Alertmanager uses to send emails. Note that when the value
+    # for `/spec/values/alertmanager/config/global/smtp_auth_username`
+    # is an empty string, Alertmanager doesn't authenticate to the
+    # SMTP server. `/spec/values/alertmanager/config/global/smtp_from`
+    # specifies the email address that will be sending the alerts.
+    # `/spec/values/alertmanager/config/global/smtp_require_tls`
+    # should normally be "true" (it may be "false" for testing).
+    - op: add
+      path: /spec/values/alertmanager/config/global/smtp_smarthost
+      value: mailhog.mailhog.svc.cluster.local:1025
+    - op: add
+      path: /spec/values/alertmanager/config/global/smtp_auth_username
+      value: ''
+    - op: add
+      path: /spec/values/alertmanager/config/global/smtp_from
+      value: from@example.com
+    - op: add
+      path: /spec/values/alertmanager/config/global/smtp_require_tls
+      value: false
+
+    # Configures the email addresses that will receive alerts from
+    # Alertmanager. The "send_resolved" flag specifies whether emails
+    # for resolved alerts should be sent.
+    - op: replace
+      path: /spec/values/alertmanager/config/receivers/0/email_configs
+      value:
+        - to: 'to@example.com'
+          send_resolved: true
+
+    # Specifies the size of the persistent volume for the
+    # Alertmanager. 1 or 2Gi should be enough for most clusters.
+    - op: replace
+      path: /spec/values/alertmanager/alertmanagerSpec/storage/volumeClaimTemplate/spec/resources/requests/storage
+      value: 1Gi
+
+    # Specifies OCI image and CPU and memory requests and limits for
+    # the Alertmanager pods. Note that the `sha` value MUST NOT be
+    # prefixed with "sha256:".
+    - op: replace
+      path: /spec/values/alertmanager/alertmanagerSpec/image/repository
+      value: swaptacular/alertmanager
+    - op: replace
+      path: /spec/values/alertmanager/alertmanagerSpec/image/sha
+      value: 27c475db5fb156cab31d5c18a4251ac7ed567746a2483ff264516437a39b15ba
+    - op: replace
+      path: /spec/values/alertmanager/alertmanagerSpec/resources
+      value:
+        requests:
+          cpu: 1m
+          memory: 35Mi
+        limits:
+          cpu: 200m
+          memory: 200Mi
+
+    # Specifies OCI image and CPU and memory requests and limits for
+    # the kube-state-metrics pods. Note that the value for
+    # `/spec/values/kube-state-metrics/image/sha` MUST be prefixed
+    # with "sha256:".
+    - op: replace
+      path: /spec/values/kube-state-metrics/image/repository
+      value: swaptacular/kube-state-metrics
+    - op: replace
+      path: /spec/values/kube-state-metrics/image/sha
+      value: sha256:e750cd4b43f782e3106537026c2995cac85d921aedea334e1d16caad7877c360
+    - op: replace
+      path: /spec/values/kube-state-metrics/resources
+      value:
+        requests:
+          cpu: 1m
+          memory: 27Mi
+        limits:
+          cpu: 100m
+          memory: 64Mi
+
+    # Specifies OCI image and CPU and memory requests and limits for
+    # the Prometheus node-exporter pod. Note that the value for
+    # `/spec/values/prometheus-node-exporter/image/digest` MUST be
+    # prefixed with "sha256:".
+    - op: replace
+      path: /spec/values/prometheus-node-exporter/image/repository
+      value: swaptacular/node-exporter
+    - op: replace
+      path: /spec/values/prometheus-node-exporter/image/digest
+      value: sha256:d00a542e409ee618a4edc67da14dd48c5da66726bbd5537ab2af9c1dfc442c8a
+    - op: replace
+      path: /spec/values/prometheus-node-exporter/resources
+      value:
+        requests:
+          cpu: 1m
+          memory: 19Mi
+        limits:
+          cpu: 200m
+          memory: 50Mi
+
+    # Specifies OCI image and CPU and memory requests and limits for
+    # the Prometheus server. Note that the `sha` value MUST NOT be
+    # prefixed with "sha256:".
+    - op: replace
+      path: /spec/values/prometheus/prometheusSpec/image/repository
+      value: swaptacular/prometheus
+    - op: replace
+      path: /spec/values/prometheus/prometheusSpec/image/sha
+      value: 3b1d5be5c3eef4f027665ddaa3b1a7de8a58d96a0a6de5dd45629afd267ecaf0
+    - op: replace
+      path: /spec/values/prometheus/prometheusSpec/resources
+      value:
+        requests:
+          cpu: 1m
+          memory: 200Mi
+        limits:
+          cpu: 1000m
+          memory: 1Gi
+
+    # Specifies the number of days for which the Prometheus server
+    # will keep the collected metrics. The default is 10d, which is
+    # reasonable. Can be lower for testing.
+    - op: replace
+      path: /spec/values/prometheus/prometheusSpec/retention
+      value: 2d
+
+    # Specifies the size of the persistent volume mounted on the
+    # Prometheus server. The needed disk space depends on the number
+    # of scrape targets, the number of time series, the metrics
+    # cardinality, the scraping interval, and the retention period.
+    # Most probably should be in the range from 10Gi to 100Gi. Can be
+    # lower for testing.
+    - op: replace
+      path: /spec/values/prometheus/prometheusSpec/storageSpec/volumeClaimTemplate/spec/resources/requests/storage
+      value: 1Gi
+
+    # Specifies the size of the persistent volume mounted on the
+    # Grafana server. The persistent volume is used to store
+    # configuration, plugins, and dashboards, and therefore does not
+    # require too much space. Most probably it should be in the range
+    # from 5Gi to 10Gi. Can be lower for testing.
+    - op: replace
+      path: /spec/values/grafana/persistence/size
+      value: 1Gi
+
+    # Specifies OCI image and CPU and memory requests and limits for
+    # the Grafana pod. Note that the `sha` value MUST NOT be prefixed
+    # with "sha256:".
+    - op: replace
+      path: /spec/values/grafana/image/repository
+      value: swaptacular/grafana
+    - op: replace
+      path: /spec/values/grafana/image/sha
+      value: b5b59bfc7561634c2d7b136c4543d702ebcc94a3da477f21ff26f89ffd4214fa
+    - op: replace
+      path: /spec/values/grafana/resources
+      value:
+        requests:
+          cpu: 1m
+          memory: 153Mi
+        limits:
+          cpu: 500m
+          memory: 1000Mi
+
+    # Specifies OCI image and CPU and memory requests and limits for
+    # the Grafana pod sidecars. Note that the `sha` value MUST NOT be
+    # prefixed with "sha256:".
+    - op: replace
+      path: /spec/values/grafana/sidecar/image/repository
+      value: swaptacular/k8s-sidecar
+    - op: replace
+      path: /spec/values/grafana/sidecar/image/sha
+      value: 49dcce269568b1645b0050f296da787c99119647965229919a136614123f0627
+    - op: replace
+      path: /spec/values/grafana/sidecar/resources
+      value:
+        requests:
+          cpu: 1m
+          memory: 106Mi
+        limits:
+          cpu: 500m
+          memory: 500Mi
+
+  target:
+    group: helm.toolkit.fluxcd.io
+    version: v2
+    kind: HelmRelease
+    name: kube-prometheus-stack
+    namespace: monitoring
+
+# This patch configures the range of IP addresses that Prometheus's
+# Alertmanager is allowed to initiate connections to. Usually, this
+# should be the SMTP server's network.
+- patch: |-
+    - op: replace
+      path: /spec/egress/0/to/0/ipBlock/cidr
+      value: 0.0.0.0/0
+
+  target:
+    group: networking.k8s.io
+    version: v1
+    kind: NetworkPolicy
+    name: allow-alertmanager-smtp-access
+    namespace: monitoring
+
+# This patch configures the CPU and memory requests and limits for the
+# Nginx server which serves the Grafana plugins.
+#
+- patch: |-
+    - op: replace
+      path: /spec/template/spec/containers/0/resources
+      value:
+        requests:
+          cpu: 1m
+          memory: 4Mi
+        limits:
+          cpu: 500m
+          memory: 128Mi
+
+  target:
+    kind: Deployment
+    name: prometheus-grafana-plugins
+    namespace: monitoring
+
+secretGenerator:
+- name: alertmanager-prometheus-kube-prometheus-alertmanager-smtp-password
+  namespace: monitoring
+
+  files:
+  # A SOPS-encrypted file containing the password for the email server
+  # that Alertmanager uses to send emails. To SOPS-encrypt your
+  # password, you may use this command:
+  #
+  # $ echo -n 'YOUR_SECRET_PASSWORD' > alertmanager-smtp-password
+  # $ sops encrypt alertmanager-smtp-password > alertmanager-smtp-password.encrypted
+  # $ shred -z alertmanager-smtp-password
+  # $ rm alertmanager-smtp-password
+  - password=secrets/alertmanager-smtp-password.encrypted
+
+  type: Opaque
+
+- name: prometheus-grafana-admin
+  namespace: monitoring
+
+  literals:
+  # The username for the Grafana admin.
+  - admin-user=admin
+
+  files:
+  # A SOPS-encrypted file containing the password for the Grafana
+  # admin. To SOPS-encrypt your chosen password, you may use this
+  # command:
+  #
+  # $ echo -n 'YOUR_SECRET_PASSWORD' > grafana-admin-password
+  # $ sops encrypt grafana-admin-password > grafana-admin-password.encrypted
+  # $ shred -z grafana-admin-password
+  # $ rm grafana-admin-password
+  - admin-password=secrets/grafana-admin-password.encrypted
+
+  options:
+    # These annotations are used as sources for convenient Kustomize
+    # replacements:
+    #
+    annotations:
+      # Grafana's, Alertmanager's, and Prometheus's UIs are publicly
+      # exposed via an HTTP reverse proxy server in the
+      # "simple-git-server" namespace. Here, the public IP address of
+      # the load balancer for this proxy server should be specified.
+      #
+      kustomize_simple_git_server_ip_address: 172.18.0.4
+
+  type: Opaque
+
+- name: regcreds
+  namespace: dragonfly-operator-system
+  files:
+  - ".dockerconfigjson=../regcreds.json.encrypted"
+  options:
+    disableNameSuffixHash: true
+  type: kubernetes.io/dockerconfigjson
+
+- name: regcreds
+  namespace: postgres-operator
+  files:
+  - ".dockerconfigjson=../regcreds.json.encrypted"
+  options:
+    disableNameSuffixHash: true
+  type: kubernetes.io/dockerconfigjson
+
+- name: regcreds
+  namespace: rabbitmq-system
+  files:
+  - ".dockerconfigjson=../regcreds.json.encrypted"
+  options:
+    disableNameSuffixHash: true
+  type: kubernetes.io/dockerconfigjson
+
+- name: regcreds
+  namespace: monitoring
+  files:
+  - ".dockerconfigjson=../regcreds.json.encrypted"
+  options:
+    disableNameSuffixHash: true
+  type: kubernetes.io/dockerconfigjson
+
+- name: regcreds
+  namespace: kube-system
+  files:
+  - ".dockerconfigjson=../regcreds.json.encrypted"
+  options:
+    disableNameSuffixHash: true
+  type: kubernetes.io/dockerconfigjson
+
+- name: regcreds
+  namespace: minio-operator
+  files:
+  - ".dockerconfigjson=../regcreds.json.encrypted"
+  options:
+    disableNameSuffixHash: true
+  type: kubernetes.io/dockerconfigjson
+
+resources:
+- ../../base/controllers/
+
+replacements:
+- path: ../../base/controllers/kube-prometheus-stack/replacements/simple-git-server-ip-address.yaml

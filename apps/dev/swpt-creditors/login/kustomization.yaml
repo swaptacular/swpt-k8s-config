@@ -1,0 +1,240 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+configMapGenerator:
+- name: swpt-login-config
+  literals:
+  # Specifies the number of processes and threads that will be spawned
+  # to handle HTTP requests. Each process will run the specified
+  # number of threads.
+  - WEBSERVER_PROCESSES=1
+  - WEBSERVER_THREADS=3
+
+  # An upper limit on the number of PostgreSQL connections in the
+  # connection pool. If set to zero, there is no limit. Note that each
+  # spawned process maintains its own connection pool. The number of
+  # spawned process is determined by WEBSERVER_PROCESSES.
+  - POSTGRES_CONNECTION_POOL_SIZE=0
+
+  # Set this to the name of your site, as it is known to your users.
+  - SITE_TITLE=Demo Creditors Agent
+
+  # Set this to an URL that tells more about your site.
+  - ABOUT_URL=https://github.com/swaptacular/swpt_login
+
+  # Optional URL for users to go to, to recover their wrongfully
+  # suspended accounts. This is not needed if no user accounts have
+  # ever been suspended.
+  - SUSPENDED_ACCOUNT_HELP_URL=https://github.com/swaptacular/swpt_login
+
+  # SMTP server connection parameters. You should set MAIL_SERVER to
+  # the name of your mail server, and MAIL_PORT to the SMTP port on
+  # that server. MAIL_DEFAULT_SENDER should be set to the email
+  # address from which outgoing emails will be sent to users. Do not
+  # set MAIL_USERNAME and MAIL_PASSWORD if the SMPT server does not
+  # require username and password (you can also set them to empty
+  # strings). MAIL_USE_SSL detemines whether SSL is required from the
+  # beginning, and MAIL_USE_TLS determines whether the STARTTLS
+  # extension should be used after the connection to the mail server
+  # has bee established.
+  - MAIL_SERVER=mailhog.mailhog.svc.cluster.local
+  - MAIL_PORT=1025
+  - MAIL_DEFAULT_SENDER=Demo Creditors Agent <no-reply@example.com>
+  - MAIL_USERNAME=
+  - MAIL_PASSWORD=
+  - MAIL_USE_SSL=False
+  - MAIL_USE_TLS=False
+
+  # When set to `False`, does not show any CAPTCHAs. Normally, this
+  # should be `True`.
+  - SHOW_CAPTCHA_ON_SIGNUP=True
+
+  # When set to "False" (the default is "True"), does not show any
+  # ALTCHAs (see https://altcha.org/). Normally, this should be "True".
+  - SHOW_ALTCHA_ON_LOGIN=True
+
+  # Parameters for ALTCHA . Required if SHOW_ALTCHA_ON_LOGIN is
+  # "True". ALTCHA_MAX_NUMBER is proportional to the computational
+  # effort needed to solve the ALTCHA challenge (default 100000).
+  # ALTCHA_INFO_URL is an URL that tells the users what ALTCHA is
+  # (default "https://altcha.org/"). ALTCHA_EXPIRATION_SECONDS
+  # determines the expiration interval of each challenge.
+  - ALTCHA_MAX_NUMBER=100000
+  - ALTCHA_INFO_URL=https://altcha.org/
+  - ALTCHA_EXPIRATION_SECONDS=3600
+
+  # Specifies the number of processes that will be spawned to process
+  # pending tasks. Normally, 1 should be enough.
+  - FLUSH_PROCESSES=1
+
+  options:
+    labels:
+      app.kubernetes.io/name: swpt-login
+
+    # These annotations are used as sources for convenient Kustomize
+    # replacements:
+    #
+    annotations:
+      # For security reasons, by default pods are not allowed egress
+      # traffic outside of the Kubernetes cluster. However, verifying
+      # CAPTCHAs and sending emails require initiating connections to
+      # servers that are not in the Kubernetes cluster. Here you must
+      # specify the range of IPs which the "login-web-server" pods
+      # will be allowed to connect to.
+      kustomize_captcha_ip_block: 0.0.0.0/0
+      kustomize_email_ip_block: 0.0.0.0/0
+
+      # Kubernetes memory and CPU requests and limits, for various
+      # containers.
+      #
+      kustomize_login_webserver_cpu_request: 1m
+      kustomize_login_webserver_cpu_limit: 1000m
+      kustomize_login_webserver_memory_request: 84Mi
+      kustomize_login_webserver_memory_limit: 1Gi
+      kustomize_login_flush_cpu_request: 1m
+      kustomize_login_flush_cpu_limit: 1000m
+      kustomize_login_flush_memory_request: 86Mi
+      kustomize_login_flush_memory_limit: 1Gi
+      kustomize_postgres_exporter_cpu_request: 1m
+      kustomize_postgres_exporter_cpu_limit: 2000m
+      kustomize_postgres_exporter_memory_request: 13Mi
+      kustomize_postgres_exporter_memory_limit: 1Gi
+      kustomize_walg_exporter_cpu_request: 1m
+      kustomize_walg_exporter_cpu_limit: 2000m
+      kustomize_walg_exporter_memory_request: 28Mi
+      kustomize_walg_exporter_memory_limit: 1Gi
+
+      # This annotation specifies the container image for the Postgres
+      # exporter sidecar.
+      kustomize_postgres_exporter_image: ghcr.io/swaptacular/postgres-exporter@sha256:38606faa38c54787525fb0ff2fd6b41b4cfb75d455c1df294927c5f611699b17
+
+      # This annotation specifies the container image for the WALG
+      # exporter sidecar.
+      kustomize_walg_exporter_image: ghcr.io/swaptacular/wal-g-exporter@sha256:5f842526cdf313a3746acb8c991abc6e9243b6dc902bbf21638588e7b38803ad
+
+# The number of replicas for each component. One replica works fine,
+# but to have high-availability, should be at least 2.
+#
+replicas:
+- name: login-web-server
+  count: 1
+
+# OCI images to use for the different containers:
+#
+images:
+- name: swpt-login
+  newName: ghcr.io/swaptacular/swpt_login
+  digest: sha256:26bf9819fe43726743db479c7baae6be9315ab82db997e85698e57a7457050c8
+
+secretGenerator:
+- name: swpt-login-captcha-keys
+
+  # Parameters for hCaptcha. You should obtain your own
+  # "sitekey"/"sitekey secret" pair from https://www.hcaptcha.com/,
+  # and put it here. Note that the "sitekey secret" should be kept
+  # secret.
+
+  literals:
+  # The "sitekey". This is not a secret.
+  #
+  - CAPTCHA_SITEKEY=10000000-ffff-ffff-ffff-000000000001
+
+  files:
+  # A SOPS-encrypted file containing the sitekey secret. To
+  # SOPS-encrypt the sitekey secret, you may use this command:
+  #
+  # $ sops encrypt captcha-sitekey-secret > captcha-sitekey-secret.encrypted
+  #
+  - CAPTCHA_SITEKEY_SECRET=../secrets/captcha-sitekey-secret.encrypted
+
+  options:
+    labels:
+      app.kubernetes.io/name: swpt-login
+  type: Opaque
+
+- name: postgres.login-db.credentials.postgresql.acid.zalan.do
+  files:
+  - password=../secrets/postgres-cluster-password.encrypted
+  literals:
+  - username=postgres
+  options:
+    disableNameSuffixHash: true
+    labels:
+      app.kubernetes.io/name: swpt-login
+      app.kubernetes.io/component: database
+      application: spilo
+      cluster-name: login-db
+      team: swpt
+  type: Opaque
+
+- name: standby.login-db.credentials.postgresql.acid.zalan.do
+  files:
+  - password=../secrets/postgres-cluster-password.encrypted
+  literals:
+  - username=standby
+  options:
+    disableNameSuffixHash: true
+    labels:
+      app.kubernetes.io/name: swpt-login
+      app.kubernetes.io/component: database
+      application: spilo
+      cluster-name: login-db
+      team: swpt
+  type: Opaque
+
+- name: db-owner.login-db.credentials.postgresql.acid.zalan.do
+  files:
+  - password=../secrets/postgres-cluster-password.encrypted
+  literals:
+  - username=db_owner
+  options:
+    disableNameSuffixHash: true
+    labels:
+      app.kubernetes.io/name: swpt-login
+      app.kubernetes.io/component: database
+      application: spilo
+      cluster-name: login-db
+      team: swpt
+  type: Opaque
+
+resources:
+- postgres-cluster.yaml
+- dragonfly-db.yaml
+- ../../../base/swpt-creditors/login/
+
+patches:
+- path: ../../../base/swpt-creditors/login/patches/postgres-cluster.yaml
+  target:
+    group: acid.zalan.do
+    kind: postgresql
+    name: login-db
+    version: v1
+
+- path: ../../../base/swpt-creditors/login/patches/dragonfly-db.yaml
+  target:
+    group: dragonflydb.io
+    kind: Dragonfly
+    name: dragonfly-db
+    version: v1alpha1
+
+replacements:
+- path: ../../../base/swpt-creditors/login/replacements/postgres-exporter-image.yaml
+- path: ../../../base/swpt-creditors/login/replacements/postgres-exporter-cpu-request.yaml
+- path: ../../../base/swpt-creditors/login/replacements/postgres-exporter-cpu-limit.yaml
+- path: ../../../base/swpt-creditors/login/replacements/postgres-exporter-memory-request.yaml
+- path: ../../../base/swpt-creditors/login/replacements/postgres-exporter-memory-limit.yaml
+- path: ../../../base/swpt-creditors/login/replacements/walg-exporter-image.yaml
+- path: ../../../base/swpt-creditors/login/replacements/walg-exporter-cpu-request.yaml
+- path: ../../../base/swpt-creditors/login/replacements/walg-exporter-cpu-limit.yaml
+- path: ../../../base/swpt-creditors/login/replacements/walg-exporter-memory-request.yaml
+- path: ../../../base/swpt-creditors/login/replacements/walg-exporter-memory-limit.yaml
+- path: ../../../base/swpt-creditors/login/replacements/login-webserver-cpu-limit.yaml
+- path: ../../../base/swpt-creditors/login/replacements/login-webserver-cpu-request.yaml
+- path: ../../../base/swpt-creditors/login/replacements/login-webserver-memory-limit.yaml
+- path: ../../../base/swpt-creditors/login/replacements/login-webserver-memory-request.yaml
+- path: ../../../base/swpt-creditors/login/replacements/login-flush-cpu-limit.yaml
+- path: ../../../base/swpt-creditors/login/replacements/login-flush-cpu-request.yaml
+- path: ../../../base/swpt-creditors/login/replacements/login-flush-memory-limit.yaml
+- path: ../../../base/swpt-creditors/login/replacements/login-flush-memory-request.yaml
+- path: ../../../base/swpt-creditors/login/replacements/captcha-ip-block.yaml
+- path: ../../../base/swpt-creditors/login/replacements/email-ip-block.yaml
