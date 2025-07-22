@@ -72,7 +72,7 @@ want to run an accounting authority node, but the difference really is
 only in the name of the sub-directory (`swpt-accounts`,
 `swpt-debtors`, or `swpt-creditors`).
 
-Note that in production, you will not need the `mailhog.yaml`,
+**Note:** In production, you will not need the `mailhog.yaml`,
 `minio.yaml`, and `pebble.yaml` files in the `clusters/example/`
 directory. They are useful only for testing.
 
