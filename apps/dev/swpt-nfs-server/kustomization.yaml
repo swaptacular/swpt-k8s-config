@@ -5,16 +5,20 @@ secretGenerator:
 - name: git-pull-ssh-id
   files:
   # A SOPS-encrypted file containing the SSH private key used to
-  # authenticate to the GitOps Git server.
+  # authenticate to the GitOps Git server. To generate a new SSH
+  # private/public key pair, you may use this command:
   #
-  # Run `ssh-keygen -f id_rsa -N ''` to generate a new SSH
-  # private/public key pair. This will create two files:
+  # $ ssh-keygen -f id_rsa -N ''
+  #
+  # This will create two files:
   # 1. "id_rsa", containing the unencrypted SSH private key;
   # 2. "id_rsa.pub", containing the SSH public key.
   #
-  # Then use SOPS to encrypt the "id_rsa" file. The resulting
-  # encrypted file must be named "id_rsa.encrypted". For example, you
-  # may run: `sops encrypt id_rsa > id_rsa.encrypted`.
+  # To SOPS-encrypt the "id_rsa" file, you may use this command:
+  #
+  # $ sops encrypt id_rsa > id_rsa.encrypted
+  # $ shred -z id_rsa
+  # $ rm id_rsa
   - id_rsa=secrets/id_rsa.encrypted
 
   # The "id_rsa.pub" file generated in the previous step. (See the

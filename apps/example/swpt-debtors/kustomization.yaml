@@ -9,10 +9,26 @@ namespace: swpt-debtors
 secretGenerator:
 - name: spilo-env-secret
   files:
-  # Run `openssl rand -base64 32` to generate a random encryption key.
+  # A SOPS-encrypted file containing the secret used to encrypt the
+  # WALG archive. Once created, the secret must not be changed. To
+  # generate and SOPS-encrypt a random secret, you may use this
+  # command:
+  #
+  # $ openssl rand -base64 32 > spilo-walg-libsodium-key
+  # $ sops encrypt spilo-walg-libsodium-key > spilo-walg-libsodium-key.encrypted
+  # $ shred -z spilo-walg-libsodium-key
+  # $ rm spilo-walg-libsodium-key
   - WALG_LIBSODIUM_KEY=secrets/spilo-walg-libsodium-key.encrypted
 
-  # The "password" for the S3 service.
+  # A SOPS-encrypted file containing the "password" for the S3
+  # service. For the testing MinIO server, the password is
+  # "console123". To SOPS-encrypt the password, you may use this
+  # command:
+  #
+  # $ echo -n 'YOUR_SECRET_PASSWORD' > spilo-aws-secret-access-key
+  # $ sops encrypt spilo-aws-secret-access-key > spilo-aws-secret-access-key.encrypted
+  # $ shred -z spilo-aws-secret-access-key
+  # $ rm spilo-aws-secret-access-key
   - AWS_SECRET_ACCESS_KEY=secrets/spilo-aws-secret-access-key.encrypted
 
   literals:
@@ -27,7 +43,8 @@ secretGenerator:
   - AWS_REGION=us-east-1
 
   # This specifies the trusted CA for the local MinIO S3 server. This
-  # should not be necessary for "proper" S3 providers.
+  # should not be necessary for "proper" S3 providers, and can be
+  # safely removed.
   - WALG_S3_CA_CERT_FILE=/certs/minio/ca.crt
 
   options:
@@ -55,7 +72,13 @@ secretGenerator:
   files:
   # A SOPS-encrypted file containing the password for the "db_owner"
   # user on all Postgres clusters which this application will create.
-  # Once created, the password must not be changed.
+  # Once created, the password must not be changed. To generate and
+  # SOPS-encrypt a random password, you may use this command:
+  #
+  # $ openssl rand -base64 32 > postgres-cluster-password
+  # $ sops encrypt postgres-cluster-password > postgres-cluster-password.encrypted
+  # $ shred -z postgres-cluster-password
+  # $ rm postgres-cluster-password
   - password=secrets/postgres-cluster-password.encrypted
 
   literals:

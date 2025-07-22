@@ -143,7 +143,13 @@ secretGenerator:
   # A SOPS-encrypted file containing the sitekey secret. To
   # SOPS-encrypt the sitekey secret, you may use this command:
   #
+  # $ echo -n 'YOUR_SITEKEY_SECRET' > captcha-sitekey-secret
   # $ sops encrypt captcha-sitekey-secret > captcha-sitekey-secret.encrypted
+  # $ shred -z captcha-sitekey-secret
+  # $ rm captcha-sitekey-secret
+  #
+  # NOTE: The integration testing sitekey secret for hCaptcha is
+  # "0x0000000000000000000000000000000000000000".
   #
   - CAPTCHA_SITEKEY_SECRET=../secrets/captcha-sitekey-secret.encrypted
 
