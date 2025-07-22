@@ -105,6 +105,8 @@ secretGenerator:
   # To SOPS-encrypt the private key, you may use this command:
   #
   # $ sops encrypt server.key > server.key.encrypted
+  # $ shred -z server.key
+  # $ rm server.key
   - server.key=server.key.encrypted
 
   options:
