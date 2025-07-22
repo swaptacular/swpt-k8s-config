@@ -2,28 +2,31 @@ server {
     listen 443 ssl;
     server_name _;
     location / {
-        proxy_pass ${GRAFANA_UPSTREAM_URL};
-        proxy_redirect default;
+        set $grafana_upstream "${GRAFANA_UPSTREAM_URL}";
+        proxy_pass $grafana_upstream;
+        proxy_redirect off;
         proxy_set_header Host $host;
         proxy_set_header X-Forwarded-Port $server_port;
         proxy_set_header X-Forwarded-Proto $scheme;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     }
     location /alertmanager/ {
+        set $alertmanager_upstream "${ALERTMANAGER_UPSTREAM_URL}/alertmanager/";
         auth_basic "Alertmanager";
         auth_basic_user_file /etc/nginx/basic-auth/alertmanager;
-        proxy_pass ${ALERTMANAGER_UPSTREAM_URL}/alertmanager/;
-        proxy_redirect default;
+        proxy_pass $alertmanager_upstream;
+        proxy_redirect off;
         proxy_set_header Host $host;
         proxy_set_header X-Forwarded-Port $server_port;
         proxy_set_header X-Forwarded-Proto $scheme;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     }
     location /prometheus/ {
+        set $prometheus_upstream "${PROMETHEUS_UPSTREAM_URL}/prometheus/";
         auth_basic "Prometheus";
         auth_basic_user_file /etc/nginx/basic-auth/prometheus;
-        proxy_pass ${PROMETHEUS_UPSTREAM_URL}/prometheus/;
-        proxy_redirect default;
+        proxy_pass $prometheus_upstream;
+        proxy_redirect off;
         proxy_set_header Host $host;
         proxy_set_header X-Forwarded-Port $server_port;
         proxy_set_header X-Forwarded-Proto $scheme;
