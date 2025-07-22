@@ -24,6 +24,131 @@ $ pwd
 /home/johndoe/src/swpt-k8s-config
 ```
 
+## Choose a cluster name
+
+Then you need to choose a name for your cluster (`dev` for example):
+
+``` console
+$ export CLUSTER_NAME=dev
+$ export CLUSTER_DIR=clusters/$CLUSTER_NAME
+```
+
+## Generate PGP keys and configure SOPS
+
+The next task is to configure secrets management with
+[SOPS](https://github.com/getsops/sops) and [GnuPG /
+PGP](https://www.gnupg.org/):
+
+``` console
+$ pwd
+/home/johndoe/src/swpt-k8s-config
+
+$ gpg --batch --full-generate-key <<EOF
+%no-protection
+Key-Type: 1
+Key-Length: 4096
+Subkey-Type: 1
+Subkey-Length: 4096
+Expire-Date: 0
+Name-Comment: flux secrets
+Name-Real: Swaptacular ${CLUSTER_DIR}
+EOF
+
+$ gpg --list-secret-keys $CLUSTER_DIR  # Show the PGP key fingerprint (2ED21ED3DBBF5A37898D9D316225432F3481C8E0 in this example).
+sec   rsa4096 2025-02-05 [SCEA]
+      2ED21ED3DBBF5A37898D9D316225432F3481C8E0
+uid           [ultimate] Swaptacular clusters/dev (flux secrets)
+ssb   rsa4096 2025-02-05 [SEA]
+
+$ export KEY_FP=$(gpg --list-secret-keys --with-colons $CLUSTER_DIR | awk -F: '/^fpr:/ {print $10; exit}')  # Extract the PGP key fingerprint.
+$ mkdir simple-git-server/secret-files
+$ gpg --export-secret-keys --armor "${KEY_FP}" > simple-git-server/secret-files/sops.asc  # Write the PGP key to a temporary file.
+$ gpg --edit-key "${KEY_FP}"  # Protect the PGP private key with strong password(s):
+gpg (GnuPG) 2.2.40; Copyright (C) 2022 g10 Code GmbH
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Secret key is available.
+
+sec  rsa4096/6225432F3481C8E0
+     created: 2025-02-05  expires: never       usage: SCEA
+     trust: ultimate      validity: ultimate
+ssb  rsa4096/8D9D22305D43BA1B
+     created: 2025-02-05  expires: never       usage: SEA
+[ultimate] (1). Swaptacular clusters/dev (flux secrets)
+
+gpg> passwd
+<Choose and confirm a strong password for "sec" (the primary key)>
+<Choose and confirm a strong password for "sbb" (the subkey)>
+gpg> quit
+
+$ gpg --export --armor "${KEY_FP}" > $CLUSTER_DIR/.sops.pub.asc
+$ git add $CLUSTER_DIR/.sops.pub.asc  # Stores the PGP public key in the repo.
+$ cat <<EOF > $CLUSTER_DIR/.sops.yaml
+creation_rules:
+  - path_regex: .*.yaml
+    encrypted_regex: ^(data|stringData)$
+    pgp: ${KEY_FP}
+  - pgp: ${KEY_FP}
+EOF
+
+$ git add $CLUSTER_DIR/.sops.yaml  # Stores the SOPS configuration file in the repo.
+$ git commit -m 'Share the PGP public key for secrets generation'
+[master 1c50aeb] Share the PGP public key for secrets generation
+ 2 files changed, 63 insertions(+)
+ create mode 100644 clusters/dev/.sops.pub.asc
+ create mode 100644 clusters/dev/.sops.yaml
+
+$ git push origin master  # Pushes the changes to the GitOps repository.
+Enumerating objects: 8, done.
+Counting objects: 100% (8/8), done.
+Delta compression using up to 4 threads
+Compressing objects: 100% (4/4), done.
+Writing objects: 100% (5/5), 3.93 KiB | 1.31 MiB/s, done.
+Total 5 (delta 2), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
+To github.com:johndoe/swpt-k8s-config.git
+   c46b496..1c50aeb  master -> master
+```
+
+After these changes to the GitOps repository, when your team members
+clone the GitOps repository, they will be able to import the public
+PGP key, and create their local SOPS configuration file. Like this:
+
+``` console
+$ pwd
+/home/johndoe/src/swpt-k8s-config
+
+$ gpg --import $CLUSTER_DIR/.sops.pub.asc  # Imports the public PGP key.
+gpg: key 9F85AF312DC6F642: "clusters/dev (flux secrets)" not changed
+gpg: Total number processed: 1
+gpg:              unchanged: 1
+
+$ cp $CLUSTER_DIR/.sops.yaml .  # Creates a local SOPS configuration file.
+```
+
+## Backup your PGP private key (optional)
+
+It is **highly recommended** that you create a backup copy of the PGP
+private key. Make sure you do not forget the password(s) which you
+chose to protect the PGP private key:
+
+``` console
+$ gpg --export-secret-key --armor "${KEY_FP}" > /mnt/backup/sops.private.asc
+$ cat /mnt/backup/sops.private.asc  # a password-protected backup copy of the PGP private key
+-----BEGIN PGP PRIVATE KEY BLOCK-----
+
+lQdGBGeiOpcBEAC5BY0+BAsdEgAvnoFcf26mpAVdHJMJJndg7sZazL43ubt19Mrp
+gb4erMOVTi8lGYLLJ2/kvOFClo4K6qKQUBT6uvQR3GW4ZMQy8lKq1cePeIDpQytm
+...
+...
+at0elqM15f4A24DhqAPT2BsHlxa55yliv7GTvRC1isT6iZ8Kj4IE1caAdHopgBpu
+nHlB9rEGqlTEhDYLc3igwmVrPPtqf3F2vBOpIEDWbwvxQbjvhcO6pGZ5pZNn9W89
+QbIgaiHj7aTsupibdTde
+=o9oQ
+-----END PGP PRIVATE KEY BLOCK-----
+```
+
 ## Choose and create a cluster name
 
 Once you have chosen a name for your cluster (`dev` for example), you
@@ -92,7 +217,7 @@ $ git commit -m "Added dev cluster"
 ...
 ...
 
-$ git push origin master
+$ git push origin master  # Pushes the changes to the GitOps repository.
 Enumerating objects: 5, done.
 Counting objects: 100% (5/5), done.
 Delta compression using up to 4 threads
@@ -124,18 +249,8 @@ https://docs.docker.com/engine/reference/commandline/login/#credentials-store
 
 Login Succeeded
 
-$ cat ~/.docker/config.json  # This file contains your password unencrypted!
-{
-	"auths": {
-		"registry.example.com": {
-			"auth": "am9obmRvZToxMjMK"
-		}
-	}
-}
-
-$ mkdir simple-git-server/secret-files
 $ cp ~/.docker/config.json simple-git-server/secret-files/regcreds.json
-$ cat simple-git-server/secret-files/regcreds.json  # contains the "image pull secret"
+$ cat simple-git-server/secret-files/regcreds.json  # This file contains the unencrypted "image pull secret". Edit the file if necessary.
 {
 	"auths": {
 		"registry.example.com": {
@@ -144,7 +259,14 @@ $ cat simple-git-server/secret-files/regcreds.json  # contains the "image pull s
 	}
 }
 
-$ docker logout registry.example.com  # Removes the password from ~/.docker/config.json.
+$ docker logout registry.example.com  # Removes the unencrypted password from ~/.docker/config.json.
+$ sops encrypt --input-type binary simple-git-server/secret-files/regcreds.json > apps/$CLUSTER_NAME/regcreds.json.encrypted
+$ sops encrypt --input-type binary simple-git-server/secret-files/regcreds.json > infrastructure/$CLUSTER_NAME/regcreds.json.encrypted
+$ git add apps/$CLUSTER_NAME/regcreds.json.encrypted
+$ git add infrastructure/$CLUSTER_NAME/regcreds.json.encrypted
+$ git commit -m 'Update regcreds'
+[master 2f1bd3c] Update regcreds
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 ```
 
 You will also need to change the
@@ -185,6 +307,16 @@ images:
 
 $ git add simple-git-server/kustomization.yaml
 $ git commit -m 'Edited simple-git-server/kustomization.yaml'
+$ git push origin master  # Pushes the updates to the GitOps repository.
+Enumerating objects: 11, done.
+Counting objects: 100% (11/11), done.
+Delta compression using up to 4 threads
+Compressing objects: 100% (7/7), done.
+Writing objects: 100% (7/7), 1.94 KiB | 662.00 KiB/s, done.
+Total 7 (delta 5), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (5/5), completed with 4 local objects.
+To github.com:johndoe/swpt-k8s-config.git
+   dca1e7a..175b62a  master -> master
 ```
 
 If you DO NOT want to use a private container image registry, you may
@@ -409,13 +541,14 @@ $ cat /etc/hosts  # The internal name of the Git-server has been added to your h
 127.0.0.1 localhost
 127.0.0.1 git-server.simple-git-server.svc.cluster.local
 
-$ export CLUSTER_NAME=dev  # one of the subdirectories in the "./clusters/" directory
-$ export CLUSTER_DIR=clusters/$CLUSTER_NAME
 $ flux bootstrap git --url=ssh://git@git-server.simple-git-server.svc.cluster.local:2222/srv/git/fluxcd.git --branch=master --private-key-file=secret-files/ssh_host_rsa_key --path=$CLUSTER_DIR --version v2.6.4 --registry ghcr.io/swaptacular
 ...
 ...
 Configuring the cluster to synchronize with the repository
 Flux controllers installed and configured successfully
+
+$ kubectl create secret generic sops-gpg --namespace=flux-system --from-file=sops.asc=secret-files/sops.asc  # Creates a Kubernetes secret with the PGP private key.
+secret/sops-gpg created
 
 $ git pull k8s-repo master  # Check for possible changes in the repo, made during the bootstrapping.
 From ssh://git-server.simple-git-server.svc.cluster.local:2222/srv/git/fluxcd
@@ -423,128 +556,25 @@ From ssh://git-server.simple-git-server.svc.cluster.local:2222/srv/git/fluxcd
 Already up to date.
 ```
 
-## Generate PGP keys and configure SOPS
+## Delete the unencrypted secrets from you local machine
 
-The next task is to configure secrets management with
-[SOPS](https://github.com/getsops/sops) and [GnuPG /
-PGP](https://www.gnupg.org/):
+Finally, do not forget to delete the unencrypted secrets from the
+`simple-git-server` directory:
 
 ``` console
-$ cd ..
+$ cd simple-git-server
 $ pwd
-/home/johndoe/src/swpt-k8s-config
+/home/johndoe/src/swpt-k8s-config/simple-git-server
 
-$ gpg --batch --full-generate-key <<EOF
-%no-protection
-Key-Type: 1
-Key-Length: 4096
-Subkey-Type: 1
-Subkey-Length: 4096
-Expire-Date: 0
-Name-Comment: flux secrets
-Name-Real: Swaptacular ${CLUSTER_DIR}
-EOF
-
-$ gpg --list-secret-keys $CLUSTER_DIR  # Show the PGP key fingerprint (2ED21ED3DBBF5A37898D9D316225432F3481C8E0 in this example).
-sec   rsa4096 2025-02-05 [SCEA]
-      2ED21ED3DBBF5A37898D9D316225432F3481C8E0
-uid           [ultimate] Swaptacular clusters/dev (flux secrets)
-ssb   rsa4096 2025-02-05 [SEA]
-
-$ export KEY_FP=2ED21ED3DBBF5A37898D9D316225432F3481C8E0  # Save the PGP key fingerprint.
-$ gpg --export-secret-keys --armor "${KEY_FP}" | kubectl create secret generic sops-gpg --namespace=flux-system --from-file=sops.asc=/dev/stdin  # Creates a Kubernetes secret with the PGP private key.
-secret/sops-gpg created
-
-$ gpg --edit-key "${KEY_FP}"  # Protect the PGP private key with strong password(s):
-gpg (GnuPG) 2.2.40; Copyright (C) 2022 g10 Code GmbH
-This is free software: you are free to change and redistribute it.
-There is NO WARRANTY, to the extent permitted by law.
-
-Secret key is available.
-
-sec  rsa4096/6225432F3481C8E0
-     created: 2025-02-05  expires: never       usage: SCEA
-     trust: ultimate      validity: ultimate
-ssb  rsa4096/8D9D22305D43BA1B
-     created: 2025-02-05  expires: never       usage: SEA
-[ultimate] (1). Swaptacular clusters/dev (flux secrets)
-
-gpg> passwd
-<Choose and confirm a strong password for "sec" (the primary key)>
-<Choose and confirm a strong password for "sbb" (the subkey)>
-gpg> quit
-
-$ gpg --export --armor "${KEY_FP}" > $CLUSTER_DIR/.sops.pub.asc
-$ git add $CLUSTER_DIR/.sops.pub.asc  # Stores the PGP public key in the repo.
-$ cat <<EOF > $CLUSTER_DIR/.sops.yaml
-creation_rules:
-  - path_regex: .*.yaml
-    encrypted_regex: ^(data|stringData)$
-    pgp: ${KEY_FP}
-  - pgp: ${KEY_FP}
-EOF
-
-$ git add $CLUSTER_DIR/.sops.yaml  # Stores the SOPS configuration file in the repo.
-$ git commit -m 'Share PGP public key for secrets generation'
-[master 1c50aeb] Share PGP public key for secrets generation
- 2 files changed, 63 insertions(+)
- create mode 100644 clusters/dev/.sops.pub.asc
- create mode 100644 clusters/dev/.sops.yaml
-
-$ git push origin master  # Pushes the changes to the GitOps repository.
-Enumerating objects: 8, done.
-Counting objects: 100% (8/8), done.
-Delta compression using up to 4 threads
-Compressing objects: 100% (4/4), done.
-Writing objects: 100% (5/5), 3.93 KiB | 1.31 MiB/s, done.
-Total 5 (delta 2), reused 0 (delta 0), pack-reused 0
-remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
-To github.com:johndoe/swpt-k8s-config.git
-   c46b496..1c50aeb  master -> master
+$ ./delete-secret-files.sh  # The secrets have already been copied to the cluster.
 ```
 
-After these changes to the GitOps repository, when your team members
-clone the GitOps repository, they will be able to import the public
-PGP key, and create their local SOPS configuration file. Like this:
+## Delete your PGP private key (optional)
 
-``` console
-$ pwd
-/home/johndoe/src/swpt-k8s-config
-
-$ gpg --import $CLUSTER_DIR/.sops.pub.asc  # Imports the public PGP key.
-gpg: key 9F85AF312DC6F642: "clusters/dev (flux secrets)" not changed
-gpg: Total number processed: 1
-gpg:              unchanged: 1
-
-$ cp $CLUSTER_DIR/.sops.yaml .  # Creates a local SOPS configuration file.
-```
-
-## Backup you PGP private key (optional)
-
-It is **highly recommended** that you create a backup copy of the PGP
-private key. Make sure you do not forget the password(s) which you
-chose to protect the PGP private key:
-
-``` console
-$ gpg --export-secret-key --armor "${KEY_FP}" > /mnt/backup/sops.private.asc
-$ cat /mnt/backup/sops.private.asc  # a password-protected backup copy of the PGP private key
------BEGIN PGP PRIVATE KEY BLOCK-----
-
-lQdGBGeiOpcBEAC5BY0+BAsdEgAvnoFcf26mpAVdHJMJJndg7sZazL43ubt19Mrp
-gb4erMOVTi8lGYLLJ2/kvOFClo4K6qKQUBT6uvQR3GW4ZMQy8lKq1cePeIDpQytm
-...
-...
-at0elqM15f4A24DhqAPT2BsHlxa55yliv7GTvRC1isT6iZ8Kj4IE1caAdHopgBpu
-nHlB9rEGqlTEhDYLc3igwmVrPPtqf3F2vBOpIEDWbwvxQbjvhcO6pGZ5pZNn9W89
-QbIgaiHj7aTsupibdTde
-=o9oQ
------END PGP PRIVATE KEY BLOCK-----
-```
-
-If you do not plan to use SOPS to decrypt secrets on this machine,
-consider deleting the PGP private key from the machine. If you need it
-later, you can always import the secret decryption key from your
-backup copy:
+If you do not plan to use SOPS to decrypt secrets on this machine
+anymore, consider deleting the PGP private key from the machine. If
+you need it later, you can always import the secret decryption key
+from your backup copy:
 
 ``` console
 $ gpg --delete-secret-keys "${KEY_FP}"  # Delete the private key.
@@ -565,59 +595,4 @@ gpg: Total number processed: 1
 gpg:              unchanged: 1
 gpg:       secret keys read: 1
 gpg:  secret keys unchanged: 1
-```
-
-## Encrypt your image pull secret (optional)
-
-Now that you have configured SOPS, if you use a private container
-image registry, you will have to encrypt your "image pull secret"
-file. Skip this step if you DO NOT use a private container image
-registry:
-
-``` console
-$ pwd
-/home/johndoe/src/swpt-k8s-config
-
-$ sops encrypt --input-type binary simple-git-server/secret-files/regcreds.json > apps/$CLUSTER_NAME/regcreds.json.encrypted
-$ sops encrypt --input-type binary simple-git-server/secret-files/regcreds.json > infrastructure/$CLUSTER_NAME/regcreds.json.encrypted
-$ git add apps/$CLUSTER_NAME/regcreds.json.encrypted
-$ git add infrastructure/$CLUSTER_NAME/regcreds.json.encrypted
-$ git commit -m 'Update regcreds'
-[master 2f1bd3c] Update regcreds
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-$ git push origin master  # Pushes the updated secret to the GitOps repository.
-Enumerating objects: 11, done.
-Counting objects: 100% (11/11), done.
-Delta compression using up to 4 threads
-Compressing objects: 100% (7/7), done.
-Writing objects: 100% (7/7), 1.94 KiB | 662.00 KiB/s, done.
-Total 7 (delta 5), reused 0 (delta 0), pack-reused 0
-remote: Resolving deltas: 100% (5/5), completed with 4 local objects.
-To github.com:johndoe/swpt-k8s-config.git
-   dca1e7a..175b62a  master -> master
-
-$ git push k8s-repo master  # Pushes the updated secret to the Kubernetes cluster.
-Enumerating objects: 11, done.
-Counting objects: 100% (11/11), done.
-Delta compression using up to 4 threads
-Compressing objects: 100% (7/7), done.
-Writing objects: 100% (7/7), 1.94 KiB | 662.00 KiB/s, done.
-Total 7 (delta 5), reused 0 (delta 0), pack-reused 0
-remote: Resolving deltas: 100% (5/5), completed with 4 local objects.
-To github.com:johndoe/swpt-k8s-config.git
-   dca1e7a..175b62a  master -> master
-```
-
-## Delete unencrypted secrets from you local machine
-
-Finally, do not forget to delete the unencrypted secrets from the
-`simple-git-server` directory:
-
-``` console
-$ cd simple-git-server
-$ pwd
-/home/johndoe/src/swpt-k8s-config/simple-git-server
-
-$ ./delete-secret-files.sh  # The secrets have already been copied to the cluster.
 ```
