@@ -3,4 +3,3 @@ kind: Kustomization
 
 resources:
 - swpt-nfs-server/
-- swpt-accounts/
