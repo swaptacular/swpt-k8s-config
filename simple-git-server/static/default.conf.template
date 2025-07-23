@@ -4,7 +4,7 @@ server {
     resolver kube-dns.kube-system.svc.cluster.local;
     location / {
         set $grafana_upstream "${GRAFANA_UPSTREAM_URL}";
-        proxy_pass $grafana_upstream;
+        proxy_pass $grafana_upstream$request_uri;
         proxy_redirect off;
         proxy_set_header Host $host;
         proxy_set_header X-Forwarded-Port $server_port;
@@ -12,10 +12,10 @@ server {
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     }
     location /alertmanager/ {
-        set $alertmanager_upstream "${ALERTMANAGER_UPSTREAM_URL}/alertmanager/";
+        set $alertmanager_upstream "${ALERTMANAGER_UPSTREAM_URL}";
         auth_basic "Alertmanager";
         auth_basic_user_file /etc/nginx/basic-auth/alertmanager;
-        proxy_pass $alertmanager_upstream;
+        proxy_pass $alertmanager_upstream$request_uri;
         proxy_redirect off;
         proxy_set_header Host $host;
         proxy_set_header X-Forwarded-Port $server_port;
@@ -23,10 +23,10 @@ server {
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     }
     location /prometheus/ {
-        set $prometheus_upstream "${PROMETHEUS_UPSTREAM_URL}/prometheus/";
+        set $prometheus_upstream "${PROMETHEUS_UPSTREAM_URL}";
         auth_basic "Prometheus";
         auth_basic_user_file /etc/nginx/basic-auth/prometheus;
-        proxy_pass $prometheus_upstream;
+        proxy_pass $prometheus_upstream$request_uri;
         proxy_redirect off;
         proxy_set_header Host $host;
         proxy_set_header X-Forwarded-Port $server_port;
