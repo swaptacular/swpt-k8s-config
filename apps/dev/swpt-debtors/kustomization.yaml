@@ -14,7 +14,7 @@ secretGenerator:
   # generate and SOPS-encrypt a random secret, you may use this
   # command:
   #
-  # $ openssl rand -base64 32 > spilo-walg-libsodium-key
+  # $ echo -n "$(openssl rand -base64 32)" > spilo-walg-libsodium-key
   # $ sops encrypt spilo-walg-libsodium-key > spilo-walg-libsodium-key.encrypted
   # $ shred -z spilo-walg-libsodium-key
   # $ rm spilo-walg-libsodium-key
@@ -137,7 +137,7 @@ secretGenerator:
   # file containing a cryptographic-grade secret. For example, to
   # generate this file you may use the following commands:
   #
-  # $ openssl rand -base64 32 > hydra-secret
+  # $ echo -n "$(openssl rand -base64 32)" > hydra-secret
   # $ sops encrypt hydra-secret > hydra-secret.encrypted
   # $ shred -z hydra-secret
   # $ rm hydra-secret

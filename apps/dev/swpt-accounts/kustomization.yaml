@@ -14,7 +14,7 @@ secretGenerator:
   # generate and SOPS-encrypt a random secret, you may use this
   # command:
   #
-  # $ openssl rand -base64 32 > spilo-walg-libsodium-key
+  # $ echo -n "$(openssl rand -base64 32)" > spilo-walg-libsodium-key
   # $ sops encrypt spilo-walg-libsodium-key > spilo-walg-libsodium-key.encrypted
   # $ shred -z spilo-walg-libsodium-key
   # $ rm spilo-walg-libsodium-key
