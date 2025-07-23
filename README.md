@@ -378,7 +378,8 @@ $ cat prometheus_viewers  # Shows Prometheus's viewers usernames and encrypted p
 viewer:$1$2gwQXkVy$An9E0C66KIGsgQ/KhPWoD.
 ```
 
-And automatically generate some secrets:
+Then we need to run a simple script which will automatically generate
+some secrets:
 
 **Note**: You will be asked to enter information about a self-signed
 SSL certificate. This certificate will be used by the Nginx reverse
