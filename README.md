@@ -391,7 +391,7 @@ as needed.
 $ pwd
 /home/johndoe/src/swpt-k8s-config/simple-git-server
 
-$ ./generate-secret-files.sh  # Generates an SSH private/public key pair.
+$ ./generate-secret-files.sh
 Generating public/private rsa key pair.
 Your identification has been saved in secret-files/ssh_host_rsa_key
 Your public key has been saved in secret-files/ssh_host_rsa_key.pub
