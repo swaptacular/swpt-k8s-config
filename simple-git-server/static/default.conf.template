@@ -1,6 +1,7 @@
 server {
     listen 443 ssl;
     server_name _;
+    resolver kube-dns.kube-system.svc.cluster.local;
     location / {
         set $grafana_upstream "${GRAFANA_UPSTREAM_URL}";
         proxy_pass $grafana_upstream;
