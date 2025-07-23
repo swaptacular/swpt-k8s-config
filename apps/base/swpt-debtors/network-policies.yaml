@@ -67,3 +67,18 @@ spec:
     - ipBlock:
         # This value will be automatically replaced.
         cidr: 255.255.255.255/32
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-stomp-client-access
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: swpt-debtors-peer
+      app.kubernetes.io/component: stomp-client
+  policyTypes:
+  - Egress
+  egress:
+  - {}
