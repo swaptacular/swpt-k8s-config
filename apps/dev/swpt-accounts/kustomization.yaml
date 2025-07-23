@@ -76,7 +76,7 @@ secretGenerator:
   # Once created, the password must not be changed. To generate and
   # SOPS-encrypt a random password, you may use this command:
   #
-  # $ openssl rand -hex 20 > postgres-cluster-password
+  # $ echo -n "$(openssl rand -hex 20)" > postgres-cluster-password
   # $ sops encrypt postgres-cluster-password > postgres-cluster-password.encrypted
   # $ shred -z postgres-cluster-password
   # $ rm postgres-cluster-password
