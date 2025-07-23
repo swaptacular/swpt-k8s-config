@@ -6,4 +6,4 @@ resources:
 - storage-user.yaml
 - tenant.yaml
 - pod-monitor.yaml
-# - network-policies.yaml
+- network-policies.yaml
