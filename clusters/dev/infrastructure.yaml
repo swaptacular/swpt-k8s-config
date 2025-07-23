@@ -38,7 +38,7 @@ spec:
     kind: GitRepository
     name: flux-system
   path: ./infrastructure/dev/controllers
-  prune: false
+  prune: true
   wait: true
 
 ---
