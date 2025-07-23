@@ -160,17 +160,17 @@ adapt these files according to your needs. Note that in several files
 (you may use `grep` to find them) you will have to change the
 references to `clusters/example`, `infrastructure/example`, and
 `apps/example`, so that they instead refer to your chosen cluster
-name. Also, note that the `secrets/` sub-directories contain example
-encrypted secrets, which you can not use. Instead of trying to use the
-example secrets, you should generate and encrypt your own secrets. The
-same applies to the files `server.crt` and `server.key.encrypted`.
-Another very important directory is the `node-data/` sub-directory
-(`apps/dev/swpt-debtors/node-data/`,
+name. Also, note that the numerous `secrets/` sub-directories contain
+example encrypted secrets, which you can not use. Instead of trying to
+use the example secrets, you should generate and encrypt your own
+secrets. The same applies to the files `server.crt` and
+`server.key.encrypted`. Another very important directory is the
+`node-data/` sub-directory (`apps/dev/swpt-debtors/node-data/`,
 `apps/dev/swpt-creditors/node-data/`, and
 `apps/dev/swpt-accounts/node-data/`). This sub-directory contains
 information about the Swaptacular node, and its peers. The
-`node-data/` sub-directory must start as a copy of the [Swaptacular
-certificate authority scripts
+`node-data/` sub-directory should start as an identical copy of the
+[Swaptacular certificate authority scripts
 repository](https://github.com/swaptacular/swpt_ca_scripts), and
 continue evolving from there.
 
