@@ -9,5 +9,5 @@ resources:
 - apiproxy.yaml
 - nfs-pvc.yaml
 - stomp-server.yaml
-- network-policies.yaml
+# - network-policies.yaml
 - spilo-pod-monitor.yaml

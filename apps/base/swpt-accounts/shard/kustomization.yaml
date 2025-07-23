@@ -8,4 +8,4 @@ resources:
 - chores-consumer.yaml
 - web-server.yaml
 - http-cache.yaml
-- network-policies.yaml
+# - network-policies.yaml
