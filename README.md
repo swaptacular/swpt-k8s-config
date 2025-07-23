@@ -168,9 +168,9 @@ secrets. The same applies to the files `server.crt` and
 `node-data/` sub-directory (`apps/dev/swpt-debtors/node-data/`,
 `apps/dev/swpt-creditors/node-data/`, and
 `apps/dev/swpt-accounts/node-data/`). This sub-directory contains
-information about the Swaptacular node, and its peers. The
-`node-data/` sub-directory should start as an identical copy of the
-[Swaptacular certificate authority scripts
+information about the Swaptacular node and its peers. The `node-data/`
+sub-directory should start as an identical copy of the [Swaptacular
+certificate authority scripts
 repository](https://github.com/swaptacular/swpt_ca_scripts), and
 continue evolving from there.
 
