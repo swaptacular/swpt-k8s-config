@@ -17,6 +17,8 @@ spec:
     - namespaceSelector:
         matchLabels:
           kubernetes.io/metadata.name: kube-system
+    - ipBlock:
+        cidr: 10.96.0.1/32  # IP of the Kubernetes API server
 
 ---
 # To scrape metrics, Prometheus's pods need to be able to connect to
