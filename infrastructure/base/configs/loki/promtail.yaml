@@ -39,6 +39,10 @@ spec:
             action: replace
             target_label: meta_log_pipeline
 
+        extraLimitsConfig:
+          max_line_size: 250000
+          max_line_size_truncate: true
+
         pipelineStages:
           # This is always needed.
           - cri: {}
