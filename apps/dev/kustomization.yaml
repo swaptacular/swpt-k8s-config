@@ -5,4 +5,4 @@ resources:
 - swpt-nfs-server/
 - swpt-accounts/
 - swpt-debtors/
-- swpt-creditors/
+# - swpt-creditors/
