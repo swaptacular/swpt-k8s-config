@@ -74,6 +74,15 @@ configMapGenerator:
       # 10.96.0.15 should always be safe.
       kustomize_nfs_service_cluster_ip: 10.96.0.4
 
+      # The network policy for the NFS-server must allow connections
+      # coming from the Kubernetes nodes.
+      #
+      # Depending on the Kubernetes cluster, the range of IPs
+      # addresses used for the Kubernetes nodes may be different. You
+      # may use `kubectl get nodes -o wide` to figure out what this
+      # range is for your cluster.
+      kustomize_kubernetes_nodes_ip_block: 172.18.0.0/16
+
       # Kubernetes memory and CPU requests and limits, for the NFS
       # server containers.
       #
@@ -100,6 +109,7 @@ resources:
 
 replacements:
 - path: ../../base/swpt-nfs-server/replacements/nfs-cluster-ip.yaml
+- path: ../../base/swpt-nfs-server/replacements/nfs-nodes-ip-block.yaml
 - path: ../../base/swpt-nfs-server/replacements/nfs-server-cpu-limit.yaml
 - path: ../../base/swpt-nfs-server/replacements/nfs-server-cpu-request.yaml
 - path: ../../base/swpt-nfs-server/replacements/nfs-server-memory-limit.yaml

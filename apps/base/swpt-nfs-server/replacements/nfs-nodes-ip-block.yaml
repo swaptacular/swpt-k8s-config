@@ -1,0 +1,10 @@
+source:
+  kind: ConfigMap
+  name: nfs-server-config
+  fieldPath: metadata.annotations.kustomize_kubernetes_nodes_ip_block
+targets:
+  - select:
+      kind: NetworkPolicy
+      name: restrict-nfs
+    fieldPaths:
+      - spec.ingress.0.from.0.ipBlock.cidr
