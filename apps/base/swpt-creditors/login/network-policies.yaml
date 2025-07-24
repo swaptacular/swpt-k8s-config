@@ -18,11 +18,9 @@ spec:
         matchLabels:
           app.kubernetes.io/name: swpt-login
           app.kubernetes.io/component: database
-  - from:
     - namespaceSelector:
         matchLabels:
           app.kubernetes.io/name: postgres-operator
-  - from:
     - namespaceSelector:
         matchLabels:
           app.kubernetes.io/name: monitoring
@@ -68,13 +66,11 @@ spec:
     - podSelector:
         matchLabels:
           app.kubernetes.io/name: dragonfly
-  - from:
     - namespaceSelector:
         matchLabels:
           app.kubernetes.io/instance: system
           app.kubernetes.io/component: manager
           app.kubernetes.io/part-of: dragonfly-operator
-  - from:
     - namespaceSelector:
         matchLabels:
           app.kubernetes.io/name: monitoring

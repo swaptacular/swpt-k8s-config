@@ -15,11 +15,9 @@ spec:
     - podSelector:
         matchLabels:
           app.kubernetes.io/name: hydra-db
-  - from:
     - namespaceSelector:
         matchLabels:
           app.kubernetes.io/name: postgres-operator
-  - from:
     - namespaceSelector:
         matchLabels:
           app.kubernetes.io/name: monitoring

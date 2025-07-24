@@ -18,11 +18,9 @@ spec:
         matchLabels:
           app.kubernetes.io/name: swpt-trade
           app.kubernetes.io/component: solver-db
-  - from:
     - namespaceSelector:
         matchLabels:
           app.kubernetes.io/name: postgres-operator
-  - from:
     - namespaceSelector:
         matchLabels:
           app.kubernetes.io/name: monitoring

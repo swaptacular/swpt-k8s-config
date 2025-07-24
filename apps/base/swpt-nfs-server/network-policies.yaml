@@ -12,22 +12,20 @@ spec:
   ingress:
   - from:
     - ipBlock:
-        cidr: 255.255.255.255/32  # Will be automatically replaced.
-  - from:
+        # This value will be automatically replaced.
+        cidr: 255.255.255.255/32
     - podSelector:
         matchLabels:
           app.kubernetes.io/component: stomp-server
       namespaceSelector:
         matchLabels:
           app.kubernetes.io/part-of: swpt-nodeset
-  - from:
     - podSelector:
         matchLabels:
           app.kubernetes.io/component: stomp-client
       namespaceSelector:
         matchLabels:
           app.kubernetes.io/part-of: swpt-nodeset
-  - from:
     - namespaceSelector:
         matchLabels:
           app.kubernetes.io/name: monitoring

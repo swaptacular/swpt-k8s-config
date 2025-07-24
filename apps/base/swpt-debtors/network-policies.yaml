@@ -28,7 +28,6 @@ spec:
     - podSelector:
         matchLabels:
           app.kubernetes.io/name: swpt-login
-  - from:
     - namespaceSelector:
         matchLabels:
           app.kubernetes.io/name: monitoring
