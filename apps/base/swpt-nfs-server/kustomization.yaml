@@ -5,4 +5,4 @@ namespace: swpt-nfs-server
 resources:
 - namespace.yaml
 - nfs-server.yaml
-# - network-policies.yaml
+- network-policies.yaml
