@@ -363,18 +363,18 @@ $ cd simple-git-server/
 $ pwd
 /home/johndoe/src/swpt-k8s-config/simple-git-server
 
-$ echo "viewer:$(openssl passwd)" > alertmanager_viewers
+$ echo "viewer:$(openssl passwd)" > secret-files/alertmanager_viewers
 Password: <enter your chosen password>
 Verifying - Password: <enter your chosen password again>
 
-$ cat alertmanager_viewers  # Shows Alertmanager's viewers usernames and encrypted passwords, one viewer per line.
+$ cat secret-files/alertmanager_viewers  # Shows Alertmanager's viewers usernames and encrypted passwords, one viewer per line.
 viewer:$1$2gwQXkVy$An9E0C66KIGsgQ/KhPWoD.
 
-$ echo "viewer:$(openssl passwd)" > prometheus_viewers
+$ echo "viewer:$(openssl passwd)" > secret-files/prometheus_viewers
 Password: <enter your chosen password>
 Verifying - Password: <enter your chosen password again>
 
-$ cat prometheus_viewers  # Shows Prometheus's viewers usernames and encrypted passwords, one viewer per line.
+$ cat secret-files/prometheus_viewers  # Shows Prometheus's viewers usernames and encrypted passwords, one viewer per line.
 viewer:$1$2gwQXkVy$An9E0C66KIGsgQ/KhPWoD.
 ```
 
