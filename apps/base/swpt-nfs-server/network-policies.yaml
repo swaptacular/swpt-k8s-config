@@ -11,6 +11,9 @@ spec:
   - Ingress
   ingress:
   - from:
+    - ipBlock:
+        cidr: 172.16.0.0/12
+  - from:
     - podSelector:
         matchLabels:
           app.kubernetes.io/component: stomp-server
