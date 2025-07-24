@@ -481,7 +481,7 @@ secretGenerator:
       # "simple-git-server" namespace. Here, the public IP address of
       # the load balancer for this proxy server should be specified.
       #
-      kustomize_simple_git_server_ip_address: 172.18.0.4
+      kustomize_simple_git_server_ip_address: 172.18.0.6
 
   type: Opaque
 
