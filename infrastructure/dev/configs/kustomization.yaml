@@ -54,7 +54,7 @@ patches:
     # Could be 1 for testing.
     - op: replace
       path: /spec/values/loki/commonConfig/replication_factor
-      value: 1
+      value: 3
 
     # https://grafana.com/blog/2021/02/16/the-essential-config-settings-you-should-use-so-you-wont-drop-logs-in-loki/
     # suggest that `heartbeat_timeout` should be increased to 10
@@ -95,7 +95,7 @@ patches:
     # production, probably quite a bit more. Can be less for testing.
     - op: replace
       path: /spec/values/write/replicas
-      value: 1
+      value: 3
     - op: replace
       path: /spec/values/write/persistence/size
       value: 1Gi
@@ -107,7 +107,7 @@ patches:
     # should be at least 3 in production. Could be less for testing.
     - op: replace
       path: /spec/values/read/replicas
-      value: 1
+      value: 3
 
     # Configures the "backend" service. The number of configured
     # replicas must grater or equal than the value set for
@@ -116,7 +116,7 @@ patches:
     # production, probably quite a bit more. Can be less for testing.
     - op: replace
       path: /spec/values/backend/replicas
-      value: 1
+      value: 3
     - op: replace
       path: /spec/values/backend/persistence/size
       value: 1Gi
