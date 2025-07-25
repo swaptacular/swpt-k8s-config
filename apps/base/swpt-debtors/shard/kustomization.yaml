@@ -6,4 +6,4 @@ resources:
 - messages-flusher.yaml
 - messages-consumer.yaml
 - web-server.yaml
-# - network-policies.yaml
+- network-policies.yaml
