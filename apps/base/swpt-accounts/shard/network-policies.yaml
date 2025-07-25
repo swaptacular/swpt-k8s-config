@@ -20,6 +20,6 @@ spec:
           app.kubernetes.io/name: monitoring
       podSelector:
         matchExpressions:
-          key: app.kubernetes.io/name
+        - key: app.kubernetes.io/name
           operator: In
           values: prometheus
