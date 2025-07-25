@@ -21,6 +21,9 @@ spec:
     - namespaceSelector:
         matchLabels:
           app.kubernetes.io/name: monitoring
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: prometheus
 
 ---
 apiVersion: networking.k8s.io/v1
