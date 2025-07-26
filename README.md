@@ -8,8 +8,9 @@ execute:
 $ sudo sysctl fs.inotify.max_user_instances=8192
 ```
 
-Keep in mind the network policies in KinD may behave surprisingly. See
-[this isse](https://github.com/kubernetes-sigs/kube-network-policies/issues/150)
+Keep in mind that the network policies in KinD may behave
+surprisingly. See [this
+isse](https://github.com/kubernetes-sigs/kube-network-policies/issues/150)
 for example.
 
 ## Fork and clone this repository
@@ -573,17 +574,21 @@ Fast-forward
  1 file changed, 2 insertions(+)
 ```
 
-## Delete the unencrypted secrets from you local machine
+## Wait for the cluster to start the pods
 
-Finally, do not forget to delete the unencrypted secrets from the
-`simple-git-server` directory:
+This will take some time. You may use `kubectl` to monitor the
+process. To check for problems durind FluxCD's reconciliation, you may
+use this command:
 
 ``` console
-$ cd simple-git-server
-$ pwd
-/home/johndoe/src/swpt-k8s-config/simple-git-server
+$ flux get all -A --status-selector ready=false
+NAMESPACE	NAME	REVISION	SUSPENDED	READY	MESSAGE
 
-$ ./delete-secret-files.sh  # The secrets have already been copied to the cluster.
+NAMESPACE	NAME	REVISION	SUSPENDED	READY	MESSAGE
+
+NAMESPACE	NAME	REVISION	SUSPENDED	READY	MESSAGE
+
+NAMESPACE	NAME	REVISION	SUSPENDED	READY	MESSAGE
 ```
 
 ## Delete your PGP private key (optional)
@@ -612,4 +617,17 @@ gpg: Total number processed: 1
 gpg:              unchanged: 1
 gpg:       secret keys read: 1
 gpg:  secret keys unchanged: 1
+```
+
+## Delete the unencrypted secrets from your local machine
+
+Finally, do not forget to delete the unencrypted secrets from the
+`simple-git-server` directory:
+
+``` console
+$ cd simple-git-server
+$ pwd
+/home/johndoe/src/swpt-k8s-config/simple-git-server
+
+$ ./delete-secret-files.sh  # The secrets have already been copied to the cluster.
 ```
