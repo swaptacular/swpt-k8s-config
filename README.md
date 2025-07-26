@@ -600,7 +600,7 @@ Once your cluster is up an running, you will need to set your DNS
 records, so that they refer to the proper load balancer(s) in your
 cluster. Each Swaptacular node which you run in your cluster will have
 its own load balancer, with its own IP address. To obtain the load
-balancer's IP address, you may run `kubectl -n <node-namespace> get
+balancer's IP address, you may run `kubectl -n <NODE-NAMESPACE> get
 services`.
 
 ## Delete your PGP private key (optional)
