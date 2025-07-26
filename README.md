@@ -594,6 +594,15 @@ flux-system	kustomization/infra-configs    	master@sha1:96334c96	False    	False
 flux-system	kustomization/infra-controllers	master@sha1:96334c96	False    	False	dependency 'flux-system/infra-cert-manager' revision is not up to date
 ```
 
+## Configure your DNS records
+
+Once your cluster is up an running, you will need to set your DNS
+records, so that they refer to the proper load balancer(s) in your
+cluster. Each Swaptacular node which you run in your cluster will have
+its own load balancer, with its own IP address. To obtain the load
+balancer's IP address, you may run `kubectl -n swpt-accounts get
+services`.
+
 ## Delete your PGP private key (optional)
 
 If you do not plan to use SOPS to decrypt secrets on this machine
