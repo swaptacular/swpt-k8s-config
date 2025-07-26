@@ -577,7 +577,7 @@ Fast-forward
 ## Wait for the cluster to start the pods
 
 This will take some time. You may use `kubectl` to monitor the
-process. To check for problems durind FluxCD's reconciliation, you may
+process. To check for problems during FluxCD's reconciliation, you may
 use this command:
 
 ``` console
@@ -588,7 +588,10 @@ NAMESPACE	NAME	REVISION	SUSPENDED	READY	MESSAGE
 
 NAMESPACE	NAME	REVISION	SUSPENDED	READY	MESSAGE
 
-NAMESPACE	NAME	REVISION	SUSPENDED	READY	MESSAGE
+NAMESPACE  	NAME                           	REVISION            	SUSPENDED	READY
+flux-system	kustomization/apps             	master@sha1:96334c96	False    	False	dependency 'flux-system/infra-configs' is not ready
+flux-system	kustomization/infra-configs    	master@sha1:96334c96	False    	False	dependency 'flux-system/infra-controllers' revision is not up to date
+flux-system	kustomization/infra-controllers	master@sha1:96334c96	False    	False	dependency 'flux-system/infra-cert-manager' revision is not up to date
 ```
 
 ## Delete your PGP private key (optional)
