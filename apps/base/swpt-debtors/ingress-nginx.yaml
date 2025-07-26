@@ -46,7 +46,7 @@ spec:
       scope:
         enabled: true
       service:
-        externalTrafficPolicy: "Local"
+        externalTrafficPolicy: "Cluster"
         annotations: {}
       customTemplate:
         configMapName: ingress-nginx-tmpl
