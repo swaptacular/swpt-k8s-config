@@ -1,11 +1,16 @@
 # Swaptacular GitOps repo for deploying in Kubernetes clusters
 
-**Note:** When running KinD (Kubernetes in Docker), you may need to
+**Note:** When deploying in KinD (Kubernetes in Docker), you may use
+the `kind-cluster.yaml` configuration file. Also, you may need to
 execute:
 
 ``` console
 $ sudo sysctl fs.inotify.max_user_instances=8192
 ```
+
+Keep in mind the network policies in KinD may behave surprisingly. See
+[this isse](https://github.com/kubernetes-sigs/kube-network-policies/issues/150)
+for example.
 
 ## Fork and clone this repository
 
