@@ -52,7 +52,6 @@ spec:
               - DAC_OVERRIDE
               - NET_RAW
               - MKNOD
-              - SYS_CHROOT
           resources:
             limits:
               cpu: "1"
