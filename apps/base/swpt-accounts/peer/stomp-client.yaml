@@ -129,6 +129,11 @@ spec:
               memory: 32Mi
         - name: activate-node
           image: swpt-nfs-server
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
           args:
             - touch
             - "-a"

@@ -133,6 +133,12 @@ spec:
             - touch
             - "-a"
             - "/var/lib/swpt/.overlay/$(APP_K8S_NAMESPACE)/node-data/peers/$(SWPT_NODE_ID)/ACTIVE"
+          image: swpt-nfs-server
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
           volumeMounts:
             - name: node-data
               mountPath: "/var/lib/swpt"

@@ -227,6 +227,14 @@ spec:
             - -q
             - --output-document=/dev/null
             - http://swpt-hydra-admin:4445/admin/clients
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - DAC_OVERRIDE
+              - NET_RAW
+              - MKNOD
+              - SYS_CHROOT
           resources:
             limits:
               cpu: 100m

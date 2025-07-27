@@ -45,6 +45,14 @@ spec:
               value: "/tmp/host-keys"
             - name: SSH_AUTHORIZED_KEYS_FILE
               value: "/etc/ssh/authorized_keys"
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - DAC_OVERRIDE
+              - NET_RAW
+              - MKNOD
+              - SYS_CHROOT
           resources:
             limits:
               cpu: "1"
@@ -81,6 +89,14 @@ spec:
               value: "http://prometheus-kube-prometheus-prometheus.monitoring.svc.cluster.local:9090"
             - name: NGINX_ENTRYPOINT_QUIET_LOGS
               value: "1"
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - DAC_OVERRIDE
+              - NET_RAW
+              - MKNOD
+              - SYS_CHROOT
           resources:
             limits:
               cpu: "1"
