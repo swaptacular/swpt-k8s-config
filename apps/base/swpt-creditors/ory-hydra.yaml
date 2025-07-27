@@ -231,10 +231,7 @@ spec:
             allowPrivilegeEscalation: false
             capabilities:
               drop:
-              - DAC_OVERRIDE
-              - NET_RAW
-              - MKNOD
-              - SYS_CHROOT
+              - ALL
           resources:
             limits:
               cpu: 100m
