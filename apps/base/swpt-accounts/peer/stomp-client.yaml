@@ -34,6 +34,11 @@ spec:
             - swpt-client
             - "$(SWPT_NODE_ID)"
             - "$(QUEUE_NAME_PREFIX).$(SWPT_NODE_ID).$(ORDINAL_NUMBER)"
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
           volumeMounts:
             - name: node-data
               mountPath: "/var/lib/swpt"
@@ -84,6 +89,11 @@ spec:
             - configure-queue
             - "$(SWPT_NODE_ID)"
             - "$(QUEUE_NAME_PREFIX).$(SWPT_NODE_ID).$(ORDINAL_NUMBER)"
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
           volumeMounts:
             - name: node-data
               mountPath: "/var/lib/swpt"

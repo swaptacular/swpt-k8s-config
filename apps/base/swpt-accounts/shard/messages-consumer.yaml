@@ -31,6 +31,11 @@ spec:
         - name: messages-consumer
           image: swpt-accounts
           args: ['consume_messages']
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
           envFrom:
             - secretRef:
                 name: db-owner-credentials
@@ -61,6 +66,11 @@ spec:
         - name: await-migrations
           image: swpt-accounts
           args: ["await_migrations"]
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
           envFrom:
             - secretRef:
                 name: db-owner-credentials

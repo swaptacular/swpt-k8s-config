@@ -35,6 +35,11 @@ spec:
         - name: stomp-server
           image: swpt-stomp
           args: ['swpt-server']
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
           ports:
             - name: stomp
               containerPort: 1234
