@@ -11,8 +11,10 @@ spec:
       priorityClassName: critical-operator
       imagePullSecrets:
         - name: regcreds
-      securityContext:
-        allowPrivilegeEscalation: false
-        capabilities:
-          drop:
-          - ALL
+      containers:
+        - name: manager
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
