@@ -37,7 +37,10 @@ spec:
             allowPrivilegeEscalation: false
             capabilities:
               drop:
-              - ALL
+              - DAC_OVERRIDE
+              - NET_RAW
+              - MKNOD
+              - SYS_CHROOT
           ports:
             - name: http
               containerPort: 8080
