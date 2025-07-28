@@ -424,6 +424,26 @@ patches:
       path: /spec/values/controller/replicaCount
       value: 1
 
+    # Configurations for the load balancer service.
+    #
+    # When the external traffic policy is "Cluster", the client IP
+    # addresses will be unknown to the service. To preserve the client
+    # IPs, the traffic policy should be set to "Local", in which case
+    # most providers will preserve the client IPs. However, for some
+    # providers this will not be enough. Digital Ocean, for example,
+    # requires you to also add this annotation to the service:
+    # `service.beta.kubernetes.io/do-loadbalancer-enable-proxy-protocol:
+    # "true"`, and then change/configure the your ingress-nginx
+    # servers to use "Proxy protocol" (see the next comment, also see
+    # https://seriousben.com/posts/2020-02-exploring-the-proxy-protocol/).
+    #
+    - op: replace
+      path: /spec/values/controller/service
+      value:
+        externalTrafficPolicy: Cluster
+        annotations:
+          service.beta.kubernetes.io/do-loadbalancer-enable-proxy-protocol: "false"
+
     # Sets the correct reference to the stomp-server service. The
     # format is "namespace/service-name:port[:PROXY]". Where:
     #
