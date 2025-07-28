@@ -31,6 +31,11 @@ spec:
         - name: transfers-triggerer
           image: swpt-trade
           args: ['trigger_transfers']
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
           envFrom:
             - secretRef:
                 name: db-owner-credentials
@@ -59,6 +64,11 @@ spec:
         - name: await-migrations
           image: swpt-trade
           args: ["await_migrations"]
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
           envFrom:
             - secretRef:
                 name: db-owner-credentials

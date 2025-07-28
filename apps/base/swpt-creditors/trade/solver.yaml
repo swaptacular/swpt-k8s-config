@@ -30,6 +30,11 @@ spec:
         - name: trade-solver
           image: swpt-trade
           args: ['solver']
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
           envFrom:
             - secretRef:
                 name: db-owner-credentials
@@ -49,6 +54,11 @@ spec:
         - name: configure
           image: swpt-trade
           args: ["configure", "solver"]
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
           envFrom:
             - secretRef:
                 name: db-owner-credentials

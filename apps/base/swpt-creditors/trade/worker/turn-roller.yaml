@@ -24,6 +24,11 @@ spec:
         - name: turn-roller
           image: swpt-trade
           args: ['worker']
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
           envFrom:
             - secretRef:
                 name: db-owner-credentials
@@ -58,6 +63,11 @@ spec:
         - name: configure
           image: swpt-trade
           args: ['configure', 'worker']
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
           envFrom:
             - secretRef:
                 name: db-owner-credentials
@@ -94,6 +104,11 @@ spec:
         - name: await-migrations  # Awaits solver's database migrations.
           image: swpt-trade
           args: ["await_migrations"]
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
           envFrom:
             - secretRef:
                 name: db-owner-credentials

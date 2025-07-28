@@ -31,6 +31,11 @@ spec:
         - name: http-fetcher
           image: swpt-trade
           args: ['fetch_debtor_infos']
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
           envFrom:
             - secretRef:
                 name: db-owner-credentials
@@ -59,6 +64,11 @@ spec:
         - name: await-migrations
           image: swpt-trade
           args: ["await_migrations"]
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
           envFrom:
             - secretRef:
                 name: db-owner-credentials

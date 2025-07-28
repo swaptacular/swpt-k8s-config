@@ -33,6 +33,14 @@ spec:
       containers:
         - name: swpt-creditors-ui
           image: swpt-creditors-ui
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - DAC_OVERRIDE
+              - NET_RAW
+              - MKNOD
+              - SYS_CHROOT
           ports:
             - name: http
               containerPort: 80
