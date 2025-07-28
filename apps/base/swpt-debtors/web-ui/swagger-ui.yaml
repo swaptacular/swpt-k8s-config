@@ -33,6 +33,11 @@ spec:
       containers:
         - name: swagger-ui
           image: swpt-debtors-swagger-ui
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
           ports:
             - name: http
               containerPort: 8080

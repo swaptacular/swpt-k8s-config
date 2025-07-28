@@ -24,6 +24,11 @@ spec:
         - name: tasks-processor
           image: swpt-debtors
           args: ['all']
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
           envFrom:
             - secretRef:
                 name: db-owner-credentials
@@ -72,6 +77,11 @@ spec:
         - name: configure
           image: swpt-debtors
           args: ['configure']
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
           envFrom:
             - secretRef:
                 name: db-owner-credentials

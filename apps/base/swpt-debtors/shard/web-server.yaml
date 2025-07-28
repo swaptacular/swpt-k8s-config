@@ -31,6 +31,11 @@ spec:
         - name: web-server
           image: swpt-debtors
           args: ['webserver']
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
           ports:
             - name: http
               containerPort: 8080
@@ -89,6 +94,11 @@ spec:
         - name: await-migrations
           image: swpt-debtors
           args: ["await_migrations"]
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
           envFrom:
             - secretRef:
                 name: db-owner-credentials

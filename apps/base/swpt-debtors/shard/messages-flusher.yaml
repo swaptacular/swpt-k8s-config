@@ -31,6 +31,11 @@ spec:
         - name: messages-flusher
           image: swpt-debtors
           args: ['flush_all']
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
           envFrom:
             - secretRef:
                 name: db-owner-credentials
@@ -57,6 +62,11 @@ spec:
         - name: await-migrations
           image: swpt-debtors
           args: ["await_migrations"]
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
           envFrom:
             - secretRef:
                 name: db-owner-credentials
