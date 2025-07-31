@@ -114,6 +114,24 @@ secretGenerator:
       app.kubernetes.io/name: swpt-accounts
   type: Opaque
 
+- name: ssl-session-ticket-key
+  files:
+  # A SOPS-encrypted file containing the secret key for encrypting
+  # SSL/TLS session tickets. To generate this file you may use the
+  # following commands:
+  #
+  # $ openssl rand 80 > ssl-session-ticket-key
+  # $ sops -e ssl-session-ticket-key > ssl-session-ticket-key.encrypted
+  # $ shred -z ssl-session-ticket-key
+  # $ rm ssl-session-ticket-key
+  - key=secrets/ssl-session-ticket-key.encrypted
+
+  options:
+    disableNameSuffixHash: true
+    labels:
+      app.kubernetes.io/name: swpt-debtors
+  type: Opaque
+
 - name: regcreds
   files:
   - ".dockerconfigjson=../regcreds.json.encrypted"
