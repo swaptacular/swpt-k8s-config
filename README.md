@@ -10,7 +10,7 @@ $ sudo sysctl fs.inotify.max_user_instances=8192
 
 Keep in mind that the network policies in KinD may behave
 surprisingly. See [this
-isse](https://github.com/kubernetes-sigs/kube-network-policies/issues/150)
+issue](https://github.com/kubernetes-sigs/kube-network-policies/issues/150)
 for example.
 
 ## Fork and clone this repository
@@ -492,7 +492,7 @@ Git server's load balancer in your Kubernetes cluster.
 $ pwd
 /home/johndoe/src/swpt-k8s-config/simple-git-server
 
-$ export CLUSTER_EXTERNAL_IP=127.0.0.1  # the public IP of the Git server's load balancer
+$ export CLUSTER_EXTERNAL_IP=172.18.0.4  # the public IP of the Git server's load balancer
 $ ssh git@$CLUSTER_EXTERNAL_IP -p 2222  # Create an empty repository:
 Welcome to the restricted login shell for Git!
 Run 'help' for help, or 'exit' to leave.  Available commands:
@@ -507,7 +507,7 @@ git> mkdir /srv/git/fluxcd.git
 git> git-init --bare -b master /srv/git/fluxcd.git
 Initialized empty Git repository in /srv/git/fluxcd.git/
 git> exit
-Connection to 127.0.0.1 closed.
+Connection to 172.18.0.4 closed.
 
 $ git remote add k8s-repo ssh://git@$CLUSTER_EXTERNAL_IP:2222/srv/git/fluxcd.git
 $ git push k8s-repo master  # Copies the GitOps repo to the just created empty repository.
@@ -517,7 +517,7 @@ Delta compression using up to 4 threads
 Compressing objects: 100% (79/79), done.
 Writing objects: 100% (79/79), 25.67 KiB | 1.97 MiB/s, done.
 Total 79 (delta 51), reused 0 (delta 0), pack-reused 0
-To ssh://127.0.0.1:2222/srv/git/fluxcd.git
+To ssh://172.18.0.4:2222/srv/git/fluxcd.git
    59b1758..b019dfe  master -> master
 ```
 
@@ -548,7 +548,7 @@ $ cat /etc/hosts  # The internal name of the Git-server has been added to your h
 ...
 ...
 127.0.0.1 localhost
-127.0.0.1 git-server.simple-git-server.svc.cluster.local
+172.18.0.4 git-server.simple-git-server.svc.cluster.local
 
 $ flux bootstrap git --url=ssh://git@git-server.simple-git-server.svc.cluster.local:2222/srv/git/fluxcd.git --branch=master --private-key-file=secret-files/ssh_host_rsa_key --path=$CLUSTER_DIR --version v2.6.4 --registry ghcr.io/swaptacular
 ...
