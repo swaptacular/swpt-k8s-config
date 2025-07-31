@@ -38,10 +38,14 @@ spec:
   - host: public-hostname
     http:
       paths:
+
+      # This is an example path. It will return a 503 error. More
+      # paths may be added in the future.
+      #
       - path: /example/
         pathType: Prefix
         backend:
           service:
             name: stomp-server
             port:
-              number: 80  # This port is not open!
+              number: 80  # This port is not open on "stomp-server"!
