@@ -114,6 +114,24 @@ secretGenerator:
       app.kubernetes.io/name: swpt-accounts
   type: Opaque
 
+- name: ssl-session-ticket-key
+  files:
+  # A SOPS-encrypted file containing the secret key for encrypting
+  # SSL/TLS session tickets. To generate this file you may use the
+  # following commands:
+  #
+  # $ openssl rand 80 > ssl-session-ticket-key
+  # $ sops -e ssl-session-ticket-key > ssl-session-ticket-key.encrypted
+  # $ shred -z ssl-session-ticket-key
+  # $ rm ssl-session-ticket-key
+  - key=secrets/ssl-session-ticket-key.encrypted
+
+  options:
+    disableNameSuffixHash: true
+    labels:
+      app.kubernetes.io/name: swpt-debtors
+  type: Opaque
+
 - name: regcreds
   files:
   - ".dockerconfigjson=../regcreds.json.encrypted"
@@ -122,6 +140,34 @@ secretGenerator:
   type: kubernetes.io/dockerconfigjson
 
 configMapGenerator:
+- name: accounting-authority-config
+
+  literals:
+  # The publicly known domain name of this Swaptacular node.
+  - PUBLIC_HOSTNAME=swpt-tests-aa
+
+  options:
+    labels:
+      app.kubernetes.io/name: swpt-accounts
+
+    # These annotations are used as sources for convenient Kustomize
+    # replacements:
+    #
+    annotations:
+      # Configurations for the ACME certificate issuer. See the
+      # "acme-cert-issuer" patch also.
+      #
+      kustomize_acme_cert_server: https://pebble.pebble.svc.cluster.local:14000/dir
+      kustomize_acme_cert_email: epandurski@gmail.com
+
+      # Kubernetes memory and CPU requests and limits, for various
+      # containers.
+      #
+      kustomize_ingress_nginx_cpu_request: 1m
+      kustomize_ingress_nginx_cpu_limit: 4000m
+      kustomize_ingress_nginx_memory_request: 90Mi
+      kustomize_ingress_nginx_memory_limit: 1Gi
+
 - name: stomp-config
   literals:
   # The number of SMP messages that STOMP servers and STOMP clients
@@ -235,6 +281,85 @@ resources:
 - node-data/peers/
 
 patches:
+# This patch configures the ingress-nginx controller.
+#
+- patch: |
+    # Specifies the ingress-nginx controller's OCI image. You should
+    # set image repository and image digest.
+    - op: add
+      path: /spec/values/controller/image/repository
+      value: ghcr.io/swaptacular/ingress-nginx-controller
+    - op: add
+      path: /spec/values/controller/image/digest
+      value: sha256:05890cb25d37aa5cfe086614104f798f55e1eeec8dda26d9fd6f6acf0e1554a0
+
+    # Specifies the "kube-webhook-certgen" OCI image. This image is
+    # used by the ingress-nginx controller to set up Kubernetes
+    # admission webhooks for the resources managed by the controller.
+    # You should set image repository and image digest.
+    - op: add
+      path: /spec/values/controller/admissionWebhooks/patch/image/repository
+      value: ghcr.io/swaptacular/kube-webhook-certgen
+    - op: add
+      path: /spec/values/controller/admissionWebhooks/patch/image/digest
+      value: sha256:7a38cf0f8480775baaee71ab519c7465fd1dfeac66c421f28f087786e631456e
+
+    # Specifies the number of Nginx servers' replicas. One replica
+    # works fine, but to have high-availability, should be at least 2.
+    - op: replace
+      path: /spec/values/controller/replicaCount
+      value: 1
+
+    # Configurations for the load balancer service.
+    #
+    # When the external traffic policy is "Cluster", the client IP
+    # addresses will be unknown to the service. To preserve the client
+    # IPs, the traffic policy should be set to "Local", in which case
+    # most providers will preserve the client IPs. However, for some
+    # providers this will not be enough. Digital Ocean, for example,
+    # requires you to also add this annotation to the service:
+    # `service.beta.kubernetes.io/do-loadbalancer-enable-proxy-protocol:
+    # "true"`, and then change/configure the your ingress-nginx
+    # servers to use "Proxy protocol" (see the next comment, also see
+    # https://seriousben.com/posts/2020-02-exploring-the-proxy-protocol/).
+    #
+    - op: replace
+      path: /spec/values/controller/service
+      value:
+        externalTrafficPolicy: Cluster
+        annotations:
+          service.beta.kubernetes.io/do-loadbalancer-enable-proxy-protocol: "false"
+
+    # Sets the correct reference to the stomp-server service. The
+    # format is "namespace/service-name:port[:PROXY]". Where:
+    #
+    # * "namespace" must be the same as the current namespace. That is:
+    #   the name of the directory that contains this `kustomization.yaml`
+    #   file;
+    #
+    # * "service-name" must be "stomp-server"; "port" must be "stomp";
+    #
+    # * If the optional ":PROXY" is appended to the value, this means that
+    #   PROXY protocol parsing will be applied to the incoming STOMP
+    #   connections.
+    - op: replace
+      path: /spec/values/tcp/1234
+      value: swpt-accounts/stomp-server:stomp
+
+    # Enables or disables the PROXY protocol parsing for the incoming
+    # HTTP and HTTPS connections. To enable PROXY protocol parsing,
+    # set the value to "true". To disable PROXY protocol parsing, set
+    # the value to "false".
+    - op: replace
+      path: /spec/values/controller/config/use-proxy-protocol
+      value: "false"
+
+  target:
+    group: helm.toolkit.fluxcd.io
+    version: v2
+    kind: HelmRelease
+    name: ingress-nginx
+
 - path: ../../base/swpt-accounts/patches/broker.yaml
   target:
     group: rabbitmq.com
@@ -254,4 +379,12 @@ replacements:
 - path: ../../base/swpt-accounts/replacements/stomp-server-cpu-request.yaml
 - path: ../../base/swpt-accounts/replacements/stomp-server-memory-limit.yaml
 - path: ../../base/swpt-accounts/replacements/stomp-server-memory-request.yaml
+- path: ../../base/swpt-accounts/replacements/ingress-nginx-cpu-limit.yaml
+- path: ../../base/swpt-accounts/replacements/ingress-nginx-cpu-request.yaml
+- path: ../../base/swpt-accounts/replacements/ingress-nginx-memory-limit.yaml
+- path: ../../base/swpt-accounts/replacements/ingress-nginx-memory-request.yaml
+- path: ../../base/swpt-accounts/replacements/public-hostname.yaml
+- path: ../../base/swpt-accounts/replacements/acme-cert-server.yaml
+- path: ../../base/swpt-accounts/replacements/acme-cert-email.yaml
 - path: ../../base/swpt-accounts/replacements/s3-ip-block.yaml
+- path: ../../base/swpt-accounts/replacements/ingress-nginx-namespace.yaml
