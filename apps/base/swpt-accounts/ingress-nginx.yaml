@@ -1,0 +1,105 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: ingress-nginx
+spec:
+  interval: 10m
+  chart:
+    spec:
+      chart: charts/ingress-nginx-4.12.1.tgz
+      sourceRef:
+        kind: GitRepository
+        name: flux-system
+        namespace: flux-system
+
+  # NOTE: Bellow, "namespace" will be automatically replaced with the
+  # name of the current namespace. However, this can not be done for
+  # the `values/tcp` section, because for some reason Kustomize seems
+  # to be unable to handle numerical properties (like "1234"). For
+  # this reason, the `values/tcp` section must be "manually" patched.
+  #
+  targetNamespace: namespace
+  releaseName: namespace
+  values:
+    imagePullSecrets:
+      - name: regcreds
+    tcp:
+      "1234": "namespace/stomp-server:stomp"
+    controller:
+      image:
+        image: ingress-nginx/controller
+        tag: v1.12.4
+      admissionWebhooks:
+        patch:
+          image:
+            image: ingress-nginx/kube-webhook-certgen
+            tag: v1.5.4
+      replicaCount: 2
+      maxUnavailable: 30%
+      unhealthyPodEvictionPolicy: AlwaysAllow
+      ingressClass: namespace.nginx
+      ingressClassByName: true
+      ingressClassResource:
+        name: namespace.nginx
+        enabled: true
+        controllerValue: k8s.io/ingress-nginx/namespace
+      scope:
+        enabled: true
+      service:
+        externalTrafficPolicy: Cluster
+        annotations: {}
+      customTemplate:
+        configMapName: ingress-nginx-tmpl
+        configMapKey: nginx.tmpl
+      config:
+        use-proxy-protocol: "false"
+        client-header-timeout: "5"
+        client-body-timeout: "5"
+        keep-alive: "6"
+        keep-alive-requests: "5"
+        proxy-body-size: "20k"
+        use-gzip: "true"
+        gzip-types: "*"
+        gzip-min-length: "5120"
+        ssl-session-cache: "false"
+        ssl-session-tickets: "true"
+        allow-snippet-annotations: "false"
+        annotations-risk-level: "Critical"
+      metrics:
+        enabled: true
+      priorityClassName: smp-receiver
+      extraVolumeMounts:
+      - name: ssl-session-ticket-key
+        mountPath: /etc/ingress-controller/tickets.key
+        subPath: key
+      extraVolumes:
+      - name: ssl-session-ticket-key
+        secret:
+          secretName: ssl-session-ticket-key
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app.kubernetes.io/name
+                operator: In
+                values:
+                - '{{ include "ingress-nginx.name" . }}'
+              - key: app.kubernetes.io/instance
+                operator: In
+                values:
+                - '{{ .Release.Name }}'
+              - key: app.kubernetes.io/component
+                operator: In
+                values:
+                - controller
+            topologyKey: kubernetes.io/hostname
+            matchLabelKeys:
+            - pod-template-hash
+      resources:
+        limits:
+          cpu: 4000m
+          memory: 1Gi
+        requests:
+          cpu: 100m
+          memory: 90Mi

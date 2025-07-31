@@ -1,0 +1,14 @@
+source:
+  kind: ConfigMap
+  name: accounting-authority-config
+  fieldPath: metadata.annotations.kustomize_ingress_nginx_cpu_request
+targets:
+  - select:
+      group: helm.toolkit.fluxcd.io
+      version: v2
+      kind: HelmRelease
+      name: ingress-nginx
+    fieldPaths:
+      - spec.values.controller.resources.requests.cpu
+    options:
+      create: true

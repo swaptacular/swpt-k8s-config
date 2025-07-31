@@ -1,0 +1,12 @@
+source:
+  kind: ConfigMap
+  name: accounting-authority-config
+  fieldPath: metadata.annotations.kustomize_acme_cert_email
+targets:
+  - select:
+      group: cert-manager.io
+      version: v1
+      kind: Issuer
+      name: acme-cert-issuer
+    fieldPaths:
+      - spec.acme.email
