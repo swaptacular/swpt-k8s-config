@@ -8,11 +8,6 @@ execute:
 $ sudo sysctl fs.inotify.max_user_instances=8192
 ```
 
-Keep in mind that the network policies in KinD may behave
-surprisingly. See [this
-issue](https://github.com/kubernetes-sigs/kube-network-policies/issues/150)
-for example.
-
 ## Fork and clone this repository
 
 First you need to create a fork of this repository, and then clone it
