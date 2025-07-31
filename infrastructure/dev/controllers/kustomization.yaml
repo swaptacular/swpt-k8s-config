@@ -485,7 +485,7 @@ secretGenerator:
       # Git server has been installed in the cluster. If you do not
       # this IP address yet, you can enter any valid IP address here,
       # and change it later.
-      kustomize_simple_git_server_ip_address: 172.18.0.6
+      kustomize_simple_git_server_ip_address: 172.18.0.4
 
   type: Opaque
 

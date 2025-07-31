@@ -560,7 +560,7 @@ remote: Counting objects: 100% (11/11), done.
 remote: Compressing objects: 100% (6/6), done.
 remote: Total 6 (delta 3), reused 1 (delta 0), pack-reused 0 (from 0)
 Unpacking objects: 100% (6/6), 572 bytes | 572.00 KiB/s, done.
-From ssh://172.18.0.6:2222/srv/git/fluxcd
+From ssh://172.18.0.4:2222/srv/git/fluxcd
  * branch            master     -> FETCH_HEAD
    f3348c8..01df4b9  master     -> k8s-repo/master
 Updating f3348c8..01df4b9
