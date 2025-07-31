@@ -16,6 +16,7 @@ fi
 
 peer_id="$1"
 number_of_queues="$(cat $peer_id/queues.txt)"
+nodeinfo_updated_at="$(cat $peer_id/nodeinfo/updated-at.txt)"
 
 if [ -e "$peer_id/DEACTIVATED" ]; then
     # The peer has been deactivated.
@@ -59,6 +60,9 @@ patches:
     - op: replace
       path: /spec/template/spec/containers/0/args/0
       value: $container_arg0
+    - op: replace
+      path: /spec/template/spec/containers/0/env/0/value
+      value: "$nodeinfo_updated_at"
   target:
     group: apps
     kind: StatefulSet
