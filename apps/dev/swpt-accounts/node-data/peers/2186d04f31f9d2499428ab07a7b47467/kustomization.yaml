@@ -17,6 +17,9 @@ patches:
     - op: replace
       path: /spec/template/spec/containers/0/args/0
       value: swpt-client
+    - op: replace
+      path: /spec/template/spec/containers/0/env/0/value
+      value: "2025-07-31"
   target:
     group: apps
     kind: StatefulSet
