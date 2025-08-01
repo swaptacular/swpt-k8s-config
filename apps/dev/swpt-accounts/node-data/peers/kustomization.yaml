@@ -1,7 +1,0 @@
-# This file is machine-generated. DO NOT EDIT IT!
-#
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-resources:
-- fa78d2429654a1d62083a74e6265dd01/
-- 2186d04f31f9d2499428ab07a7b47467/
