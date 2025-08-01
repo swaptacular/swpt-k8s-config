@@ -666,8 +666,8 @@ gpg:  secret keys unchanged: 1
 ## Delete the unencrypted secrets from your machine (optional)
 
 It is **strongly recommended** that you delete the unencrypted secrets
-from the `simple-git-server` directory on your machine. To do so, run
-the following command:
+from the `simple-git-server/secret-files` directory on your machine.
+To do so, run the following command:
 
 ``` console
 $ cd simple-git-server
