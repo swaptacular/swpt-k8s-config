@@ -130,9 +130,9 @@ $ cp $CLUSTER_DIR/.sops.yaml .  # Creates a local SOPS configuration file.
 
 ## Backup your PGP private key (optional)
 
-It is **highly recommended** that you create a backup copy of the PGP
-private key. Make sure you do not forget the passwords which you chose
-to protect the PGP private key:
+It is **strongly recommended** that you create a backup copy of the
+PGP private key. Make sure you do not forget the passwords which you
+chose to protect the PGP private key:
 
 ``` console
 $ gpg --export-secret-key --armor "${KEY_FP}" > /mnt/backup/sops.private.asc
@@ -638,10 +638,9 @@ In this example, the IP address of `swpt-accounts`'s load balancer is
 
 ## Delete your PGP private key (optional)
 
-If you do not plan to use SOPS to decrypt secrets on this machine
-anymore, consider deleting the PGP private key from the machine. If
-you need it later, you can always import the secret decryption key
-from your backup copy:
+If you do not plan to use SOPS *to decrypt* secrets on this machine,
+consider deleting the PGP private key from the machine. If you need it
+later, you can always import the decryption key from your backup copy:
 
 ``` console
 $ gpg --delete-secret-keys "${KEY_FP}"  # Delete the private key.
@@ -664,10 +663,11 @@ gpg:       secret keys read: 1
 gpg:  secret keys unchanged: 1
 ```
 
-## Delete the unencrypted secrets from your local machine
+## Delete the unencrypted secrets from your local machine (optional)
 
-Finally, do not forget to delete the unencrypted secrets from the
-`simple-git-server` directory:
+It is **strongly recommended** that you delete the unencrypted secrets
+from the `simple-git-server` directory. To do so, run the following
+command:
 
 ``` console
 $ cd simple-git-server
