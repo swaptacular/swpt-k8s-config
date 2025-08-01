@@ -535,19 +535,19 @@ To ssh://172.18.0.4:2222/srv/git/fluxcd.git
 
 ## Bootstrap FluxCD
 
-The next step is to bootstraps [FluxCD](https://fluxcd.io/) from the
+The next step is to bootstrap [FluxCD](https://fluxcd.io/) from the
 Git server installed in your Kubernetes cluster.
 
 If you want to use a private container image registry for the FluxCD
-images, you will need to specify your private registry in the
+images, you will need to specify your private registry using the
 `--registry` option of the `flux bootstrap` command (instead of
 "ghcr.io/swaptacular"), and also add the following options:
 
-1. Give the username and the password for your private registry with
-   the `--registry-creds username:password` option.
+1. Provide the username and the password for your private registry
+   with the `--registry-creds username:password` option.
 
 2. Specify the name of the image pull secret that FluxCD will create,
-   with the `--image-pull-secret regcreds` option. The name must be
+   with the `--image-pull-secret regcreds` option. The name *must be*
    "regcreds".
 
 ``` console
@@ -588,9 +588,9 @@ Fast-forward
 
 ## Wait for the cluster to start the pods
 
-This will take some time. You may use `kubectl` to monitor the
-process. To check for problems during FluxCD's reconciliation, you may
-use this command:
+This process will take some time. You can use `kubectl` to monitor the
+process. To check for any issues during FluxCD's reconciliation, you
+may run the following command:
 
 ``` console
 $ flux get all -A --status-selector ready=false
@@ -608,12 +608,31 @@ flux-system	kustomization/infra-controllers	master@sha1:96334c96	False    	False
 
 ## Configure your DNS records
 
-Once your cluster is up an running, you will need to set your DNS
-records, so that they refer to the proper load balancer(s) in your
+Once your cluster is up and running, you will need to set your DNS
+records, that they point to the proper load balancer(s) in your
 cluster. Each Swaptacular node which you run in your cluster will have
-its own load balancer, with its own IP address. To obtain the load
-balancer's IP address, you may run `kubectl -n
-<SWAPTACULAR-NODE-NAMESPACE> get services`.
+its own load balancer, with a unique IP address. To obtain the load
+balancer's IP address, you may use `kubectl`:
+
+``` console
+$ kubectl -n swpt-accounts get services
+NAME                                               TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)                                     AGE
+apiproxy                                           ClusterIP      10.96.57.222    <none>        80/TCP                                      21h
+broker                                             ClusterIP      10.96.10.19     <none>        15692/TCP,5672/TCP,15672/TCP                21h
+broker-nodes                                       ClusterIP      None            <none>        4369/TCP,25672/TCP                          21h
+db                                                 ClusterIP      10.96.157.204   <none>        5432/TCP                                    21h
+db-config                                          ClusterIP      None            <none>        <none>                                      21h
+db-repl                                            ClusterIP      10.96.176.132   <none>        5432/TCP                                    21h
+http-cache                                         ClusterIP      10.96.27.123    <none>        80/TCP                                      21h
+stomp-server                                       ClusterIP      10.96.165.250   <none>        1234/TCP                                    21h
+swpt-accounts-ingress-nginx-controller             LoadBalancer   10.96.171.44    172.18.0.9    80:31318/TCP,443:32170/TCP,1234:31637/TCP   21h
+swpt-accounts-ingress-nginx-controller-admission   ClusterIP      10.96.223.9     <none>        443/TCP                                     21h
+swpt-accounts-ingress-nginx-controller-metrics     ClusterIP      10.96.183.76    <none>        10254/TCP                                   21h
+web-server                                         ClusterIP      10.96.103.250   <none>        80/TCP                                      21h
+```
+
+In this example, the IP address of `swpt-accounts`'s load balancer is
+`172.18.0.9`.
 
 ## Delete your PGP private key (optional)
 
