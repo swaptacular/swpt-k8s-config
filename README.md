@@ -609,10 +609,12 @@ flux-system	kustomization/infra-controllers	master@sha1:96334c96	False    	False
 ## Configure your DNS records
 
 Once your cluster is up and running, you will need to set your DNS
-records, that they point to the proper load balancer(s) in your
-cluster. Each Swaptacular node which you run in your cluster will have
-its own load balancer, with a unique IP address. To obtain the load
-balancer's IP address, you may use `kubectl`:
+records, so that they point to the proper load balancer(s) in your
+cluster.
+
+Each Swaptacular node which you run in your cluster will have its own
+load balancer, with a unique IP address. To obtain the load balancer's
+IP address, you may use `kubectl`:
 
 ``` console
 $ kubectl -n swpt-accounts get services
