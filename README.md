@@ -1,8 +1,8 @@
-# Swaptacular GitOps repo for deploying in Kubernetes clusters
+# Swaptacular GitOps repo for deploying to Kubernetes clusters
 
-**Note:** When deploying in KinD (Kubernetes in Docker), you may use
-the `kind-cluster.yaml` configuration file. Also, you may need to
-execute:
+**Note:** When deploying to a KinD (Kubernetes in Docker) cluster, you
+may use the `kind-cluster.yaml` configuration file. Also, you may need
+to execute:
 
 ``` console
 $ sudo sysctl fs.inotify.max_user_instances=8192
@@ -27,7 +27,7 @@ $ pwd
 
 ## Choose a cluster name
 
-Then you need to choose a name for your cluster (`dev` for example):
+Then you need to choose a name for your cluster (e.g. `dev`):
 
 ``` console
 $ export CLUSTER_NAME=dev
@@ -63,8 +63,8 @@ ssb   rsa4096 2025-02-05 [SEA]
 
 $ export KEY_FP=$(gpg --list-secret-keys --with-colons $CLUSTER_DIR | awk -F: '/^fpr:/ {print $10; exit}')  # Extract the PGP key fingerprint.
 $ mkdir simple-git-server/secret-files
-$ gpg --export-secret-keys --armor "${KEY_FP}" > simple-git-server/secret-files/sops.asc  # Write the PGP key to a temporary file.
-$ gpg --edit-key "${KEY_FP}"  # Protect the PGP private key with strong passwords:
+$ gpg --export-secret-keys --armor "${KEY_FP}" > simple-git-server/secret-files/sops.asc  # Write the unencrypted PGP key to a file.
+$ gpg --edit-key "${KEY_FP}"  # Protect the PGP private key with (two) strong passwords:
 gpg (GnuPG) 2.2.40; Copyright (C) 2022 g10 Code GmbH
 This is free software: you are free to change and redistribute it.
 There is NO WARRANTY, to the extent permitted by law.
@@ -150,27 +150,27 @@ QbIgaiHj7aTsupibdTde
 -----END PGP PRIVATE KEY BLOCK-----
 ```
 
-## Create sub-directories for your cluster name
+## Create subdirectories for your cluster name
 
-Now that you have chosen a name for your cluster (`dev` for example),
-you need to create sub-directories with this name in the `clusters/`,
+Now that you have chosen a name for your cluster (e.g. `dev`), you
+need to create subdirectories with this name in the `clusters/`,
 `infrastructure/`, and `apps/` directories. In these directories, you
-will find sub-directories named `example` -- use them as a template.
+will find subdirectories named `example` -- use them as a template.
 Pay close attention to the comments in the various `.yaml` files, and
 adapt these files according to your needs. Note that in several files
 (you may use `grep` to find them) you will have to change the
 references to `clusters/example`, `infrastructure/example`, and
 `apps/example`, so that they instead refer to your chosen cluster
-name. Also, note that the numerous `secrets/` sub-directories contain
+name. Also, note that the numerous `secrets/` subdirectories contain
 example encrypted secrets, which you can not use. Instead of trying to
 use the example secrets, you should generate and encrypt your own
 secrets. The same applies to the files `server.crt` and
 `server.key.encrypted`. Another very important directory is the
-`node-data/` sub-directory (`apps/dev/swpt-debtors/node-data/`,
+`node-data/` subdirectory (`apps/dev/swpt-debtors/node-data/`,
 `apps/dev/swpt-creditors/node-data/`, and
-`apps/dev/swpt-accounts/node-data/`). This sub-directory contains
+`apps/dev/swpt-accounts/node-data/`). This subdirectory contains
 information about the Swaptacular node and its peers. The `node-data/`
-sub-directory should start as an identical copy of the [Swaptacular
+subdirectory should start as an identical copy of the [Swaptacular
 certificate authority scripts
 repository](https://github.com/swaptacular/swpt_ca_scripts), and
 continue evolving from there.
@@ -178,7 +178,7 @@ continue evolving from there.
 You should always include a copy of the
 `apps/example/regcreds.json.encrypted` file, and the
 `apps/example/swpt-nfs-server/` directory in your cluster (`apps/dev/`
-for example). However, among the other sub-directories in
+for example). However, among the other subdirectories in
 `apps/example/`, you should copy only those which are responsible for
 running the types of Swaptacular nodes that you want to run in your
 Kubernetes cluster:
@@ -195,10 +195,10 @@ Kubernetes cluster:
 You can run more than one Swaptacluar node type in the same Kubernetes
 cluster. You can even run multiple instances of the same node type,
 but then you need to make sure that the name of each node's
-sub-directory is unique. In this example, we will presume that you
-want to run an accounting authority node, but the difference really is
-only in the name of the sub-directory (`swpt-accounts`,
-`swpt-debtors`, or `swpt-creditors`).
+subdirectory is unique. In this example, we will presume that you want
+to run an accounting authority node, but the only difference in the
+name of the subdirectory (`swpt-accounts`, `swpt-debtors`, or
+`swpt-creditors`).
 
 **Note:** In production, you will not need the `mailhog.yaml`,
 `minio.yaml`, and `pebble.yaml` files in the `clusters/example/`
@@ -379,7 +379,7 @@ $ cat secret-files/prometheus_viewers  # Shows Prometheus's viewers usernames an
 viewer:$1$2gwQXkVy$An9E0C66KIGsgQ/KhPWoD.
 ```
 
-Then we need to run a simple script which will automatically generate
+Then you need to run a simple script which will automatically generate
 some secrets:
 
 **Note**: You will be asked to enter information about a self-signed
@@ -452,7 +452,24 @@ secret/regcreds configured
 service/git-server configured
 persistentvolumeclaim/git-repositories configured
 deployment.apps/simple-git-server configured
+
+$ kubectl -n simple-git-server get all
+NAME                                     READY   STATUS    RESTARTS   AGE
+pod/simple-git-server-5d86d687d8-7khj6   2/2     Running   0          24h
+
+NAME                 TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)                        AGE
+service/git-server   LoadBalancer   10.96.123.249   172.18.0.4    2222:31003/TCP,443:32730/TCP   25h
+
+NAME                                READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/simple-git-server   1/1     1            1           24h
+
+NAME                                           DESIRED   CURRENT   READY   AGE
+replicaset.apps/simple-git-server-5d86d687d8   1         1         1       24h
 ```
+
+**Note:** The last command shows the public IP address of the load
+balancer for the just installed Git server (`172.18.0.4` in this
+example).
 
 ## Copy the GitOps repo to the just installed Git server
 
