@@ -1,8 +1,8 @@
-# Swaptacular GitOps repo for deploying to Kubernetes clusters
+# Swaptacular GitOps repository for deploying to Kubernetes clusters
 
 **Note:** When deploying to a KinD (Kubernetes in Docker) cluster, you
-may use the `kind-cluster.yaml` configuration file. Also, you may need
-to execute:
+can use the `kind-cluster.yaml` configuration file. Also, you may need
+to run the following command:
 
 ``` console
 $ sudo sysctl fs.inotify.max_user_instances=8192
@@ -10,10 +10,10 @@ $ sudo sysctl fs.inotify.max_user_instances=8192
 
 ## Fork and clone this repository
 
-First you need to create a fork of this repository, and then clone it
+First, you need to create a fork of this repository, and then clone it
 locally:
 
-**Note**: In this example, the name of the user is `johndoe`.
+**Note**: In this example, the username is `johndoe`.
 
 ``` console
 $ cd ~
@@ -27,7 +27,7 @@ $ pwd
 
 ## Choose a cluster name
 
-Then you need to choose a name for your cluster (e.g. `dev`):
+Then, you need to choose a name for your cluster (e.g., `dev`):
 
 ``` console
 $ export CLUSTER_NAME=dev
@@ -36,7 +36,7 @@ $ export CLUSTER_DIR=clusters/$CLUSTER_NAME
 
 ## Generate PGP keys and configure SOPS
 
-The next task is to configure secrets management with
+The next task is to configure secrets management using
 [SOPS](https://github.com/getsops/sops) and [GnuPG /
 PGP](https://www.gnupg.org/):
 
@@ -112,9 +112,11 @@ To github.com:johndoe/swpt-k8s-config.git
    c46b496..1c50aeb  master -> master
 ```
 
-After these changes to the GitOps repository, when your team members
-clone the GitOps repository, they will be able to import the public
-PGP key, and create their local SOPS configuration file. Like this:
+After these changes to the GitOps repository, your team members will
+be able to clone the repository, import the public PGP key, and create
+their local SOPS configuration file.
+
+Like this:
 
 ``` console
 $ pwd
@@ -152,7 +154,7 @@ QbIgaiHj7aTsupibdTde
 
 ## Create subdirectories for your cluster name
 
-Now that you have chosen a name for your cluster (e.g. `dev`), you
+Now that you have chosen a name for your cluster (e.g., `dev`), you
 need to create subdirectories with this name in the `clusters/`,
 `infrastructure/`, and `apps/` directories. In these directories, you
 will find subdirectories named `example` -- use them as a template.
