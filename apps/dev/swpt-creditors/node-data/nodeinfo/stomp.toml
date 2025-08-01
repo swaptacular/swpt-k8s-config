@@ -1,3 +1,0 @@
-servers = ["stomp-server.swpt-creditors.svc.cluster.local:1234"]
-host = "/"
-destination = "/exchange/creditors_in"
