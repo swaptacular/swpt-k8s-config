@@ -39,10 +39,11 @@ spec:
     http:
       paths:
 
-      # This is an example path. It will return a 503 error. More
-      # paths may be added in the future.
+      # Currently, this is just an example path. It will return a 503
+      # error. In the future, this path may be used to allow creditors
+      # to view their balances directly with the accounting authority.
       #
-      - path: /example/
+      - path: /accounts/
         pathType: Prefix
         backend:
           service:

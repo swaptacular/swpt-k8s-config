@@ -53,10 +53,10 @@ spec:
         configMapKey: nginx.tmpl
       config:
         use-proxy-protocol: "false"
-        client-header-timeout: "5"
-        client-body-timeout: "5"
-        keep-alive: "6"
-        keep-alive-requests: "5"
+        client-header-timeout: "10"
+        client-body-timeout: "10"
+        keep-alive: "11"
+        keep-alive-requests: "20"
         proxy-body-size: "20k"
         use-gzip: "true"
         gzip-types: "*"
