@@ -639,7 +639,7 @@ In this example, the IP address of `swpt-accounts`'s load balancer is
 
 ## Delete your PGP private key (optional)
 
-If you do not plan to use SOPS *to decrypt* secrets on this machine,
+If you do not plan to use SOPS **to decrypt** secrets on this machine,
 consider deleting the PGP private key from the machine. If you need it
 later, you can always import the decryption key from your backup copy:
 
@@ -676,4 +676,25 @@ $ pwd
 /home/johndoe/src/swpt-k8s-config/simple-git-server
 
 $ ./delete-secret-files.sh  # The secrets have already been copied to the cluster.
+```
+
+## Make changes to your GitOps repository
+
+Each time you commit changes to your GitOps repository, for example,
+when you add a new peer to your Swaptacular node, you need to push
+those changes to the Git server in your Kubernetes cluster. For example:
+
+``` console
+$ cd ..
+$ pwd
+/home/johndoe/src/swpt-k8s-config
+
+$ git status
+On branch master
+Your branch is up to date with 'k8s-repo/master'.
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+	modified:   README.md
+
 ```
