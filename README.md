@@ -34,11 +34,11 @@ $ export CLUSTER_NAME=dev
 $ export CLUSTER_DIR=clusters/$CLUSTER_NAME
 ```
 
-## Generate PGP keys and configure SOPS
+## Generate the cluster's PGP keys and configure SOPS
 
 The next task is to configure secrets management using
-[SOPS](https://github.com/getsops/sops) and [GnuPG /
-PGP](https://www.gnupg.org/):
+[SOPS](https://github.com/getsops/sops) and
+[GnuPG/PGP](https://www.gnupg.org/):
 
 ``` console
 $ pwd
@@ -113,8 +113,8 @@ To github.com:johndoe/swpt-k8s-config.git
 ```
 
 After these changes to the GitOps repository, your team members will
-be able to clone the repository, import the public PGP key, and create
-their local SOPS configuration file.
+be able to clone the repository, import the cluster's public PGP key,
+and create their local SOPS configuration file.
 
 Like this:
 
@@ -130,11 +130,11 @@ gpg:              unchanged: 1
 $ cp $CLUSTER_DIR/.sops.yaml .  # Creates a local SOPS configuration file.
 ```
 
-## Backup your PGP private key (optional)
+## Back up the cluster's PGP private key (optional)
 
 It is **strongly recommended** that you create a backup copy of the
-PGP private key. Make sure you do not forget the passwords which you
-chose to protect the PGP private key:
+cluster's PGP private key. Make sure you do not forget the two
+passwords you used to protect the key (they may be the same):
 
 ``` console
 $ gpg --export-secret-key --armor "${KEY_FP}" > /mnt/backup/sops.private.asc
@@ -237,9 +237,9 @@ To github.com:epandurski/swpt-k8s-config.git
 ## Use a private container image registry (optional)
 
 If you want to use a private container image registry (recommended for
-production deployments), you will have to prepare an "image pull
-secret" file, containing the credentials for pulling from your private
-registry. Here is how to do this:
+production deployments), you will need to prepare an "image pull
+secret" file, containing the credentials required to pull images from
+your private registry. Here is how to do it:
 
 ``` console
 $ pwd
@@ -274,10 +274,9 @@ $ git commit -m 'Update regcreds'
  2 files changed, 2 insertions(+), 2 deletions(-)
 ```
 
-You will also need to change the
-`simple-git-server/kustomization.yaml` file, so that it uses your
-private container image registry for the Git server's and Nginx's
-images:
+You will also need to update the
+`simple-git-server/kustomization.yaml` file to use your private
+container image registry for the Git server's and Nginx's images:
 
 ``` console
 $ pwd
@@ -324,17 +323,16 @@ To github.com:johndoe/swpt-k8s-config.git
    dca1e7a..175b62a  master -> master
 ```
 
-If you DO NOT want to use a private container image registry, you may
-skip the previous steps, and start installing the Git server right
-away.
+If you **do not** want to use a private container image registry, you
+can skip the previous steps, and start installing the Git server
+immediately.
 
 ## Install a simple Git server in your Kubernetes cluster
 
 The next step is to install a Git server in your Kubernetes cluster,
-which will contain a copy of your GitOps repository. But before you
-can do this, you need to add the root-CA public key for each one of
-your Swaptacular nodes, to the
-`simple-git-server/trusted_user_ca_keys` file:
+which will host a copy of your GitOps repository. Before doing this,
+you need to add the root-CA public key for each of your Swaptacular
+nodes, to the `simple-git-server/trusted_user_ca_keys` file:
 
 ``` console
 $ pwd
@@ -358,8 +356,8 @@ $ cat simple-git-server/trusted_user_ca_keys  # Shows the trusted root-CA keys, 
 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCJfDWvw+LxOW1ECcpoHdFw+ygG4XSeVrB9JFVdIcrrVHqIXDPjvJKXrQ2TadeaTA2i1XUv+XwJr2ZN3OZ6dGLxddPQD4ZG6ciT4iK4TOjAiauE8gQPHR1uzShoK2TGfuYXma2lOnB4s/w5Tif+an5NzHRuDzAwXHPVfVeb9kgIO4A761CztwdTPyEM0jocpoz03Ch4DgYvwf2r+P+1x2Hm5htipNigkhdwtdw5yjUuTR3ylFIeokwcIZomYcGGO66i7EWGYzhr811uApgLJH5YtqeFnD054ia+AbOdCXEr1ZXvpol1Vqo6p/R015zBjMQ8wcdzd+PMSzHvXMLMjG6POhRvQ2yy3cmDpPPIzMHOcNxXhdarVLKDt8/SJlo4O+buAbHdib0pRXpqbPS6rjFwArB93H7TOcY+xl3EGAsjz+1wRPlbi1TN9XNRyQKxLK21QpYql4iYoD8Wac6iWQDDKNaTr88YFUu+MMUfZuQ+0MmXQ1yA/wfqyC9pjm4tkc0=
 ```
 
-Also, you need to choose the passwords for viewing Alertmanager's and
-Prometheus's UIs:
+You also need to choose the passwords for accessing the Alertmanager
+and Prometheus UIs (view-only):
 
 ``` console
 $ cd simple-git-server/
@@ -381,14 +379,14 @@ $ cat secret-files/prometheus_viewers  # Shows Prometheus's viewers usernames an
 viewer:$1$2gwQXkVy$An9E0C66KIGsgQ/KhPWoD.
 ```
 
-Then you need to run a simple script which will automatically generate
-some secrets:
+Then, you need to run a simple script which will automatically
+generate some secrets:
 
-**Note**: You will be asked to enter information about a self-signed
+**Note**: You will be prompted to enter information for a self-signed
 SSL certificate. This certificate will be used by the Nginx reverse
-proxy that gives access to Alertmanager's and Prometheus's UIs. You
-may enter anything you like, including hitting "Enter" as many times
-as needed.
+proxy providing access to the Alertmanager and Prometheus UIs. You may
+enter any values you like, including pressing “Enter” multiple times
+to skip fields.
 
 ``` console
 $ pwd
@@ -438,7 +436,8 @@ Email Address []:
 ****************************************************************
 ```
 
-Then you can install a simple Git server in your Kubernetes cluster:
+After completing all the preparations, you can install a simple Git
+server in your Kubernetes cluster:
 
 ``` console
 $ pwd
@@ -469,15 +468,15 @@ NAME                                           DESIRED   CURRENT   READY   AGE
 replicaset.apps/simple-git-server-5d86d687d8   1         1         1       24h
 ```
 
-**Note:** The last command shows the public IP address of the load
-balancer for the just installed Git server (`172.18.0.4` in this
+**Note:** The last command displays the public IP address of the load
+balancer for the newly installed Git server (`172.18.0.4` in this
 example).
 
-## Copy the GitOps repo to the just installed Git server
+## Copy the GitOps repository to the newly installed Git server
 
-In order to authenticate to the just installed Git server, you need to
-issue an SSH certificate to yourself. (That is: generate a
-`id_rsa-cert.pub` file in your `~/.ssh` directory.):
+To authenticate to the newly installed Git server, you need to issue
+an SSH certificate to yourself -- that is, generate a new
+`id_rsa-cert.pub` file in your `~/.ssh` directory:
 
 ``` console
 $ pwd
@@ -495,11 +494,11 @@ $ ls ~/.ssh
 id_rsa  id_rsa.pub  id_rsa-cert.pub  known_hosts
 ```
 
-Then you need to connect to the Git server, create a new
-`/srv/git/fluxcd.git` repository, and copy the whole content of the
+Then, you need to connect to the Git server, create a new
+`/srv/git/fluxcd.git` repository, and copy the entire contents of the
 GitOps repo into it:
 
-**Important note**: You need the obtain the public IP address of the
+**Important note:** You need to obtain the public IP address of the
 Git server's load balancer in your Kubernetes cluster.
 
 ``` console
