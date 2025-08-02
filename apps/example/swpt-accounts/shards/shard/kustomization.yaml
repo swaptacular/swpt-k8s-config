@@ -205,7 +205,6 @@ replacements:
 - path: ../../../../base/swpt-accounts/shard/replacements/secrets-clustername.yaml
 - path: ../../../../base/swpt-accounts/shard/replacements/secrets-namesuffix.yaml
 - path: ../../../../base/swpt-accounts/shard/replacements/shardconfig.yaml
-- path: ../../../../base/swpt-accounts/shard/replacements/webserver.yaml
 - path: ../../../../base/swpt-accounts/shard/replacements/http-cache-size.yaml
 - path: ../../../../base/swpt-accounts/shard/replacements/chores-consumer-cpu-request.yaml
 - path: ../../../../base/swpt-accounts/shard/replacements/chores-consumer-cpu-limit.yaml
