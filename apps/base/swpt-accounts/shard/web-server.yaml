@@ -111,22 +111,6 @@ spec:
               memory: 100Mi
 
 ---
-apiVersion: v1
-kind: Service
-metadata:
-  name: web-server
-  labels:
-    app.kubernetes.io/component: web-server
-spec:
-  selector:
-    app.kubernetes.io/component: web-server
-  ports:
-    - name: http
-      port: 80
-      protocol: TCP
-      targetPort: http
-
----
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:

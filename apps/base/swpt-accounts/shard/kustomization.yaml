@@ -7,5 +7,6 @@ resources:
 - messages-consumer.yaml
 - chores-consumer.yaml
 - web-server.yaml
+- web-server-service.yaml
 - http-cache.yaml
 - network-policies.yaml
