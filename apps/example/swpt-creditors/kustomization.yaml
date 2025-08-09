@@ -387,10 +387,10 @@ replicas:
 images:
 - name: swpt-creditors
   newName: ghcr.io/swaptacular/swpt_creditors
-  digest: sha256:b241c061a102468771b18b94aefd43ad04c3c8960a67b2fe562ff879e6b5016a
+  digest: sha256:bc956f005bd91587e2c5eb21a998e72fda1d4c56af1b20805e43441cdcaf997c
 - name: swpt-creditors-swagger-ui
   newName: ghcr.io/swaptacular/swpt_creditors_swagger_ui
-  digest: sha256:2789e49baa8ea5757423748748566977b06b92a054707735104873e1484dff2d
+  digest: sha256:ef66130edc168cb27667c673f8341991d05296fceaabed3784db03b6ebadc1cd
 - name: swpt-creditors-ui
   newName: ghcr.io/swaptacular/swpt_creditors_ui
   digest: sha256:31ed252b9db16ffa37e81527137880b5e5d10d3ced246519fa3d077995e78f67
@@ -399,7 +399,7 @@ images:
   digest: sha256:7a396d200c4c023f5cf46a3dc45d202917df4ef184e33580c3177a70c4a3675b
 - name: swpt-stomp
   newName: ghcr.io/swaptacular/swpt_stomp
-  digest: sha256:9ca8d559eb5482e85593df07edacea1268aa6881878609e03778f8bfc4c7cd93
+  digest: sha256:393fc048dad43fa95587de8d0f486a73427f8077fb0ad147c94c9dc3018ee7e3
 - name: swpt-nfs-server
   newName: ghcr.io/swaptacular/swpt_nfs_server
   digest: sha256:f3674f3a027e961d6c4be308094e1ec129859fda1aafac85e5920edb0c9bdb7f
