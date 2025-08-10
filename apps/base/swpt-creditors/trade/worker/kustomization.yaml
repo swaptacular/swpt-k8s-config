@@ -4,6 +4,7 @@ kind: Kustomization
 resources:
 - messages-flusher.yaml
 - messages-consumer.yaml
+- messages-drainer.yaml
 - http-fetcher.yaml
 - transfers-triggerer.yaml
 - turn-roller.yaml

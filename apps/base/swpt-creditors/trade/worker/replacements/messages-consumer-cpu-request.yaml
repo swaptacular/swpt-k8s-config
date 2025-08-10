@@ -11,3 +11,11 @@ targets:
       - spec.template.spec.initContainers.[name=await-migrations].resources.requests.cpu
     options:
       create: true
+  - select:
+      kind: Deployment
+      name: trade-worker-messages-drainer
+    fieldPaths:
+      - spec.template.spec.containers.[name=messages-drainer].resources.requests.cpu
+      - spec.template.spec.initContainers.[name=await-migrations].resources.requests.cpu
+    options:
+      create: true

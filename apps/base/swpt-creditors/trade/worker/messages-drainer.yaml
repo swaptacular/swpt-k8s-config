@@ -1,29 +1,36 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: trade-worker-turn-roller
+  name: trade-worker-messages-drainer
   labels:
-    app.kubernetes.io/component: turn-roller
+    app.kubernetes.io/component: messages-drainer
 spec:
-  replicas: 1  # Must be 1, unless the shard is being split (then it must be 0)!
-  strategy:
-    type: Recreate
+  replicas: 0  # Must be zero, unless the shard is being split.
   selector:
     matchLabels:
-      app.kubernetes.io/component: turn-roller
+      app.kubernetes.io/component: messages-drainer
   template:
     metadata:
       labels:
-        app.kubernetes.io/component: turn-roller
+        app.kubernetes.io/component: messages-drainer
         log.pipeline: swpt-python-logging
     spec:
-      priorityClassName: shard-background-worker
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                app.kubernetes.io/component: messages-drainer
+            topologyKey: kubernetes.io/hostname
+            matchLabelKeys:
+            - pod-template-hash
+      priorityClassName: shard-smp-consumer
       imagePullSecrets:
         - name: regcreds
       containers:
-        - name: turn-roller
+        - name: messages-drainer
           image: swpt-trade
-          args: ['worker']
+          args: ['consume_messages', '--draining-mode']
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
@@ -49,59 +56,12 @@ spec:
               value: "$(rmq_connection_string)"
             - name: PROTOCOL_BROKER_QUEUE
               value: "$(pg_cluster_name)"
-            - name: PROTOCOL_BROKER_PROCESSES
-              value: "0"
-            - name: FLUSH_PROCESSES
-              value: "0"
-            - name: HTTP_FETCH_PROCESSES
-              value: "0"
             - name: APP_LOG_LEVEL
               value: warning
             - name: APP_LOG_FORMAT
               value: json
       initContainers:
-        - name: configure
-          image: swpt-trade
-          args: ['configure', 'worker']
-          securityContext:
-            allowPrivilegeEscalation: false
-            capabilities:
-              drop:
-              - ALL
-          envFrom:
-            - secretRef:
-                name: db-owner-credentials
-              prefix: pg_
-            - secretRef:
-                name: broker-default-user
-              prefix: rmq_
-            - configMapRef:
-                name: swpt-trade-config
-            - configMapRef:
-                name: trade-workerconfig
-          env:
-            - name: SOLVER_POSTGRES_URL
-              value: "postgresql+psycopg://$(pg_username):$(pg_password)@trade-solver-db:5432/db"
-            - name: WORKER_POSTGRES_URL
-              value: "postgresql+psycopg://$(pg_username):$(pg_password)@$(pg_cluster_name):5432/db"
-            - name: PROTOCOL_BROKER_URL
-              value: "$(rmq_connection_string)"
-            - name: PROTOCOL_BROKER_QUEUE
-              value: "$(pg_cluster_name)"
-            - name: SETUP_RABBITMQ_BINDINGS
-              value: "yes"
-            - name: APP_LOG_LEVEL
-              value: warning
-            - name: APP_LOG_FORMAT
-              value: json
-          resources:
-            limits:
-              cpu: "1"
-              memory: 100Mi
-            requests:
-              cpu: 5m
-              memory: 100Mi
-        - name: await-migrations  # Awaits solver's database migrations.
+        - name: await-migrations
           image: swpt-trade
           args: ["await_migrations"]
           securityContext:
@@ -133,3 +93,17 @@ spec:
             requests:
               cpu: 5m
               memory: 100Mi
+
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: trade-worker-messages-drainer
+  labels:
+    app.kubernetes.io/component: messages-drainer
+spec:
+  maxUnavailable: 30%
+  unhealthyPodEvictionPolicy: AlwaysAllow
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: messages-drainer

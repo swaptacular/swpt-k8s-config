@@ -5,7 +5,7 @@ metadata:
   labels:
     app.kubernetes.io/component: tasks-processor
 spec:
-  replicas: 1  # Must always be exactly 1!
+  replicas: 1  # Must be 1, unless the shard is being split (then it must be 0)!
   strategy:
     type: Recreate
   selector:
