@@ -5,6 +5,7 @@ resources:
 - tasks-processor.yaml
 - messages-flusher.yaml
 - messages-consumer.yaml
+- messages-drainer.yaml
 - chores-consumer.yaml
 - web-server.yaml
 - web-server-service.yaml
