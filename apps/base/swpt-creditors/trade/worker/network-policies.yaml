@@ -12,6 +12,11 @@ spec:
   - from:
     - podSelector:
         matchLabels: {}
+    - podSelector:
+        matchExpressions:
+        - key: app.kubernetes.io/name
+          operator: In
+          values: ["shard-splitting-job"]
     - namespaceSelector:
         matchLabels:
           app.kubernetes.io/name: postgres-operator
