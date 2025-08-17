@@ -14,7 +14,7 @@ spec:
         matchLabels: {}
     - podSelector:
         matchExpressions:
-        - key: app.kubernetes.io/name
+        - key: app.kubernetes.io/component
           operator: In
           values: ["shard-splitting-job"]
     - namespaceSelector:
