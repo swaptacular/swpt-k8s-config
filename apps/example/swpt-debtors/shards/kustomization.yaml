@@ -1,11 +1,9 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-
 labels:
-- includeSelectors: true
-  pairs:
-    app.kubernetes.io/name: swpt-debtors-shard
-    app.kubernetes.io/part-of: swpt-debtors
-
+  - includeSelectors: true
+    pairs:
+      app.kubernetes.io/name: swpt-debtors-shard
+      app.kubernetes.io/part-of: swpt-debtors
 resources:
-- shard/
+  - shard/
