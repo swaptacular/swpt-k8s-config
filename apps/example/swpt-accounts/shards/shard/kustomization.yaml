@@ -41,7 +41,6 @@ configMapGenerator:
   - PROCESS_FINALIZATION_REQUESTS_THREADS=1
   - PROCESS_BALANCE_CHANGES_THREADS=1
   - REMOVE_FROM_ARCHIVE_THRESHOLD_DATE=2022-07-30
-  - DELETE_PARENT_SHARD_RECORDS=false
 
   # The size of the shared memory zone, used by each "http-cache" pod,
   # for storing the cache keys and metadata such as usage timers.

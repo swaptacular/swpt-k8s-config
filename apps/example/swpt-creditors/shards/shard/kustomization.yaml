@@ -36,7 +36,6 @@ configMapGenerator:
   - FLUSH_PERIOD=1.5
   - PROCESS_LOG_ADDITIONS_THREADS=1
   - PROCESS_LEDGER_UPDATES_THREADS=1
-  - DELETE_PARENT_SHARD_RECORDS=false
 
   options:
     annotations:
