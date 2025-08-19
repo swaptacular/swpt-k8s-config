@@ -1,236 +1,210 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-
 # This must be either an empty string, or a string starting with '-',
 # and followed by 0s or 1s. "-101" for example.
-#
 nameSuffix: ""
-
 labels:
-- includeSelectors: true
-  pairs:
-    # The value for the label must correspond to the "nameSuffix"
-    # value. For example, if "nameSuffix" is "-101", the value for the
-    # label must be "shard-101". If "nameSuffix" is "", the value for
-    # the label must be "shard".
-    #
-    app.kubernetes.io/instance: shard
-
+  - includeSelectors: true
+    pairs:
+      # The value for the label must correspond to the "nameSuffix"
+      # value. For example, if "nameSuffix" is "-101", the value for the
+      # label must be "shard-101". If "nameSuffix" is "", the value for
+      # the label must be "shard".
+      app.kubernetes.io/instance: shard
 configMapGenerator:
-- name: shardconfig
-  literals:
-  # The routing key must correspond to the "nameSuffix" value. For
-  # example, if "nameSuffix" is "-101", the routing key must be
-  # "1.0.1.#". If "nameSuffix" is "", the routing key must be "#".
-  #
-  - PROTOCOL_BROKER_QUEUE_ROUTING_KEY=#
-
-  # Shard configuration settings which you may want to change:
-  #
-  - PROTOCOL_BROKER_PROCESSES=1
-  - PROTOCOL_BROKER_THREADS=1
-  - PROTOCOL_BROKER_PREFETCH_COUNT=10
-  - CHORES_BROKER_PROCESSES=1
-  - CHORES_BROKER_THREADS=1
-  - CHORES_BROKER_PREFETCH_COUNT=10
-  - WEBSERVER_PROCESSES=1
-  - WEBSERVER_THREADS=3
-  - FLUSH_PROCESSES=1
-  - FLUSH_PERIOD=1.5
-  - PROCESS_TRANSFER_REQUESTS_THREADS=1
-  - PROCESS_FINALIZATION_REQUESTS_THREADS=1
-  - PROCESS_BALANCE_CHANGES_THREADS=1
-  - REMOVE_FROM_ARCHIVE_THRESHOLD_DATE=2022-07-30
-
-  # The size of the shared memory zone, used by each "http-cache" pod,
-  # for storing the cache keys and metadata such as usage timers.
-  # Having a copy of the keys in memory enables NGINX to quickly
-  # determine if a request is a HIT or a MISS without having to go to
-  # disk, greatly speeding up the check. A 1‑MB zone can store data
-  # for about 8,000 keys, so a 10‑MB zone can store data for about
-  # 80,000 keys. Note that the unit "m" means "MiB", and "g" means
-  # "GiB".
-  - CACHE_KEYS_ZONE=10m
-
-  # The upper limit of the size of the on-disk cache, maintained by
-  # each "http-cache" pod. When the cache size reaches the limit, a
-  # process called the "cache manager" removes the files that were
-  # least recently used to bring the cache size back under the limit.
-  # Note that the unit "m" means "MiB", and "g" means "GiB".
-  - CACHE_MAX_SIZE=800m
-
-  # The size of the persistent volume mounted on each "http-cache" pod
-  # to store the cached data. It must be slightly greater than the
-  # value specified by "CACHE_MAX_SIZE". Note however, that once the
-  # persistent volume claims have been created, increasing this value
-  # will not automatically expand the volumes. The unit "Mi" means
-  # "MiB", and "Gi" means "GiB".
-  - CACHE_VOLUME_SIZE=1Gi
-
-  options:
-    annotations:
-      # These annotations are used as sources for convenient Kustomize
-      # replacements. They specify Kubernetes memory and CPU requests
-      # and limits, for different shard container types.
-      #
-      kustomize_chores_consumer_cpu_request: 1m
-      kustomize_chores_consumer_cpu_limit: 2000m
-      kustomize_chores_consumer_memory_request: 84Mi
-      kustomize_chores_consumer_memory_limit: 1Gi
-      kustomize_http_cache_cpu_request: 1m
-      kustomize_http_cache_cpu_limit: 2000m
-      kustomize_http_cache_memory_request: 23Mi
-      kustomize_http_cache_memory_limit: 1Gi
-      kustomize_messages_consumer_cpu_request: 1m
-      kustomize_messages_consumer_cpu_limit: 2000m
-      kustomize_messages_consumer_memory_request: 98Mi
-      kustomize_messages_consumer_memory_limit: 1Gi
-      kustomize_messages_flusher_cpu_request: 1m
-      kustomize_messages_flusher_cpu_limit: 2000m
-      kustomize_messages_flusher_memory_request: 96Mi
-      kustomize_messages_flusher_memory_limit: 1Gi
-      kustomize_tasks_processor_cpu_request: 1m
-      kustomize_tasks_processor_cpu_limit: 2000m
-      kustomize_tasks_processor_memory_request: 743Mi
-      kustomize_tasks_processor_memory_limit: 1Gi
-      kustomize_web_server_cpu_request: 1m
-      kustomize_web_server_cpu_limit: 2000m
-      kustomize_web_server_memory_request: 83Mi
-      kustomize_web_server_memory_limit: 1Gi
-      kustomize_postgres_exporter_cpu_request: 1m
-      kustomize_postgres_exporter_cpu_limit: 2000m
-      kustomize_postgres_exporter_memory_request: 13Mi
-      kustomize_postgres_exporter_memory_limit: 1Gi
-      kustomize_walg_exporter_cpu_request: 1m
-      kustomize_walg_exporter_cpu_limit: 2000m
-      kustomize_walg_exporter_memory_request: 28Mi
-      kustomize_walg_exporter_memory_limit: 1Gi
-
-      # This annotation specifies the container image for the Postgres
-      # exporter sidecar.
-      #
-      kustomize_postgres_exporter_image: ghcr.io/swaptacular/postgres-exporter@sha256:38606faa38c54787525fb0ff2fd6b41b4cfb75d455c1df294927c5f611699b17
-
-      # This annotation specifies the container image for the WALG
-      # exporter sidecar.
-      #
-      kustomize_walg_exporter_image: ghcr.io/swaptacular/wal-g-exporter@sha256:5f842526cdf313a3746acb8c991abc6e9243b6dc902bbf21638588e7b38803ad
-
-      # Do not change the next two lines!
-      kustomize_zalando_top_level_domain: do
-      kustomize_zalando_clone_timestamp: "2199-01-01T00:00:00.000+00:00"
-
-- name: http-cache-nginx-config
-  files:
-  - nginx.conf=../../../../base/swpt-accounts/shard/static/nginx.conf
-  - default.conf.template=../../../../base/swpt-accounts/shard/static/default.conf.template
-
+  - name: shardconfig
+    literals:
+      # The routing key must correspond to the "nameSuffix" value. For
+      # example, if "nameSuffix" is "-101", the routing key must be
+      # "1.0.1.#". If "nameSuffix" is "", the routing key must be "#".
+      - PROTOCOL_BROKER_QUEUE_ROUTING_KEY=#
+      # Shard configuration settings which you may want to change:
+      - PROTOCOL_BROKER_PROCESSES=1
+      - PROTOCOL_BROKER_THREADS=1
+      - PROTOCOL_BROKER_PREFETCH_COUNT=10
+      - CHORES_BROKER_PROCESSES=1
+      - CHORES_BROKER_THREADS=1
+      - CHORES_BROKER_PREFETCH_COUNT=10
+      - WEBSERVER_PROCESSES=1
+      - WEBSERVER_THREADS=3
+      - FLUSH_PROCESSES=1
+      - FLUSH_PERIOD=1.5
+      - PROCESS_TRANSFER_REQUESTS_THREADS=1
+      - PROCESS_FINALIZATION_REQUESTS_THREADS=1
+      - PROCESS_BALANCE_CHANGES_THREADS=1
+      - REMOVE_FROM_ARCHIVE_THRESHOLD_DATE=2022-07-30
+      # The size of the shared memory zone, used by each "http-cache" pod,
+      # for storing the cache keys and metadata such as usage timers.
+      # Having a copy of the keys in memory enables NGINX to quickly
+      # determine if a request is a HIT or a MISS without having to go to
+      # disk, greatly speeding up the check. A 1‑MB zone can store data
+      # for about 8,000 keys, so a 10‑MB zone can store data for about
+      # 80,000 keys. Note that the unit "m" means "MiB", and "g" means
+      # "GiB".
+      - CACHE_KEYS_ZONE=10m
+      # The upper limit of the size of the on-disk cache, maintained by
+      # each "http-cache" pod. When the cache size reaches the limit, a
+      # process called the "cache manager" removes the files that were
+      # least recently used to bring the cache size back under the limit.
+      # Note that the unit "m" means "MiB", and "g" means "GiB".
+      - CACHE_MAX_SIZE=800m
+      # The size of the persistent volume mounted on each "http-cache" pod
+      # to store the cached data. It must be slightly greater than the
+      # value specified by "CACHE_MAX_SIZE". Note however, that once the
+      # persistent volume claims have been created, increasing this value
+      # will not automatically expand the volumes. The unit "Mi" means
+      # "MiB", and "Gi" means "GiB".
+      - CACHE_VOLUME_SIZE=1Gi
+    options:
+      annotations:
+        # These annotations are used as sources for convenient Kustomize
+        # replacements. They specify Kubernetes memory and CPU requests
+        # and limits, for different shard container types.
+        kustomize_chores_consumer_cpu_request: 1m
+        kustomize_chores_consumer_cpu_limit: 2000m
+        kustomize_chores_consumer_memory_request: 84Mi
+        kustomize_chores_consumer_memory_limit: 1Gi
+        kustomize_http_cache_cpu_request: 1m
+        kustomize_http_cache_cpu_limit: 2000m
+        kustomize_http_cache_memory_request: 23Mi
+        kustomize_http_cache_memory_limit: 1Gi
+        kustomize_messages_consumer_cpu_request: 1m
+        kustomize_messages_consumer_cpu_limit: 2000m
+        kustomize_messages_consumer_memory_request: 98Mi
+        kustomize_messages_consumer_memory_limit: 1Gi
+        kustomize_messages_flusher_cpu_request: 1m
+        kustomize_messages_flusher_cpu_limit: 2000m
+        kustomize_messages_flusher_memory_request: 96Mi
+        kustomize_messages_flusher_memory_limit: 1Gi
+        kustomize_tasks_processor_cpu_request: 1m
+        kustomize_tasks_processor_cpu_limit: 2000m
+        kustomize_tasks_processor_memory_request: 743Mi
+        kustomize_tasks_processor_memory_limit: 1Gi
+        kustomize_web_server_cpu_request: 1m
+        kustomize_web_server_cpu_limit: 2000m
+        kustomize_web_server_memory_request: 83Mi
+        kustomize_web_server_memory_limit: 1Gi
+        kustomize_postgres_exporter_cpu_request: 1m
+        kustomize_postgres_exporter_cpu_limit: 2000m
+        kustomize_postgres_exporter_memory_request: 13Mi
+        kustomize_postgres_exporter_memory_limit: 1Gi
+        kustomize_walg_exporter_cpu_request: 1m
+        kustomize_walg_exporter_cpu_limit: 2000m
+        kustomize_walg_exporter_memory_request: 28Mi
+        kustomize_walg_exporter_memory_limit: 1Gi
+        # This annotation specifies the container image for the Postgres
+        # exporter sidecar.
+        kustomize_postgres_exporter_image: ghcr.io/swaptacular/postgres-exporter@sha256:38606faa38c54787525fb0ff2fd6b41b4cfb75d455c1df294927c5f611699b17
+        # This annotation specifies the container image for the WALG
+        # exporter sidecar.
+        kustomize_walg_exporter_image: ghcr.io/swaptacular/wal-g-exporter@sha256:5f842526cdf313a3746acb8c991abc6e9243b6dc902bbf21638588e7b38803ad
+        # Do not change the next two lines!
+        kustomize_zalando_top_level_domain: do
+        kustomize_zalando_clone_timestamp: "2199-01-01T00:00:00.000+00:00"
+  - name: http-cache-nginx-config
+    files:
+      - nginx.conf=../../../../base/swpt-accounts/shard/static/nginx.conf
+      - default.conf.template=../../../../base/swpt-accounts/shard/static/default.conf.template
 # The number of replicas for each component. One replica works fine,
 # but to have high-availability, should be at least 2.
-#
 replicas:
-- name: web-server
-  count: 1
-- name: messages-flusher
-  count: 1
-- name: messages-consumer
-  count: 1
-- name: chores-consumer
-  count: 1
-- name: http-cache
-  count: 1
-
+  - name: web-server
+    count: 1
+  - name: messages-flusher
+    count: 1
+  - name: messages-consumer
+    count: 1
+  - name: chores-consumer
+    count: 1
+  - name: http-cache
+    count: 1
 secretGenerator:
-- name: postgres.cluster-name.credentials.postgresql.acid.zalan.do
-  files:
-  - password=../../secrets/postgres-cluster-password.encrypted
-  literals:
-  - username=postgres
-  options:
-    disableNameSuffixHash: true
-    labels:
-      application: spilo
-      cluster-name: cluster-name
-      team: swpt
-  type: Opaque
-- name: standby.cluster-name.credentials.postgresql.acid.zalan.do
-  files:
-  - password=../../secrets/postgres-cluster-password.encrypted
-  literals:
-  - username=standby
-  options:
-    disableNameSuffixHash: true
-    labels:
-      application: spilo
-      cluster-name: cluster-name
-      team: swpt
-  type: Opaque
-- name: db-owner.cluster-name.credentials.postgresql.acid.zalan.do
-  files:
-  - password=../../secrets/postgres-cluster-password.encrypted
-  literals:
-  - username=db_owner
-  options:
-    disableNameSuffixHash: true
-    labels:
-      application: spilo
-      cluster-name: cluster-name
-      team: swpt
-  type: Opaque
-
+  - name: postgres.cluster-name.credentials.postgresql.acid.zalan.do
+    files:
+      - password=../../secrets/postgres-cluster-password.encrypted
+    literals:
+      - username=postgres
+    options:
+      disableNameSuffixHash: true
+      labels:
+        application: spilo
+        cluster-name: cluster-name
+        team: swpt
+    type: Opaque
+  - name: standby.cluster-name.credentials.postgresql.acid.zalan.do
+    files:
+      - password=../../secrets/postgres-cluster-password.encrypted
+    literals:
+      - username=standby
+    options:
+      disableNameSuffixHash: true
+      labels:
+        application: spilo
+        cluster-name: cluster-name
+        team: swpt
+    type: Opaque
+  - name: db-owner.cluster-name.credentials.postgresql.acid.zalan.do
+    files:
+      - password=../../secrets/postgres-cluster-password.encrypted
+    literals:
+      - username=db_owner
+    options:
+      disableNameSuffixHash: true
+      labels:
+        application: spilo
+        cluster-name: cluster-name
+        team: swpt
+    type: Opaque
 resources:
-- ../../../../base/swpt-accounts/shard/
-- postgres-cluster.yaml
-
+  - ../../../../base/swpt-accounts/shard/
+  - postgres-cluster.yaml
 patches:
-- path: ../../../../base/swpt-accounts/shard/patches/postgres-cluster.yaml
-  target:
-    group: acid.zalan.do
-    kind: postgresql
-    name: db
-    version: v1
-
+  - path: ../../../../base/swpt-accounts/shard/patches/postgres-cluster.yaml
+    target:
+      group: acid.zalan.do
+      kind: postgresql
+      name: db
+      version: v1
 replacements:
-- path: ../../../../base/swpt-accounts/shard/replacements/postgres-exporter-image.yaml
-- path: ../../../../base/swpt-accounts/shard/replacements/postgres-exporter-cpu-request.yaml
-- path: ../../../../base/swpt-accounts/shard/replacements/postgres-exporter-cpu-limit.yaml
-- path: ../../../../base/swpt-accounts/shard/replacements/postgres-exporter-memory-request.yaml
-- path: ../../../../base/swpt-accounts/shard/replacements/postgres-exporter-memory-limit.yaml
-- path: ../../../../base/swpt-accounts/shard/replacements/walg-exporter-image.yaml
-- path: ../../../../base/swpt-accounts/shard/replacements/walg-exporter-cpu-request.yaml
-- path: ../../../../base/swpt-accounts/shard/replacements/walg-exporter-cpu-limit.yaml
-- path: ../../../../base/swpt-accounts/shard/replacements/walg-exporter-memory-request.yaml
-- path: ../../../../base/swpt-accounts/shard/replacements/walg-exporter-memory-limit.yaml
-- path: ../../../../base/swpt-accounts/shard/replacements/secrets-clustername.yaml
-- path: ../../../../base/swpt-accounts/shard/replacements/secrets-namesuffix.yaml
-- path: ../../../../base/swpt-accounts/shard/replacements/shardconfig.yaml
-- path: ../../../../base/swpt-accounts/shard/replacements/webserver.yaml
-- path: ../../../../base/swpt-accounts/shard/replacements/http-cache-size.yaml
-- path: ../../../../base/swpt-accounts/shard/replacements/chores-consumer-cpu-request.yaml
-- path: ../../../../base/swpt-accounts/shard/replacements/chores-consumer-cpu-limit.yaml
-- path: ../../../../base/swpt-accounts/shard/replacements/chores-consumer-memory-request.yaml
-- path: ../../../../base/swpt-accounts/shard/replacements/chores-consumer-memory-limit.yaml
-- path: ../../../../base/swpt-accounts/shard/replacements/http-cache-cpu-request.yaml
-- path: ../../../../base/swpt-accounts/shard/replacements/http-cache-cpu-limit.yaml
-- path: ../../../../base/swpt-accounts/shard/replacements/http-cache-memory-request.yaml
-- path: ../../../../base/swpt-accounts/shard/replacements/http-cache-memory-limit.yaml
-- path: ../../../../base/swpt-accounts/shard/replacements/messages-consumer-cpu-request.yaml
-- path: ../../../../base/swpt-accounts/shard/replacements/messages-consumer-cpu-limit.yaml
-- path: ../../../../base/swpt-accounts/shard/replacements/messages-consumer-memory-request.yaml
-- path: ../../../../base/swpt-accounts/shard/replacements/messages-consumer-memory-limit.yaml
-- path: ../../../../base/swpt-accounts/shard/replacements/messages-flusher-cpu-request.yaml
-- path: ../../../../base/swpt-accounts/shard/replacements/messages-flusher-cpu-limit.yaml
-- path: ../../../../base/swpt-accounts/shard/replacements/messages-flusher-memory-request.yaml
-- path: ../../../../base/swpt-accounts/shard/replacements/messages-flusher-memory-limit.yaml
-- path: ../../../../base/swpt-accounts/shard/replacements/tasks-processor-cpu-request.yaml
-- path: ../../../../base/swpt-accounts/shard/replacements/tasks-processor-cpu-limit.yaml
-- path: ../../../../base/swpt-accounts/shard/replacements/tasks-processor-memory-request.yaml
-- path: ../../../../base/swpt-accounts/shard/replacements/tasks-processor-memory-limit.yaml
-- path: ../../../../base/swpt-accounts/shard/replacements/web-server-cpu-request.yaml
-- path: ../../../../base/swpt-accounts/shard/replacements/web-server-cpu-limit.yaml
-- path: ../../../../base/swpt-accounts/shard/replacements/web-server-memory-request.yaml
-- path: ../../../../base/swpt-accounts/shard/replacements/web-server-memory-limit.yaml
-
+  - path: ../../../../base/swpt-accounts/shard/replacements/postgres-exporter-image.yaml
+  - path: ../../../../base/swpt-accounts/shard/replacements/postgres-exporter-cpu-request.yaml
+  - path: ../../../../base/swpt-accounts/shard/replacements/postgres-exporter-cpu-limit.yaml
+  - path: ../../../../base/swpt-accounts/shard/replacements/postgres-exporter-memory-request.yaml
+  - path: ../../../../base/swpt-accounts/shard/replacements/postgres-exporter-memory-limit.yaml
+  - path: ../../../../base/swpt-accounts/shard/replacements/walg-exporter-image.yaml
+  - path: ../../../../base/swpt-accounts/shard/replacements/walg-exporter-cpu-request.yaml
+  - path: ../../../../base/swpt-accounts/shard/replacements/walg-exporter-cpu-limit.yaml
+  - path: ../../../../base/swpt-accounts/shard/replacements/walg-exporter-memory-request.yaml
+  - path: ../../../../base/swpt-accounts/shard/replacements/walg-exporter-memory-limit.yaml
+  - path: ../../../../base/swpt-accounts/shard/replacements/secrets-clustername.yaml
+  - path: ../../../../base/swpt-accounts/shard/replacements/secrets-namesuffix.yaml
+  - path: ../../../../base/swpt-accounts/shard/replacements/shardconfig.yaml
+  - path: ../../../../base/swpt-accounts/shard/replacements/webserver.yaml
+  - path: ../../../../base/swpt-accounts/shard/replacements/http-cache-size.yaml
+  - path: ../../../../base/swpt-accounts/shard/replacements/chores-consumer-cpu-request.yaml
+  - path: ../../../../base/swpt-accounts/shard/replacements/chores-consumer-cpu-limit.yaml
+  - path: ../../../../base/swpt-accounts/shard/replacements/chores-consumer-memory-request.yaml
+  - path: ../../../../base/swpt-accounts/shard/replacements/chores-consumer-memory-limit.yaml
+  - path: ../../../../base/swpt-accounts/shard/replacements/http-cache-cpu-request.yaml
+  - path: ../../../../base/swpt-accounts/shard/replacements/http-cache-cpu-limit.yaml
+  - path: ../../../../base/swpt-accounts/shard/replacements/http-cache-memory-request.yaml
+  - path: ../../../../base/swpt-accounts/shard/replacements/http-cache-memory-limit.yaml
+  - path: ../../../../base/swpt-accounts/shard/replacements/messages-consumer-cpu-request.yaml
+  - path: ../../../../base/swpt-accounts/shard/replacements/messages-consumer-cpu-limit.yaml
+  - path: ../../../../base/swpt-accounts/shard/replacements/messages-consumer-memory-request.yaml
+  - path: ../../../../base/swpt-accounts/shard/replacements/messages-consumer-memory-limit.yaml
+  - path: ../../../../base/swpt-accounts/shard/replacements/messages-flusher-cpu-request.yaml
+  - path: ../../../../base/swpt-accounts/shard/replacements/messages-flusher-cpu-limit.yaml
+  - path: ../../../../base/swpt-accounts/shard/replacements/messages-flusher-memory-request.yaml
+  - path: ../../../../base/swpt-accounts/shard/replacements/messages-flusher-memory-limit.yaml
+  - path: ../../../../base/swpt-accounts/shard/replacements/tasks-processor-cpu-request.yaml
+  - path: ../../../../base/swpt-accounts/shard/replacements/tasks-processor-cpu-limit.yaml
+  - path: ../../../../base/swpt-accounts/shard/replacements/tasks-processor-memory-request.yaml
+  - path: ../../../../base/swpt-accounts/shard/replacements/tasks-processor-memory-limit.yaml
+  - path: ../../../../base/swpt-accounts/shard/replacements/web-server-cpu-request.yaml
+  - path: ../../../../base/swpt-accounts/shard/replacements/web-server-cpu-limit.yaml
+  - path: ../../../../base/swpt-accounts/shard/replacements/web-server-memory-request.yaml
+  - path: ../../../../base/swpt-accounts/shard/replacements/web-server-memory-limit.yaml
 # # Uncomment the these lines to recover from the S3 backup. Once the
 # # data has been recovered successfully, the lines can be commented
 # # again. Uncommenting these lines will add a clone section in the
@@ -244,6 +218,5 @@ replacements:
 # #   clone:
 # #     cluster: <cluster-name>
 # #     timestamp: "2199-01-01T00:00:00.000+00:00"
-# #
 # - path: ../../../../base/swpt-accounts/shard/replacements/clone-clustername.yaml
 # - path: ../../../../base/swpt-accounts/shard/replacements/clone-timestamp.yaml

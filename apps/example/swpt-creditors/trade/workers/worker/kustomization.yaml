@@ -1,192 +1,172 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-
 # This must be either an empty string, or a string starting with '-',
 # and followed by 0s or 1s. "-101" for example.
-#
 nameSuffix: ""
-
 labels:
-- includeSelectors: true
-  pairs:
-    # The value for the label must correspond to the "nameSuffix"
-    # value. For example, if "nameSuffix" is "-101", the value for the
-    # label must be "worker-101". If "nameSuffix" is "", the value for
-    # the label must be "worker".
-    #
-    app.kubernetes.io/instance: worker
-
+  - includeSelectors: true
+    pairs:
+      # The value for the label must correspond to the "nameSuffix"
+      # value. For example, if "nameSuffix" is "-101", the value for the
+      # label must be "worker-101". If "nameSuffix" is "", the value for
+      # the label must be "worker".
+      app.kubernetes.io/instance: worker
 configMapGenerator:
-- name: trade-workerconfig
-  literals:
-  # The routing key must correspond to the "nameSuffix" value. For
-  # example, if "nameSuffix" is "-101", the routing key must be
-  # "1.0.1.#". If "nameSuffix" is "", the routing key must be "#".
-  #
-  - PROTOCOL_BROKER_QUEUE_ROUTING_KEY=#
-
-  # Worker configuration settings which you may want to change:
-  #
-  - PROTOCOL_BROKER_PROCESSES=1
-  - PROTOCOL_BROKER_THREADS=1
-  - PROTOCOL_BROKER_PREFETCH_COUNT=10
-  - SOLVER_CLIENT_POOL_SIZE=0
-  - FLUSH_PROCESSES=1
-  - FLUSH_PERIOD=1.5
-  - HTTP_FETCH_PROCESSES=1
-  - HTTP_FETCH_CONNECTIONS=100
-  - HTTP_FETCH_TIMEOUT=10.0
-  - HTTP_FETCH_PERIOD=5.0
-  - TRIGGER_TRANSFERS_PROCESSES=1
-  - TRIGGER_TRANSFERS_PERIOD=5.0
-  - HANDLE_PRISTINE_COLLECTORS_THREADS=1
-  - HANDLE_PRISTINE_COLLECTORS_PERIOD=60.0
-
-  options:
-    annotations:
-      # These annotations are used as sources for convenient Kustomize
-      # replacements. They specify Kubernetes memory and CPU requests
-      # and limits, for different shard container types.
-      #
-      kustomize_messages_consumer_cpu_request: 1m
-      kustomize_messages_consumer_cpu_limit: 2000m
-      kustomize_messages_consumer_memory_request: 100Mi
-      kustomize_messages_consumer_memory_limit: 1Gi
-      kustomize_messages_flusher_cpu_request: 1m
-      kustomize_messages_flusher_cpu_limit: 2000m
-      kustomize_messages_flusher_memory_request: 94Mi
-      kustomize_messages_flusher_memory_limit: 1Gi
-      kustomize_turn_roller_cpu_request: 1m
-      kustomize_turn_roller_cpu_limit: 2000m
-      kustomize_turn_roller_memory_request: 579Mi
-      kustomize_turn_roller_memory_limit: 1Gi
-      kustomize_http_fetcher_cpu_request: 1m
-      kustomize_http_fetcher_cpu_limit: 2000m
-      kustomize_http_fetcher_memory_request: 93Mi
-      kustomize_http_fetcher_memory_limit: 1Gi
-      kustomize_transfers_triggerer_cpu_request: 1m
-      kustomize_transfers_triggerer_cpu_limit: 2000m
-      kustomize_transfers_triggerer_memory_request: 92Mi
-      kustomize_transfers_triggerer_memory_limit: 1Gi
-      kustomize_postgres_exporter_cpu_request: 1m
-      kustomize_postgres_exporter_cpu_limit: 2000m
-      kustomize_postgres_exporter_memory_request: 13Mi
-      kustomize_postgres_exporter_memory_limit: 1Gi
-      kustomize_walg_exporter_cpu_request: 1m
-      kustomize_walg_exporter_cpu_limit: 2000m
-      kustomize_walg_exporter_memory_request: 28Mi
-      kustomize_walg_exporter_memory_limit: 1Gi
-
-      # This annotation specifies the container image for the Postgres
-      # exporter sidecar.
-      kustomize_postgres_exporter_image: ghcr.io/swaptacular/postgres-exporter@sha256:38606faa38c54787525fb0ff2fd6b41b4cfb75d455c1df294927c5f611699b17
-
-      # This annotation specifies the container image for the WALG
-      # exporter sidecar.
-      kustomize_walg_exporter_image: ghcr.io/swaptacular/wal-g-exporter@sha256:5f842526cdf313a3746acb8c991abc6e9243b6dc902bbf21638588e7b38803ad
-
-      # Do not change the next two lines!
-      kustomize_zalando_top_level_domain: do
-      kustomize_zalando_clone_timestamp: "2199-01-01T00:00:00.000+00:00"
-
+  - name: trade-workerconfig
+    literals:
+      # The routing key must correspond to the "nameSuffix" value. For
+      # example, if "nameSuffix" is "-101", the routing key must be
+      # "1.0.1.#". If "nameSuffix" is "", the routing key must be "#".
+      - PROTOCOL_BROKER_QUEUE_ROUTING_KEY=#
+      # Worker configuration settings which you may want to change:
+      - PROTOCOL_BROKER_PROCESSES=1
+      - PROTOCOL_BROKER_THREADS=1
+      - PROTOCOL_BROKER_PREFETCH_COUNT=10
+      - SOLVER_CLIENT_POOL_SIZE=0
+      - FLUSH_PROCESSES=1
+      - FLUSH_PERIOD=1.5
+      - HTTP_FETCH_PROCESSES=1
+      - HTTP_FETCH_CONNECTIONS=100
+      - HTTP_FETCH_TIMEOUT=10.0
+      - HTTP_FETCH_PERIOD=5.0
+      - TRIGGER_TRANSFERS_PROCESSES=1
+      - TRIGGER_TRANSFERS_PERIOD=5.0
+      - HANDLE_PRISTINE_COLLECTORS_THREADS=1
+      - HANDLE_PRISTINE_COLLECTORS_PERIOD=60.0
+    options:
+      annotations:
+        # These annotations are used as sources for convenient Kustomize
+        # replacements. They specify Kubernetes memory and CPU requests
+        # and limits, for different shard container types.
+        kustomize_messages_consumer_cpu_request: 1m
+        kustomize_messages_consumer_cpu_limit: 2000m
+        kustomize_messages_consumer_memory_request: 100Mi
+        kustomize_messages_consumer_memory_limit: 1Gi
+        kustomize_messages_flusher_cpu_request: 1m
+        kustomize_messages_flusher_cpu_limit: 2000m
+        kustomize_messages_flusher_memory_request: 94Mi
+        kustomize_messages_flusher_memory_limit: 1Gi
+        kustomize_turn_roller_cpu_request: 1m
+        kustomize_turn_roller_cpu_limit: 2000m
+        kustomize_turn_roller_memory_request: 579Mi
+        kustomize_turn_roller_memory_limit: 1Gi
+        kustomize_http_fetcher_cpu_request: 1m
+        kustomize_http_fetcher_cpu_limit: 2000m
+        kustomize_http_fetcher_memory_request: 93Mi
+        kustomize_http_fetcher_memory_limit: 1Gi
+        kustomize_transfers_triggerer_cpu_request: 1m
+        kustomize_transfers_triggerer_cpu_limit: 2000m
+        kustomize_transfers_triggerer_memory_request: 92Mi
+        kustomize_transfers_triggerer_memory_limit: 1Gi
+        kustomize_postgres_exporter_cpu_request: 1m
+        kustomize_postgres_exporter_cpu_limit: 2000m
+        kustomize_postgres_exporter_memory_request: 13Mi
+        kustomize_postgres_exporter_memory_limit: 1Gi
+        kustomize_walg_exporter_cpu_request: 1m
+        kustomize_walg_exporter_cpu_limit: 2000m
+        kustomize_walg_exporter_memory_request: 28Mi
+        kustomize_walg_exporter_memory_limit: 1Gi
+        # This annotation specifies the container image for the Postgres
+        # exporter sidecar.
+        kustomize_postgres_exporter_image: ghcr.io/swaptacular/postgres-exporter@sha256:38606faa38c54787525fb0ff2fd6b41b4cfb75d455c1df294927c5f611699b17
+        # This annotation specifies the container image for the WALG
+        # exporter sidecar.
+        kustomize_walg_exporter_image: ghcr.io/swaptacular/wal-g-exporter@sha256:5f842526cdf313a3746acb8c991abc6e9243b6dc902bbf21638588e7b38803ad
+        # Do not change the next two lines!
+        kustomize_zalando_top_level_domain: do
+        kustomize_zalando_clone_timestamp: "2199-01-01T00:00:00.000+00:00"
 # The number of replicas for each component. One replica works fine,
 # but to have high-availability, should be at least 2.
-#
 replicas:
-- name: trade-worker-messages-flusher
-  count: 1
-- name: trade-worker-messages-consumer
-  count: 1
-- name: trade-worker-http-fetcher
-  count: 1
-- name: trade-worker-transfers-triggerer
-  count: 1
-
+  - name: trade-worker-messages-flusher
+    count: 1
+  - name: trade-worker-messages-consumer
+    count: 1
+  - name: trade-worker-http-fetcher
+    count: 1
+  - name: trade-worker-transfers-triggerer
+    count: 1
 secretGenerator:
-- name: postgres.cluster-name.credentials.postgresql.acid.zalan.do
-  files:
-  - password=../../../secrets/postgres-cluster-password.encrypted
-  literals:
-  - username=postgres
-  options:
-    disableNameSuffixHash: true
-    labels:
-      application: spilo
-      cluster-name: cluster-name
-      team: swpt
-  type: Opaque
-- name: standby.cluster-name.credentials.postgresql.acid.zalan.do
-  files:
-  - password=../../../secrets/postgres-cluster-password.encrypted
-  literals:
-  - username=standby
-  options:
-    disableNameSuffixHash: true
-    labels:
-      application: spilo
-      cluster-name: cluster-name
-      team: swpt
-  type: Opaque
-- name: db-owner.cluster-name.credentials.postgresql.acid.zalan.do
-  files:
-  - password=../../../secrets/postgres-cluster-password.encrypted
-  literals:
-  - username=db_owner
-  options:
-    disableNameSuffixHash: true
-    labels:
-      application: spilo
-      cluster-name: cluster-name
-      team: swpt
-  type: Opaque
-
+  - name: postgres.cluster-name.credentials.postgresql.acid.zalan.do
+    files:
+      - password=../../../secrets/postgres-cluster-password.encrypted
+    literals:
+      - username=postgres
+    options:
+      disableNameSuffixHash: true
+      labels:
+        application: spilo
+        cluster-name: cluster-name
+        team: swpt
+    type: Opaque
+  - name: standby.cluster-name.credentials.postgresql.acid.zalan.do
+    files:
+      - password=../../../secrets/postgres-cluster-password.encrypted
+    literals:
+      - username=standby
+    options:
+      disableNameSuffixHash: true
+      labels:
+        application: spilo
+        cluster-name: cluster-name
+        team: swpt
+    type: Opaque
+  - name: db-owner.cluster-name.credentials.postgresql.acid.zalan.do
+    files:
+      - password=../../../secrets/postgres-cluster-password.encrypted
+    literals:
+      - username=db_owner
+    options:
+      disableNameSuffixHash: true
+      labels:
+        application: spilo
+        cluster-name: cluster-name
+        team: swpt
+    type: Opaque
 resources:
-- ../../../../../base/swpt-creditors/trade/worker/
-- postgres-cluster.yaml
-
+  - ../../../../../base/swpt-creditors/trade/worker/
+  - postgres-cluster.yaml
 patches:
-- path: ../../../../../base/swpt-creditors/trade/worker/patches/postgres-cluster.yaml
-  target:
-    group: acid.zalan.do
-    kind: postgresql
-    name: trade-worker-db
-    version: v1
-
+  - path: ../../../../../base/swpt-creditors/trade/worker/patches/postgres-cluster.yaml
+    target:
+      group: acid.zalan.do
+      kind: postgresql
+      name: trade-worker-db
+      version: v1
 replacements:
-- path: ../../../../../base/swpt-creditors/trade/worker/replacements/postgres-exporter-image.yaml
-- path: ../../../../../base/swpt-creditors/trade/worker/replacements/postgres-exporter-cpu-request.yaml
-- path: ../../../../../base/swpt-creditors/trade/worker/replacements/postgres-exporter-cpu-limit.yaml
-- path: ../../../../../base/swpt-creditors/trade/worker/replacements/postgres-exporter-memory-request.yaml
-- path: ../../../../../base/swpt-creditors/trade/worker/replacements/postgres-exporter-memory-limit.yaml
-- path: ../../../../../base/swpt-creditors/trade/worker/replacements/walg-exporter-image.yaml
-- path: ../../../../../base/swpt-creditors/trade/worker/replacements/walg-exporter-cpu-request.yaml
-- path: ../../../../../base/swpt-creditors/trade/worker/replacements/walg-exporter-cpu-limit.yaml
-- path: ../../../../../base/swpt-creditors/trade/worker/replacements/walg-exporter-memory-request.yaml
-- path: ../../../../../base/swpt-creditors/trade/worker/replacements/walg-exporter-memory-limit.yaml
-- path: ../../../../../base/swpt-creditors/trade/worker/replacements/secrets-clustername.yaml
-- path: ../../../../../base/swpt-creditors/trade/worker/replacements/secrets-namesuffix.yaml
-- path: ../../../../../base/swpt-creditors/trade/worker/replacements/trade-workerconfig.yaml
-- path: ../../../../../base/swpt-creditors/trade/worker/replacements/turn-roller-cpu-request.yaml
-- path: ../../../../../base/swpt-creditors/trade/worker/replacements/turn-roller-cpu-limit.yaml
-- path: ../../../../../base/swpt-creditors/trade/worker/replacements/turn-roller-memory-request.yaml
-- path: ../../../../../base/swpt-creditors/trade/worker/replacements/turn-roller-memory-limit.yaml
-- path: ../../../../../base/swpt-creditors/trade/worker/replacements/messages-consumer-cpu-request.yaml
-- path: ../../../../../base/swpt-creditors/trade/worker/replacements/messages-consumer-cpu-limit.yaml
-- path: ../../../../../base/swpt-creditors/trade/worker/replacements/messages-consumer-memory-request.yaml
-- path: ../../../../../base/swpt-creditors/trade/worker/replacements/messages-consumer-memory-limit.yaml
-- path: ../../../../../base/swpt-creditors/trade/worker/replacements/messages-flusher-cpu-request.yaml
-- path: ../../../../../base/swpt-creditors/trade/worker/replacements/messages-flusher-cpu-limit.yaml
-- path: ../../../../../base/swpt-creditors/trade/worker/replacements/messages-flusher-memory-request.yaml
-- path: ../../../../../base/swpt-creditors/trade/worker/replacements/messages-flusher-memory-limit.yaml
-- path: ../../../../../base/swpt-creditors/trade/worker/replacements/http-fetcher-cpu-request.yaml
-- path: ../../../../../base/swpt-creditors/trade/worker/replacements/http-fetcher-cpu-limit.yaml
-- path: ../../../../../base/swpt-creditors/trade/worker/replacements/http-fetcher-memory-request.yaml
-- path: ../../../../../base/swpt-creditors/trade/worker/replacements/http-fetcher-memory-limit.yaml
-- path: ../../../../../base/swpt-creditors/trade/worker/replacements/transfers-triggerer-cpu-request.yaml
-- path: ../../../../../base/swpt-creditors/trade/worker/replacements/transfers-triggerer-cpu-limit.yaml
-- path: ../../../../../base/swpt-creditors/trade/worker/replacements/transfers-triggerer-memory-request.yaml
-- path: ../../../../../base/swpt-creditors/trade/worker/replacements/transfers-triggerer-memory-limit.yaml
-
+  - path: ../../../../../base/swpt-creditors/trade/worker/replacements/postgres-exporter-image.yaml
+  - path: ../../../../../base/swpt-creditors/trade/worker/replacements/postgres-exporter-cpu-request.yaml
+  - path: ../../../../../base/swpt-creditors/trade/worker/replacements/postgres-exporter-cpu-limit.yaml
+  - path: ../../../../../base/swpt-creditors/trade/worker/replacements/postgres-exporter-memory-request.yaml
+  - path: ../../../../../base/swpt-creditors/trade/worker/replacements/postgres-exporter-memory-limit.yaml
+  - path: ../../../../../base/swpt-creditors/trade/worker/replacements/walg-exporter-image.yaml
+  - path: ../../../../../base/swpt-creditors/trade/worker/replacements/walg-exporter-cpu-request.yaml
+  - path: ../../../../../base/swpt-creditors/trade/worker/replacements/walg-exporter-cpu-limit.yaml
+  - path: ../../../../../base/swpt-creditors/trade/worker/replacements/walg-exporter-memory-request.yaml
+  - path: ../../../../../base/swpt-creditors/trade/worker/replacements/walg-exporter-memory-limit.yaml
+  - path: ../../../../../base/swpt-creditors/trade/worker/replacements/secrets-clustername.yaml
+  - path: ../../../../../base/swpt-creditors/trade/worker/replacements/secrets-namesuffix.yaml
+  - path: ../../../../../base/swpt-creditors/trade/worker/replacements/trade-workerconfig.yaml
+  - path: ../../../../../base/swpt-creditors/trade/worker/replacements/turn-roller-cpu-request.yaml
+  - path: ../../../../../base/swpt-creditors/trade/worker/replacements/turn-roller-cpu-limit.yaml
+  - path: ../../../../../base/swpt-creditors/trade/worker/replacements/turn-roller-memory-request.yaml
+  - path: ../../../../../base/swpt-creditors/trade/worker/replacements/turn-roller-memory-limit.yaml
+  - path: ../../../../../base/swpt-creditors/trade/worker/replacements/messages-consumer-cpu-request.yaml
+  - path: ../../../../../base/swpt-creditors/trade/worker/replacements/messages-consumer-cpu-limit.yaml
+  - path: ../../../../../base/swpt-creditors/trade/worker/replacements/messages-consumer-memory-request.yaml
+  - path: ../../../../../base/swpt-creditors/trade/worker/replacements/messages-consumer-memory-limit.yaml
+  - path: ../../../../../base/swpt-creditors/trade/worker/replacements/messages-flusher-cpu-request.yaml
+  - path: ../../../../../base/swpt-creditors/trade/worker/replacements/messages-flusher-cpu-limit.yaml
+  - path: ../../../../../base/swpt-creditors/trade/worker/replacements/messages-flusher-memory-request.yaml
+  - path: ../../../../../base/swpt-creditors/trade/worker/replacements/messages-flusher-memory-limit.yaml
+  - path: ../../../../../base/swpt-creditors/trade/worker/replacements/http-fetcher-cpu-request.yaml
+  - path: ../../../../../base/swpt-creditors/trade/worker/replacements/http-fetcher-cpu-limit.yaml
+  - path: ../../../../../base/swpt-creditors/trade/worker/replacements/http-fetcher-memory-request.yaml
+  - path: ../../../../../base/swpt-creditors/trade/worker/replacements/http-fetcher-memory-limit.yaml
+  - path: ../../../../../base/swpt-creditors/trade/worker/replacements/transfers-triggerer-cpu-request.yaml
+  - path: ../../../../../base/swpt-creditors/trade/worker/replacements/transfers-triggerer-cpu-limit.yaml
+  - path: ../../../../../base/swpt-creditors/trade/worker/replacements/transfers-triggerer-memory-request.yaml
+  - path: ../../../../../base/swpt-creditors/trade/worker/replacements/transfers-triggerer-memory-limit.yaml
 # # Uncomment the these lines to recover from the S3 backup. Once the
 # # data has been recovered successfully, the lines can be commented
 # # again. Uncommenting these lines will add a clone section in the
@@ -200,6 +180,5 @@ replacements:
 # #   clone:
 # #     cluster: <cluster-name>
 # #     timestamp: "2199-01-01T00:00:00.000+00:00"
-# #
 # - path: ../../../../../base/swpt-creditors/trade/worker/replacements/clone-clustername.yaml
 # - path: ../../../../../base/swpt-creditors/trade/worker/replacements/clone-timestamp.yaml
