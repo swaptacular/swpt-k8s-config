@@ -132,6 +132,15 @@ secretGenerator:
       app.kubernetes.io/name: swpt-debtors
   type: Opaque
 
+- name: git-ops-ssh-id
+  files:
+  - id_rsa=../swpt-nfs-server/secrets/id_rsa.encrypted
+  - id_rsa.pub=../swpt-nfs-server/secrets/id_rsa.pub
+  - id_rsa-cert.pub=../swpt-nfs-server/secrets/id_rsa-cert.pub
+  options:
+    disableNameSuffixHash: true
+  type: Opaque
+
 - name: regcreds
   files:
   - ".dockerconfigjson=../regcreds.json.encrypted"
@@ -245,6 +254,14 @@ configMapGenerator:
       kustomize_apiproxy_cpu_limit: 1000m
       kustomize_apiproxy_memory_request: 19Mi
       kustomize_apiproxy_memory_limit: 1Gi
+
+- name: git-ops-config
+  literals:
+  - GIT_SERVER=git-server.simple-git-server.svc.cluster.local
+  - GIT_PORT=2222
+  - GIT_REPOSITORY_PATH=/srv/git/fluxcd.git
+  options:
+    disableNameSuffixHash: true
 
 # The number of replicas for each component. One replica works fine,
 # but to have high-availability, should be at least 2.
