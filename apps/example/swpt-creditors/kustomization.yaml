@@ -404,10 +404,10 @@ replicas:
 images:
 - name: swpt-creditors
   newName: ghcr.io/swaptacular/swpt_creditors
-  digest: sha256:bc956f005bd91587e2c5eb21a998e72fda1d4c56af1b20805e43441cdcaf997c
+  digest: sha256:009e5c5fc5346584d681a7dc19f9e10b5a78eeecdc789dcae86e5b141dae5348
 - name: swpt-creditors-swagger-ui
   newName: ghcr.io/swaptacular/swpt_creditors_swagger_ui
-  digest: sha256:ef66130edc168cb27667c673f8341991d05296fceaabed3784db03b6ebadc1cd
+  digest: sha256:c704b74d89c58d0b88f8e8b8bf1abf15824ca4db98f6e18c992635da6470a9ee
 - name: swpt-creditors-ui
   newName: ghcr.io/swaptacular/swpt_creditors_ui
   digest: sha256:31ed252b9db16ffa37e81527137880b5e5d10d3ced246519fa3d077995e78f67
