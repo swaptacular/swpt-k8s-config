@@ -292,7 +292,7 @@ images:
   digest: sha256:f3674f3a027e961d6c4be308094e1ec129859fda1aafac85e5920edb0c9bdb7f
 - name: swpt-split-shard
   newName: ghcr.io/swaptacular/swpt_split_shard
-  digest: sha256:9241af56a9964030803b6166b902cdf04947801f080bafd9d01c76253b290076
+  digest: sha256:0bf2a6820051d12cc72a8d4a46d2e5835cdbdfcc7c7fce13d2ffee59ddb93957
 
 resources:
 - ../../base/swpt-accounts/
