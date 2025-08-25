@@ -2,11 +2,13 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-if [[ "$#" != 0 && ${1:-} != "--validate-only" ]]; then
-    echo 'Splits the shard into two children shards.'
+if [[ "$#" == 0 || ("$#" == 2 && "$2" != "--validate-only") || "$#" -gt 2 || "$1" == "--help" ]]; then
+    echo 'Splits the shard declared in SUBDIRECTORY_NAME into two children shards.'
     echo
-    echo 'Usage: split'
-    echo '       split --validate-only'
+    echo 'Usage: split-shard SUBDIRECTORY_NAME'
+    echo '       split-shard SUBDIRECTORY_NAME --validate-only'
+    echo
+    echo 'Example: split-shard shard'
     exit 2
 fi
 
@@ -384,6 +386,13 @@ function split_shard {
 }
 
 find_script_dir || exit 3
+cd "$DIR"
+if [[ ! -d "$1" ]]; then
+    echo
+    echo "ERROR: Can not find subdirectory \"$1\"."
+    exit 1
+fi
+DIR=$(realpath "$1")
 
 GITOPS_ROOT_DIR="$(realpath $DIR/../../../../../)"
 SHARDS_PG_CLUSTER_PREFIX=db
@@ -414,7 +423,7 @@ ensure_successful_shard_kustomization_build
 ensure_no_existing_children_shards
 ensure_no_split_in_progress
 
-if [[ ${1:-} == "--validate-only" ]]; then
+if [[ ${2:-} == "--validate-only" ]]; then
     echo
     echo "\"$SHARD_BASENAME\" is valid and can be split."
     exit 0
@@ -423,3 +432,4 @@ fi
 split_shard
 echo
 echo "\"$SHARD_BASENAME\" has been prepared for splitting."
+echo 'Use "git status" to verify the prepared changes.'
