@@ -17,15 +17,14 @@ do
     if ! which "$dependency" &> /dev/null; then
         echo
         echo "ERROR: $dependency is not installed on your system."
-        echo
         exit 2
     fi
 done
 
-if ! yq --version | grep -iE 'version\s+v?4\.[0-9]' > /dev/null; then
+if ! yq --version | grep -iE 'version v?4\.[0-9]' > /dev/null; then
     echo
     echo "ERROR: A wrong version of 'yq' is installed on your system."
-    echo
+    echo "       You need version 4 of Mike Farah's yq tool (https://github.com/mikefarah/yq)."
     exit 2
 fi
 
@@ -258,6 +257,17 @@ function ensure_no_split_in_progress {
         echo
         echo "ERROR: A split is already in progress for \"$SHARD_BASENAME\"."
         exit 1
+    fi
+    grandparent_suffix="$(echo "$SHARD_SUFFIX" | sed -E 's/(\-[01]*)[01]$/\1/; s/\-$//')"
+    grandparent_name="$SHARDS_PREFIX$grandparent_suffix"
+    grandparent_dir="$(realpath "$DIR/..")/$grandparent_name"
+    if [[ "$grandparent_dir" != "$DIR" ]]; then
+        echo "Checking if $grandparent_dir/ still exists."
+        if [[ -e "$grandparent_dir" ]]; then
+            echo
+            echo "ERROR: \"$SHARD_BASENAME\" has not been fully split from \"$grandparent_name\"."
+            exit 1
+        fi
     fi
 }
 
