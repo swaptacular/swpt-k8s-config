@@ -1,0 +1,105 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: splitting-phase-1-job
+  labels:
+    app.kubernetes.io/component: shard-splitting-job
+spec:
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: shard-splitting-job
+    spec:
+      podReplacementPolicy: Failed
+      priorityClassName: shard-background-worker
+      imagePullSecrets:
+        - name: regcreds
+      containers:
+      - name: prepare-for-draining
+        image: swpt-split-shard
+        args: ['prepare-for-draining']
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+        envFrom:
+          - secretRef:
+              name: db-owner-credentials
+            prefix: pg_
+          - configMapRef:
+              name: git-ops-config
+          - configMapRef:
+              name: splitting-jobs-config
+        env:
+          - name: WORKING_DIRECTORY
+            value: "/mnt/git-ops"
+        resources:
+          requests:
+            cpu: 50m
+            memory: 200Mi
+            ephemeral-storage: 1Gi
+          limits:
+            cpu: "1"
+            memory: 300Mi
+            ephemeral-storage: 5Gi
+        volumeMounts:
+          - mountPath: "/mnt/git-ops/"
+            name: git-repo-working-copy
+            readOnly: false
+          - name: git-ops-ssh-id
+            mountPath: "/etc/ssh/id_rsa"
+            subPath: id_rsa
+          - name: git-ops-ssh-id
+            mountPath: "/etc/ssh/id_rsa.pub"
+            subPath: id_rsa.pub
+          - name: git-ops-ssh-id
+            mountPath: "/etc/ssh/id_rsa-cert.pub"
+            subPath: id_rsa-cert.pub
+      initContainers:
+      - name: verify-shard-content
+        image: swpt-trade
+        args: ['verify_shard_content']
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+        envFrom:
+          - secretRef:
+              name: db-owner-credentials
+            prefix: pg_
+          - secretRef:
+              name: broker-default-user
+            prefix: rmq_
+          - configMapRef:
+              name: swpt-trade-config
+          - configMapRef:
+              name: trade-workerconfig
+        env:
+          - name: SOLVER_POSTGRES_URL
+            value: "postgresql+psycopg://$(pg_username):$(pg_password)@trade-solver-db:5432/db"
+          - name: WORKER_POSTGRES_URL
+            value: "postgresql+psycopg://$(pg_username):$(pg_password)@$(pg_cluster_name):5432/db"
+          - name: PROTOCOL_BROKER_URL
+            value: "$(rmq_connection_string)"
+          - name: PROTOCOL_BROKER_QUEUE
+            value: "$(pg_cluster_name)"
+          - name: APP_LOG_LEVEL
+            value: info
+        resources:
+          requests:
+            cpu: 50m
+            memory: 200Mi
+          limits:
+            cpu: "1"
+            memory: 300Mi
+      restartPolicy: OnFailure
+      volumes:
+        - name: git-repo-working-copy
+          emptyDir: {}
+        - name: git-ops-ssh-id
+          secret:
+            secretName: git-ops-ssh-id
+            defaultMode: 0600
+  backoffLimit: 2147483647

@@ -1,0 +1,438 @@
+#!/bin/bash
+set -euo pipefail
+IFS=$'\n\t'
+
+if [[ "$#" == 0 || ("$#" == 2 && "$2" != "--validate-only") || "$#" -gt 2 || "$1" == "--help" ]]; then
+    echo 'Splits the worker declared in SUBDIRECTORY_NAME into two children workers.'
+    echo
+    echo 'Usage: split-worker SUBDIRECTORY_NAME'
+    echo '       split-worker SUBDIRECTORY_NAME --validate-only'
+    echo
+    echo 'Example: split-worker worker'
+    exit 2
+fi
+
+for dependency in sed kustomize yq
+do
+    if ! which "$dependency" &> /dev/null; then
+        echo
+        echo "ERROR: $dependency is not installed on your system."
+        exit 2
+    fi
+done
+
+if ! yq --version | grep -iE 'version v?4\.[0-9]' > /dev/null; then
+    echo
+    echo "ERROR: A wrong version of 'yq' is installed on your system."
+    echo "       You need version 4 of Mike Farah's yq tool (https://github.com/mikefarah/yq)."
+    exit 2
+fi
+
+function find_script_dir {
+    SOURCE=${BASH_SOURCE[0]}
+    while [ -L "$SOURCE" ]; do # resolve $SOURCE until the file is not a symlink
+        DIR=$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )
+        SOURCE=$(readlink "$SOURCE")
+        # If $SOURCE was a relative symlink, we need to resolve it relative
+        # to the path where the symlink file was located.
+        [[ $SOURCE != /* ]] && SOURCE=$DIR/$SOURCE
+    done
+    DIR=$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )
+    export SWPT_SHARD_DIR="$DIR"
+}
+
+function yq_ensure {
+    result="$(yq "$2" "$1")"
+    if [[ "$result" != "$3" ]]; then
+        echo
+        echo "ERROR: Unexpected value for '$2' in $1."
+        echo
+        echo "Expected '$3', got '$result'."
+        exit 1
+    fi
+}
+
+function validate_shards_kustomization_file {
+    fname="$SHARDS_KUSTOMIZATION_FILE"
+    echo "Validating $fname:"
+
+    echo '... Ensuring required fields are present.'
+    yq_ensure "$fname" '.apiVersion' kustomize.config.k8s.io/v1beta1
+    yq_ensure "$fname" '.kind' Kustomization
+    yq_ensure "$fname" '.labels | kind' seq
+    yq_ensure "$fname" '.resources | kind' seq
+
+    echo '... Ensuring common labels are correctly declared.'
+    yq_ensure "$fname" '.labels | length' 1
+    yq_ensure "$fname" '.labels[0] | kind' map
+    yq_ensure "$fname" '.labels[0] | length' 2
+    yq_ensure "$fname" '.labels[0].includeSelectors' true
+    yq_ensure "$fname" '.labels[0].pairs | kind' map
+    yq_ensure "$fname" '.labels[0].pairs | length' 2
+    yq_ensure "$fname" '.labels[0].pairs."app.kubernetes.io/name"' "$SHARDS_APP"
+    yq_ensure "$fname" '.labels[0].pairs."app.kubernetes.io/part-of"' "$PART_OF_APP"
+
+    echo '... Ensuring no additional resources and transformers are declared.'
+    yq_ensure "$fname" '. | has("configMapGenerator")' false
+    yq_ensure "$fname" '. | has("secretGenerator")' false
+    yq_ensure "$fname" '. | has("namespace")' false
+    yq_ensure "$fname" '. | has("namePrefix")' false
+    yq_ensure "$fname" '. | has("nameSuffix")' false
+    yq_ensure "$fname" '. | has("replicas")' false
+    yq_ensure "$fname" '. | has("patches")' false
+    yq_ensure "$fname" '. | has("replacements")' false
+    yq_ensure "$fname" '. | has("images")' false
+    yq_ensure "$fname" '. | has("configMapGenerator")' false
+    yq_ensure "$fname" '. | has("secretGenerator")' false
+
+    echo "... Ensuring ${SHARD_BASENAME}/ is included."
+    yq_ensure "$fname" ".resources | contains([\"${SHARD_BASENAME}/\"])" true
+
+    for shard_name in "$SHARDS_PREFIX$SHARD0_SUFFIX" "$SHARDS_PREFIX$SHARD1_SUFFIX"
+    do
+        echo "... Ensuring ${shard_name}/ is not included."
+        yq_ensure "$fname" ".resources | contains([\"${shard_name}\"])" false
+        yq_ensure "$fname" ".resources | contains([\"${shard_name}/\"])" false
+    done
+}
+
+function validate_shard_kustomization_file {
+    fname="$DIR/kustomization.yaml"
+    echo "Validating ${fname}:"
+
+    echo '... Ensuring required fields are present.'
+    yq_ensure "$fname" '.apiVersion' kustomize.config.k8s.io/v1beta1
+    yq_ensure "$fname" '.kind' Kustomization
+    yq_ensure "$fname" '.labels | kind' seq
+    yq_ensure "$fname" '.configMapGenerator | kind' seq
+    yq_ensure "$fname" '.secretGenerator | kind' seq
+    yq_ensure "$fname" '.replicas | kind' seq
+    yq_ensure "$fname" '.resources | kind' seq
+    yq_ensure "$fname" '.patches | kind' seq
+    yq_ensure "$fname" '.replacements | kind' seq
+
+    echo '... Ensuring no common namespace is declared.'
+    yq_ensure "$fname" '. | has("namespace")' false
+
+    echo '... Ensuring no namePrefix is declared.'
+    yq_ensure "$fname" '. | has("namePrefix")' false
+
+    echo '... Ensuring the correct nameSuffix is declared.'
+    yq_ensure "$fname" '.nameSuffix' "$SHARD_SUFFIX"
+
+    echo '... Ensuring common labels are correctly declared.'
+    yq_ensure "$fname" '.labels | length' 1
+    yq_ensure "$fname" '.labels[0] | kind' map
+    yq_ensure "$fname" '.labels[0] | length' 2
+    yq_ensure "$fname" '.labels[0].includeSelectors' true
+    yq_ensure "$fname" '.labels[0].pairs | kind' map
+    yq_ensure "$fname" '.labels[0].pairs | length' 1
+    yq_ensure "$fname" '.labels[0].pairs."app.kubernetes.io/instance"' "$SHARD_BASENAME"
+
+    echo '... Ensuring only needed resources are included.'
+    yq_ensure "$fname" ".resources | kind" seq
+    yq_ensure "$fname" ".resources | length" 2
+    yq_ensure "$fname" ".resources | contains([\"${BASE_DIR}\", \"postgres-cluster.yaml\"])" true
+
+    echo "... Ensuring worker's configuration contains the correct routing key."
+    literals=".configMapGenerator[] | select(.name == \"$SHARD_CONFIG\") .literals"
+    varname='PROTOCOL_BROKER_QUEUE_ROUTING_KEY'
+    yq_ensure "$fname" "${literals} | kind" seq
+    yq_ensure "$fname" "${literals}[] | select(. == \"${varname}=*\")" "${varname}=${SHARD_ROUTING_KEY}"
+
+    echo '... Ensuring PostgreSQL secrets are correctly declared.'
+    for db_user in postgres standby db-owner
+    do
+        config_name_suffix='cluster-name.credentials.postgresql.acid.zalan.do'
+        password_file='../../../secrets/postgres-cluster-password.encrypted'
+        db_user_underscored="$(echo $db_user | sed 's/-/_/')"
+        yq_ensure "$fname"\
+                  ".secretGenerator[] | select(.name == \"${db_user}.${config_name_suffix}\" and .type == \"Opaque\" and .options.disableNameSuffixHash == true and .options.labels.application == \"spilo\" and .options.labels.team == \"swpt\" and .options.labels.cluster-name == \"cluster-name\" and .literals[0] == \"username=${db_user_underscored}\" and .files[0] == \"password=${password_file}\") | kind"\
+                  map
+    done
+
+    echo '... Ensuring the "postgres-cluster.yaml" patch is applied.'
+    patches_dir="${BASE_DIR}patches/"
+    yq_ensure "$fname"\
+              ".patches[] | select(.path == \"${patches_dir}postgres-cluster.yaml\" and .target.group == \"acid.zalan.do\" and .target.kind == \"postgresql\" and .target.name == \"trade-worker-db\" and .target.version == \"v1\") | kind"\
+              map
+
+    echo '... Ensuring critical replacements are applied.'
+    replacements_dir="${BASE_DIR}replacements/"
+    for filename in \
+            secrets-clustername\
+            secrets-namesuffix\
+            trade-workerconfig\
+            postgres-exporter-image\
+            walg-exporter-image
+    do
+        yq_ensure "$fname"\
+                  ".replacements[] | select(.path == \"${replacements_dir}${filename}.yaml\") | kind"\
+                  map
+    done
+
+    echo '... Ensuring the "clone" replacements are not applied.'
+    yq_ensure "$fname"\
+              ".replacements[] | select(.path == \"${replacements_dir}clone-clustername.yaml\" or .path == \"${replacements_dir}clone-timestamp.yaml\") | kind"\
+              ""
+
+    echo '... Ensuring the number replicas is declared for each deployment.'
+    for replica_name in \
+            trade-worker-http-fetcher\
+            trade-worker-transfers-triggerer\
+            trade-worker-messages-flusher\
+            trade-worker-messages-consumer
+    do
+        yq_ensure "$fname" ".replicas[] | select(.name == \"${replica_name}\") | has(\"count\")" true
+    done
+}
+
+function validate_shard_postgres_cluster_file {
+    fname="$DIR/postgres-cluster.yaml"
+    echo "Validating ${fname}:"
+
+    echo '... Ensuring required fields are present.'
+    yq_ensure "$fname" '.apiVersion' acid.zalan.do/v1
+    yq_ensure "$fname" '.kind' postgresql
+    yq_ensure "$fname" '.metadata | kind' map
+    yq_ensure "$fname" '.spec | kind' map
+    yq_ensure "$fname" '.spec | has("dockerImage")' true
+    yq_ensure "$fname" '.spec | has("numberOfInstances")' true
+    yq_ensure "$fname" '.spec.volume | kind' map
+    yq_ensure "$fname" '.spec.volume | has("size")' true
+    yq_ensure "$fname" '.spec.postgresql | kind' map
+    yq_ensure "$fname" '.spec.postgresql | has("version")' true
+
+    echo '... Ensuring correct cluster name.'
+    yq_ensure "$fname" '.metadata.name' trade-worker-db
+
+    echo '... Ensuring no "standby:" or "clone:" sections are declared.'
+    yq_ensure "$fname" '.spec | has("standby")' false
+    yq_ensure "$fname" '.spec | has("clone")' false
+
+    echo '... Ensuring an "env:" section is declared.'
+    yq_ensure "$fname" '.spec.env | kind' seq
+
+    echo '... Ensuring resource requests and limits are declared.'
+    yq_ensure "$fname" '.spec.resources | kind' map
+    yq_ensure "$fname" '.spec.resources | length' 2
+    yq_ensure "$fname" '.spec.resources.requests | kind' map
+    yq_ensure "$fname" '.spec.resources.limits | kind' map
+
+    echo '... Ensuring a correct team ID is declared.'
+    yq_ensure "$fname" '.spec.teamId' swpt
+
+    echo '... Ensuring database users are correctly declared.'
+    yq_ensure "$fname" '.spec.users | kind' map
+    yq_ensure "$fname" '.spec.users | length' 1
+    yq_ensure "$fname" '.spec.users.db_owner | kind' seq
+    yq_ensure "$fname" '.spec.users.db_owner | length' 0
+
+    echo '... Ensuring databases are correctly declared.'
+    yq_ensure "$fname" '.spec.databases | kind' map
+    yq_ensure "$fname" '.spec.databases | length' 1
+    yq_ensure "$fname" '.spec.databases.db' db_owner
+}
+
+function ensure_successful_shard_kustomization_build {
+    if ! kustomize build --output=/dev/null --load-restrictor=LoadRestrictionsNone "$DIR"; then
+        echo
+        echo "ERROR: Can not build worker's resources from the worker's Kustomization file."
+        exit 1
+    fi
+}
+
+function ensure_no_split_in_progress {
+    fname="$DIR/kustomization.unsplit"
+    echo "Checking if $fname already exists."
+    if [[ -e "$fname" ]]; then
+        echo
+        echo "ERROR: A split is already in progress for \"$SHARD_BASENAME\"."
+        exit 1
+    fi
+    grandparent_suffix="$(echo "$SHARD_SUFFIX" | sed -E 's/(\-[01]*)[01]$/\1/; s/\-$//')"
+    grandparent_name="$SHARDS_PREFIX$grandparent_suffix"
+    grandparent_dir="$(realpath "$DIR/..")/$grandparent_name"
+    if [[ "$grandparent_dir" != "$DIR" ]]; then
+        echo "Checking if $grandparent_dir/ still exists."
+        if [[ -e "$grandparent_dir" ]]; then
+            echo
+            echo "ERROR: \"$SHARD_BASENAME\" has not been fully split from \"$grandparent_name\"."
+            exit 1
+        fi
+    fi
+}
+
+function ensure_no_existing_children_shards {
+    for shard_suffix in "$SHARD0_SUFFIX" "$SHARD1_SUFFIX"
+    do
+        child_dir="$DIR/../$SHARDS_PREFIX$shard_suffix"
+        echo "Checking if ${child_dir} already exists."
+        if [[ -e "$child_dir" ]]; then
+            echo
+            echo "ERROR: A child-worker already exists: $SHARDS_PREFIX$shard_suffix"
+            exit 1
+        fi
+    done
+}
+
+function add_do_not_edit_comment {
+    temp_file=$(mktemp)
+    echo '# This file is currently owned by the worker-splitting job. DO NOT EDIT!' >> "$temp_file"
+    echo "# Date: $(date)" >> "$temp_file"
+    echo '#' >> "$temp_file"
+    cat "$1" >> "$temp_file"
+    mv -f "$temp_file" "$1"
+}
+
+function set_replicas_selector {
+    REPLICAS_SELECTOR='.name != ""'
+    IFS=$' '
+    for workload in ${SHARDS_CRITICAL_WORKLOADS-}
+    do
+        REPLICAS_SELECTOR+=" and .name != \"$workload\""
+    done
+    IFS=$'\n\t'
+}
+
+function create_child_shard {
+    child_suffix_var_name=SHARD${1}_SUFFIX
+    child_routing_key_var_name=SHARD${1}_ROUTING_KEY
+    eval child_suffix=\$$child_suffix_var_name
+    eval child_routing_key=\$$child_routing_key_var_name
+    child_name=$SHARDS_PREFIX$child_suffix
+    child_dir="$DIR/../$child_name"
+
+    echo "... Creating ${child_dir}/"
+    cp -r "$DIR" "${child_dir}"
+    rm "${child_dir}/kustomization.unsplit"
+
+    # Ensure nothing except the database and the critical (readonly)
+    # workloads are running.
+    yq -i "with(.replicas[] | select($REPLICAS_SELECTOR); .count |= 0)" "${child_dir}/kustomization.yaml"
+
+    # Set the correct child index.
+    yq -i ".nameSuffix = \"$child_suffix\"" "${child_dir}/kustomization.yaml"
+    yq -i ".labels[0].pairs.\"app.kubernetes.io/instance\" = \"$child_name\""\
+       "${child_dir}/kustomization.yaml"
+    yq -i "with(.configMapGenerator[] | select(.name == \"$SHARD_CONFIG\") .literals[] | select(. == \"PROTOCOL_BROKER_QUEUE_ROUTING_KEY=*\"); . = \"PROTOCOL_BROKER_QUEUE_ROUTING_KEY=${child_routing_key}\")"\
+       "${child_dir}/kustomization.yaml"
+
+    # Add "standby:" section to the PostgreSQL cluster declaration.
+    pg_version="$(yq '.spec.postgresql.version' "${child_dir}/postgres-cluster.yaml")"
+    namespace="$(basename "$(realpath "$DIR/../../")")"
+    s3_wal_path="s3://swpt/spilo/${namespace}-db${SHARD_SUFFIX}/wal/${pg_version}"
+    yq -i ".spec.standby = {\"s3_wal_path\": \"${s3_wal_path}\"}" "${child_dir}/postgres-cluster.yaml"
+
+    echo "... Adding ${child_name}/ to the list of resources in $SHARDS_KUSTOMIZATION_FILE"
+    yq -i ".resources += \"${child_name}/\"" "$SHARDS_KUSTOMIZATION_FILE"
+}
+
+function split_shard {
+    echo
+    echo "Splitting \"$SHARD_BASENAME\":"
+
+    echo "... Creating $DIR/kustomization.unsplit"
+    cp "$DIR/kustomization.yaml" "$DIR/kustomization.unsplit"
+    add_do_not_edit_comment "$DIR/kustomization.unsplit"
+
+    echo "... Setting count=1 for ${SINGLETON_REPLICA_NAME}'s replicas in $DIR/kustomization.yaml"
+    yq -i "with(.replicas[] | select(.name == \"$SINGLETON_REPLICA_NAME\"); del(.))" "$DIR/kustomization.yaml"
+    yq -i ".replicas += [{\"name\": \"$SINGLETON_REPLICA_NAME\", \"count\": 1}]" "$DIR/kustomization.yaml"
+
+    varname='DELETE_PARENT_SHARD_RECORDS'
+    echo "... Setting $varname=true in $DIR/kustomization.yaml"
+    literals=".configMapGenerator[] | select(.name == \"$SHARD_CONFIG\") .literals"
+    vardecl="${literals}[] | select(. == \"${varname}=*\")"
+    yq -i "del($vardecl)" "$DIR/kustomization.yaml"
+    yq -i "with($literals; . += \"$varname=true\")" "$DIR/kustomization.yaml"
+
+    echo "... Adding comment in $DIR/kustomization.yaml"
+    add_do_not_edit_comment "$DIR/kustomization.yaml"
+
+    echo "... Adding comment in $DIR/postgres-cluster.yaml"
+    add_do_not_edit_comment "$DIR/postgres-cluster.yaml"
+
+    set_replicas_selector
+    create_child_shard 0
+    create_child_shard 1
+
+    echo "... Adding splitting-jobs-config to the list of generated configmaps in $DIR/kustomization.yaml"
+    ennvars=""
+    for envvar_name in \
+            SHARDS_APP\
+            SHARDS_CRITICAL_WORKLOADS\
+            SHARDS_COMPONENTS\
+            SHARDS_PREFIX\
+            SHARDS_PG_CLUSTER_PREFIX\
+            SHARD_SUFFIX\
+            SHARD0_SUFFIX\
+            SHARD1_SUFFIX\
+            SHARD_ROUTING_KEY\
+            SHARD0_ROUTING_KEY\
+            SHARD1_ROUTING_KEY\
+            APIPROXY_CONFIG\
+            CONSUMER_TASK_NAME\
+            DRAINER_TASK_NAME
+    do
+        eval envvar_value="\$$envvar_name"
+        envvars+="\"${envvar_name}=${envvar_value}\", "
+    done
+    envvars+="\"SHARDS_SUBDIR=${SHARDS_DIR#$GITOPS_ROOT_DIR/}\""
+    yq -i ".configMapGenerator += {\"name\": \"splitting-jobs-config\", \"literals\": [${envvars}]}"\
+       "$DIR/kustomization.yaml"
+
+    job_path="${BASE_DIR}splitting-phase-1-job.yaml"
+    echo "... Adding $job_path to the list of resources in $DIR/kustomization.yaml"
+    yq -i ".resources += \"$job_path\"" "$DIR/kustomization.yaml"
+}
+
+find_script_dir || exit 3
+cd "$DIR"
+if [[ ! -d "$1" ]]; then
+    echo
+    echo "ERROR: Can not find subdirectory \"$1\"."
+    exit 1
+fi
+DIR=$(realpath "$1")
+
+GITOPS_ROOT_DIR="$(realpath $DIR/../../../../../../)"
+SHARDS_PG_CLUSTER_PREFIX=trade-worker-db
+BASE_DIR='../../../../../base/swpt-creditors/trade/worker/'
+APIPROXY_CONFIG=''
+PART_OF_APP=swpt-trade
+SHARDS_APP=swpt-trade-worker
+SHARDS_CRITICAL_WORKLOADS=''
+SHARDS_COMPONENTS='http-fetcher messages-consumer messages-flusher transfers-triggerer turn-roller'
+SINGLETON_REPLICA_NAME=turn-roller
+CONSUMER_TASK_NAME=messages-consumer
+DRAINER_TASK_NAME=messages-drainer
+SHARD_CONFIG=trade-workerconfig
+SHARD_BASENAME=$(basename "$DIR")
+SHARD_SUFFIX=$(echo "$SHARD_BASENAME" | sed -nE 's/^.*(\-[01]+)$/\1/p')
+SHARD_ROUTING_KEY=$(echo "$SHARD_SUFFIX" | sed 's/^-//; s/./&./g; s/$/#/')
+SHARDS_DIR="$(realpath $DIR/../)"
+SHARDS_KUSTOMIZATION_FILE="$SHARDS_DIR/kustomization.yaml"
+SHARDS_PREFIX=$(echo "$SHARD_BASENAME" | sed -nE "s/^(.*)${SHARD_SUFFIX}$/\1/p")
+SHARD0_SUFFIX="$(echo "$SHARD_SUFFIX" | sed 's/^$/-/')0"
+SHARD1_SUFFIX="$(echo "$SHARD_SUFFIX" | sed 's/^$/-/')1"
+SHARD0_ROUTING_KEY=$(echo "$SHARD0_SUFFIX" | sed 's/^-//; s/./&./g; s/$/#/')
+SHARD1_ROUTING_KEY=$(echo "$SHARD1_SUFFIX" | sed 's/^-//; s/./&./g; s/$/#/')
+
+validate_shards_kustomization_file
+validate_shard_kustomization_file
+validate_shard_postgres_cluster_file
+ensure_successful_shard_kustomization_build
+ensure_no_existing_children_shards
+ensure_no_split_in_progress
+
+if [[ ${2:-} == "--validate-only" ]]; then
+    echo
+    echo "\"$SHARD_BASENAME\" is valid and can be split."
+    exit 0
+fi
+
+split_shard
+echo
+echo "\"$SHARD_BASENAME\" has been prepared for splitting."
+echo 'Use "git status" to verify the prepared changes.'
