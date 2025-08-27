@@ -320,8 +320,8 @@ function create_child_shard {
 
     # Add "standby:" section to the PostgreSQL cluster declaration.
     pg_version="$(yq '.spec.postgresql.version' "${child_dir}/postgres-cluster.yaml")"
-    namespace="$(basename "$(realpath "$DIR/../../")")"
-    s3_wal_path="s3://swpt/spilo/${namespace}-db${SHARD_SUFFIX}/wal/${pg_version}"
+    namespace="$(basename "$(realpath "$DIR/../../../")")"
+    s3_wal_path="s3://swpt/spilo/${namespace}-trade-worker-db${SHARD_SUFFIX}/wal/${pg_version}"
     yq -i ".spec.standby = {\"s3_wal_path\": \"${s3_wal_path}\"}" "${child_dir}/postgres-cluster.yaml"
 
     echo "... Adding ${child_name}/ to the list of resources in $SHARDS_KUSTOMIZATION_FILE"
@@ -404,9 +404,9 @@ PART_OF_APP=swpt-trade
 SHARDS_APP=swpt-trade-worker
 SHARDS_CRITICAL_WORKLOADS=''
 SHARDS_COMPONENTS='http-fetcher messages-consumer messages-flusher transfers-triggerer turn-roller'
-SINGLETON_REPLICA_NAME=turn-roller
-CONSUMER_TASK_NAME=messages-consumer
-DRAINER_TASK_NAME=messages-drainer
+SINGLETON_REPLICA_NAME=trade-worker-turn-roller
+CONSUMER_TASK_NAME=trade-worker-messages-consumer
+DRAINER_TASK_NAME=trade-worker-messages-drainer
 SHARD_CONFIG=trade-workerconfig
 SHARD_BASENAME=$(basename "$DIR")
 SHARD_SUFFIX=$(echo "$SHARD_BASENAME" | sed -nE 's/^.*(\-[01]+)$/\1/p')
