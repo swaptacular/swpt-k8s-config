@@ -140,12 +140,6 @@ function validate_shard_kustomization_file {
     yq_ensure "$fname" "${literals} | kind" seq
     yq_ensure "$fname" "${literals}[] | select(. == \"${varname}=*\")" "${varname}=${SHARD_ROUTING_KEY}"
 
-    echo '... Ensuring "http-cache-nginx-config" configmap is correctly declared.'
-    files='.configMapGenerator[] | select(.name == "http-cache-nginx-config") .files'
-    yq_ensure "$fname" "${files} | kind" seq
-    yq_ensure "$fname" "${files}[] | select(. == \"nginx.conf=*\") | kind" scalar
-    yq_ensure "$fname" "${files}[] | select(. == \"default.conf.template=*\") | kind" scalar
-
     echo '... Ensuring PostgreSQL secrets are correctly declared.'
     for db_user in postgres standby db-owner
     do
@@ -166,13 +160,11 @@ function validate_shard_kustomization_file {
     echo '... Ensuring critical replacements are applied.'
     replacements_dir="${BASE_DIR}replacements/"
     for filename in \
-            http-cache-size\
             secrets-clustername\
             secrets-namesuffix\
             shardconfig\
             postgres-exporter-image\
-            walg-exporter-image\
-            webserver
+            walg-exporter-image
     do
         yq_ensure "$fname"\
                   ".replacements[] | select(.path == \"${replacements_dir}${filename}.yaml\") | kind"\
@@ -188,9 +180,7 @@ function validate_shard_kustomization_file {
     for replica_name in \
             web-server\
             messages-flusher\
-            messages-consumer\
-            chores-consumer\
-            http-cache
+            messages-consumer
     do
         yq_ensure "$fname" ".replicas[] | select(.name == \"${replica_name}\") | has(\"count\")" true
     done
@@ -407,12 +397,12 @@ DIR=$(realpath "$1")
 
 GITOPS_ROOT_DIR="$(realpath $DIR/../../../../../)"
 SHARDS_PG_CLUSTER_PREFIX=db
-BASE_DIR='../../../../base/swpt-accounts/shard/'
+BASE_DIR='../../../../base/swpt-debtors/shard/'
 APIPROXY_CONFIG='../../apiproxy.conf'
-PART_OF_APP=swpt-accounts
-SHARDS_APP=swpt-accounts-shard
-SHARDS_CRITICAL_WORKLOADS='http-cache web-server'
-SHARDS_COMPONENTS='chores-consumer messages-consumer messages-flusher tasks-processor'
+PART_OF_APP=swpt-debtors
+SHARDS_APP=swpt-debtors-shard
+SHARDS_CRITICAL_WORKLOADS=''
+SHARDS_COMPONENTS='web-server messages-consumer messages-flusher tasks-processor'
 SINGLETON_REPLICA_NAME=tasks-processor
 CONSUMER_TASK_NAME=messages-consumer
 DRAINER_TASK_NAME=messages-drainer
