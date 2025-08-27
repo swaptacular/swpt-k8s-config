@@ -25,4 +25,5 @@ resources:
 - ingress-nginx-pod-monitor.yaml
 - acme-cert-issuer.yaml
 - spilo-pod-monitor.yaml
+- shard-splitter-service-account.yaml
 - web-ui/
