@@ -37,7 +37,7 @@ images:
 # The Nginx server which serves the Grafana plugins:
 - name: swpt-http-server
   newName: ghcr.io/swaptacular/swpt_http_server
-  digest: sha256:f4c12ebca1acac14fa7aef6c7d7cb8583ee58a29d509545cb381ae0c1d6771e8
+  digest: sha256:e44948e4673a1aa02bc90882d4bb509cb2dc884484bcc1ea2566d1bff7f82662
 
 patches:
 
