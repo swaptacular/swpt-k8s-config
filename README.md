@@ -728,3 +728,88 @@ To ssh://git-server.simple-git-server.svc.cluster.local:2222/srv/git/fluxcd.git
 FluxCD will periodically check for changes in the repository hosted on
 the Git server in your Kubernetes cluster and reconcile the state of
 the cluster.
+
+## Scaling up
+
+As the number of users grows, you may need to increase the number of
+running deployment replicas, processes, and threads of the various
+components, by editing the relevant `kustomization.yaml`,
+`broker.yaml`, `postgres-cluster.yaml`, and `dragonfly-db.yaml` files.
+While increasing replicas, processes, or threads can help with compute
+scalability, eventually the database itself becomes a bottleneck,
+necessitating horizontal scaling through sharding.
+
+Each database shard is responsible for some portion of all existing
+database records. At the beginning, there is only one database shard
+(named `shard` in general, or "worker" in the trade app), which is
+responsible for all database records. To increase the number of shards
+to two, you need to split the existing shard into two child shards.
+The new shards will have the names `shard-0` and `shard-1`, and each
+will be responsible for half of the records previously belonging to
+the parent shard. (That is: `shard-0` will be responsible for the
+records whose MD5-hash's first bit is 0, and `shard-1` will be
+responsible for the records whose MD5-hash's first bit is 1.) When
+those children shards are again close to becoming overloaded, you can
+again split each of them into two, resulting in four shards in total
+(`shard-00`, `shard-01`, `shard-10`, and `shard-11`). You can continue
+scaling by recursively splitting existing shards as needed.
+
+The process of shard splitting is completely automated, but must be
+triggered manually. To trigger a shard split, navigate to the `shards`
+subdirectory of your GitOps repository (or for the trade app, the
+"trade/workers" subdirectory), and execute the `split-shard` script as
+shown below:
+
+``` console
+$ cd apps/dev/swpt-accounts/shards
+$ pwd
+/home/johndoe/src/swpt-k8s-config/apps/dev/swpt-accounts/shards
+$ ls -F
+kustomization.yaml  shard/  split-shard*
+
+$ ./split-shard shard
+...
+...
+"shard" has been prepared for splitting.
+Use "git status" to verify the prepared changes.
+
+$ git status
+On branch master
+Your branch is up to date with 'k8s-repo/master'.
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   kustomization.yaml
+	modified:   shard/kustomization.yaml
+	modified:   shard/postgres-cluster.yaml
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	shard-0/
+	shard-1/
+	shard/kustomization.unsplit
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+$ git add -A
+$ git commit -m "Trigger split of apps/dev/swpt-accounts/shards/shard"
+[split 80703f6] Trigger split of apps/dev/swpt-accounts/shards/shard
+ 8 files changed, 806 insertions(+)
+ create mode 100644 apps/example/swpt-accounts/shards/shard-0/kustomization.yaml
+ create mode 100644 apps/example/swpt-accounts/shards/shard-0/postgres-cluster.yaml
+ create mode 100644 apps/example/swpt-accounts/shards/shard-1/kustomization.yaml
+ create mode 100644 apps/example/swpt-accounts/shards/shard-1/postgres-cluster.yaml
+ create mode 100644 apps/example/swpt-accounts/shards/shard/kustomization.unsplit
+
+$ git push k8s-repo master
+Enumerating objects: 8, done.
+Counting objects: 100% (8/8), done.
+Delta compression using up to 4 threads
+Compressing objects: 100% (4/4), done.
+Writing objects: 100% (5/5), 3.93 KiB | 1.31 MiB/s, done.
+Total 5 (delta 2), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
+To github.com:johndoe/swpt-k8s-config.git
+   c46b496..1c50aeb  master -> master
+```
