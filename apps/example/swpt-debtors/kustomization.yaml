@@ -398,6 +398,9 @@ images:
 - name: swpt-stomp
   newName: ghcr.io/swaptacular/swpt_stomp
   digest: sha256:393fc048dad43fa95587de8d0f486a73427f8077fb0ad147c94c9dc3018ee7e3
+- name: swpt-nfs-server
+  newName: ghcr.io/swaptacular/swpt_nfs_server
+  digest: sha256:867dbf9d15350907be5ace69a06845cb670d9a9c47bf6c872109a24669658523
 - name: oryd-hydra-maester
   newName: ghcr.io/swaptacular/hydra-maester
   digest: sha256:470e314ad0c3803dc4b221e05709002b1d2f28c274a6504ab3430e61920e3f6b
