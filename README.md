@@ -511,7 +511,8 @@ Then, you need to connect to the Git server, create a new
 GitOps repo into it:
 
 **Important note:** You need to obtain the public IP address of the
-Git server's load balancer in your Kubernetes cluster.
+Git server's load balancer in your Kubernetes cluster (`172.18.0.4` in
+this example).
 
 ``` console
 $ pwd
