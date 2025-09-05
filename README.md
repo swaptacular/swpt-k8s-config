@@ -344,50 +344,50 @@ this, you need to do some preparations:
    instructions ](https://github.com/swaptacular/swpt_ca_scripts). In
    this example, we presume that you have done this already.
 
-``` console
-$ pwd
-/home/johndoe/src/swpt-k8s-config
+   ``` console
+   $ pwd
+   /home/johndoe/src/swpt-k8s-config
 
-$ cp simple-git-server/static/trusted_user_ca_keys simple-git-server/
-$ ls -F apps/dev/swpt-accounts/node-data/  # See https://github.com/swaptacular/swpt_ca_scripts
-certs/                generate-serverkey*  private/           root-ca.conf.template
-create-infobundle*    init-ca*             README.md          root-ca.crt
-creditors-subnet.txt  my-infobundle.zip    reconfigure-peer*  sign-peercert*
-db/                   nodeinfo/            register-peer*     sign-servercert*
-generate-masterkey*   peers/               root-ca.conf
+   $ cp simple-git-server/static/trusted_user_ca_keys simple-git-server/
+   $ ls -F apps/dev/swpt-accounts/node-data/  # See https://github.com/swaptacular/swpt_ca_scripts
+   certs/                generate-serverkey*  private/           root-ca.conf.template
+   create-infobundle*    init-ca*             README.md          root-ca.crt
+   creditors-subnet.txt  my-infobundle.zip    reconfigure-peer*  sign-peercert*
+   db/                   nodeinfo/            register-peer*     sign-servercert*
+   generate-masterkey*   peers/               root-ca.conf
 
-$ export ROOT_CA_CRT_FILE=apps/dev/swpt-accounts/node-data/root-ca.crt  # the path to your Swaptacular node's self-signed root-CA certificate
-$ openssl x509 -in "$ROOT_CA_CRT_FILE" -pubkey -noout > CERT.tmp
-$ ssh-keygen -f CERT.tmp -i -m PKCS8 >> simple-git-server/trusted_user_ca_keys
-$ rm CERT.tmp
-$ cat simple-git-server/trusted_user_ca_keys  # Shows the trusted root-CA keys, one key per line.
-...
-...
-ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCJfDWvw+LxOW1ECcpoHdFw+ygG4XSeVrB9JFVdIcrrVHqIXDPjvJKXrQ2TadeaTA2i1XUv+XwJr2ZN3OZ6dGLxddPQD4ZG6ciT4iK4TOjAiauE8gQPHR1uzShoK2TGfuYXma2lOnB4s/w5Tif+an5NzHRuDzAwXHPVfVeb9kgIO4A761CztwdTPyEM0jocpoz03Ch4DgYvwf2r+P+1x2Hm5htipNigkhdwtdw5yjUuTR3ylFIeokwcIZomYcGGO66i7EWGYzhr811uApgLJH5YtqeFnD054ia+AbOdCXEr1ZXvpol1Vqo6p/R015zBjMQ8wcdzd+PMSzHvXMLMjG6POhRvQ2yy3cmDpPPIzMHOcNxXhdarVLKDt8/SJlo4O+buAbHdib0pRXpqbPS6rjFwArB93H7TOcY+xl3EGAsjz+1wRPlbi1TN9XNRyQKxLK21QpYql4iYoD8Wac6iWQDDKNaTr88YFUu+MMUfZuQ+0MmXQ1yA/wfqyC9pjm4tkc0=
-```
+   $ export ROOT_CA_CRT_FILE=apps/dev/swpt-accounts/node-data/root-ca.crt  # the path to your Swaptacular node's self-signed root-CA certificate
+   $ openssl x509 -in "$ROOT_CA_CRT_FILE" -pubkey -noout > CERT.tmp
+   $ ssh-keygen -f CERT.tmp -i -m PKCS8 >> simple-git-server/trusted_user_ca_keys
+   $ rm CERT.tmp
+   $ cat simple-git-server/trusted_user_ca_keys  # Shows the trusted root-CA keys, one key per line.
+   ...
+   ...
+   ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCJfDWvw+LxOW1ECcpoHdFw+ygG4XSeVrB9JFVdIcrrVHqIXDPjvJKXrQ2TadeaTA2i1XUv+XwJr2ZN3OZ6dGLxddPQD4ZG6ciT4iK4TOjAiauE8gQPHR1uzShoK2TGfuYXma2lOnB4s/w5Tif+an5NzHRuDzAwXHPVfVeb9kgIO4A761CztwdTPyEM0jocpoz03Ch4DgYvwf2r+P+1x2Hm5htipNigkhdwtdw5yjUuTR3ylFIeokwcIZomYcGGO66i7EWGYzhr811uApgLJH5YtqeFnD054ia+AbOdCXEr1ZXvpol1Vqo6p/R015zBjMQ8wcdzd+PMSzHvXMLMjG6POhRvQ2yy3cmDpPPIzMHOcNxXhdarVLKDt8/SJlo4O+buAbHdib0pRXpqbPS6rjFwArB93H7TOcY+xl3EGAsjz+1wRPlbi1TN9XNRyQKxLK21QpYql4iYoD8Wac6iWQDDKNaTr88YFUu+MMUfZuQ+0MmXQ1yA/wfqyC9pjm4tkc0=
+   ```
 
 2. You need to choose the passwords for accessing the Alertmanager and
    Prometheus UIs (a view-only access):
 
-``` console
-$ cd simple-git-server/
-$ pwd
-/home/johndoe/src/swpt-k8s-config/simple-git-server
+   ``` console
+   $ cd simple-git-server/
+   $ pwd
+   /home/johndoe/src/swpt-k8s-config/simple-git-server
 
-$ echo "viewer:$(openssl passwd)" > secret-files/alertmanager_viewers
-Password: <enter your chosen password>
-Verifying - Password: <enter your chosen password again>
+   $ echo "viewer:$(openssl passwd)" > secret-files/alertmanager_viewers
+   Password: <enter your chosen password>
+   Verifying - Password: <enter your chosen password again>
 
-$ cat secret-files/alertmanager_viewers  # Shows Alertmanager's viewers usernames and encrypted passwords, one viewer per line.
-viewer:$1$2gwQXkVy$An9E0C66KIGsgQ/KhPWoD.
+   $ cat secret-files/alertmanager_viewers  # Shows Alertmanager's viewers usernames and encrypted passwords, one viewer per line.
+   viewer:$1$2gwQXkVy$An9E0C66KIGsgQ/KhPWoD.
 
-$ echo "viewer:$(openssl passwd)" > secret-files/prometheus_viewers
-Password: <enter your chosen password>
-Verifying - Password: <enter your chosen password again>
+   $ echo "viewer:$(openssl passwd)" > secret-files/prometheus_viewers
+   Password: <enter your chosen password>
+   Verifying - Password: <enter your chosen password again>
 
-$ cat secret-files/prometheus_viewers  # Shows Prometheus's viewers usernames and encrypted passwords, one viewer per line.
-viewer:$1$2gwQXkVy$An9E0C66KIGsgQ/KhPWoD.
-```
+   $ cat secret-files/prometheus_viewers  # Shows Prometheus's viewers usernames and encrypted passwords, one viewer per line.
+   viewer:$1$2gwQXkVy$An9E0C66KIGsgQ/KhPWoD.
+   ```
 
 3. Then, you need to run a simple script which will automatically
    generate some secrets:
@@ -398,53 +398,53 @@ viewer:$1$2gwQXkVy$An9E0C66KIGsgQ/KhPWoD.
    Prometheus UIs. You may enter any values you like, including
    pressing “Enter” multiple times to skip fields.
 
-``` console
-$ pwd
-/home/johndoe/src/swpt-k8s-config/simple-git-server
+   ``` console
+   $ pwd
+   /home/johndoe/src/swpt-k8s-config/simple-git-server
 
-$ ./generate-secret-files.sh
-Generating public/private rsa key pair.
-Your identification has been saved in secret-files/ssh_host_rsa_key
-Your public key has been saved in secret-files/ssh_host_rsa_key.pub
-The key fingerprint is:
-SHA256:V5z4od4LmSBF3MyXsTzPBjt+yYOKLJQqrZS2ULerNyM johndoe@mycomputer
-The key's randomart image is:
-+---[RSA 3072]----+
-|+oo+=o...o=.    =|
-| + oo+o .. + o *o|
-|. . ..+.  E + O +|
-|   .   + o   = *o|
-|      . S + + . =|
-|         o + . + |
-|            o . .|
-|             =   |
-|              o  |
-+----[SHA256]-----+
-........+...+..+.+..+...+....+.........+..+.......+........++++++++++++
-...
-...
------
-You are about to be asked to enter information that will be incorporated
-into your certificate request.
-What you are about to enter is what is called a Distinguished Name or a DN.
-There are quite a few fields but you can leave some blank
-For some fields there will be a default value,
-If you enter '.', the field will be left blank.
------
-Country Name (2 letter code) [AU]:
-State or Province Name (full name) [Some-State]:
-Locality Name (eg, city) []:
-Organization Name (eg, company) [Internet Widgits Pty Ltd]:
-Organizational Unit Name (eg, section) []:
-Common Name (e.g. server FQDN or YOUR name) []:
-Email Address []:
+   $ ./generate-secret-files.sh
+   Generating public/private rsa key pair.
+   Your identification has been saved in secret-files/ssh_host_rsa_key
+   Your public key has been saved in secret-files/ssh_host_rsa_key.pub
+   The key fingerprint is:
+   SHA256:V5z4od4LmSBF3MyXsTzPBjt+yYOKLJQqrZS2ULerNyM johndoe@mycomputer
+   The key's randomart image is:
+   +---[RSA 3072]----+
+   |+oo+=o...o=.    =|
+   | + oo+o .. + o *o|
+   |. . ..+.  E + O +|
+   |   .   + o   = *o|
+   |      . S + + . =|
+   |         o + . + |
+   |            o . .|
+   |             =   |
+   |              o  |
+   +----[SHA256]-----+
+   ........+...+..+.+..+...+....+.........+..+.......+........++++++++++++
+   ...
+   ...
+   -----
+   You are about to be asked to enter information that will be incorporated
+   into your certificate request.
+   What you are about to enter is what is called a Distinguished Name or a DN.
+   There are quite a few fields but you can leave some blank
+   For some fields there will be a default value,
+   If you enter '.', the field will be left blank.
+   -----
+   Country Name (2 letter code) [AU]:
+   State or Province Name (full name) [Some-State]:
+   Locality Name (eg, city) []:
+   Organization Name (eg, company) [Internet Widgits Pty Ltd]:
+   Organizational Unit Name (eg, section) []:
+   Common Name (e.g. server FQDN or YOUR name) []:
+   Email Address []:
 
-****************************************************************
-* IMPORTANT: Do not forget to run the "delete-secret-files.sh" *
-* script once you have successfully bootstrapped your          *
-* Kubernetes cluster!                                          *
-****************************************************************
-```
+   ****************************************************************
+   * IMPORTANT: Do not forget to run the "delete-secret-files.sh" *
+   * script once you have successfully bootstrapped your          *
+   * Kubernetes cluster!                                          *
+   ****************************************************************
+   ```
 
 After completing all the preparations, you can finally install the Git
 server in your Kubernetes cluster:
