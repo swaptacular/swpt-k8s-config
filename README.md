@@ -196,11 +196,13 @@ Kubernetes cluster:
 
 You can run more than one Swaptacluar node type in the same Kubernetes
 cluster. You can even run multiple instances of the same node type,
-but then you need to make sure that the name of each node's
-subdirectory is unique. In this example, we will presume that you want
-to run an accounting authority node, but the only difference in the
-name of the subdirectory (`swpt-accounts`, `swpt-debtors`, or
-`swpt-creditors`).
+but in this case you would need to make sure that the name of each
+node's subdirectory is unique.
+
+In this example, we will presume that you want to run an accounting
+authority node, but if you want to run a different type of node, the
+only difference would be in the name of the subdirectory that you need
+to copy (`swpt-accounts`, `swpt-debtors`, or `swpt-creditors`).
 
 **Note:** In production, you will not need the `mailhog.yaml`,
 `minio.yaml`, and `pebble.yaml` files in the `clusters/example/`
@@ -330,9 +332,17 @@ immediately.
 ## Install a simple Git server in your Kubernetes cluster
 
 The next step is to install a Git server in your Kubernetes cluster,
-which will host a copy of your GitOps repository. Before doing this,
-you need to add the root-CA public key for each of your Swaptacular
-nodes, to the `simple-git-server/trusted_user_ca_keys` file:
+which will host a copy of your GitOps repository. But before doing
+this, you need to do some preparations:
+
+1. You need to add the root-CA public key for each (or at least one)
+   of your Swaptacular nodes, to the
+   `simple-git-server/trusted_user_ca_keys` file:
+
+   **Note:** To generate a root-CA public key for you node, you must
+   use the scripts in the `node-data` subdirectory, and [follow these
+   instructions ](https://github.com/swaptacular/swpt_ca_scripts). In
+   this example, we presume that you have done this already.
 
 ``` console
 $ pwd
@@ -356,8 +366,8 @@ $ cat simple-git-server/trusted_user_ca_keys  # Shows the trusted root-CA keys, 
 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCJfDWvw+LxOW1ECcpoHdFw+ygG4XSeVrB9JFVdIcrrVHqIXDPjvJKXrQ2TadeaTA2i1XUv+XwJr2ZN3OZ6dGLxddPQD4ZG6ciT4iK4TOjAiauE8gQPHR1uzShoK2TGfuYXma2lOnB4s/w5Tif+an5NzHRuDzAwXHPVfVeb9kgIO4A761CztwdTPyEM0jocpoz03Ch4DgYvwf2r+P+1x2Hm5htipNigkhdwtdw5yjUuTR3ylFIeokwcIZomYcGGO66i7EWGYzhr811uApgLJH5YtqeFnD054ia+AbOdCXEr1ZXvpol1Vqo6p/R015zBjMQ8wcdzd+PMSzHvXMLMjG6POhRvQ2yy3cmDpPPIzMHOcNxXhdarVLKDt8/SJlo4O+buAbHdib0pRXpqbPS6rjFwArB93H7TOcY+xl3EGAsjz+1wRPlbi1TN9XNRyQKxLK21QpYql4iYoD8Wac6iWQDDKNaTr88YFUu+MMUfZuQ+0MmXQ1yA/wfqyC9pjm4tkc0=
 ```
 
-You also need to choose the passwords for accessing the Alertmanager
-and Prometheus UIs (view-only):
+2. You need to choose the passwords for accessing the Alertmanager and
+   Prometheus UIs (a view-only access):
 
 ``` console
 $ cd simple-git-server/
@@ -379,14 +389,14 @@ $ cat secret-files/prometheus_viewers  # Shows Prometheus's viewers usernames an
 viewer:$1$2gwQXkVy$An9E0C66KIGsgQ/KhPWoD.
 ```
 
-Then, you need to run a simple script which will automatically
-generate some secrets:
+3. Then, you need to run a simple script which will automatically
+   generate some secrets:
 
-**Note**: You will be prompted to enter information for a self-signed
-SSL certificate. This certificate will be used by the Nginx reverse
-proxy providing access to the Alertmanager and Prometheus UIs. You may
-enter any values you like, including pressing “Enter” multiple times
-to skip fields.
+   **Note**: You will be prompted to enter information for a
+   self-signed SSL certificate. This certificate will be used by the
+   Nginx reverse proxy providing access to the Alertmanager and
+   Prometheus UIs. You may enter any values you like, including
+   pressing “Enter” multiple times to skip fields.
 
 ``` console
 $ pwd
@@ -436,7 +446,7 @@ Email Address []:
 ****************************************************************
 ```
 
-After completing all the preparations, you can install a simple Git
+After completing all the preparations, you can finally install the Git
 server in your Kubernetes cluster:
 
 ``` console
@@ -470,7 +480,9 @@ replicaset.apps/simple-git-server-5d86d687d8   1         1         1       24h
 
 **Note:** The last command displays the public IP address of the load
 balancer for the newly installed Git server (`172.18.0.4` in this
-example).
+example). You can also access Alertmanager and Prometheus UIs at this
+IP address (at `https://172.18.0.4/alertmanager/` and
+`https://172.18.0.4/prometheus/`).
 
 ## Copy the GitOps repository to the newly installed Git server
 
