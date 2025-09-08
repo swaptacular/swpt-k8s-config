@@ -357,6 +357,11 @@ configMapGenerator:
 
 - name: git-ops-config
   literals:
+  # Specifies how to connect to the GitOps server. By default, this
+  # points to the "simple-git-server" installed in the Kubernetes
+  # cluster. If you have decided to bootstrap FluxCD from an external
+  # Git server instead, you will need to change this.
+  #
   - GIT_SERVER=git-server.simple-git-server.svc.cluster.local
   - GIT_PORT=2222
   - GIT_REPOSITORY_PATH=/srv/git/fluxcd.git
