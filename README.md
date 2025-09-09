@@ -200,7 +200,7 @@ information about the Swaptacular node and its peers. The `node-data/`
 subdirectory starts as an identical copy of the [Swaptacular
 certificate authority scripts
 repository](https://github.com/swaptacular/swpt_ca_scripts), and
-continue evolving from there.
+continues evolving from there.
 
 You should always include a copy of the
 `apps/example/regcreds.json.encrypted` file, and the
@@ -241,7 +241,7 @@ $ rm -rf apps/$CLUSTER_NAME/swpt-creditors  # Do not run a creditors agent node.
 `minio.yaml`, and `pebble.yaml` files in the `clusters/example/`
 directory. They are useful only for testing.
 
-Once you have sorted all this out (Remember, you must **pay close
+Once you have sorted all this out (Remember, **you must pay close
 attention** to the comments in the various `.yaml` files!), commit and
 push your changes to the GitOps repository:
 
@@ -634,6 +634,11 @@ Fast-forward
  1 file changed, 2 insertions(+)
 ```
 
+**Note:** When deploying a non-production cluster, you may choose to
+simplify your workflow by using an external GitOps server (less
+secure) instead of the Git server installed on the cluster. In that
+case, you must change the `flux bootstrap` command accordingly.
+
 ## Wait for the cluster to start the pods
 
 This process will take some time. You can use `kubectl` to monitor the
@@ -713,9 +718,10 @@ gpg:  secret keys unchanged: 1
 
 ## Delete the unencrypted secrets from your machine (optional)
 
-It is **strongly recommended** that you delete the unencrypted secrets
-from the `simple-git-server/secret-files` directory on your machine.
-To do so, run the following command:
+Once you have successfully bootstrapped your Kubernetes cluster, it is
+**strongly recommended** that you delete the unencrypted secrets from
+the `simple-git-server/secret-files` directory on your machine. To do
+so, run the following command:
 
 ``` console
 $ cd simple-git-server
