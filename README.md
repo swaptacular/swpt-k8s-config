@@ -158,17 +158,41 @@ Now that you have chosen a name for your cluster (e.g., `dev`), you
 need to create subdirectories with this name in the `clusters/`,
 `infrastructure/`, and `apps/` directories. In these directories, you
 will find subdirectories named `example` -- use them as a template.
-Pay close attention to the comments in the various `.yaml` files, and
-adapt these files according to your needs. Note that in several files
-(you may use `grep` to find them) you will have to change the
-references to `clusters/example`, `infrastructure/example`, and
-`apps/example`, so that they instead refer to your chosen cluster
-name. Also, note that the numerous `secrets/` subdirectories contain
-example encrypted secrets, which you can not use. Instead of trying to
-use the example secrets, you should generate and encrypt your own
-secrets. The same applies to the files `server.crt` and
-`server.key.encrypted`. Another very important directory is the
-`node-data/` subdirectory (`apps/dev/swpt-debtors/node-data/`,
+For example:
+
+``` console
+$ pwd
+/home/johndoe/src/swpt-k8s-config
+
+$ cp -r clusters/example/ clusters/$CLUSTER_NAME
+$ cp -r infrastructure/example/ infrastructure/$CLUSTER_NAME
+$ cp -r apps/example/ apps/$CLUSTER_NAME
+```
+
+In these newly created directories, pay close attention to the
+comments in the various `.yaml` files, and adapt these files according
+to your needs. In several files you will have to change the references
+to `clusters/example`, `infrastructure/example`, and `apps/example`,
+so that they instead refer to your chosen cluster name. You can use
+`grep` or `sed` to change those references:
+
+``` console
+$ pwd
+/home/johndoe/src/swpt-k8s-config
+
+$ sed -i "s/clusters\/example/clusters\/$CLUSTER_NAME/g" clusters/$CLUSTER_NAME/flux-system/gotk-sync.yaml
+$ sed -i "s/infrastructure\/example/infrastructure\/$CLUSTER_NAME/g" clusters/$CLUSTER_NAME/infrastructure.yaml
+$ sed -i "s/apps\/example/apps\/$CLUSTER_NAME/g" clusters/$CLUSTER_NAME/apps.yaml
+$ sed -i "s/apps\/example/apps\/$CLUSTER_NAME/g" apps/$CLUSTER_NAME/swpt-nfs-server/kustomization.yaml
+```
+
+Also, note that the numerous
+`secrets/` subdirectories contain example encrypted secrets, which you
+can not use. Instead of trying to use the example secrets, you should
+generate and encrypt your own secrets. The same applies to the files
+`server.crt` and `server.key.encrypted`. Another very important
+directory is the `node-data/` subdirectory
+(`apps/dev/swpt-debtors/node-data/`,
 `apps/dev/swpt-creditors/node-data/`, and
 `apps/dev/swpt-accounts/node-data/`). This subdirectory contains
 information about the Swaptacular node and its peers. The `node-data/`
@@ -215,9 +239,9 @@ GitOps repository:
 $ pwd
 /home/johndoe/src/swpt-k8s-config
 
-$ git add clusters/dev infrastructure/dev apps/dev
-$ git commit -m "Added dev cluster"
-[master fbe45cc] Added dev cluster
+$ git add clusters/$CLUSTER_NAME infrastructure/$CLUSTER_NAME apps/$CLUSTER_NAME
+$ git commit -m "Added cluster directories"
+[master fbe45cc] Added cluster directories
  12 files changed, 1157 insertions(+)
  create mode 100644 infrastructure/dev/cert-manager/kustomization.yaml
  create mode 100644 infrastructure/dev/configs/kustomization.yaml
@@ -349,14 +373,14 @@ this, you need to do some preparations:
    /home/johndoe/src/swpt-k8s-config
 
    $ cp simple-git-server/static/trusted_user_ca_keys simple-git-server/
-   $ ls -F apps/dev/swpt-accounts/node-data/  # See https://github.com/swaptacular/swpt_ca_scripts
+   $ ls -F apps/$CLUSTER_NAME/swpt-accounts/node-data/  # See https://github.com/swaptacular/swpt_ca_scripts
    certs/                generate-serverkey*  private/           root-ca.conf.template
    create-infobundle*    init-ca*             README.md          root-ca.crt
    creditors-subnet.txt  my-infobundle.zip    reconfigure-peer*  sign-peercert*
    db/                   nodeinfo/            register-peer*     sign-servercert*
    generate-masterkey*   peers/               root-ca.conf
 
-   $ export ROOT_CA_CRT_FILE=apps/dev/swpt-accounts/node-data/root-ca.crt  # the path to your Swaptacular node's self-signed root-CA certificate
+   $ export ROOT_CA_CRT_FILE=apps/$CLUSTER_NAME/swpt-accounts/node-data/root-ca.crt  # the path to your Swaptacular node's self-signed root-CA certificate
    $ openssl x509 -in "$ROOT_CA_CRT_FILE" -pubkey -noout > CERT.tmp
    $ ssh-keygen -f CERT.tmp -i -m PKCS8 >> simple-git-server/trusted_user_ca_keys
    $ rm CERT.tmp
@@ -494,7 +518,7 @@ an SSH certificate to yourself -- that is, generate a new
 $ pwd
 /home/johndoe/src/swpt-k8s-config/simple-git-server
 
-$ export ROOT_CA_PRIVATE_KEY_FILE=../apps/dev/swpt-accounts/node-data/private/root-ca.key  # the path to your Swaptacular node's private key
+$ export ROOT_CA_PRIVATE_KEY_FILE=../apps/$CLUSTER_NAME/swpt-accounts/node-data/private/root-ca.key  # the path to your Swaptacular node's private key
 $ ls ~/.ssh  # Inspect the SSH keys installed on your computer:
 id_rsa  id_rsa.pub  known_hosts
 
@@ -774,7 +798,7 @@ subdirectory of your GitOps repository (or for the trade app, the
 shown below:
 
 ``` console
-$ cd apps/dev/swpt-accounts/shards
+$ cd apps/$CLUSTER_NAME/swpt-accounts/shards
 $ pwd
 /home/johndoe/src/swpt-k8s-config/apps/dev/swpt-accounts/shards
 $ ls -F
@@ -806,8 +830,8 @@ Untracked files:
 no changes added to commit (use "git add" and/or "git commit -a")
 
 $ git add -A
-$ git commit -m "Trigger split of apps/dev/swpt-accounts/shards/shard"
-[split 80703f6] Trigger split of apps/dev/swpt-accounts/shards/shard
+$ git commit -m "Trigger split of swpt-accounts/shards/shard"
+[split 80703f6] Trigger split of swpt-accounts/shards/shard
  8 files changed, 806 insertions(+)
  create mode 100644 apps/example/swpt-accounts/shards/shard-0/kustomization.yaml
  create mode 100644 apps/example/swpt-accounts/shards/shard-0/postgres-cluster.yaml
