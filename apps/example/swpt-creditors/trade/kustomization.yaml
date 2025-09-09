@@ -117,7 +117,7 @@ configMapGenerator:
 images:
 - name: swpt-trade
   newName: ghcr.io/swaptacular/swpt_trade
-  digest: sha256:471b970e094d26ffcd97a841a55fc2ef79c69cfa84e1df82b86d994e0267c305
+  digest: sha256:0f9002087b3b6981e355c4ff9218287c61ee1dee94b77a7d1322bcf9d7992d33
 
 secretGenerator:
 - name: postgres.trade-solver-db.credentials.postgresql.acid.zalan.do
