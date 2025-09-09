@@ -205,9 +205,9 @@ You should always include a copy of the
 `apps/example/regcreds.json.encrypted` file, and the
 `apps/example/swpt-nfs-server/` directory in your cluster (`apps/dev/`
 for example). However, among the other subdirectories in
-`apps/example/`, you should copy only those which are responsible for
-running the types of Swaptacular nodes that you want to run in your
-Kubernetes cluster:
+`apps/example/`, you should preserve only those which are responsible
+for running the types of Swaptacular nodes that you want to run in
+your Kubernetes cluster:
 
   * `apps/example/swpt-accounts/` is responsible for running an
     [accounting authority
@@ -226,9 +226,17 @@ node's subdirectory is unique.
 In this example, we will presume that you want to run an accounting
 authority node, but if you want to run a different type of node, the
 only difference would be in the name of the subdirectory that you need
-to copy (`swpt-accounts`, `swpt-debtors`, or `swpt-creditors`).
+to preserve (`swpt-accounts`, `swpt-debtors`, or `swpt-creditors`):
 
-**Note:** In production, you will not need the `mailhog.yaml`,
+``` console
+$ pwd
+/home/johndoe/src/swpt-k8s-config
+
+$ rm -rf apps/$CLUSTER_NAME/swpt-debtors
+$ rm -rf apps/$CLUSTER_NAME/swpt-creditors
+```
+
+**Note:** In production, you will also not need the `mailhog.yaml`,
 `minio.yaml`, and `pebble.yaml` files in the `clusters/example/`
 directory. They are useful only for testing.
 
