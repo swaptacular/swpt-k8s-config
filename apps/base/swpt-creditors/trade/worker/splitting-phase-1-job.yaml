@@ -73,8 +73,6 @@ spec:
               name: broker-default-user
             prefix: rmq_
           - configMapRef:
-              name: swpt-trade-config
-          - configMapRef:
               name: trade-workerconfig
         env:
           - name: SOLVER_POSTGRES_URL
