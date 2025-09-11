@@ -173,7 +173,7 @@ QbIgaiHj7aTsupibdTde
 The next task -- and this is a big one -- is to create subdirectories
 named after your cluster (e.g., `dev`) in the `clusters/`,
 `infrastructure/`, and `apps/` directories. In each of these, you'll
-find an example subdirectory -- it as a template. For instance:
+find an `example/` subdirectory -- it as a template. For instance:
 
 **Note:** The `clusters/$CLUSTER_NAME` directory (aka `$CLUSTER_DIR`)
 already exists and contains hidden SOPS configuration files.
@@ -204,11 +204,12 @@ $ sed -i "s/apps\/example/apps\/$CLUSTER_NAME/g" $CLUSTER_DIR/apps.yaml
 $ sed -i "s/apps\/example/apps\/$CLUSTER_NAME/g" apps/$CLUSTER_NAME/swpt-nfs-server/kustomization.yaml
 ```
 
-Also, note that the numerous
-`secrets/` subdirectories contain example encrypted secrets, which you
-can not use. Instead of trying to use the example secrets, you should
-generate and encrypt your own secrets. The same applies to the files
-`server.crt` and `server.key.encrypted`.
+Also, note that the numerous `secrets/` subdirectories contain example
+encrypted secrets, which you can not use. Instead of trying to use the
+example secrets, you should generate and encrypt your own secrets. The
+same applies to the files `server.crt` and `server.key.encrypted`. You
+will find instructions how to generate those secrets in the comments
+in the various `.yaml` files.
 
 Another very important directory is the `node-data/` subdirectory
 (`apps/dev/swpt-debtors/node-data/`,
@@ -222,11 +223,10 @@ continues evolving from there.
 
 You should always include a copy of the
 `apps/example/regcreds.json.encrypted` file, and the
-`apps/example/swpt-nfs-server/` directory in your cluster (`apps/dev/`
-for example). However, among the other subdirectories in
-`apps/example/`, you should preserve only those which are responsible
-for running the types of Swaptacular nodes that you want to run in
-your Kubernetes cluster:
+`apps/example/swpt-nfs-server/` directory in your cluster. However,
+among the other subdirectories in `apps/example/`, you should preserve
+only those which are responsible for running the types of Swaptacular
+nodes that you want to run in your Kubernetes cluster:
 
   * `apps/example/swpt-accounts/` is responsible for running an
     [accounting authority
@@ -328,10 +328,9 @@ $ git commit -m 'Update regcreds'
  2 files changed, 2 insertions(+), 2 deletions(-)
 ```
 
-You will also need to update the
-`simple-git-server/$CLUSTER_NAME/kustomization.yaml` file to use your
-private container image registry for the Git server's and Nginx's
-images:
+You will also need to update the `$GIT_INSTALL_DIR/kustomization.yaml`
+file to use your private container image registry for the Git server's
+and Nginx's images:
 
 ``` console
 $ pwd
@@ -386,14 +385,14 @@ immediately.
 
 The next step is to install a Git server in your Kubernetes cluster,
 which will host a copy of your GitOps repository. This server will
-also act as a reverse proxy for Alertmanager and Prometheus UIs
+also act as a Nginx reverse proxy for Alertmanager and Prometheus UIs
 requests. But before installing the Git server, you need to do some
 preparations:
 
 1. In order to be able to authenticate to the Git server you are about
    to install, you need to add the root-CA public key for at least one
    of your Swaptacular nodes to the
-   `simple-git-server/$CLUSTER_NAME/static/trusted_user_ca_keys` file:
+   `$GIT_INSTALL_DIR/static/trusted_user_ca_keys` file:
 
    **Note:** To generate a root-CA public key for you node, you must
    use the scripts in the `node-data/` subdirectory, and [follow these
@@ -743,8 +742,8 @@ gpg:  secret keys unchanged: 1
 
 Once you have successfully bootstrapped your Kubernetes cluster, it is
 **strongly recommended** that you delete the unencrypted secrets from
-the `simple-git-server/$CLUSTER_NAME/secret-files` directory on your
-machine. To do so, run the following command:
+the `$GIT_INSTALL_DIR/secret-files` directory on your machine. To do
+so, run the following command:
 
 ``` console
 $ pwd
