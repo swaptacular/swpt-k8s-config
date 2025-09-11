@@ -299,7 +299,9 @@ your private registry. Here is how to do it:
 $ pwd
 /home/johndoe/src/swpt-k8s-config
 
-$ docker login registry.example.com  # Enter the name of your private registry here.
+$ export REGISTRY_NAME=registry.example.com   # Enter enter your image registry name here.
+$ export REPOSITORY_NAME=repository  # Enter enter your repository name here.
+$ docker login $REGISTRY_NAME
 Username: johndoe
 Password: <enter you password here>
 WARNING! Your password will be stored unencrypted in /home/johndoe/.docker/config.json.
@@ -318,7 +320,7 @@ $ cat $GIT_INSTALL_DIR/secret-files/regcreds.json  # This file contains the unen
 	}
 }
 
-$ docker logout registry.example.com  # Removes the unencrypted password from ~/.docker/config.json.
+$ docker logout $REGISTRY_NAME  # Removes the unencrypted password from ~/.docker/config.json.
 $ sops encrypt --input-type binary $GIT_INSTALL_DIR/secret-files/regcreds.json > apps/$CLUSTER_NAME/regcreds.json.encrypted
 $ sops encrypt --input-type binary $GIT_INSTALL_DIR/secret-files/regcreds.json > infrastructure/$CLUSTER_NAME/regcreds.json.encrypted
 $ git add apps/$CLUSTER_NAME/regcreds.json.encrypted
@@ -349,8 +351,6 @@ images:
 ...
 ...
 
-$ export REGISTRY_NAME=registry.example.com   # Enter enter your image registry name here.
-$ export REPOSITORY_NAME=repository  # Enter enter your repository name here.
 $ sed -i "s/ghcr.io\/swaptacular/$REGISTRY_NAME\/$REPOSITORY_NAME/" $GIT_INSTALL_DIR/kustomization.yaml
 $ cat $GIT_INSTALL_DIR/kustomization.yaml
 ...
@@ -538,10 +538,16 @@ replicaset.apps/simple-git-server-5d86d687d8   1         1         1       24h
 ```
 
 The last command displays the public IP address of the load balancer
-for the newly installed Git server (`172.18.0.4` in this example). You
-can access Alertmanager and Prometheus UIs at this IP address
-(`https://172.18.0.4/alertmanager/` and
+for the newly installed Git server (`172.18.0.4` in this example).
+Later you will be able to access Alertmanager and Prometheus UIs at
+this IP address (`https://172.18.0.4/alertmanager/` and
 `https://172.18.0.4/prometheus/` respectively).
+
+You should save this IP address because you will need it later:
+
+``` console
+$ export CLUSTER_EXTERNAL_IP=172.18.0.4  # the public IP of the Git server's load balancer
+```
 
 ## Copy the GitOps repository to the newly installed Git server
 
@@ -581,7 +587,6 @@ GitOps repo into it (in this example Git server's IP address is
 $ pwd
 /home/johndoe/src/swpt-k8s-config/simple-git-server/dev
 
-$ export CLUSTER_EXTERNAL_IP=172.18.0.4  # the public IP of the Git server's load balancer
 $ ssh git@$CLUSTER_EXTERNAL_IP -p 2222  # Create an empty repository:
 Welcome to the restricted login shell for Git!
 Run 'help' for help, or 'exit' to leave.  Available commands:
