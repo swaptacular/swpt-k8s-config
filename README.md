@@ -403,6 +403,9 @@ this, you need to do some preparations:
 2. You need to choose the passwords for accessing the Alertmanager and
    Prometheus UIs (a view-only access):
 
+   **Note**: In the given example, the username for both Alertmanager and
+   Prometheus UIs will be `viewer`.
+
    ``` console
    $ cd simple-git-server/
    $ pwd
@@ -514,9 +517,9 @@ replicaset.apps/simple-git-server-5d86d687d8   1         1         1       24h
 
 **Note:** The last command displays the public IP address of the load
 balancer for the newly installed Git server (`172.18.0.4` in this
-example). You can also access Alertmanager and Prometheus UIs at this
-IP address (at `https://172.18.0.4/alertmanager/` and
-`https://172.18.0.4/prometheus/`).
+example). You can access Alertmanager and Prometheus UIs at this IP
+address (`https://172.18.0.4/alertmanager/` and
+`https://172.18.0.4/prometheus/` respectively).
 
 ## Copy the GitOps repository to the newly installed Git server
 
