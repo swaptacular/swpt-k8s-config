@@ -170,10 +170,11 @@ QbIgaiHj7aTsupibdTde
 
 ## Create subdirectories for your cluster name
 
-The next task -- and this is a big one -- is to create subdirectories
-named after your cluster (e.g., `dev`) in the `clusters/`,
-`infrastructure/`, and `apps/` directories. In each of these, you'll
-find an `example/` subdirectory -- use it as a template. For instance:
+The next task -- and this is a big one -- is to create/populate
+subdirectories named after your cluster (e.g., `dev`) in the
+`clusters/`, `infrastructure/`, and `apps/` directories. In each of
+these, you'll find an `example/` subdirectory -- use it as a template.
+For instance:
 
 **Note:** The `clusters/$CLUSTER_NAME` directory (aka `$CLUSTER_DIR`)
 already exists and contains hidden SOPS configuration files.
