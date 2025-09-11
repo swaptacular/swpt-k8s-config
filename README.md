@@ -537,11 +537,11 @@ NAME                                           DESIRED   CURRENT   READY   AGE
 replicaset.apps/simple-git-server-5d86d687d8   1         1         1       24h
 ```
 
-The last command displays the public IP address of the load balancer
-for the newly installed Git server (`172.18.0.4` in this example).
-Later, you will be able to access the Alertmanager and Prometheus UIs
-at this IP address (`https://172.18.0.4/alertmanager/` and
-`https://172.18.0.4/prometheus/` respectively).
+The last command displays the public (external) IP address of the load
+balancer for the newly installed Git server (`172.18.0.4` in this
+example). Later, you will be able to access the Alertmanager and
+Prometheus UIs at this IP address (`https://172.18.0.4/alertmanager/`
+and `https://172.18.0.4/prometheus/` respectively).
 
 You should **save this IP address**, because you will need it soon:
 
@@ -580,8 +580,7 @@ id_rsa  id_rsa.pub  id_rsa-cert.pub  known_hosts
 
 Then, you need to connect to the Git server, create a new
 `/srv/git/fluxcd.git` repository, and copy the entire contents of the
-GitOps repo into it (in this example Git server's IP address is
-`172.18.0.4`):
+GitOps repo into it:
 
 ``` console
 $ pwd
@@ -695,8 +694,8 @@ records, so that they point to the proper load balancer(s) in your
 cluster.
 
 Each Swaptacular node which you run in your cluster will have its own
-load balancer, with a unique IP address. To obtain the load balancer's
-IP address, you may use `kubectl`:
+load balancer, with a unique external IP address. To obtain the load
+balancer's external IP address, you may use `kubectl`:
 
 ``` console
 $ kubectl -n swpt-accounts get services
@@ -715,8 +714,8 @@ swpt-accounts-ingress-nginx-controller-metrics     ClusterIP      10.96.183.76  
 web-server                                         ClusterIP      10.96.103.250   <none>        80/TCP                                      21h
 ```
 
-In this example, the IP address of `swpt-accounts`'s load balancer is
-`172.18.0.9`.
+In this example, the IP external address of `swpt-accounts`'s load
+balancer is `172.18.0.9`.
 
 ## Delete your PGP private key (optional)
 
@@ -771,6 +770,7 @@ $ cd ../..
 $ pwd
 /home/johndoe/src/swpt-k8s-config
 
+$ echo "This README file has been improved!" >> README.md
 $ git status
 On branch master
 Your branch is up to date with 'k8s-repo/master'.
