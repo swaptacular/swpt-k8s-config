@@ -523,6 +523,13 @@ address (`https://172.18.0.4/alertmanager/` and
 
 ## Copy the GitOps repository to the newly installed Git server
 
+**Note:** When deploying a non-production cluster, you may choose to
+simplify your workflow by using an external GitOps server (less
+secure) instead of the Git server you installed on the cluster. In
+that case you may skip this step, however you will need to change the
+`flux bootstrap` command accordingly (see the "Bootstrap FluxCD"
+section).
+
 To authenticate to the newly installed Git server, you need to issue
 an SSH certificate to yourself -- that is, generate a new
 `id_rsa-cert.pub` file in your `~/.ssh` directory:
@@ -547,9 +554,9 @@ Then, you need to connect to the Git server, create a new
 `/srv/git/fluxcd.git` repository, and copy the entire contents of the
 GitOps repo into it:
 
-**Important note:** You need to obtain the public IP address of the
-Git server's load balancer in your Kubernetes cluster (`172.18.0.4` in
-this example).
+**Note:** You need to obtain the public IP address of the Git server's
+load balancer in your Kubernetes cluster (`172.18.0.4` in this
+example).
 
 ``` console
 $ pwd
@@ -636,13 +643,6 @@ Fast-forward
  clusters/dev/flux-system/gotk-sync.yaml | 2 ++
  1 file changed, 2 insertions(+)
 ```
-
-**Note:** When deploying a non-production cluster, you may choose to
-simplify your workflow by using an external GitOps server (less
-secure) instead of the Git server installed on the cluster. In that
-case, you must change the `flux bootstrap` command accordingly. (You
-still need to install the "simple Git server" on your cluster,
-though.)
 
 ## Wait for the cluster to start the pods
 
