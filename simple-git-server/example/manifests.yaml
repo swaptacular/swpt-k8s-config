@@ -159,17 +159,6 @@ spec:
       protocol: TCP
       targetPort: 443
   type: LoadBalancer
-
-  # When "externalTrafficPolicy" is "Cluster", the client IPs will be
-  # unknown to the service. To preserve the client IPs, this should be
-  # set to "Local", in which case most providers will preserve the
-  # client IPs. However, for some providers this will not be enough.
-  # Digital Ocean, for example, requires you to also add this
-  # annotation to the service:
-  # `service.beta.kubernetes.io/do-loadbalancer-enable-proxy-protocol: "true"`,
-  # and then change/configure the server to use "Proxy protocol" (see
-  # https://seriousben.com/posts/2020-02-exploring-the-proxy-protocol/).
-  #
   externalTrafficPolicy: Cluster
 
 ---

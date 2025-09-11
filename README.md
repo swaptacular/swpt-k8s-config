@@ -34,6 +34,17 @@ $ export CLUSTER_NAME=dev
 $ export CLUSTER_DIR=clusters/$CLUSTER_NAME
 ```
 
+And then prepare for the next steps by adding a directory to the
+GitOps repository:
+
+``` console
+$ pwd
+/home/johndoe/src/swpt-k8s-config
+
+$ cp -r simple-git-server/example/ simple-git-server/$CLUSTER_NAME
+$ git add simple-git-server/$CLUSTER_NAME
+```
+
 ## Generate the cluster's PGP keys and configure SOPS
 
 The next task is to configure secrets management using
@@ -62,8 +73,8 @@ uid           [ultimate] Swaptacular clusters/dev (flux secrets)
 ssb   rsa4096 2025-02-05 [SEA]
 
 $ export KEY_FP=$(gpg --list-secret-keys --with-colons $CLUSTER_DIR | awk -F: '/^fpr:/ {print $10; exit}')  # Extract the PGP key fingerprint.
-$ mkdir simple-git-server/secret-files
-$ gpg --export-secret-keys --armor "${KEY_FP}" > simple-git-server/secret-files/sops.asc  # Write the unencrypted PGP key to a file.
+$ mkdir simple-git-server/$CLUSTER_NAME/secret-files
+$ gpg --export-secret-keys --armor "${KEY_FP}" > simple-git-server/$CLUSTER_NAME/secret-files/sops.asc  # Write the unencrypted PGP key to a file.
 $ gpg --edit-key "${KEY_FP}"  # Protect the PGP private key with (two) strong passwords:
 gpg (GnuPG) 2.2.40; Copyright (C) 2022 g10 Code GmbH
 This is free software: you are free to change and redistribute it.
@@ -96,7 +107,15 @@ EOF
 $ git add $CLUSTER_DIR/.sops.yaml  # Stores the SOPS configuration file in the repo.
 $ git commit -m 'Share the PGP public key for secrets generation'
 [master 1c50aeb] Share the PGP public key for secrets generation
- 2 files changed, 63 insertions(+)
+ 10 files changed, 463 insertions(+)
+ create mode 100644 simple-git-server/dev/delete-secret-files.sh
+ create mode 100644 simple-git-server/dev/generate-secret-files.sh
+ create mode 100644 simple-git-server/dev/kustomization.yaml
+ create mode 100644 simple-git-server/dev/manifests.yaml
+ create mode 100644 simple-git-server/dev/static/default.conf.template
+ create mode 100644 simple-git-server/dev/static/nginx.conf
+ create mode 100644 simple-git-server/dev/static/sshd_config
+ create mode 100644 simple-git-server/dev/static/trusted_user_ca_keys
  create mode 100644 clusters/dev/.sops.pub.asc
  create mode 100644 clusters/dev/.sops.yaml
 
@@ -158,7 +177,7 @@ Now that you have chosen a name for your cluster (e.g., `dev`), you
 need to create subdirectories with this name in the `clusters/`,
 `infrastructure/`, and `apps/` directories. In these directories, you
 will find subdirectories named `example` -- use them as a template.
-For example:
+For instance:
 
 ``` console
 $ pwd
@@ -290,8 +309,8 @@ https://docs.docker.com/engine/reference/commandline/login/#credentials-store
 
 Login Succeeded
 
-$ cp ~/.docker/config.json simple-git-server/secret-files/regcreds.json
-$ cat simple-git-server/secret-files/regcreds.json  # This file contains the unencrypted "image pull secret". If necessary, you may edit the file.
+$ cp ~/.docker/config.json simple-git-server/$CLUSTER_NAME/secret-files/regcreds.json
+$ cat simple-git-server/$CLUSTER_NAME/secret-files/regcreds.json  # This file contains the unencrypted "image pull secret". If necessary, you may edit the file.
 {
 	"auths": {
 		"registry.example.com": {
@@ -301,8 +320,8 @@ $ cat simple-git-server/secret-files/regcreds.json  # This file contains the une
 }
 
 $ docker logout registry.example.com  # Removes the unencrypted password from ~/.docker/config.json.
-$ sops encrypt --input-type binary simple-git-server/secret-files/regcreds.json > apps/$CLUSTER_NAME/regcreds.json.encrypted
-$ sops encrypt --input-type binary simple-git-server/secret-files/regcreds.json > infrastructure/$CLUSTER_NAME/regcreds.json.encrypted
+$ sops encrypt --input-type binary simple-git-server/$CLUSTER_NAME/secret-files/regcreds.json > apps/$CLUSTER_NAME/regcreds.json.encrypted
+$ sops encrypt --input-type binary simple-git-server/$CLUSTER_NAME/secret-files/regcreds.json > infrastructure/$CLUSTER_NAME/regcreds.json.encrypted
 $ git add apps/$CLUSTER_NAME/regcreds.json.encrypted
 $ git add infrastructure/$CLUSTER_NAME/regcreds.json.encrypted
 $ git commit -m 'Update regcreds'
@@ -311,14 +330,15 @@ $ git commit -m 'Update regcreds'
 ```
 
 You will also need to update the
-`simple-git-server/kustomization.yaml` file to use your private
-container image registry for the Git server's and Nginx's images:
+`simple-git-server/$CLUSTER_NAME/kustomization.yaml` file to use your
+private container image registry for the Git server's and Nginx's
+images:
 
 ``` console
 $ pwd
 /home/johndoe/src/swpt-k8s-config
 
-$ cat simple-git-server/kustomization.yaml
+$ cat simple-git-server/$CLUSTER_NAME/kustomization.yaml
 ...
 ...
 images:
@@ -331,8 +351,8 @@ images:
 ...
 ...
 
-$ sed -i 's/ghcr.io\/swaptacular/registry.example.com\/repository/' simple-git-server/kustomization.yaml  # Here you should enter your image registry and repository.
-$ cat simple-git-server/kustomization.yaml
+$ sed -i 's/ghcr.io\/swaptacular/registry.example.com\/repository/' simple-git-server/$CLUSTER_NAME/kustomization.yaml  # Here you should enter your image registry and repository names.
+$ cat simple-git-server/$CLUSTER_NAME/kustomization.yaml
 ...
 ...
 images:
@@ -345,8 +365,8 @@ images:
 ...
 ...
 
-$ git add simple-git-server/kustomization.yaml
-$ git commit -m 'Edited simple-git-server/kustomization.yaml'
+$ git add simple-git-server/$CLUSTER_NAME/kustomization.yaml
+$ git commit -m 'Edited simple-git-server/dev/kustomization.yaml'
 $ git push origin master  # Pushes the updates to the GitOps repository.
 Enumerating objects: 11, done.
 Counting objects: 100% (11/11), done.
@@ -374,7 +394,7 @@ preparations:
 1. In order to be able to authenticate to the Git server you are about
    to install, you need to add the root-CA public key for at least one
    of your Swaptacular nodes to the
-   `simple-git-server/trusted_user_ca_keys` file:
+   `simple-git-server/$CLUSTER_NAME/static/trusted_user_ca_keys` file:
 
    **Note:** To generate a root-CA public key for you node, you must
    use the scripts in the `node-data/` subdirectory, and [follow these
@@ -385,7 +405,6 @@ preparations:
    $ pwd
    /home/johndoe/src/swpt-k8s-config
 
-   $ cp simple-git-server/static/trusted_user_ca_keys simple-git-server/
    $ ls -F apps/$CLUSTER_NAME/swpt-accounts/node-data/  # See https://github.com/swaptacular/swpt_ca_scripts
    certs/                generate-serverkey*  private/           root-ca.conf.template
    create-infobundle*    init-ca*             README.md          root-ca.crt
@@ -395,9 +414,9 @@ preparations:
 
    $ export ROOT_CA_CRT_FILE=apps/$CLUSTER_NAME/swpt-accounts/node-data/root-ca.crt  # the path to your Swaptacular node's self-signed root-CA certificate
    $ openssl x509 -in "$ROOT_CA_CRT_FILE" -pubkey -noout > CERT.tmp
-   $ ssh-keygen -f CERT.tmp -i -m PKCS8 >> simple-git-server/trusted_user_ca_keys
+   $ ssh-keygen -f CERT.tmp -i -m PKCS8 >> simple-git-server/$CLUSTER_NAME/static/trusted_user_ca_keys
    $ rm CERT.tmp
-   $ cat simple-git-server/trusted_user_ca_keys  # Shows the trusted root-CA keys, one key per line.
+   $ cat simple-git-server/$CLUSTER_NAME/static/trusted_user_ca_keys  # Shows the trusted root-CA keys, one key per line.
    ...
    ...
    ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCJfDWvw+LxOW1ECcpoHdFw+ygG4XSeVrB9JFVdIcrrVHqIXDPjvJKXrQ2TadeaTA2i1XUv+XwJr2ZN3OZ6dGLxddPQD4ZG6ciT4iK4TOjAiauE8gQPHR1uzShoK2TGfuYXma2lOnB4s/w5Tif+an5NzHRuDzAwXHPVfVeb9kgIO4A761CztwdTPyEM0jocpoz03Ch4DgYvwf2r+P+1x2Hm5htipNigkhdwtdw5yjUuTR3ylFIeokwcIZomYcGGO66i7EWGYzhr811uApgLJH5YtqeFnD054ia+AbOdCXEr1ZXvpol1Vqo6p/R015zBjMQ8wcdzd+PMSzHvXMLMjG6POhRvQ2yy3cmDpPPIzMHOcNxXhdarVLKDt8/SJlo4O+buAbHdib0pRXpqbPS6rjFwArB93H7TOcY+xl3EGAsjz+1wRPlbi1TN9XNRyQKxLK21QpYql4iYoD8Wac6iWQDDKNaTr88YFUu+MMUfZuQ+0MmXQ1yA/wfqyC9pjm4tkc0=
@@ -410,9 +429,9 @@ preparations:
    Prometheus UIs will be `viewer`.
 
    ``` console
-   $ cd simple-git-server/
+   $ cd simple-git-server/$CLUSTER_NAME
    $ pwd
-   /home/johndoe/src/swpt-k8s-config/simple-git-server
+   /home/johndoe/src/swpt-k8s-config/simple-git-server/dev
 
    $ echo "viewer:$(openssl passwd)" > secret-files/alertmanager_viewers
    Password: <enter your chosen password>
@@ -440,7 +459,7 @@ preparations:
 
    ``` console
    $ pwd
-   /home/johndoe/src/swpt-k8s-config/simple-git-server
+   /home/johndoe/src/swpt-k8s-config/simple-git-server/dev
 
    $ ./generate-secret-files.sh
    Generating public/private rsa key pair.
@@ -491,7 +510,7 @@ server in your Kubernetes cluster:
 
 ``` console
 $ pwd
-/home/johndoe/src/swpt-k8s-config/simple-git-server
+/home/johndoe/src/swpt-k8s-config/simple-git-server/dev
 
 $ kubectl apply -k .
 ...
@@ -539,9 +558,9 @@ an SSH certificate to yourself -- that is, generate a new
 
 ``` console
 $ pwd
-/home/johndoe/src/swpt-k8s-config/simple-git-server
+/home/johndoe/src/swpt-k8s-config/simple-git-server/dev
 
-$ export ROOT_CA_PRIVATE_KEY_FILE=../apps/$CLUSTER_NAME/swpt-accounts/node-data/private/root-ca.key  # the path to your Swaptacular node's private key
+$ export ROOT_CA_PRIVATE_KEY_FILE=../../apps/$CLUSTER_NAME/swpt-accounts/node-data/private/root-ca.key  # the path to your Swaptacular node's private key
 $ ls ~/.ssh  # Inspect the SSH keys installed on your computer:
 id_rsa  id_rsa.pub  known_hosts
 
@@ -560,7 +579,7 @@ GitOps repo into it (in this example Git server's IP address is
 
 ``` console
 $ pwd
-/home/johndoe/src/swpt-k8s-config/simple-git-server
+/home/johndoe/src/swpt-k8s-config/simple-git-server/dev
 
 $ export CLUSTER_EXTERNAL_IP=172.18.0.4  # the public IP of the Git server's load balancer
 $ ssh git@$CLUSTER_EXTERNAL_IP -p 2222  # Create an empty repository:
@@ -610,7 +629,7 @@ images, you will need to specify your private registry using the
 
 ``` console
 $ pwd
-/home/johndoe/src/swpt-k8s-config/simple-git-server
+/home/johndoe/src/swpt-k8s-config/simple-git-server/dev
 
 $ sudo sh -c "sed -i '/git-server.simple-git-server.svc.cluster.local/d' /etc/hosts"
 $ sudo sh -c "echo $CLUSTER_EXTERNAL_IP git-server.simple-git-server.svc.cluster.local >> /etc/hosts"
@@ -725,13 +744,12 @@ gpg:  secret keys unchanged: 1
 
 Once you have successfully bootstrapped your Kubernetes cluster, it is
 **strongly recommended** that you delete the unencrypted secrets from
-the `simple-git-server/secret-files` directory on your machine. To do
-so, run the following command:
+the `simple-git-server/$CLUSTER_NAME/secret-files` directory on your
+machine. To do so, run the following command:
 
 ``` console
-$ cd simple-git-server
 $ pwd
-/home/johndoe/src/swpt-k8s-config/simple-git-server
+/home/johndoe/src/swpt-k8s-config/simple-git-server/dev
 
 $ ./delete-secret-files.sh  # The secrets have already been copied to the cluster.
 ```
@@ -744,7 +762,7 @@ those changes to the Git server in your Kubernetes cluster. For
 instance:
 
 ``` console
-$ cd ..
+$ cd ../..
 $ pwd
 /home/johndoe/src/swpt-k8s-config
 
