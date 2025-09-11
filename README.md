@@ -176,8 +176,9 @@ subdirectories named after your cluster (e.g., `dev`) in the
 these, you'll find an `example/` subdirectory -- use it as a template.
 For instance:
 
-**Note:** The `clusters/$CLUSTER_NAME` directory (aka `$CLUSTER_DIR`)
-already exists and contains hidden SOPS configuration files.
+**Note:** At this point the `clusters/$CLUSTER_NAME` directory (aka
+`$CLUSTER_DIR`) already exists and contains hidden SOPS configuration
+files.
 
 ``` console
 $ pwd
@@ -554,10 +555,11 @@ $ export CLUSTER_EXTERNAL_IP=172.18.0.4  # the public IP of the Git server's loa
 
 **Note:** When deploying a non-production cluster, you may choose to
 simplify your workflow by using an external GitOps server (less
-secure) instead of the Git server you installed on the cluster. In
-that case you can skip this step, however, you will need to change the
-`flux bootstrap` command accordingly (see the "Bootstrap FluxCD"
-section).
+secure) instead of the Git server you have installed on the cluster.
+If that's the case, you can skip this step. However, you will need to
+update the relevant `kustomiztion.yaml` files (search for
+"GIT_SERVER"), and adjust the `flux bootstrap` command accordingly
+(see the "Bootstrap FluxCD" section).
 
 To authenticate to the newly installed Git server, you need to issue
 an SSH certificate to yourself -- that is, generate a new
