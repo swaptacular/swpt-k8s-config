@@ -637,7 +637,9 @@ Fast-forward
 **Note:** When deploying a non-production cluster, you may choose to
 simplify your workflow by using an external GitOps server (less
 secure) instead of the Git server installed on the cluster. In that
-case, you must change the `flux bootstrap` command accordingly.
+case, you must change the `flux bootstrap` command accordingly. (You
+still need to install the "simple Git server" on your cluster,
+though.)
 
 ## Wait for the cluster to start the pods
 
@@ -866,3 +868,10 @@ remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
 To github.com:johndoe/swpt-k8s-config.git
    c46b496..1c50aeb  master -> master
 ```
+
+**Note:** If you try to split a shard which itself have been recently
+split, and still contains records from its parent shard, the splitting
+procedure will need to wait until all those records have been garbage
+collected. The time needed for this to happen depends on the garbage
+collecting settings. With the default settings it should take a week
+or two.
