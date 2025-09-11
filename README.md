@@ -130,7 +130,7 @@ gpg:              unchanged: 1
 $ cp $CLUSTER_DIR/.sops.yaml .  # Creates a local SOPS configuration file.
 ```
 
-## Back up the cluster's PGP private key (optional)
+## Back up the cluster's PGP private key (recommended)
 
 It is **strongly recommended** that you create a backup copy of the
 cluster's PGP private key. Make sure you do not forget the two
@@ -526,7 +526,7 @@ address (`https://172.18.0.4/alertmanager/` and
 **Note:** When deploying a non-production cluster, you may choose to
 simplify your workflow by using an external GitOps server (less
 secure) instead of the Git server you installed on the cluster. In
-that case you may skip this step, however you will need to change the
+that case you can skip this step, however, you will need to change the
 `flux bootstrap` command accordingly (see the "Bootstrap FluxCD"
 section).
 
@@ -721,7 +721,7 @@ gpg:       secret keys read: 1
 gpg:  secret keys unchanged: 1
 ```
 
-## Delete the unencrypted secrets from your machine (optional)
+## Delete the unencrypted secrets from your machine (recommended)
 
 Once you have successfully bootstrapped your Kubernetes cluster, it is
 **strongly recommended** that you delete the unencrypted secrets from
