@@ -366,12 +366,13 @@ immediately.
 ## Install a simple Git server in your Kubernetes cluster
 
 The next step is to install a Git server in your Kubernetes cluster,
-which will host a copy of your GitOps repository. But before doing
-this, you need to do some preparations:
+which will host a copy of your GitOps repository. This server will
+also act as a reverse proxy for Alertmanager and Prometheus UIs
+requests. But before doing this, you need to do some preparations:
 
 1. You need to add the root-CA public key for each (or at least one)
-   of your Swaptacular nodes, to the
-   `simple-git-server/trusted_user_ca_keys` file:
+   of your Swaptacular nodes which will run on the Kubernetes cluster,
+   to the `simple-git-server/trusted_user_ca_keys` file:
 
    **Note:** To generate a root-CA public key for you node, you must
    use the scripts in the `node-data` subdirectory, and [follow these
