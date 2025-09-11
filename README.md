@@ -71,7 +71,7 @@ ssb   rsa4096 2025-02-05 [SEA]
 
 $ export KEY_FP=$(gpg --list-secret-keys --with-colons $CLUSTER_DIR | awk -F: '/^fpr:/ {print $10; exit}')  # Extract the PGP key fingerprint.
 $ gpg --export-secret-keys --armor "${KEY_FP}" > $GIT_INSTALL_DIR/secret-files/sops.asc  # Write the unencrypted PGP key to a file.
-$ gpg --edit-key "${KEY_FP}"  # Protect the PGP private key with (two) strong passwords:
+$ gpg --edit-key "${KEY_FP}"  # Protect the PGP private key with two strong passwords (they can be the same):
 gpg (GnuPG) 2.2.40; Copyright (C) 2022 g10 Code GmbH
 This is free software: you are free to change and redistribute it.
 There is NO WARRANTY, to the extent permitted by law.
@@ -150,7 +150,7 @@ $ cp $CLUSTER_DIR/.sops.yaml .  # Creates a local SOPS configuration file.
 
 It is **strongly recommended** that you create a backup copy of the
 cluster's PGP private key. Make sure you do not forget the two
-passwords you used to protect the key (they may be the same):
+passwords you used to protect the key:
 
 ``` console
 $ gpg --export-secret-key --armor "${KEY_FP}" > /mnt/backup/sops.private.asc
@@ -176,11 +176,14 @@ need to create subdirectories with this name in the `clusters/`,
 will find subdirectories named `example` -- use them as a template.
 For instance:
 
+**Note:** The `clusters/$CLUSTER_NAME` directory (aka `$CLUSTER_DIR`)
+already exists and contains hidden SOPS configuration files.
+
 ``` console
 $ pwd
 /home/johndoe/src/swpt-k8s-config
 
-$ cp -r clusters/example/* $CLUSTER_DIR  # $CLUSTER_DIR already contains hidden SOPS configuration files.
+$ cp -r clusters/example/* clusters/$CLUSTER_NAME
 $ cp -r infrastructure/example/ infrastructure/$CLUSTER_NAME
 $ cp -r apps/example/ apps/$CLUSTER_NAME
 ```
