@@ -45,7 +45,7 @@ The next task is to configure secrets management using
 $ pwd
 /home/johndoe/src/swpt-k8s-config
 
-$ cp -r simple-git-server/example/ $GIT_INSTALL_DIR  # Create and add a git-install directory to the repo.
+$ cp -r simple-git-server/example/ $GIT_INSTALL_DIR  # Add a git-install directory to the repo.
 $ mkdir $GIT_INSTALL_DIR/secret-files
 $ git add $GIT_INSTALL_DIR
 $ ls -F $GIT_INSTALL_DIR
@@ -349,7 +349,9 @@ images:
 ...
 ...
 
-$ sed -i 's/ghcr.io\/swaptacular/registry.example.com\/repository/' $GIT_INSTALL_DIR/kustomization.yaml  # Here you should enter your image registry and repository names.
+$ export REGISTRY_NAME=registry.example.com   # Enter enter your image registry name here.
+$ export REPOSITORY_NAME=repository  # Enter enter your repository name here.
+$ sed -i "s/ghcr.io\/swaptacular/$REGISTRY_NAME\/$REPOSITORY_NAME/" $GIT_INSTALL_DIR/kustomization.yaml
 $ cat $GIT_INSTALL_DIR/kustomization.yaml
 ...
 ...
