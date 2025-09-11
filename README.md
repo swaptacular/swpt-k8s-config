@@ -173,7 +173,7 @@ QbIgaiHj7aTsupibdTde
 The next task -- and this is a big one -- is to create subdirectories
 named after your cluster (e.g., `dev`) in the `clusters/`,
 `infrastructure/`, and `apps/` directories. In each of these, you'll
-find an `example/` subdirectory -- it as a template. For instance:
+find an `example/` subdirectory -- use it as a template. For instance:
 
 **Note:** The `clusters/$CLUSTER_NAME` directory (aka `$CLUSTER_DIR`)
 already exists and contains hidden SOPS configuration files.
@@ -714,12 +714,12 @@ swpt-accounts-ingress-nginx-controller-metrics     ClusterIP      10.96.183.76  
 web-server                                         ClusterIP      10.96.103.250   <none>        80/TCP                                      21h
 ```
 
-In this example, the IP external address of `swpt-accounts`'s load
+In this example, the external IP address of `swpt-accounts`'s load
 balancer is `172.18.0.9`.
 
 ## Delete your PGP private key (optional)
 
-If you do not plan to use SOPS **to decrypt** secrets on this machine,
+If you do not plan to use SOPS **to decrypt secrets** on this machine,
 consider deleting the PGP private key from the machine. If you need it
 later, you can always import the decryption key from your backup copy:
 
