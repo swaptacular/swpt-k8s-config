@@ -237,7 +237,7 @@ $ rm -rf apps/$CLUSTER_NAME/swpt-debtors  # Do not run a debtors agent node.
 $ rm -rf apps/$CLUSTER_NAME/swpt-creditors  # Do not run a creditors agent node.
 ```
 
-**Note:** In production, you also will not need the `mailhog.yaml`,
+In production, you also will not need the `mailhog.yaml`,
 `minio.yaml`, and `pebble.yaml` files in the `clusters/example/`
 directory. They are useful only for testing.
 
@@ -517,10 +517,10 @@ NAME                                           DESIRED   CURRENT   READY   AGE
 replicaset.apps/simple-git-server-5d86d687d8   1         1         1       24h
 ```
 
-**Note:** The last command displays the public IP address of the load
-balancer for the newly installed Git server (`172.18.0.4` in this
-example). You can access Alertmanager and Prometheus UIs at this IP
-address (`https://172.18.0.4/alertmanager/` and
+The last command displays the public IP address of the load balancer
+for the newly installed Git server (`172.18.0.4` in this example). You
+can access Alertmanager and Prometheus UIs at this IP address
+(`https://172.18.0.4/alertmanager/` and
 `https://172.18.0.4/prometheus/` respectively).
 
 ## Copy the GitOps repository to the newly installed Git server
@@ -554,11 +554,8 @@ id_rsa  id_rsa.pub  id_rsa-cert.pub  known_hosts
 
 Then, you need to connect to the Git server, create a new
 `/srv/git/fluxcd.git` repository, and copy the entire contents of the
-GitOps repo into it:
-
-**Note:** You need to obtain the public IP address of the Git server's
-load balancer in your Kubernetes cluster (`172.18.0.4` in this
-example).
+GitOps repo into it (in this example Git server's IP address is
+`172.18.0.4`):
 
 ``` console
 $ pwd
