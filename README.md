@@ -557,6 +557,10 @@ $ echo $CLUSTER_EXTERNAL_IP  # Shows the public IP of the Git server's load bala
 
 ## Copy the GitOps repository to the newly installed Git server
 
+To authenticate to the newly installed Git server, you need to issue
+an SSH certificate to yourself -- that is, generate a new
+`id_rsa-cert.pub` file in your `~/.ssh` directory:
+
 **Note:** When deploying a non-production cluster, you may choose to
 simplify your workflow by using an external GitOps server (less
 secure) instead of the Git server you have installed on the cluster.
@@ -564,10 +568,6 @@ If that's the case, you can skip this step. However, you will need to
 update the relevant `kustomiztion.yaml` files (search for
 "GIT_SERVER"), and adjust the `flux bootstrap` command accordingly
 (see the "Bootstrap FluxCD" section).
-
-To authenticate to the newly installed Git server, you need to issue
-an SSH certificate to yourself -- that is, generate a new
-`id_rsa-cert.pub` file in your `~/.ssh` directory:
 
 ``` console
 $ pwd
@@ -676,9 +676,10 @@ Fast-forward
 
 ## Wait for the cluster to start the pods
 
-This process will take some time. You can use `kubectl` to monitor the
-process. To check for any issues during FluxCD's reconciliation, you
-may run the following command:
+After FluxCD has been bootstrapped, starting the pods will take some
+time. You can use `kubectl` to monitor the process. To check for any
+issues during FluxCD's reconciliation, you may run the following
+command:
 
 ``` console
 $ flux get all -A --status-selector ready=false
@@ -765,7 +766,7 @@ $ pwd
 $ ./delete-secret-files.sh  # The secrets have already been copied to the cluster.
 ```
 
-## Make changes to your GitOps repository
+## Making changes to your GitOps repository
 
 Each time you commit changes to your GitOps repository -- for example,
 when you add a new peer to your Swaptacular node -- you need to push
