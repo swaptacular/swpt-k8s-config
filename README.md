@@ -820,7 +820,7 @@ the cluster.
 
 ## Scaling up
 
-As the number of users grows, you may need to increase the number of
+As the number of users grow, you may need to increase the number of
 running deployment replicas, processes, and threads of the various
 components, by editing the relevant `kustomization.yaml`,
 `broker.yaml`, `postgres-cluster.yaml`, and `dragonfly-db.yaml` files.
