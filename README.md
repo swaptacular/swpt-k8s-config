@@ -30,7 +30,7 @@ $ pwd
 Then, you need to choose a name for your cluster (e.g., `dev`):
 
 ``` console
-$ export CLUSTER_NAME=dev
+$ export CLUSTER_NAME=dev  # Enter the name for your cluster here.
 $ export CLUSTER_DIR=clusters/$CLUSTER_NAME
 $ export GIT_INSTALL_DIR=simple-git-server/$CLUSTER_NAME
 ```
@@ -45,9 +45,9 @@ The next task is to configure secrets management using
 $ pwd
 /home/johndoe/src/swpt-k8s-config
 
-$ cp -r simple-git-server/example/ $GIT_INSTALL_DIR  # Add a git-install directory to the repo.
-$ mkdir $GIT_INSTALL_DIR/secret-files
+$ cp -r simple-git-server/example/ $GIT_INSTALL_DIR  # Adds a git-install directory to the repo.
 $ git add $GIT_INSTALL_DIR
+$ mkdir $GIT_INSTALL_DIR/secret-files
 $ ls -F $GIT_INSTALL_DIR
 delete-secret-files.sh*    kustomization.yaml  secret-files/
 generate-secret-files.sh*  manifests.yaml      static/
@@ -63,15 +63,15 @@ Name-Comment: flux secrets
 Name-Real: Swaptacular ${CLUSTER_DIR}
 EOF
 
-$ gpg --list-secret-keys $CLUSTER_DIR  # Show the PGP key fingerprint (2ED21ED3DBBF5A37898D9D316225432F3481C8E0 in this example).
+$ gpg --list-secret-keys $CLUSTER_DIR  # Shows the PGP key fingerprint (2ED21ED3DBBF5A37898D9D316225432F3481C8E0 in this example).
 sec   rsa4096 2025-02-05 [SCEA]
       2ED21ED3DBBF5A37898D9D316225432F3481C8E0
 uid           [ultimate] Swaptacular clusters/dev (flux secrets)
 ssb   rsa4096 2025-02-05 [SEA]
 
-$ export KEY_FP=$(gpg --list-secret-keys --with-colons $CLUSTER_DIR | awk -F: '/^fpr:/ {print $10; exit}')  # Extract the PGP key fingerprint.
-$ gpg --export-secret-keys --armor "${KEY_FP}" > $GIT_INSTALL_DIR/secret-files/sops.asc  # Write the unencrypted PGP key to a file.
-$ gpg --edit-key "${KEY_FP}"  # Protect the PGP private key with two strong passwords (they can be the same):
+$ export KEY_FP=$(gpg --list-secret-keys --with-colons $CLUSTER_DIR | awk -F: '/^fpr:/ {print $10; exit}')  # Extracts the PGP key fingerprint.
+$ gpg --export-secret-keys --armor "${KEY_FP}" > $GIT_INSTALL_DIR/secret-files/sops.asc  # Writes the unencrypted PGP key to a file.
+$ gpg --edit-key "${KEY_FP}"  # Protects the PGP private key with two strong passwords (they can be the same):
 gpg (GnuPG) 2.2.40; Copyright (C) 2022 g10 Code GmbH
 This is free software: you are free to change and redistribute it.
 There is NO WARRANTY, to the extent permitted by law.
@@ -153,8 +153,8 @@ cluster's PGP private key. Make sure you do not forget the two
 passwords you used to protect the key:
 
 ``` console
-$ gpg --export-secret-key --armor "${KEY_FP}" > /mnt/backup/sops.private.asc
-$ cat /mnt/backup/sops.private.asc  # a password-protected backup copy of the PGP private key
+$ gpg --export-secret-key --armor "${KEY_FP}" > /mnt/backup/sops.private.asc  # Enter the path to the backup file here.
+$ cat /mnt/backup/sops.private.asc  # Shows the password-protected backup copy of the PGP private key.
 -----BEGIN PGP PRIVATE KEY BLOCK-----
 
 lQdGBGeiOpcBEAC5BY0+BAsdEgAvnoFcf26mpAVdHJMJJndg7sZazL43ubt19Mrp
@@ -194,7 +194,7 @@ comments in the various `.yaml` files, and adapt these files according
 to your needs. In several files you will have to change the references
 to `clusters/example`, `infrastructure/example`, and `apps/example`,
 so that they instead refer to your chosen cluster name. You can use
-`grep` or `sed` to change those references:
+`sed` to change those references:
 
 ``` console
 $ pwd
@@ -414,7 +414,7 @@ some preparations:
    db/                   nodeinfo/            register-peer*     sign-servercert*
    generate-masterkey*   peers/               root-ca.conf
 
-   $ export ROOT_CA_CRT_FILE=apps/$CLUSTER_NAME/swpt-accounts/node-data/root-ca.crt  # the path to your Swaptacular node's self-signed root-CA certificate
+   $ export ROOT_CA_CRT_FILE=apps/$CLUSTER_NAME/swpt-accounts/node-data/root-ca.crt  # This is the path to your Swaptacular node's self-signed root-CA certificate.
    $ openssl x509 -in "$ROOT_CA_CRT_FILE" -pubkey -noout > CERT.tmp
    $ ssh-keygen -f CERT.tmp -i -m PKCS8 >> $GIT_INSTALL_DIR/static/trusted_user_ca_keys
    $ rm CERT.tmp
@@ -569,8 +569,8 @@ an SSH certificate to yourself -- that is, generate a new
 $ pwd
 /home/johndoe/src/swpt-k8s-config/simple-git-server/dev
 
-$ export ROOT_CA_PRIVATE_KEY_FILE=../../apps/$CLUSTER_NAME/swpt-accounts/node-data/private/root-ca.key  # the path to your Swaptacular node's private key
-$ ls ~/.ssh  # Inspect the SSH keys installed on your computer:
+$ export ROOT_CA_PRIVATE_KEY_FILE=../../apps/$CLUSTER_NAME/swpt-accounts/node-data/private/root-ca.key  # This is the path to your Swaptacular node's private key.
+$ ls ~/.ssh  # Shows the SSH keys installed on your computer.
 id_rsa  id_rsa.pub  known_hosts
 
 $ ssh-keygen -s "$ROOT_CA_PRIVATE_KEY_FILE" -I johndoe -n git ~/.ssh/id_rsa.pub  # Issues a certificate for the "id_rsa.pub" key.
@@ -589,7 +589,7 @@ GitOps repo into it:
 $ pwd
 /home/johndoe/src/swpt-k8s-config/simple-git-server/dev
 
-$ ssh git@$CLUSTER_EXTERNAL_IP -p 2222  # Create an empty repository:
+$ ssh git@$CLUSTER_EXTERNAL_IP -p 2222  # Creates an empty repository:
 Welcome to the restricted login shell for Git!
 Run 'help' for help, or 'exit' to leave.  Available commands:
 -------------------------------------------------------------
@@ -640,7 +640,7 @@ $ pwd
 
 $ sudo sh -c "sed -i '/git-server.simple-git-server.svc.cluster.local/d' /etc/hosts"
 $ sudo sh -c "echo $CLUSTER_EXTERNAL_IP git-server.simple-git-server.svc.cluster.local >> /etc/hosts"
-$ cat /etc/hosts  # The internal name of the Git-server has been added to your hosts file.
+$ cat /etc/hosts  # Shows that the internal name of the Git-server has been added to your hosts file.
 ...
 ...
 127.0.0.1 localhost
@@ -652,10 +652,10 @@ $ flux bootstrap git --url=ssh://git@git-server.simple-git-server.svc.cluster.lo
 Configuring the cluster to synchronize with the repository
 Flux controllers installed and configured successfully
 
-$ kubectl create secret generic sops-gpg --namespace=flux-system --from-file=sops.asc=secret-files/sops.asc  # Creates a Kubernetes secret with the PGP private key.
+$ kubectl create secret generic sops-gpg --namespace=flux-system --from-file=sops.asc=secret-files/sops.asc  # Creates a Kubernetes secret containing the PGP private key.
 secret/sops-gpg created
 
-$ git pull k8s-repo master  # Check for possible changes in the repo, made during the bootstrapping.
+$ git pull k8s-repo master  # Checks for possible changes in the repo, made during the bootstrapping.
 remote: Enumerating objects: 11, done.
 remote: Counting objects: 100% (11/11), done.
 remote: Compressing objects: 100% (6/6), done.
@@ -727,7 +727,7 @@ consider deleting the PGP private key from the machine. If you need it
 later, you can always import the decryption key from your backup copy:
 
 ``` console
-$ gpg --delete-secret-keys "${KEY_FP}"  # Delete the private key.
+$ gpg --delete-secret-keys "${KEY_FP}"  # Deletes the private key.
 gpg (GnuPG) 2.2.40; Copyright (C) 2022 g10 Code GmbH
 This is free software: you are free to change and redistribute it.
 There is NO WARRANTY, to the extent permitted by law.
@@ -738,7 +738,7 @@ sec  rsa4096/6225432F3481C8E0 2025-02-05 Swaptacular clusters/dev (flux secrets)
 Delete this key from the keyring? (y/N)
 This is a secret key! - really delete? (y/N) y
 
-$ gpg --import /mnt/backup/sops.private.asc  # Import the private key from your backup copy.
+$ gpg --import /mnt/backup/sops.private.asc  # Imports the private key from your backup copy.
 gpg: key 6225432F3481C8E0: "Swaptacular clusters/dev (flux secrets)" not changed
 gpg: key 6225432F3481C8E0: secret key imported
 gpg: Total number processed: 1
