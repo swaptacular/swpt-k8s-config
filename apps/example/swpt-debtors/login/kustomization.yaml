@@ -141,7 +141,7 @@ secretGenerator:
 
   files:
   # A SOPS-encrypted file containing the sitekey secret. To
-  # SOPS-encrypt the sitekey secret, you may use this command:
+  # SOPS-encrypt the sitekey secret, you may use these commands:
   #
   # $ echo -n 'YOUR_SITEKEY_SECRET' > captcha-sitekey-secret
   # $ sops encrypt captcha-sitekey-secret > captcha-sitekey-secret.encrypted

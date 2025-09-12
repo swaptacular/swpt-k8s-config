@@ -14,7 +14,7 @@ secretGenerator:
   # 1. "id_rsa", containing the unencrypted SSH private key;
   # 2. "id_rsa.pub", containing the SSH public key.
   #
-  # To SOPS-encrypt the "id_rsa" file, you may use this command:
+  # To SOPS-encrypt the "id_rsa" file, you may use these commands:
   #
   # $ sops encrypt id_rsa > id_rsa.encrypted
   # $ shred -z id_rsa

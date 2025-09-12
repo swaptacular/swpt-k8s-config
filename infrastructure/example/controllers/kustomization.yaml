@@ -443,7 +443,7 @@ secretGenerator:
   files:
   # A SOPS-encrypted file containing the password for the email server
   # that Alertmanager uses to send emails. To SOPS-encrypt your
-  # password, you may use this command:
+  # password, you may use these commands:
   #
   # $ echo -n 'YOUR_SECRET_PASSWORD' > alertmanager-smtp-password
   # $ sops encrypt alertmanager-smtp-password > alertmanager-smtp-password.encrypted
@@ -462,8 +462,8 @@ secretGenerator:
 
   files:
   # A SOPS-encrypted file containing the password for the Grafana
-  # admin. To SOPS-encrypt your chosen password, you may use this
-  # command:
+  # admin. To SOPS-encrypt your chosen password, you may use these
+  # commands:
   #
   # $ echo -n 'YOUR_SECRET_PASSWORD' > grafana-admin-password
   # $ sops encrypt grafana-admin-password > grafana-admin-password.encrypted

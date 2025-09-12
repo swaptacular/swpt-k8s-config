@@ -206,12 +206,13 @@ $ sed -i "s/apps\/example/apps\/$CLUSTER_NAME/g" $CLUSTER_DIR/apps.yaml
 $ sed -i "s/apps\/example/apps\/$CLUSTER_NAME/g" apps/$CLUSTER_NAME/swpt-nfs-server/kustomization.yaml
 ```
 
-Also, note that the numerous `secrets/` subdirectories contain example
+Also, note that the numerous `secrets/` subdirectories contain fake
 encrypted secrets, which you can not use. Instead of trying to use the
-example secrets, you should generate and encrypt your own secrets. The
-same applies to the files `server.crt` and `server.key.encrypted`. You
-will find instructions how to generate those secrets in the comments
-in the various `.yaml` files.
+fake secrets, you should generate and encrypt your own secrets. The
+fake secret files actually contain instructions on how to generate the
+real secrets. The same applies to the files `server.crt` and
+`server.key.encrypted`. You will find the same instructions on how to
+generate those secrets in the comments in the various `.yaml` files.
 
 Another very important directory is the `node-data/` subdirectory
 (`apps/dev/swpt-debtors/node-data/`,
