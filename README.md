@@ -13,7 +13,7 @@ $ sudo sysctl fs.inotify.max_user_instances=8192
 First, you need to create a fork of this repository, and then clone it
 locally:
 
-**Note**: In this example, the username is `johndoe`.
+**Note**: In this example, we use the username `johndoe`.
 
 ``` console
 $ cd ~
@@ -246,9 +246,10 @@ but in this case you would need to make sure that the name of each
 node's subdirectory is unique.
 
 In this example, we will presume that you want to run an accounting
-authority node, but if you want to run a different type of node, the
-only difference would be in the name of the subdirectory that you need
-to preserve (`swpt-accounts`, `swpt-debtors`, or `swpt-creditors`):
+authority node, but if you want to run a different type of node (or
+more than one type of node), the only difference would be the names of
+the subdirectories that you need to preserve (`swpt-accounts`,
+`swpt-debtors`, or `swpt-creditors`):
 
 ``` console
 $ pwd
@@ -576,7 +577,7 @@ $ export ROOT_CA_PRIVATE_KEY_FILE=../../apps/$CLUSTER_NAME/swpt-accounts/node-da
 $ ls ~/.ssh  # Shows the SSH keys installed on your computer.
 id_rsa  id_rsa.pub  known_hosts
 
-$ ssh-keygen -s "$ROOT_CA_PRIVATE_KEY_FILE" -I johndoe -n git ~/.ssh/id_rsa.pub  # Issues a certificate for the "id_rsa.pub" key.
+$ ssh-keygen -s "$ROOT_CA_PRIVATE_KEY_FILE" -I johndoe -n git ~/.ssh/id_rsa.pub  # Issues a certificate for the "id_rsa.pub" key. Here may substitute "johndoe" with any username.
 Enter passphrase: <Enter your passphrase here>
 Signed user key /home/johndoe/.ssh/id_rsa-cert.pub: id "johndoe" serial 0 for git valid forever
 
