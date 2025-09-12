@@ -548,7 +548,9 @@ and `https://172.18.0.4/prometheus/` respectively).
 You should **save this IP address**, because you will need it soon:
 
 ``` console
-$ export CLUSTER_EXTERNAL_IP=172.18.0.4  # the public IP of the Git server's load balancer
+$ export CLUSTER_EXTERNAL_IP=$(kubectl -n simple-git-server get service git-server -o 'jsonpath={.status.loadBalancer.ingress[0].ip}')
+$ echo $CLUSTER_EXTERNAL_IP  # Shows the public IP of the Git server's load balancer.
+172.18.0.4
 ```
 
 ## Copy the GitOps repository to the newly installed Git server
