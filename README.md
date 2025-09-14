@@ -391,9 +391,9 @@ immediately.
 
 The next step is to install a Git server in your Kubernetes cluster,
 which will host a copy of your GitOps repository. This server will
-also act as a Nginx reverse proxy for the Alertmanager and Prometheus
-UIs requests. But before installing the Git server, you need to do
-some preparations:
+also act as a Nginx reverse proxy for the Grafana, Alertmanager and
+Prometheus UIs requests. But before installing the Git server, you
+need to do some preparations:
 
 1. In order to be able to authenticate to the Git server you are about
    to install, you need to add the root-CA public key for at least one
@@ -457,8 +457,8 @@ some preparations:
 
    **Note**: You will be prompted to enter information for a
    self-signed SSL certificate. This certificate will be used by the
-   Nginx reverse proxy providing access to the Alertmanager and
-   Prometheus UIs. You may enter any values you like, including
+   Nginx reverse proxy providing access to the Grfana, Alertmanager,
+   and Prometheus UIs. You may enter any values you like, including
    pressing “Enter” multiple times to skip fields.
 
    ``` console
@@ -542,10 +542,12 @@ replicaset.apps/simple-git-server-5d86d687d8   1         1         1       24h
 ```
 
 The last command displays the public (external) IP address of the load
-balancer for the newly installed Git server (`172.18.0.4` in this
-example). Later, you will be able to access the Alertmanager and
-Prometheus UIs at this IP address (`https://172.18.0.4/alertmanager/`
-and `https://172.18.0.4/prometheus/` respectively).
+balancer for the newly installed Git server (`172.18.0.4:2222` in this
+example). Later, you will be able to access the Grafana, Alertmanager
+and Prometheus UIs at this IP address (`https://172.18.0.4/` for
+Grafana, `https://172.18.0.4/alertmanager/` and
+`https://172.18.0.4/prometheus/` for Alertmanager and Prometheus UIs
+respectively).
 
 You should **save this IP address**, because you will need it soon:
 
