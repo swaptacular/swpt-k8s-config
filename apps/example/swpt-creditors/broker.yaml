@@ -18,6 +18,32 @@ spec:
   # Specifies the disk space allocated for the broker. The value must
   # not be decreased.
   #
+  # IMPORTANT NOTE: Once the persistent volume claims have been
+  # created, increasing the storage size here will not automatically
+  # expand the PVs. To expand the PVs, after increasing the storage
+  # size here, and applying the changes to the cluster, follow this
+  # procedure:
+  #
+  # 1. For each PVC in the StatefulSet, run:
+  #
+  #    $ kubectl edit pvc <name>
+  #
+  #    and increase the capacity of each PVC.
+  #
+  # 2. Run:
+  #
+  #    $ kubectl delete sts --cascade=orphan broker-server
+  #
+  #    to delete the StatefulSet and leave its pods.
+  #
+  # 3. Wait until the RabbitMQ cluster operator recreates the
+  #    StatefulSet automatically.
+  #
+  # 4. During the next pod rollout, pods' PVs will be resized. To
+  #    trigger a pod rollout, you run:
+  #
+  #    $ kubectl rollout restart sts broker-server
+  #
   persistence:
     # # `storageClassName` defines the name of the Kubernetes
     # # StorageClass to use. If your cluster does not have a default
