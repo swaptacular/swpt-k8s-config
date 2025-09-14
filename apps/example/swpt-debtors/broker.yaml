@@ -19,11 +19,28 @@ spec:
   # not be decreased.
   #
   persistence:
+    # # `storageClassName` defines the name of the Kubernetes
+    # # StorageClass to use. If your cluster does not have a default
+    # # StorageClass, this property must be set, otherwise RabbitMQ pods
+    # # will not be scheduled because they require a persistent volume.
+    # #
+    # storageClassName: fast
+
+    # The capacity of the persistent volume, expressed as a Kubernetes
+    # resource quantity. Since increasing the capacity later may not
+    # be trivial, make this big enough, to be on the safe side (100Gi
+    # seem reasonable). Keep in mind that when a peer is off-line for
+    # a long period of time, messages for this peer will accumulate on
+    # the message broker, and may eat up all available space on the
+    # persistent volume.
+    #
     storage: 1Gi
 
   # Specifies Kubernetes memory and CPU requests and limits. It is
   # highly recommended that the memory request is the same as the
-  # memory limit.
+  # memory limit. The default values, which generally should be a good
+  # start are: memory requests 2Gi, memory limit 2Gi, CPU request
+  # 1000m, CPU limit 2000m.
   #
   resources:
     requests:

@@ -27,6 +27,19 @@
           matchLabels:
             app.kubernetes.io/name: dragonfly
         topologyKey: kubernetes.io/hostname
+    nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 1
+        preference:
+          matchExpressions:
+          - operator: In
+            values: []
+- op: copy
+  from: /spec/tolerations/0/key
+  path: /spec/affinity/nodeAffinity/preferredDuringSchedulingIgnoredDuringExecution/0/preference/matchExpressions/0/key
+- op: copy
+  from: /spec/tolerations/0/value
+  path: /spec/affinity/nodeAffinity/preferredDuringSchedulingIgnoredDuringExecution/0/preference/matchExpressions/0/values/-
 
 - op: test
   path: /spec/priorityClassName

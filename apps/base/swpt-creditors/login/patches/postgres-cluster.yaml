@@ -41,6 +41,25 @@
     synchronous_mode: true
 
 - op: test
+  path: /spec/nodeAffinity
+  value: null
+- op: add
+  path: /spec/nodeAffinity
+  value:
+    preferredDuringSchedulingIgnoredDuringExecution:
+    - weight: 1
+      preference:
+        matchExpressions:
+        - operator: In
+          values: []
+- op: copy
+  from: /spec/tolerations/0/key
+  path: /spec/nodeAffinity/preferredDuringSchedulingIgnoredDuringExecution/0/preference/matchExpressions/0/key
+- op: copy
+  from: /spec/tolerations/0/value
+  path: /spec/nodeAffinity/preferredDuringSchedulingIgnoredDuringExecution/0/preference/matchExpressions/0/values/-
+
+- op: test
   path: /spec/additionalVolumes
   value: null
 - op: add
