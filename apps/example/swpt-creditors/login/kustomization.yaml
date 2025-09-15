@@ -6,14 +6,18 @@ configMapGenerator:
   literals:
   # Specifies the number of processes and threads that will be spawned
   # to handle HTTP requests. Each process will run the specified
-  # number of threads.
+  # number of threads. In general, you should increase those numbers
+  # as the load increases.
   - WEBSERVER_PROCESSES=1
   - WEBSERVER_THREADS=3
 
   # An upper limit on the number of PostgreSQL connections in the
   # connection pool. If set to zero, there is no limit. Note that each
   # spawned process maintains its own connection pool. The number of
-  # spawned process is determined by WEBSERVER_PROCESSES.
+  # spawned process is determined by WEBSERVER_PROCESSES. You may need
+  # to set this limit when the total number of threads (that is:
+  # WEBSERVER_PROCESSES x WEBSERVER_THREADS) has become too big
+  # (bigger than 500, for example).
   - POSTGRES_CONNECTION_POOL_SIZE=0
 
   # Set this to the name of your site, as it is known to your users.
@@ -113,7 +117,8 @@ configMapGenerator:
       kustomize_walg_exporter_image: ghcr.io/swaptacular/wal-g-exporter@sha256:5f842526cdf313a3746acb8c991abc6e9243b6dc902bbf21638588e7b38803ad
 
 # The number of replicas for each component. One replica works fine,
-# but to have high-availability, should be at least 2.
+# but to have high-availability, should be at least 2. You should
+# increase those numbers as the load increases.
 #
 replicas:
 - name: login-web-server

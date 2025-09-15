@@ -18,7 +18,9 @@ configMapGenerator:
       # example, if "nameSuffix" is "-101", the routing key must be
       # "1.0.1.#". If "nameSuffix" is "", the routing key must be "#".
       - PROTOCOL_BROKER_QUEUE_ROUTING_KEY=#
-      # Shard configuration settings which you may want to change:
+      # Shard configuration settings which you may want to change. In
+      # general, you should increase those numbers as the load
+      # increases.
       - PROTOCOL_BROKER_PROCESSES=1
       - PROTOCOL_BROKER_THREADS=1
       - PROTOCOL_BROKER_PREFETCH_COUNT=10
@@ -65,7 +67,8 @@ configMapGenerator:
         kustomize_zalando_top_level_domain: do
         kustomize_zalando_clone_timestamp: "2199-01-01T00:00:00.000+00:00"
 # The number of replicas for each component. One replica works fine,
-# but to have high-availability, should be at least 2.
+# but to have high-availability, should be at least 2. You should
+# increase those numbers as the load increases.
 replicas:
   - name: web-server
     count: 1

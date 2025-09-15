@@ -73,7 +73,8 @@ configMapGenerator:
       # Depending on the Kubernetes cluster, the safe range for static
       # cluster IPs will be different, but according to the Kubernetes
       # documentation, is seems that the range from 10.96.0.2 to
-      # 10.96.0.15 should always be safe.
+      # 10.96.0.15 should always be safe. Therefore, normally you do
+      # not need to change this.
       kustomize_nfs_service_cluster_ip: 10.96.0.4
 
       # The network policy for the NFS-server must allow connections

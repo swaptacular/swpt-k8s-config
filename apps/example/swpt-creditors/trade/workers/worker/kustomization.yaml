@@ -18,11 +18,12 @@ configMapGenerator:
       # example, if "nameSuffix" is "-101", the routing key must be
       # "1.0.1.#". If "nameSuffix" is "", the routing key must be "#".
       - PROTOCOL_BROKER_QUEUE_ROUTING_KEY=#
-      # Worker configuration settings which you may want to change:
+      # Worker configuration settings which you may want to change. In
+      # general, you should increase those numbers as the load
+      # increases.
       - PROTOCOL_BROKER_PROCESSES=1
       - PROTOCOL_BROKER_THREADS=1
       - PROTOCOL_BROKER_PREFETCH_COUNT=10
-      - SOLVER_CLIENT_POOL_SIZE=0
       - FLUSH_PROCESSES=1
       - FLUSH_PERIOD=1.5
       - HTTP_FETCH_PROCESSES=1
@@ -33,6 +34,15 @@ configMapGenerator:
       - TRIGGER_TRANSFERS_PERIOD=5.0
       - HANDLE_PRISTINE_COLLECTORS_THREADS=1
       - HANDLE_PRISTINE_COLLECTORS_PERIOD=60.0
+      # Each worker process maintains a pool of database connections
+      # to the solver's PostgreSQL database server.
+      # SOLVER_CLIENT_POOL_SIZE determines the maximum number of
+      # connections in this pool. If zero is specified (the default)
+      # there is no limit to the connection pool's size. You may need
+      # to set this limit when `TOTAL_NUMBER_OF_WORKERS x
+      # HANDLE_PRISTINE_COLLECTORS_THREADS` has become too big (bigger
+      # than 500, for example).
+      - SOLVER_CLIENT_POOL_SIZE=0
     options:
       annotations:
         # These annotations are used as sources for convenient Kustomize
@@ -76,7 +86,8 @@ configMapGenerator:
         kustomize_zalando_top_level_domain: do
         kustomize_zalando_clone_timestamp: "2199-01-01T00:00:00.000+00:00"
 # The number of replicas for each component. One replica works fine,
-# but to have high-availability, should be at least 2.
+# but to have high-availability, should be at least 2. You should
+# increase those numbers as the load increases.
 replicas:
   - name: trade-worker-messages-flusher
     count: 1

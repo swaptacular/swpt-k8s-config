@@ -43,9 +43,9 @@ secretGenerator:
   # case, specifying `AWS_ENDPOINT` should not be necessary.
   - AWS_REGION=us-east-1
 
-  # This specifies the trusted CA for the local MinIO S3 server. This
-  # should not be necessary for "proper" S3 providers, and can be
-  # safely removed.
+  # Specifies the trusted CA for the local MinIO S3 server. This is
+  # not necessary for "proper" S3 providers, and should be removed or
+  # commented out.
   - WALG_S3_CA_CERT_FILE=/certs/minio/ca.crt
 
   options:
@@ -189,7 +189,9 @@ secretGenerator:
 configMapGenerator:
 - name: creditors-agent-config
   literals:
-  # The publicly known domain name of this Swaptacular node.
+  # The publicly known domain name of this Swaptacular node. This must
+  # match the configuration of your DNS records.
+  #
   - PUBLIC_HOSTNAME=swpt-tests-ca
 
   # Creditor IDs are 64-bit integer numbers. The creditors agent is
@@ -221,11 +223,13 @@ configMapGenerator:
     # replacements:
     #
     annotations:
-      # Configurations for the ACME certificate issuer. See the
-      # "acme-cert-issuer" patch also.
+      # Configuration for the ACME certificate issuer. For example, if
+      # you want to use Letsencrypt, `kustomize_acme_cert_server`
+      # would be "https://acme-v02.api.letsencrypt.org/directory", and
+      # `kustomize_acme_cert_email` would be your email address.
       #
       kustomize_acme_cert_server: https://pebble.pebble.svc.cluster.local:14000/dir
-      kustomize_acme_cert_email: epandurski@gmail.com
+      kustomize_acme_cert_email: your-email@example.com
 
       # Kubernetes memory and CPU requests and limits, for various
       # containers.
@@ -247,8 +251,8 @@ configMapGenerator:
 
 - name: swpt-creditors-ui-config
   literals:
-  # Those are undocumented configuration settings. They may change
-  # from version to version. Use these with caution!
+  # Configuration for "swpt-creditors-ui". Normally, you do not need
+  # to change those.
   - SERVER_API_TIMEOUT=8000
   - TRANSFER_DELETION_DELAY_SECONDS=1296000
   - DEBTOR_INFOS_REVISION_DAYS=7
@@ -260,7 +264,7 @@ configMapGenerator:
 - name: swpt-hydra
   files:
   # The configuration file for Ory-Hydra. Can reference a custom
-  # configuration file. Normally, the default one should be work
+  # configuration file. Normally, the default one should work
   # reasonably well.
   - hydra.yaml=../../base/swpt-creditors/static/hydra.yaml
 
@@ -268,19 +272,21 @@ configMapGenerator:
   # This string will be appended to the "data source name" (DSN)
   # string (after the "?" character). It alters the behaviour of the
   # database driver. For example: the maximum number of open
-  # connections, or the maximum number of idle connections.
+  # connections, or the maximum number of idle connections. Normally,
+  # you do not need to change this.
   - dsn_query_params=max_conns=20&max_idle_conns=4
 
   # Configure how many records Hydra's janitor retrieves from the
-  # database for deletion.
+  # database for deletion. 10000 seems reasonable.
   - janitor_limit=10000
 
   # Configure how many records Hydra's janitor deletes with each
-  # iteration.
+  # iteration. 100 seems reasonable.
   - janitor_batch_size=100
 
   # An URL to which the user will be redirected when an error has
-  # occurred during the OAuth 2.0 workflow.
+  # occurred during the OAuth 2.0 workflow. You do not need to change
+  # this, but the default one is not "user friendly".
   - urls_error=https://github.com/swaptacular/swpt_login
 
   options:
@@ -303,12 +309,12 @@ configMapGenerator:
 - name: stomp-config
   literals:
   # The number of SMP messages that STOMP servers and STOMP clients
-  # will buffer in memory.
+  # will buffer in memory. 100 seems like a reasonable value for both.
   - SWPT_SERVER_BUFFER=100
   - SWPT_CLIENT_BUFFER=100
 
   # The number of worker threads that STOMP servers will use for file
-  # access to the NFS server.
+  # access to the NFS server. 10 seems like a reasonable value.
   - APP_FILE_READ_THREADS=10
 
   options:
@@ -320,7 +326,10 @@ configMapGenerator:
     #
     annotations:
       # The static cluster IP address of the
-      # "nfs-server.swpt-nfs-server.svc.cluster.local" service.
+      # "nfs-server.swpt-nfs-server.svc.cluster.local" service. See
+      # the comment for the same annotation in the
+      # "../swpt-nfs-server/kustomization.yaml" file. Normally you do
+      # not need to change this.
       kustomize_nfs_service_cluster_ip: 10.96.0.4
 
       # Kubernetes memory and CPU requests and limits, for the STOMP
@@ -333,7 +342,9 @@ configMapGenerator:
 
 - name: apiproxy-config
   files:
-  # The configuration file for the "apiproxy".
+  # The configuration file for the "apiproxy". Normally, you do not
+  # need to change this file manually, because it will be changed
+  # automatically when new database shards are created.
   #
   # Each line in the configuration file should start with a route
   # specifier, followed by at least one space, followed by a web
@@ -388,7 +399,8 @@ configMapGenerator:
     disableNameSuffixHash: true
 
 # The number of replicas for each component. One replica works fine,
-# but to have high-availability, should be at least 2.
+# but to have high-availability, should be at least 2. You should
+# increase those numbers as the load increases.
 #
 replicas:
 - name: apiproxy
@@ -442,8 +454,9 @@ patches:
 # This patch configures the ingress-nginx controller.
 #
 - patch: |
-    # Specifies the ingress-nginx controller's OCI image. You should
-    # set image repository and image digest.
+    # Specifies the ingress-nginx controller's OCI image. If you
+    # decide to change this, you should specify image repository and
+    # image digest.
     - op: add
       path: /spec/values/controller/image/repository
       value: ghcr.io/swaptacular/ingress-nginx-controller
@@ -454,7 +467,8 @@ patches:
     # Specifies the "kube-webhook-certgen" OCI image. This image is
     # used by the ingress-nginx controller to set up Kubernetes
     # admission webhooks for the resources managed by the controller.
-    # You should set image repository and image digest.
+    # If you decide to change this, you should specify image
+    # repository and image digest.
     - op: add
       path: /spec/values/controller/admissionWebhooks/patch/image/repository
       value: ghcr.io/swaptacular/kube-webhook-certgen
@@ -464,11 +478,12 @@ patches:
 
     # Specifies the number of Nginx servers' replicas. One replica
     # works fine, but to have high-availability, should be at least 2.
+    # You should increase this number as the load increases.
     - op: replace
       path: /spec/values/controller/replicaCount
       value: 1
 
-    # Configurations for the load balancer service.
+    # Configurations for Nginx's load balancer.
     #
     # When the external traffic policy is "Cluster", the client IP
     # addresses will be unknown to the service. To preserve the client
@@ -480,7 +495,6 @@ patches:
     # "true"`, and then change/configure the your ingress-nginx
     # servers to use "Proxy protocol" (see the next comment, also see
     # https://seriousben.com/posts/2020-02-exploring-the-proxy-protocol/).
-    #
     - op: replace
       path: /spec/values/controller/service
       value:

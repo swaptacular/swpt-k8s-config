@@ -4,7 +4,13 @@ kind: Kustomization
 configMapGenerator:
 - name: swpt-trade-config
   literals:
-  # Determiene when new trading turns will be started.
+  # Determines when new trading turns will be started. If you do not
+  # change anything, a new turn will be started every day at 2:00am
+  # UTC, the time allotted to the first turn phase (the currency info
+  # collection phase) will be 10 minutes, and the time allotted to the
+  # second turn phase (buy/sell offers collection phase) will be 1
+  # hour. The solver server will check the status of ongoing trading
+  # turns every 60 seconds.
   - TURN_PERIOD=1d
   - TURN_PERIOD_OFFSET=2h
   - TURN_PHASE1_DURATION=10m
@@ -15,7 +21,8 @@ configMapGenerator:
   # currencies, thus forming a "peg-tree". At the root of the peg-tree
   # sits the "base currency". The base currency is specified by its
   # "debtor info locator" and its debtor ID ("BASE_DEBTOR_ID" and
-  # "BASE_DEBTOR_INFO_LOCATOR"). Currencies with distance to the root
+  # "BASE_DEBTOR_INFO_LOCATOR" -- you can obtain both from the base
+  # currency's digital coin). Currencies with distance to the root
   # bigger than "MAX_DISTANCE_TO_BASE" will be ignored.
   - BASE_DEBTOR_INFO_LOCATOR=https://debtors.swaptacular.org/840
   - BASE_DEBTOR_ID=840
@@ -51,9 +58,9 @@ configMapGenerator:
   # currencies. Normally, this must be 1.
   - DEFAULT_NUMBER_OF_COLLECTOR_ACCOUNTS=1
 
-  # When the outgouing transfers are committed, a deadline for each
+  # When the outgoing transfers are committed, a deadline for each
   # transfer should be specified. This allows the "Circular Trade"
-  # service to make a resonable estimate for the maximum possible
+  # service to make a reasonable estimate for the maximum possible
   # losses coming form negative interest rates. This variable
   # specifies the period during which it is highly likely that all
   # scheduled outgoing transfers will be successfully performed. As a

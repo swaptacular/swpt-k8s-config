@@ -18,7 +18,9 @@ configMapGenerator:
       # example, if "nameSuffix" is "-101", the routing key must be
       # "1.0.1.#". If "nameSuffix" is "", the routing key must be "#".
       - PROTOCOL_BROKER_QUEUE_ROUTING_KEY=#
-      # Shard configuration settings which you may want to change:
+      # Shard configuration settings which you may want to change. In
+      # general, you should increase those numbers as the load
+      # increases.
       - PROTOCOL_BROKER_PROCESSES=1
       - PROTOCOL_BROKER_THREADS=1
       - PROTOCOL_BROKER_PREFETCH_COUNT=10
@@ -32,6 +34,13 @@ configMapGenerator:
       - PROCESS_TRANSFER_REQUESTS_THREADS=1
       - PROCESS_FINALIZATION_REQUESTS_THREADS=1
       - PROCESS_BALANCE_CHANGES_THREADS=1
+      # The `REMOVE_FROM_ARCHIVE_THRESHOLD_DATE` setting determines
+      # the date before which transfer IDs are safe to remove from the
+      # archive (default 1970-01-01). Normally, this should be a date
+      # at least a few weeks in the past. The date must be given in
+      # ISO 8601 date format. It can also include time, for example:
+      # "2022-07-30T18:59:59Z". You should periodically increase this
+      # date, to free up disk space.
       - REMOVE_FROM_ARCHIVE_THRESHOLD_DATE=2022-07-30
       # The size of the shared memory zone, used by each "http-cache"
       # pod, for storing the cache keys and metadata such as usage
@@ -110,7 +119,8 @@ configMapGenerator:
       - nginx.conf=../../../../base/swpt-accounts/shard/static/nginx.conf
       - default.conf.template=../../../../base/swpt-accounts/shard/static/default.conf.template
 # The number of replicas for each component. One replica works fine,
-# but to have high-availability, should be at least 2.
+# but to have high-availability, should be at least 2. You should
+# increase those numbers as the load increases.
 replicas:
   - name: web-server
     count: 1
