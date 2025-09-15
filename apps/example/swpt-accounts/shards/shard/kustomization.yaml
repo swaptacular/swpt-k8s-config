@@ -179,6 +179,16 @@ patches:
       kind: postgresql
       name: db
       version: v1
+  # # If you do not want to use the default Kubernetes storage class for
+  # # http-cache's persistent volumes, uncomment these lines, and set
+  # # the desired storageClassName.
+  # - patch: |-
+  #     - op: add
+  #       path: /spec/volumeClaimTemplates/0/spec/storageClassName
+  #       value: fast
+  #   target:
+  #     kind: StatefulSet
+  #     name: http-cache
 replacements:
   - path: ../../../../base/swpt-accounts/shard/replacements/postgres-exporter-image.yaml
   - path: ../../../../base/swpt-accounts/shard/replacements/postgres-exporter-cpu-request.yaml
