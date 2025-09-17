@@ -33,11 +33,24 @@ spec:
   # must not be decreased.
   #
   volume:
+    # # `storageClass` defines the name of the Kubernetes storage class
+    # # to draw the persistent volume from. If your cluster does not
+    # # have a default StorageClass, this property must be set.
+    # # Otherwise it is optional.
+    # #
+    # storageClass: fast
+
+    # The capacity of the persistent volume, expressed as a Kubernetes
+    # resource quantity. If the storage class supports resizing, you
+    # will be able to increase the capacity simply by increasing this
+    # value later (20Gi should be enough for a start).
+    #
     size: 1Gi
 
   # Specifies Kubernetes memory and CPU requests and limits. It is
   # recommended that the memory request is the same as the memory
-  # limit.
+  # limit. Good minimum values for production are: memory requests
+  # 2Gi, memory limit 2Gi, CPU request 1000m, CPU limit 2000m.
   #
   resources:
     requests:
@@ -48,9 +61,26 @@ spec:
       memory: 350Mi
 
   # Specifies the number of PosgreSQL server instances in the cluster.
-  # Must be between 1 and 3. It is recommended to be at least 2.
+  # Must be between 1 and 3. It is recommended to be at least 2 in
+  # production.
   #
   numberOfInstances: 1
+
+  # Specifies Kubernetes tolerations. If you add the respective taint
+  # to a set of nodes in your Kubernetes cluster, the hydra-db
+  # instances will be scheduled to those nodes. To ensure correct
+  # scheduling, you must also add the corresponding label to each one
+  # of the tainted nodes. For example, if you added the
+  # "swpt-hydra-db=swpt-creditors:NoSchedule" taint, you must also add
+  # the "swpt-hydra-db=swpt-creditors" label to the tainted node. If
+  # you do not add the taint to any node, the hydra-db instances will
+  # be scheduled to any of the suitable nodes.
+  #
+  tolerations:
+  - key: "swpt-hydra-db"
+    operator: "Equal"
+    value: "swpt-creditors"
+    effect: "NoSchedule"
 
   env:
   # You can change the value of this variable to trigger a restart of

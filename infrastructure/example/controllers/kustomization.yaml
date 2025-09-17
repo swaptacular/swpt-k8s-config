@@ -477,7 +477,7 @@ secretGenerator:
     #
     annotations:
       # Grafana's, Alertmanager's, and Prometheus's UIs are publicly
-      # exposed via an HTTP reverse proxy server in the
+      # exposed via an Nginx reverse proxy server in the
       # "simple-git-server" namespace. Here, the public IP address of
       # the load balancer for this proxy server should be specified.
       #

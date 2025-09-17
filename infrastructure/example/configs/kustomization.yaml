@@ -18,8 +18,8 @@ patches:
 # This patch is sometimes needed (in "KinD" clusters for example) in
 # order for the metrics-server to work. It simply adds
 # "--kubelet-insecure-tls" to the list of arguments for the metrics
-# server process. Comment this section out if this does not apply to
-# your cluster.
+# server process. In production, you will most probably need to
+# comment this section out.
 #
 - target:
     version: v1
@@ -138,7 +138,9 @@ patches:
     # Note that pods' memory requests will be adjusted automatically
     # to accommodate the allocated memory. The configured persistent
     # storage will be used to "extend" the allocated memory (although,
-    # the disk is much slower).
+    # the disk is much slower). It is probably a good idea to assign
+    # at least 10Gi of persistent storage for this. Adding more
+    # replicas effectively increases the total size of the cache.
     - op: replace
       path: /spec/values/chunksCache/replicas
       value: 1
@@ -159,7 +161,9 @@ patches:
     # memory requests will be adjusted automatically to accommodate
     # the allocated memory. The configured persistent storage will be
     # used to "extend" the allocated memory (although, the disk is
-    # much slower).
+    # much slower). It is probably a good idea to assign at least 10Gi
+    # of persistent storage for this. Adding more replicas effectively
+    # increases the total size of the cache.
     - op: replace
       path: /spec/values/resultsCache/replicas
       value: 1
@@ -353,7 +357,8 @@ patches:
     # Configures the size of the persistent volumes used by the
     # tenant. The size of the volumes can not be changed after the
     # tenant has been created. The total number of created persistent
-    # volumes will be 4 X <the_number_of_servers>.
+    # volumes will be 4 X <the number of servers>. In production, the
+    # value should probably be at least 10Gi.
     - op: replace
       path: /spec/pools/0/volumeClaimTemplate/spec/resources/requests/storage
       value: 1Gi
@@ -364,6 +369,7 @@ patches:
     # servers can be either 1 (for standalone mode) or at least 4 (for
     # distributed mode). Note however, that the operator does not
     # support upgrading from standalone to distributed mode.
+    # Therefore, you MUST always use distributed mode in production.
     - op: replace
       path: /spec/pools/0/servers
       value: 1
