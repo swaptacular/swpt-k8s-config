@@ -912,6 +912,8 @@ collected. The time needed for this to happen depends on the garbage
 collecting settings. With the default settings it should take a week
 or two.
 
+## Scaling up Ory Hydra
+
 Another database that may eventually need to be split into shards is
 the one used by [Ory Hydra](https://www.ory.sh/hydra). Currently, it
 uses a standard [PostgreSQL](https://www.postgresql.org/) database.
