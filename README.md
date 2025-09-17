@@ -911,3 +911,13 @@ procedure will need to wait until all those records have been garbage
 collected. The time needed for this to happen depends on the garbage
 collecting settings. With the default settings it should take a week
 or two.
+
+Another database that may eventually need to be split into shards is
+the one used by [Ory Hydra](https://www.ory.sh/hydra). Currently, it
+uses a standard [PostgreSQL](https://www.postgresql.org/) database.
+However, because losing the data in this database would not be
+catastrophic, and since Ory Hydra supports databases specifically
+designed to scale, you could relatively easily switch to
+[CockroachDB](https://www.cockroachlabs.com/),
+[YugabyteDB](https://www.yugabyte.com/) or
+[Citus](https://www.citusdata.com/).
