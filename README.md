@@ -66,7 +66,7 @@ $ sudo sysctl fs.inotify.max_user_instances=8192
 ## Generate the cluster's PGP keys and configure SOPS
 
 The next task is to configure secrets management using [SOPS] and
-[GnuPG/PGP]:
+[GnuPG]:
 
 ``` console
 $ pwd
@@ -957,7 +957,7 @@ relatively easily switch to [CockroachDB], [YugabyteDB], or [Citus].
 [CAPTCHA]: https://en.wikipedia.org/wiki/CAPTCHA
 [hCaptcha]: https://www.hcaptcha.com/
 [SOPS]: https://github.com/getsops/sops
-[GnuPG/PGP]: https://www.gnupg.org/
+[GnuPG]: https://www.gnupg.org/
 [FluxCD]: https://fluxcd.io/
 [Ory Hydra]: https://www.ory.sh/hydra
 [PostgreSQL]: https://www.postgresql.org/
