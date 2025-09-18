@@ -3,8 +3,35 @@
 This repository serves as a template for deploying [Swaptacular nodes]
 to [Kubernetes] clusters. It follows the [GitOps] paradigm and aims to
 make deploying secure, reliable, and scalable Swaptacular nodes as
-simple as possible. The rest of this file provides step-by-step
-instructions for deploying a Swaptacular node to a Kubernetes cluster.
+simple as possible. The resulting deployments should:
+
+  * Work on any standard-compliant Kubernetes cluster.
+
+  * Be highly available and horizontally scalable.
+
+  * Perform automatic database backups.
+
+  * Provide cluster monitoring and log aggregation.
+
+  * Require zero or almost-zero administration.
+
+  * Have minimum external dependencies:
+
+    1. An [Amazon S3]-compatible service used for database backups;
+
+    2. An [SMTP server] used for sending emails to users and
+    administrators;
+
+    3. An [OCI] container image repository to download [Docker images]
+    from;
+
+    4. A [CAPTCHA] service used during sign-in and sign-up. By
+    default, [hCaptcha] is used for this, but the API is quite generic
+    and can easily support other CAPTCHA services, including homegrown
+    ones.
+
+The rest of this file provides step-by-step instructions for deploying
+a Swaptacular node to a Kubernetes cluster.
 
 **Note:** When deploying to a [KinD] (Kubernetes in Docker) cluster,
 you can use the `kind-cluster.yaml` configuration file. Also, you may
@@ -936,3 +963,9 @@ could relatively easily switch to
 [Kubernetes]: https://kubernetes.io/
 [GitOps]: https://www.redhat.com/en/topics/devops/what-is-gitops
 [KinD]: https://kind.sigs.k8s.io/
+[Amazon S3]: https://en.wikipedia.org/wiki/Amazon_S3
+[SMTP]: https://en.wikipedia.org/wiki/Simple_Mail_Transfer_Protocol
+[OCI]: https://opencontainers.org/
+[Docker images]: https://www.geeksforgeeks.org/what-is-docker-images/
+[CAPTCHA]: https://en.wikipedia.org/wiki/CAPTCHA
+[hCaptcha]: https://www.hcaptcha.com/
