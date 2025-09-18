@@ -1,9 +1,9 @@
 # Swaptacular GitOps repository for deploying to Kubernetes clusters
 
 This repository serves as a template for deploying [Swaptacular nodes]
-to [Kubernetes] clusters. It follows the [GitOps] paradigm and aims to
-make deploying Swaptacular nodes as simple as possible. The resulting
-deployments are designed to:
+to [Kubernetes] clusters. It follows the [GitOps] paradigm, and aims
+to make deploying Swaptacular nodes as simple as possible. The
+resulting deployments are designed to:
 
   * Work on any standards-compliant Kubernetes cluster.
 
@@ -15,7 +15,7 @@ deployments are designed to:
 
   * Require zero or near-zero administration.
 
-  * Minimize external dependencies, limited to:
+  * Minimize external dependencies, which are limited to:
     - an [OCI image repository] for downloading Docker images;
     - an [Amazon S3]-compatible service for database backups;
     - an [SMTP server] for sending emails;
