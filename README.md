@@ -16,10 +16,9 @@ simple as possible. The resulting deployments are designed to:
   * Require zero or near-zero administration.
 
   * Minimize external dependencies, limited to:
+    - an [OCI image repository] for downloading Docker images;
     - an [Amazon S3]-compatible service for database backups;
     - an [SMTP server] for sending emails;
-    - an [OCI container image repository] for downloading Docker
-      images;
     - a [CAPTCHA] service for sign-in and sign-up.
 
     By default, [hCaptcha] is used, but the integration is generic and
@@ -961,6 +960,6 @@ could relatively easily switch to
 [KinD]: https://kind.sigs.k8s.io/
 [Amazon S3]: https://en.wikipedia.org/wiki/Amazon_S3
 [SMTP server]: https://en.wikipedia.org/wiki/Simple_Mail_Transfer_Protocol
-[OCI container image repository]: https://opencontainers.org/
+[OCI image repository]: https://opencontainers.org/
 [CAPTCHA]: https://en.wikipedia.org/wiki/CAPTCHA
 [hCaptcha]: https://www.hcaptcha.com/
