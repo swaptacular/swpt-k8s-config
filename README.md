@@ -17,12 +17,9 @@ simple as possible. The resulting deployments are designed to:
 
   * Minimize external dependencies, limited to:
     - an [Amazon S3]-compatible service for database backups;
-
     - an [SMTP server] for sending emails to users and administrators;
-
     - an [OCI container image repository] for downloading Docker
       images;
-
     - a [CAPTCHA] service for sign-in and sign-up.
 
       By default, [hCaptcha] is used, but the integration is generic
