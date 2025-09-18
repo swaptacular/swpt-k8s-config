@@ -17,7 +17,8 @@ resulting deployments are designed to:
 
   * Minimize external dependencies, which are limited to:
     - an [OCI image repository] for downloading Docker images;
-    - an [Amazon S3]-compatible service for database backups;
+    - an [Amazon S3]-compatible service for storing *encrypted*
+      database backups;
     - an [SMTP server] for sending emails;
     - a [CAPTCHA] service for sign-in and sign-up.
 
