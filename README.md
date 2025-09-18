@@ -931,6 +931,6 @@ relatively easily switch to
 [Citus](https://www.citusdata.com/).
 
 
-[Swaptacular]: https://swaptacular.github.io/overview
+[Swaptacular nodes]: https://swaptacular.github.io/overview
 [Kubernetes]: https://kubernetes.io/
 [GitOps]: https://www.redhat.com/en/topics/devops/what-is-gitops
