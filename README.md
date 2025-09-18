@@ -1,9 +1,9 @@
 # Swaptacular GitOps repository for deploying to Kubernetes clusters
 
 This repository serves as a template for deploying [Swaptacular nodes]
-to [Kubernetes] clusters. It follows the [GitOps] paradigm, and aims
-to make deploying Swaptacular nodes as simple as possible. The
-resulting deployments are designed to:
+to [Kubernetes] clusters. It uses [FluxCD] to implement the [GitOps
+paradigm], and aims to make deploying Swaptacular nodes as simple as
+possible. The resulting deployments are designed to:
 
   * Work on any standards-compliant Kubernetes cluster.
 
@@ -950,7 +950,7 @@ relatively easily switch to [CockroachDB], [YugabyteDB], or [Citus].
 
 [Swaptacular nodes]: https://swaptacular.github.io/overview
 [Kubernetes]: https://kubernetes.io/
-[GitOps]: https://www.redhat.com/en/topics/devops/what-is-gitops
+[GitOps paradigm]: https://www.redhat.com/en/topics/devops/what-is-gitops
 [KinD]: https://kind.sigs.k8s.io/
 [Amazon S3]: https://en.wikipedia.org/wiki/Amazon_S3
 [SMTP server]: https://en.wikipedia.org/wiki/Simple_Mail_Transfer_Protocol
