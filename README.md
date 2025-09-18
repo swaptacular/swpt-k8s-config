@@ -25,8 +25,8 @@ simple as possible. The resulting deployments are designed to:
     can easily support other CAPTCHA services, including custom
     implementations.
 
-The rest of this file provides step-by-step instructions for deploying
-a Swaptacular node to a Kubernetes cluster.
+The rest of this file provides **step-by-step instructions** for
+deploying one or more Swaptacular nodes to a Kubernetes cluster.
 
 **Note:** When deploying to a [KinD] (Kubernetes in Docker) cluster,
 you can use the `kind-cluster.yaml` configuration file. Also, you may
