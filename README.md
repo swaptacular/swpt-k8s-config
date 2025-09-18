@@ -416,8 +416,8 @@ immediately.
 ## Install a simple Git server in your Kubernetes cluster
 
 The next step is to install a Git server in your Kubernetes cluster,
-which will host a copy of your GitOps repository. This server will
-also act as a Nginx reverse proxy for the Grafana, Alertmanager and
+which will host a copy of your GitOps repository. The Git server's pod
+will also run a Nginx reverse proxy for the Grafana, Alertmanager and
 Prometheus UIs requests. But before installing the Git server, you
 need to do some preparations:
 
