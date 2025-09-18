@@ -17,14 +17,14 @@ simple as possible. The resulting deployments are designed to:
 
   * Minimize external dependencies, limited to:
     - an [Amazon S3]-compatible service for database backups;
-    - an [SMTP server] for sending emails to users and administrators;
+    - an [SMTP server] for sending emails;
     - an [OCI container image repository] for downloading Docker
       images;
     - a [CAPTCHA] service for sign-in and sign-up.
 
-      By default, [hCaptcha] is used, but the integration is generic
-      and can easily support other CAPTCHA services, including custom
-      implementations.
+    By default, [hCaptcha] is used, but the integration is generic and
+    can easily support other CAPTCHA services, including custom
+    implementations.
 
 The rest of this file provides step-by-step instructions for deploying
 a Swaptacular node to a Kubernetes cluster.
