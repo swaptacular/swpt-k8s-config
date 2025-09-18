@@ -5,7 +5,7 @@ to [Kubernetes] clusters. It follows the [GitOps] paradigm and aims to
 make deploying secure, reliable, and scalable Swaptacular nodes as
 simple as possible. The resulting deployments should:
 
-  * Work on any standard-compliant Kubernetes cluster.
+  * Work on any standards-compliant Kubernetes cluster.
 
   * Be highly available and horizontally scalable.
 
@@ -13,22 +13,15 @@ simple as possible. The resulting deployments should:
 
   * Provide cluster monitoring and log aggregation.
 
-  * Require zero or almost-zero administration.
+  * Require zero or near-zero administration.
 
-  * Have minimum external dependencies:
-
-    1. An [Amazon S3]-compatible service used for database backups;
-
-    2. An [SMTP server] used for sending emails to users and
-    administrators;
-
-    3. An [OCI] container image repository to download [Docker images]
-    from;
-
-    4. A [CAPTCHA] service used during sign-in and sign-up. By
-    default, [hCaptcha] is used for this, but the API is quite generic
-    and can easily support other CAPTCHA services, including homegrown
-    ones.
+  * Have minimum external dependencies: 1) An [Amazon S3]-compatible
+    service for database backups; 2) An [SMTP server] for sending
+    emails to users and administrators; 3) An [OCI] container image
+    repository for download [Docker images]; 4) A [CAPTCHA] service
+    used during sign-in and sign-up. By default, [hCaptcha] is used,
+    but the integration is generic and can easily support other
+    CAPTCHA services, including custom implementations.
 
 The rest of this file provides step-by-step instructions for deploying
 a Swaptacular node to a Kubernetes cluster.
@@ -964,7 +957,7 @@ could relatively easily switch to
 [GitOps]: https://www.redhat.com/en/topics/devops/what-is-gitops
 [KinD]: https://kind.sigs.k8s.io/
 [Amazon S3]: https://en.wikipedia.org/wiki/Amazon_S3
-[SMTP]: https://en.wikipedia.org/wiki/Simple_Mail_Transfer_Protocol
+[SMTP server]: https://en.wikipedia.org/wiki/Simple_Mail_Transfer_Protocol
 [OCI]: https://opencontainers.org/
 [Docker images]: https://www.geeksforgeeks.org/what-is-docker-images/
 [CAPTCHA]: https://en.wikipedia.org/wiki/CAPTCHA
