@@ -6,9 +6,9 @@ make deploying secure, reliable, and scalable Swaptacular nodes as
 simple as possible. The rest of this file provides step-by-step
 instructions for deploying a Swaptacular node to a Kubernetes cluster.
 
-**Note:** When deploying to a KinD (Kubernetes in Docker) cluster, you
-can use the `kind-cluster.yaml` configuration file. Also, you may need
-to run the following command:
+**Note:** When deploying to a [KinD] (Kubernetes in Docker) cluster,
+you can use the `kind-cluster.yaml` configuration file. Also, you may
+need to run the following command:
 
 ``` console
 $ sudo sysctl fs.inotify.max_user_instances=8192
@@ -935,3 +935,4 @@ relatively easily switch to
 [Swaptacular nodes]: https://swaptacular.github.io/overview
 [Kubernetes]: https://kubernetes.io/
 [GitOps]: https://www.redhat.com/en/topics/devops/what-is-gitops
+[KinD]: https://kind.sigs.k8s.io/
