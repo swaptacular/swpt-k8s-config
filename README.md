@@ -2,8 +2,8 @@
 
 This repository serves as a template for deploying [Swaptacular nodes]
 to [Kubernetes] clusters. It follows the [GitOps] paradigm and aims to
-make deploying secure, reliable, and scalable Swaptacular nodes as
-simple as possible. The resulting deployments are designed to:
+make deploying Swaptacular nodes as simple as possible. The resulting
+deployments are designed to:
 
   * Work on any standards-compliant Kubernetes cluster.
 
@@ -26,7 +26,7 @@ simple as possible. The resulting deployments are designed to:
     implementations.
 
 The rest of this file provides **step-by-step instructions** for
-deploying one or more Swaptacular nodes to a Kubernetes cluster.
+deploying one or more Swaptacular nodes to a Kubernetes cluster:
 
 ## Fork and clone this repository
 
@@ -56,8 +56,8 @@ $ export GIT_INSTALL_DIR=simple-git-server/$CLUSTER_NAME
 ```
 
 **Note:** When deploying to a [KinD] (Kubernetes in Docker) cluster,
-you can use the `kind-cluster.yaml` configuration file. Also, you may
-need to run the following command:
+you can use the provided `kind-cluster.yaml` configuration file. Also,
+you may need to run the following command:
 
 ``` console
 $ sudo sysctl fs.inotify.max_user_instances=8192
