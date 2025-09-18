@@ -1,5 +1,10 @@
 # Swaptacular GitOps repository for deploying to Kubernetes clusters
 
+This repository serves as a template for deploying [Swaptacular nodes]
+to [Kubernetes] clusters. It follows the [GitOps] paradigm, and aims
+to make deploying secure, reliable, and scalable Swaptacular nodes as
+simple as possible.
+
 **Note:** When deploying to a KinD (Kubernetes in Docker) cluster, you
 can use the `kind-cluster.yaml` configuration file. Also, you may need
 to run the following command:
@@ -924,3 +929,8 @@ relatively easily switch to
 [CockroachDB](https://www.cockroachlabs.com/),
 [YugabyteDB](https://www.yugabyte.com/) or
 [Citus](https://www.citusdata.com/).
+
+
+[Swaptacular]: https://swaptacular.github.io/overview
+[Kubernetes]: https://kubernetes.io/
+[GitOps]: https://www.redhat.com/en/topics/devops/what-is-gitops
