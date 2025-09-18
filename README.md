@@ -3,7 +3,7 @@
 This repository serves as a template for deploying [Swaptacular nodes]
 to [Kubernetes] clusters. It follows the [GitOps] paradigm and aims to
 make deploying secure, reliable, and scalable Swaptacular nodes as
-simple as possible. The resulting deployments should:
+simple as possible. The resulting deployments are designed to:
 
   * Work on any standards-compliant Kubernetes cluster.
 
@@ -15,13 +15,15 @@ simple as possible. The resulting deployments should:
 
   * Require zero or near-zero administration.
 
-  * Have minimum external dependencies: 1) An [Amazon S3]-compatible
-    service for database backups; 2) An [SMTP server] for sending
-    emails to users and administrators; 3) An [OCI] container image
-    repository for download [Docker images]; 4) A [CAPTCHA] service
-    used during sign-in and sign-up. By default, [hCaptcha] is used,
-    but the integration is generic and can easily support other
-    CAPTCHA services, including custom implementations.
+  * Minimize external dependencies, limited to:
+    - An [Amazon S3]-compatible service for database backups;
+    - An [SMTP server] for sending emails to users and administrators;
+    - An [OCI] container image repository for download [Docker
+      images];
+    - A [CAPTCHA] service used during sign-in and sign-up. By default,
+      [hCaptcha] is used, but the integration is generic and can
+      easily support other CAPTCHA services, including custom
+      implementations.
 
 The rest of this file provides step-by-step instructions for deploying
 a Swaptacular node to a Kubernetes cluster.
