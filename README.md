@@ -28,14 +28,6 @@ simple as possible. The resulting deployments are designed to:
 The rest of this file provides **step-by-step instructions** for
 deploying one or more Swaptacular nodes to a Kubernetes cluster.
 
-**Note:** When deploying to a [KinD] (Kubernetes in Docker) cluster,
-you can use the `kind-cluster.yaml` configuration file. Also, you may
-need to run the following command:
-
-``` console
-$ sudo sysctl fs.inotify.max_user_instances=8192
-```
-
 ## Fork and clone this repository
 
 First, you need to create a fork of this repository, and then clone it
@@ -61,6 +53,14 @@ Then, you need to choose a name for your cluster (e.g., `dev`):
 $ export CLUSTER_NAME=dev  # Enter the name for your cluster here.
 $ export CLUSTER_DIR=clusters/$CLUSTER_NAME
 $ export GIT_INSTALL_DIR=simple-git-server/$CLUSTER_NAME
+```
+
+**Note:** When deploying to a [KinD] (Kubernetes in Docker) cluster,
+you can use the `kind-cluster.yaml` configuration file. Also, you may
+need to run the following command:
+
+``` console
+$ sudo sysctl fs.inotify.max_user_instances=8192
 ```
 
 ## Generate the cluster's PGP keys and configure SOPS
