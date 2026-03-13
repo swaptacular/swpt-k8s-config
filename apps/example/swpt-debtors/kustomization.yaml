@@ -227,6 +227,10 @@ configMapGenerator:
 
 - name: swpt-debtors-ui-config
   literals:
+  # Set this to the name of the site, as it is known to the users. It
+  # should be short, and start with a captital letter.
+  - SITE_TITLE=Swaptacular
+
   # When the currency issuer wants to peg its currency to another
   # currency, a default peg currency will be suggested. Its
   # abbreviation will be the value of "DEFAULT_PEG_ABBR", and its
