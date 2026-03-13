@@ -402,19 +402,19 @@ replicas:
 images:
 - name: swpt-debtors
   newName: ghcr.io/swaptacular/swpt_debtors
-  digest: sha256:9908f4ed813fde5030e8c1d9714c5da69d5c458e8e699b9c651714273c7cf9e4
+  digest: sha256:b0175eaa8f1bae36a7ac487f4c37308b06247e4cc9d390c69ca7bfc110a88abc
 - name: swpt-debtors-swagger-ui
   newName: ghcr.io/swaptacular/swpt_debtors_swagger_ui
-  digest: sha256:72e0c864027d5921d5f5b217df012b2efd89ec928a353a16a1226cef0975fff1
+  digest: sha256:3027dc5601fe36f94e0956db23d5f437fac0b15e6530de627a58d0082dc19b9a
 - name: swpt-debtors-ui
   newName: ghcr.io/swaptacular/swpt_debtors_ui
-  digest: sha256:79a3a99aaa0fffefd5f721ddbfbc5c9846301d13a6c33db7e2c3e8b6731bd782
+  digest: sha256:c05575c32e371a0a835a1926dfe42ed4c35e894d68b5cd084e8f5ecfd87712b9
 - name: swpt-apiproxy
   newName: ghcr.io/swaptacular/swpt_apiproxy
   digest: sha256:7a396d200c4c023f5cf46a3dc45d202917df4ef184e33580c3177a70c4a3675b
 - name: swpt-stomp
   newName: ghcr.io/swaptacular/swpt_stomp
-  digest: sha256:393fc048dad43fa95587de8d0f486a73427f8077fb0ad147c94c9dc3018ee7e3
+  digest: sha256:3149fe87e78b3ccb93fae3a79130f1f783c292cdcff8e70254ff4cdeffe087e2
 - name: swpt-nfs-server
   newName: ghcr.io/swaptacular/swpt_nfs_server
   digest: sha256:867dbf9d15350907be5ace69a06845cb670d9a9c47bf6c872109a24669658523
