@@ -178,15 +178,12 @@ if [ ! -s nodeinfo/stomp.toml ]; then
     case "$(cat db/nodetype)" in
         "Creditors Agents")
             stomp_destination='/exchange/creditors_in'
-            break
             ;;
         "Debtors Agents")
             stomp_destination='/exchange/debtors_in'
-            break
             ;;
         "Accounting Authorities")
             stomp_destination='/exchange/accounts_in'
-            break
             ;;
         *)
             echo "ERROR: Invalid node type."
