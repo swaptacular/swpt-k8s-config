@@ -11,4 +11,4 @@ targets:
     fieldPaths:
       - spec.clone.timestamp
     options:
-      create: True
+      create: true

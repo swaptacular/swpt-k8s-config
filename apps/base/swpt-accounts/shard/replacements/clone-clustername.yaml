@@ -13,4 +13,4 @@ targets:
     fieldPaths:
       - spec.clone.cluster
     options:
-      create: True
+      create: true

@@ -11,4 +11,4 @@ targets:
     fieldPaths:
       - data.pg_cluster_name
     options:
-      create: True
+      create: true
