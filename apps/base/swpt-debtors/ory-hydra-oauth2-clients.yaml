@@ -15,9 +15,9 @@ spec:
     - access.readonly
   secretName: oauth2-clients.debtors-webapp
   redirectUris:
-    # Here "hostname" will be automatically replaced with the public
-    # hostname of the Swaptacular node.
-    - https://hostname/debtors-webapp/
+    # Here "webapp-hostname" will be automatically replaced with the
+    # configured webapp hostname.
+    - https://webapp-hostname/debtors-webapp/
   tokenEndpointAuthMethod: none
 
 ---
@@ -38,9 +38,9 @@ spec:
     - access.readonly
   secretName: oauth2-clients.swagger-ui
   redirectUris:
-    # Here "hostname" will be automatically replaced with the public
-    # hostname of the Swaptacular node.
-    - https://hostname/debtors-swagger-ui/oauth2-redirect.html
+    # Here "public-hostname" will be automatically replaced with the
+    # public hostname of the Swaptacular node.
+    - https://public-hostname/debtors-swagger-ui/oauth2-redirect.html
   tokenEndpointAuthMethod: client_secret_post
 
 ---

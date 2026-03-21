@@ -1,13 +1,13 @@
 source:
   kind: ConfigMap
   name: debtors-agent-config
-  fieldPath: data.PUBLIC_HOSTNAME
+  fieldPath: data.WEBAPP_HOSTNAME
 targets:
   - select:
       group: hydra.ory.sh
       version: v1alpha1
       kind: OAuth2Client
-      name: swagger-ui
+      name: debtors-webapp
     fieldPaths:
       - spec.redirectUris.0
     options:
@@ -19,5 +19,4 @@ targets:
       kind: Ingress
       name: ingress-rules
     fieldPaths:
-      - spec.rules.*.host
-      - spec.tls.*.hosts.0
+      - spec.tls.*.hosts.1
