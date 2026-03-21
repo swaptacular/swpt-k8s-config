@@ -58,6 +58,11 @@ spec:
                 configMapKeyRef:
                   name: creditors-agent-config
                   key: PUBLIC_HOSTNAME
+            - name: WEBAPP_HOSTNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: creditors-agent-config
+                  key: WEBAPP_HOSTNAME
             - name: BASE_URL
               value: /creditors-webapp
             - name: SERVER_API_ENTRYPOINT
@@ -72,7 +77,7 @@ spec:
                   name: oauth2-clients.creditors-webapp
                   key: CLIENT_ID
             - name: REDIRECT_URL
-              value: https://$(PUBLIC_HOSTNAME)/creditors-webapp/
+              value: https://$(WEBAPP_HOSTNAME)/creditors-webapp/
           resources:
             limits:
               cpu: "1"
@@ -128,19 +133,19 @@ spec:
   #
   ingressClassName: namespace.nginx
 
-  # Here "public-hostname" will be automatically replaced with the
-  # real public hostname of the Swaptacular node.
+  # Here "webapp-hostname" will be automatically replaced with the
+  # configured webapp hostname.
   #
   tls:
   - hosts:
-    - public-hostname
+    - webapp-hostname
     secretName: acme-cert-key
 
   rules:
-  # Here "public-hostname" will be automatically replaced with the
-  # real public hostname of the Swaptacular node.
+  # Here "webapp-hostname" will be automatically replaced with the
+  # configured webapp hostname.
   #
-  - host: public-hostname
+  - host: webapp-hostname
     http:
       paths:
       - path: /creditors-webapp/

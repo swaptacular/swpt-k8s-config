@@ -194,6 +194,13 @@ configMapGenerator:
   #
   - PUBLIC_HOSTNAME=swpt-tests-ca
 
+  # This must be a subdomain of the above configured PUBLIC_HOSTNAME,
+  # pointing to the same IP address. For example: if PUBLIC_HOSTNAME
+  # is set to "example.com", you may set "webapp.example.com" here.
+  # This must match the configuration of your DNS records.
+  #
+  - WEBAPP_HOSTNAME=webapp.swpt-tests-ca
+
   # Creditor IDs are 64-bit integer numbers. The creditors agent is
   # responsible only for creditor IDs which start with the hexadecimal
   # prefix specified in the `./node-data/creditors-subnet.txt` file.
@@ -597,9 +604,11 @@ replacements:
 - path: ../../base/swpt-creditors/replacements/ingress-nginx-memory-limit.yaml
 - path: ../../base/swpt-creditors/replacements/ingress-nginx-memory-request.yaml
 - path: ../../base/swpt-creditors/replacements/public-hostname.yaml
+- path: ../../base/swpt-creditors/replacements/webapp-hostname.yaml
 - path: ../../base/swpt-creditors/replacements/acme-cert-server.yaml
 - path: ../../base/swpt-creditors/replacements/acme-cert-email.yaml
 - path: ../../base/swpt-creditors/replacements/s3-ip-block.yaml
 - path: ../../base/swpt-creditors/replacements/ingress-nginx-namespace.yaml
 - path: ../../base/swpt-creditors/web-ui/replacements/public-hostname.yaml
+- path: ../../base/swpt-creditors/web-ui/replacements/webapp-hostname.yaml
 - path: ../../base/swpt-creditors/web-ui/replacements/ingress-nginx-namespace.yaml
