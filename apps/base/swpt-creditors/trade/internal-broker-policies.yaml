@@ -1,0 +1,27 @@
+apiVersion: rabbitmq.com/v1beta1
+kind: Policy
+metadata:
+  name: internal-broker-dead-letter-streams-policy
+spec:
+  name: dead-letter-streams
+  pattern: "^.+\\.XQ$"
+  applyTo: "streams"
+  definition:
+    max-age: "7D"
+  rabbitmqClusterReference:
+    name: internal-broker
+
+---
+apiVersion: rabbitmq.com/v1beta1
+kind: Policy
+metadata:
+  name: internal-broker-dead-letter-queues-policy
+spec:
+  name: dead-letter-queues
+  pattern: "^.+\\.XQ$"
+  applyTo: "classic_queues"
+  definition:
+    max-length-bytes: 1000000000
+    overflow: drop-head
+  rabbitmqClusterReference:
+    name: internal-broker

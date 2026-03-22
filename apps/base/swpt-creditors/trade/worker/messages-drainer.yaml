@@ -43,6 +43,9 @@ spec:
             - secretRef:
                 name: broker-default-user
               prefix: rmq_
+            - secretRef:
+                name: internal-broker-default-user
+              prefix: internal_rmq_
             - configMapRef:
                 name: swpt-trade-config
             - configMapRef:
@@ -56,6 +59,10 @@ spec:
               value: "$(rmq_connection_string)"
             - name: PROTOCOL_BROKER_QUEUE
               value: "$(pg_cluster_name)"
+            - name: INTERNAL_BROKER_URL
+              value: "$(internal_rmq_connection_string)"
+            - name: INTERNAL_BROKER_QUEUE
+              value: "$(pg_cluster_name)-internal"
             - name: APP_LOG_LEVEL
               value: warning
             - name: APP_LOG_FORMAT

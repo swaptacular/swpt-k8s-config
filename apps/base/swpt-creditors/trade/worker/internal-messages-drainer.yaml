@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: trade-worker-messages-flusher
+  name: trade-worker-internal-messages-drainer
   labels:
-    app.kubernetes.io/component: messages-flusher
+    app.kubernetes.io/component: internal-messages-drainer
 spec:
-  replicas: 2
+  replicas: 0  # Must be zero, unless the shard is being split.
   selector:
     matchLabels:
-      app.kubernetes.io/component: messages-flusher
+      app.kubernetes.io/component: internal-messages-drainer
   template:
     metadata:
       labels:
-        app.kubernetes.io/component: messages-flusher
+        app.kubernetes.io/component: internal-messages-drainer
         log.pipeline: swpt-python-logging
     spec:
       affinity:
@@ -20,17 +20,17 @@ spec:
           requiredDuringSchedulingIgnoredDuringExecution:
           - labelSelector:
               matchLabels:
-                app.kubernetes.io/component: messages-flusher
+                app.kubernetes.io/component: internal-messages-drainer
             topologyKey: kubernetes.io/hostname
             matchLabelKeys:
             - pod-template-hash
-      priorityClassName: shard-background-worker
+      priorityClassName: shard-smp-consumer
       imagePullSecrets:
         - name: regcreds
       containers:
-        - name: messages-flusher
+        - name: internal-messages-drainer
           image: swpt-trade
-          args: ['flush_all']
+          args: ['consume_internal_messages', '--draining-mode']
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
@@ -105,12 +105,12 @@ spec:
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: trade-worker-messages-flusher
+  name: trade-worker-internal-messages-drainer
   labels:
-    app.kubernetes.io/component: messages-flusher
+    app.kubernetes.io/component: internal-messages-drainer
 spec:
   maxUnavailable: 30%
   unhealthyPodEvictionPolicy: AlwaysAllow
   selector:
     matchLabels:
-      app.kubernetes.io/component: messages-flusher
+      app.kubernetes.io/component: internal-messages-drainer

@@ -24,25 +24,15 @@ configMapGenerator:
       - PROTOCOL_BROKER_PROCESSES=1
       - PROTOCOL_BROKER_THREADS=1
       - PROTOCOL_BROKER_PREFETCH_COUNT=10
+      - INTERNAL_BROKER_PROCESSES=1
+      - INTERNAL_BROKER_THREADS=1
+      - INTERNAL_BROKER_PREFETCH_COUNT=10
       - FLUSH_PROCESSES=1
-      - FLUSH_PERIOD=1.5
+      - FLUSH_PERIOD=5.0
       - HTTP_FETCH_PROCESSES=1
       - HTTP_FETCH_CONNECTIONS=100
       - HTTP_FETCH_TIMEOUT=10.0
-      - HTTP_FETCH_PERIOD=5.0
       - TRIGGER_TRANSFERS_PROCESSES=1
-      - TRIGGER_TRANSFERS_PERIOD=5.0
-      - HANDLE_PRISTINE_COLLECTORS_THREADS=1
-      - HANDLE_PRISTINE_COLLECTORS_PERIOD=60.0
-      # Each worker process maintains a pool of database connections
-      # to the solver's PostgreSQL database server.
-      # SOLVER_CLIENT_POOL_SIZE determines the maximum number of
-      # connections in this pool. If zero is specified (the default)
-      # there is no limit to the connection pool's size. You may need
-      # to set this limit when `TOTAL_NUMBER_OF_WORKERS x
-      # HANDLE_PRISTINE_COLLECTORS_THREADS` has become too big (bigger
-      # than 500, for example).
-      - SOLVER_CLIENT_POOL_SIZE=0
     options:
       annotations:
         # These annotations are used as sources for convenient Kustomize
@@ -52,6 +42,10 @@ configMapGenerator:
         kustomize_messages_consumer_cpu_limit: 2000m
         kustomize_messages_consumer_memory_request: 100Mi
         kustomize_messages_consumer_memory_limit: 1Gi
+        kustomize_internal_messages_consumer_cpu_request: 1m
+        kustomize_internal_messages_consumer_cpu_limit: 2000m
+        kustomize_internal_messages_consumer_memory_request: 80Mi
+        kustomize_internal_messages_consumer_memory_limit: 1Gi
         kustomize_messages_flusher_cpu_request: 1m
         kustomize_messages_flusher_cpu_limit: 2000m
         kustomize_messages_flusher_memory_request: 94Mi
@@ -92,6 +86,8 @@ replicas:
   - name: trade-worker-messages-flusher
     count: 1
   - name: trade-worker-messages-consumer
+    count: 1
+  - name: trade-worker-internal-messages-consumer
     count: 1
   - name: trade-worker-http-fetcher
     count: 1
@@ -166,6 +162,10 @@ replacements:
   - path: ../../../../../base/swpt-creditors/trade/worker/replacements/messages-consumer-cpu-limit.yaml
   - path: ../../../../../base/swpt-creditors/trade/worker/replacements/messages-consumer-memory-request.yaml
   - path: ../../../../../base/swpt-creditors/trade/worker/replacements/messages-consumer-memory-limit.yaml
+  - path: ../../../../../base/swpt-creditors/trade/worker/replacements/internal-messages-consumer-cpu-request.yaml
+  - path: ../../../../../base/swpt-creditors/trade/worker/replacements/internal-messages-consumer-cpu-limit.yaml
+  - path: ../../../../../base/swpt-creditors/trade/worker/replacements/internal-messages-consumer-memory-request.yaml
+  - path: ../../../../../base/swpt-creditors/trade/worker/replacements/internal-messages-consumer-memory-limit.yaml
   - path: ../../../../../base/swpt-creditors/trade/worker/replacements/messages-flusher-cpu-request.yaml
   - path: ../../../../../base/swpt-creditors/trade/worker/replacements/messages-flusher-cpu-limit.yaml
   - path: ../../../../../base/swpt-creditors/trade/worker/replacements/messages-flusher-memory-request.yaml

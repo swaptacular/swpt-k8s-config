@@ -194,8 +194,8 @@ configMapGenerator:
   #
   - PUBLIC_HOSTNAME=swpt-tests-ca
 
-  # This must be a subdomain of the above configured PUBLIC_HOSTNAME,
-  # pointing to the same IP address. For example: if PUBLIC_HOSTNAME
+  # This must be a subdomain of the above configured PUBLIC_HOSTNAME
+  # (pointing to the same IP address). For example: if PUBLIC_HOSTNAME
   # is set to "example.com", you may set "webapp.example.com" here.
   # This must match the configuration of your DNS records.
   #
@@ -459,7 +459,7 @@ images:
   digest: sha256:65645c7bb6a0661892a8b03b89d0743208a18dd2f3f17a54ef4b76fb8e2f2a10
 - name: swpt-split-shard
   newName: ghcr.io/swaptacular/swpt_split_shard
-  digest: sha256:0bf2a6820051d12cc72a8d4a46d2e5835cdbdfcc7c7fce13d2ffee59ddb93957
+  digest: sha256:997a06e52903654d1f1debf341caaa9ccca43399c1607618e81bba8a0bd01c63
 
 patches:
 # This patch configures the ingress-nginx controller.

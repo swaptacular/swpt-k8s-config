@@ -181,7 +181,8 @@ function validate_shard_kustomization_file {
             trade-worker-http-fetcher\
             trade-worker-transfers-triggerer\
             trade-worker-messages-flusher\
-            trade-worker-messages-consumer
+            trade-worker-messages-consumer\
+            trade-worker-internal-messages-consumer
     do
         yq_ensure "$fname" ".replicas[] | select(.name == \"${replica_name}\") | has(\"count\")" true
     done
@@ -373,7 +374,9 @@ function split_shard {
             SHARD1_ROUTING_KEY\
             APIPROXY_CONFIG\
             CONSUMER_TASK_NAME\
-            DRAINER_TASK_NAME
+            DRAINER_TASK_NAME\
+            INTERNAL_CONSUMER_TASK_NAME\
+            INTERNAL_DRAINER_TASK_NAME
     do
         eval envvar_value="\$$envvar_name"
         envvars+="\"${envvar_name}=${envvar_value}\", "
@@ -403,10 +406,12 @@ APIPROXY_CONFIG=''
 PART_OF_APP=swpt-trade
 SHARDS_APP=swpt-trade-worker
 SHARDS_CRITICAL_WORKLOADS=''
-SHARDS_COMPONENTS='http-fetcher messages-consumer messages-flusher transfers-triggerer turn-roller'
+SHARDS_COMPONENTS='http-fetcher messages-consumer internal-messages-consumer messages-flusher transfers-triggerer turn-roller'
 SINGLETON_REPLICA_NAME=trade-worker-turn-roller
 CONSUMER_TASK_NAME=trade-worker-messages-consumer
+INTERNAL_CONSUMER_TASK_NAME=trade-worker-internal-messages-consumer
 DRAINER_TASK_NAME=trade-worker-messages-drainer
+INTERNAL_DRAINER_TASK_NAME=trade-worker-internal-messages-drainer
 SHARD_CONFIG=trade-workerconfig
 SHARD_BASENAME=$(basename "$DIR")
 SHARD_SUFFIX=$(echo "$SHARD_BASENAME" | sed -nE 's/^.*(\-[01]+)$/\1/p')

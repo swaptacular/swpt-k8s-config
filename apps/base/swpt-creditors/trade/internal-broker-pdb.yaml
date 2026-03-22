@@ -1,0 +1,13 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: internal-broker
+  labels:
+    app.kubernetes.io/name: swpt-trade
+    app.kubernetes.io/component: internal-message-broker
+spec:
+  maxUnavailable: 1
+  unhealthyPodEvictionPolicy: AlwaysAllow
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: internal-broker
