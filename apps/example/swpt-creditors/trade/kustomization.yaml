@@ -102,6 +102,12 @@ configMapGenerator:
   # corresponding two's complement negative numbers.
   - OWNER_CREDITOR_ID=0x00000100ffffffff
 
+  # The specified number of processes will be spawned to handle trade
+  # "admin API" requests, each process will run the specified number
+  # of threads in parallel.
+  - WEBSERVER_PROCESSES=1
+  - WEBSERVER_THREADS=3
+
   # Whether to verify the SSL certificates of digital coin URLs.
   # Normally, this should be "true". Setting it to "false" is useful
   # only for testing.
@@ -139,12 +145,25 @@ configMapGenerator:
       # database's WALG exporter sidecar.
       kustomize_walg_exporter_image: ghcr.io/swaptacular/wal-g-exporter@sha256:5f842526cdf313a3746acb8c991abc6e9243b6dc902bbf21638588e7b38803ad
 
+# The number of replicas for each component. One replica works fine,
+# but to have high-availability, should be at least 2. You should
+# increase those numbers as the load increases.
+#
+replicas:
+- name: trade-web-server
+  count: 1
+- name: trade-swagger-ui
+  count: 1
+
 # OCI images to use for the different containers:
 #
 images:
 - name: swpt-trade
   newName: ghcr.io/swaptacular/swpt_trade
   digest: sha256:0fdd8de350004041ef429ab54e257117353e989ebc17444abe4d26afc44ed786
+- name: swpt-trade-swagger-ui
+  newName: ghcr.io/swaptacular/swpt_trade_swagger_ui
+  digest: sha256:447d330d54657c83097c4954af23b20229ddf09634174a3af5686b7dde6a5f45
 
 secretGenerator:
 - name: postgres.trade-solver-db.credentials.postgresql.acid.zalan.do

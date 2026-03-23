@@ -612,3 +612,5 @@ replacements:
 - path: ../../base/swpt-creditors/web-ui/replacements/public-hostname.yaml
 - path: ../../base/swpt-creditors/web-ui/replacements/webapp-hostname.yaml
 - path: ../../base/swpt-creditors/web-ui/replacements/ingress-nginx-namespace.yaml
+- path: ../../base/swpt-creditors/trade/replacements/public-hostname.yaml
+- path: ../../base/swpt-creditors/trade/replacements/ingress-nginx-namespace.yaml
