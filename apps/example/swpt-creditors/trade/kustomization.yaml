@@ -63,10 +63,13 @@ configMapGenerator:
   # For example, if the `./node-data/creditors-subnet.txt` file
   # contains the string "000001", then:
   # 1) `MIN_COLLECTOR_ID` must be set to "0x0000010000000000";
-  # 2) `MAX_COLLECTOR_ID` must be a bit larger, say "0x00000100000007ff".
+  # 2) `MAX_COLLECTOR_ID` must be a bit larger, say "0x00000100000003ff".
   #
+  # IMPORTANT NOTE: Once this interval has been set, it must not be
+  # changed! Changing the already set interval will almost certainly
+  # put trading databases in a dysfunctional state!
   - MIN_COLLECTOR_ID=0x0000010000000000
-  - MAX_COLLECTOR_ID=0x00000100000007ff
+  - MAX_COLLECTOR_ID=0x00000100000003ff
 
   # The value for PostgreSQL's `work_mem` setting, which will only be
   # used for queries that perform sorting of huge number of rows. Such
