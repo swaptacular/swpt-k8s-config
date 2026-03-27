@@ -413,10 +413,10 @@ replicas:
 images:
 - name: swpt-debtors
   newName: ghcr.io/swaptacular/swpt_debtors
-  digest: sha256:b0175eaa8f1bae36a7ac487f4c37308b06247e4cc9d390c69ca7bfc110a88abc
+  digest: sha256:d2415910041a17fedf14f68c4257f3716ddad574592abc392a9bfc875d354e9e
 - name: swpt-debtors-swagger-ui
   newName: ghcr.io/swaptacular/swpt_debtors_swagger_ui
-  digest: sha256:3027dc5601fe36f94e0956db23d5f437fac0b15e6530de627a58d0082dc19b9a
+  digest: sha256:8fcfc87f8ea3f37fa3df2f6747f62d6eb62820e5457fac0aee3be25802ace9e1
 - name: swpt-debtors-ui
   newName: ghcr.io/swaptacular/swpt_debtors_ui
   digest: sha256:c05575c32e371a0a835a1926dfe42ed4c35e894d68b5cd084e8f5ecfd87712b9
@@ -425,7 +425,7 @@ images:
   digest: sha256:7a396d200c4c023f5cf46a3dc45d202917df4ef184e33580c3177a70c4a3675b
 - name: swpt-stomp
   newName: ghcr.io/swaptacular/swpt_stomp
-  digest: sha256:3149fe87e78b3ccb93fae3a79130f1f783c292cdcff8e70254ff4cdeffe087e2
+  digest: sha256:15cbc2b50b8728298627405461de3d4ce015f01964f7fd5f4e4ab60cd780698f
 - name: swpt-nfs-server
   newName: ghcr.io/swaptacular/swpt_nfs_server
   digest: sha256:867dbf9d15350907be5ace69a06845cb670d9a9c47bf6c872109a24669658523
@@ -440,7 +440,7 @@ images:
   digest: sha256:65645c7bb6a0661892a8b03b89d0743208a18dd2f3f17a54ef4b76fb8e2f2a10
 - name: swpt-split-shard
   newName: ghcr.io/swaptacular/swpt_split_shard
-  digest: sha256:0bf2a6820051d12cc72a8d4a46d2e5835cdbdfcc7c7fce13d2ffee59ddb93957
+  digest: sha256:997a06e52903654d1f1debf341caaa9ccca43399c1607618e81bba8a0bd01c63
 
 patches:
 # This patch configures the ingress-nginx controller.
