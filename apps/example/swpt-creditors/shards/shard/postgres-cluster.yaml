@@ -47,6 +47,16 @@ spec:
   teamId: swpt
   postgresql:
     version: "17"
+    parameters:
+      # Change or add PostgreSQL configuration parameters here as you
+      # see fit.
+      max_connections: "100"
+      work_mem: "4MB"
+      maintenance_work_mem: "64MB"
+      autovacuum_naptime: "1min"
+      autovacuum_max_workers: "3"
+      autovacuum_vacuum_cost_limit: "-1"
+      idle_in_transaction_session_timeout: "10min"
   users:
     db_owner: []
   databases:
