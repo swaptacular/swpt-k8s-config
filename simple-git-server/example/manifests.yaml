@@ -4,8 +4,6 @@ metadata:
   name: simple-git-server
   labels:
     app.kubernetes.io/name: simple-git-server
-    pod-security.kubernetes.io/enforce: privileged
-    pod-security.kubernetes.io/enforce-version: latest
 
 ---
 kind: PersistentVolumeClaim
