@@ -49,11 +49,11 @@ spec:
             - name: SUBJECT_PREFIX
               value: "debtors:"
             - name: POSTGRES_URL
-              value: "postgresql+psycopg://$(pg_username):$(pg_password)@login-db:5432/db"
+              value: "postgresql+psycopg://$(pg_username):$(pg_password)@login-db:5432/db?connect_timeout=10"
             - name: REDIS_URL
               value: "redis://default:$(pg_password)@dragonfly-db:6379/0"
             - name: SIGNED_UP_REDIRECT_URL
-              value: https://$(PUBLIC_HOSTNAME)/debtors-webapp/
+              value: https://$(WEBAPP_HOSTNAME)/debtors-webapp/
             - name: API_AUTH2_TOKEN_URL
               value: http://swpt-hydra-public:4444/oauth2/token
             - name: API_RESOURCE_SERVER
@@ -83,7 +83,7 @@ spec:
             - name: SUBJECT_PREFIX
               value: "debtors:"
             - name: POSTGRES_URL
-              value: "postgresql+psycopg://$(pg_username):$(pg_password)@login-db:5432/db"
+              value: "postgresql+psycopg://$(pg_username):$(pg_password)@login-db:5432/db?connect_timeout=10"
             - name: APP_LOG_LEVEL
               value: warning
             - name: APP_LOG_FORMAT

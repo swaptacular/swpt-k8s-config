@@ -4,3 +4,7 @@ kind: Kustomization
 resources:
 - network-policies.yaml
 - solver.yaml
+- web-server.yaml
+- swagger-ui.yaml
+- internal-broker-pdb.yaml
+- internal-broker-policies.yaml

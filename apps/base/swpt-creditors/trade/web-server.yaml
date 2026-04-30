@@ -1,0 +1,183 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trade-web-server
+  labels:
+    app.kubernetes.io/name: swpt-trade
+    app.kubernetes.io/component: web-server
+    app: trade-web-server
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: swpt-trade
+      app.kubernetes.io/component: web-server
+      app: trade-web-server
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: swpt-trade
+        app.kubernetes.io/component: web-server
+        log.pipeline: swpt-python-logging
+        app: trade-web-server
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                app.kubernetes.io/name: swpt-trade
+                app.kubernetes.io/component: web-server
+            topologyKey: kubernetes.io/hostname
+            matchLabelKeys:
+            - pod-template-hash
+      priorityClassName: user-ui-webserver
+      imagePullSecrets:
+        - name: regcreds
+      containers:
+        - name: web-server
+          image: swpt-trade
+          args: ['webserver']
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+          ports:
+            - name: http
+              containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /trade/health/check/public
+              port: http
+            initialDelaySeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /trade/health/check/public
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            timeoutSeconds: 10
+            failureThreshold: 5
+          envFrom:
+            - secretRef:
+                name: db-owner-credentials
+              prefix: pg_
+            - configMapRef:
+                name: swpt-trade-config
+          env:
+            - name: SOLVER_POSTGRES_URL
+              value: "postgresql+psycopg://$(pg_username):$(pg_password)@trade-solver-db:5432/db?connect_timeout=10"
+            - name: OAUTH2_INTROSPECT_URL
+              value: "http://swpt-hydra-admin:4445/admin/oauth2/introspect"
+            - name: OAUTH2_SUPERUSER_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: oauth2-clients.creditors-superuser
+                  key: CLIENT_ID
+            - name: OAUTH2_SUPERVISOR_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: oauth2-clients.creditors-supervisor
+                  key: CLIENT_ID
+            - name: APP_LOG_LEVEL
+              value: warning
+            - name: APP_LOG_FORMAT
+              value: json
+      initContainers:
+        - name: configure
+          image: swpt-trade
+          args: ["configure", "solver"]
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+          envFrom:
+            - secretRef:
+                name: db-owner-credentials
+              prefix: pg_
+          env:
+            - name: SOLVER_POSTGRES_URL
+              value: "postgresql+psycopg://$(pg_username):$(pg_password)@trade-solver-db:5432/db?connect_timeout=10"
+            - name: APP_LOG_LEVEL
+              value: warning
+            - name: APP_LOG_FORMAT
+              value: json
+          resources:
+            limits:
+              cpu: "1"
+              memory: 100Mi
+            requests:
+              cpu: 5m
+              memory: 100Mi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: trade-web-server
+  labels:
+    app.kubernetes.io/name: swpt-trade
+    app.kubernetes.io/component: web-server
+spec:
+  selector:
+    app.kubernetes.io/name: swpt-trade
+    app.kubernetes.io/component: web-server
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: http
+
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: trade-web-server
+  labels:
+    app.kubernetes.io/name: swpt-trade
+    app.kubernetes.io/component: web-server
+spec:
+  maxUnavailable: 30%
+  unhealthyPodEvictionPolicy: AlwaysAllow
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: swpt-trade
+      app.kubernetes.io/component: web-server
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-trade
+  annotations:
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+spec:
+  # Here "namespace" will be automatically replaced with the name of
+  # the current namespace.
+  #
+  ingressClassName: namespace.nginx
+
+  # Here "public-hostname" will be automatically replaced with the
+  # real public hostname of the Swaptacular node.
+  #
+  tls:
+  - hosts:
+    - public-hostname
+    secretName: acme-cert-key
+
+  rules:
+  # Here "public-hostname" will be automatically replaced with the
+  # real public hostname of the Swaptacular node.
+  #
+  - host: public-hostname
+    http:
+      paths:
+      - path: /trade/
+        pathType: Prefix
+        backend:
+          service:
+            name: trade-web-server
+            port:
+              name: http

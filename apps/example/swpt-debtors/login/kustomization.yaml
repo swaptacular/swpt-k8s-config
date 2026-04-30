@@ -26,6 +26,11 @@ configMapGenerator:
   # Set this to an URL that tells more about your site.
   - ABOUT_URL=https://github.com/swaptacular/swpt_login
 
+  # The name of the CSS style-sheet that will be used. Currently, the
+  # available names are "default" and "alt1". The default style-sheet
+  # name is "default".
+  - STYLE_NAME=default
+
   # Optional URL for users to go to, to recover their wrongfully
   # suspended accounts. This is not needed if no user accounts have
   # ever been suspended.
@@ -133,7 +138,7 @@ replicas:
 images:
 - name: swpt-login
   newName: ghcr.io/swaptacular/swpt_login
-  digest: sha256:69710de4a3b2b3bfa2c3ff32bfb2d4c6b0b43c7ce92001933fbe73da2cc6fb5b
+  digest: sha256:0c74c95a87781f03913f4b022dd04be6eccb76f1740884155633afec7ab86e52
 
 secretGenerator:
 - name: swpt-login-captcha-keys

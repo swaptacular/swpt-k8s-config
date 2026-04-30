@@ -1,0 +1,21 @@
+source:
+  kind: ConfigMap
+  name: trade-workerconfig
+  fieldPath: metadata.annotations.kustomize_internal_messages_consumer_memory_request
+targets:
+  - select:
+      kind: Deployment
+      name: trade-worker-internal-messages-consumer
+    fieldPaths:
+      - spec.template.spec.containers.[name=internal-messages-consumer].resources.requests.memory
+      - spec.template.spec.initContainers.[name=await-migrations].resources.requests.memory
+    options:
+      create: true
+  - select:
+      kind: Deployment
+      name: trade-worker-internal-messages-drainer
+    fieldPaths:
+      - spec.template.spec.containers.[name=internal-messages-drainer].resources.requests.memory
+      - spec.template.spec.initContainers.[name=await-migrations].resources.requests.memory
+    options:
+      create: true

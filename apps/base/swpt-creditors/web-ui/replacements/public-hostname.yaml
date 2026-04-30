@@ -11,11 +11,3 @@ targets:
     fieldPaths:
       - spec.rules.*.host
       - spec.tls.*.hosts.*
-  - select:
-      group: networking.k8s.io
-      version: v1
-      kind: Ingress
-      name: ingress-swpt-creditors-ui
-    fieldPaths:
-      - spec.rules.*.host
-      - spec.tls.*.hosts.*

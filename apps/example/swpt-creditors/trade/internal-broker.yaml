@@ -1,0 +1,82 @@
+apiVersion: rabbitmq.com/v1beta1
+kind: RabbitmqCluster
+metadata:
+  name: internal-broker  # must be "internal-broker"
+spec:
+  # Specifies the "RabbitMQ" OCI image to use.
+  #
+  image: ghcr.io/swaptacular/rabbitmq@sha256:971ca2ba19fbcd01d0b8ecdb553ff05da58f652b09b26d6e8df86b6694cf38a7
+
+  rabbitmq:
+    # Specifies additional RabbitMQ plugins that need to be enabled.
+    # The "rabbitmq_random_exchange" plugin must not be listed here,
+    # because it will be added automatically by a Kustomize patch.
+    # This field must be present, even if its value is an empty list.
+    #
+    additionalPlugins: ["rabbitmq_management"]
+
+  # Specifies the disk space allocated for the broker. The value must
+  # not be decreased.
+  #
+  # IMPORTANT NOTE: Once the persistent volume claims have been
+  # created, increasing the storage size here will not automatically
+  # expand the PVs. To expand the PVs, after increasing the storage
+  # size here, and applying the changes to the cluster, follow this
+  # procedure:
+  #
+  # 1. For each PVC in the StatefulSet, run:
+  #
+  #    $ kubectl edit pvc <name>
+  #
+  #    and increase the capacity of each PVC.
+  #
+  # 2. Run:
+  #
+  #    $ kubectl delete sts --cascade=orphan broker-server
+  #
+  #    to delete the StatefulSet and leave its pods.
+  #
+  # 3. Wait until the RabbitMQ cluster operator recreates the
+  #    StatefulSet automatically.
+  #
+  # 4. During the next pod rollout, pods' PVs will be resized. To
+  #    trigger a pod rollout, you run:
+  #
+  #    $ kubectl rollout restart sts broker-server
+  #
+  persistence:
+    # # `storageClassName` defines the name of the Kubernetes
+    # # StorageClass to use. If your cluster does not have a default
+    # # StorageClass, this property must be set, otherwise RabbitMQ pods
+    # # will not be scheduled because they require a persistent volume.
+    # #
+    # storageClassName: fast
+
+    # The capacity of the persistent volume, expressed as a Kubernetes
+    # resource quantity. Since increasing the capacity later may not
+    # be trivial, make this big enough, to be on the safe side (100Gi
+    # seem reasonable). Keep in mind that when a peer is off-line for
+    # a long period of time, messages for this peer will accumulate on
+    # the message broker, and may eat up all available space on the
+    # persistent volume.
+    #
+    storage: 1Gi
+
+  # Specifies Kubernetes memory and CPU requests and limits. It is
+  # highly recommended that the memory request is the same as the
+  # memory limit. The default values, which generally should be a good
+  # start are: memory requests 2Gi, memory limit 2Gi, CPU request
+  # 1000m, CPU limit 2000m.
+  #
+  resources:
+    requests:
+      cpu: 100m
+      memory: 700Mi
+    limits:
+      cpu: 1000m
+      memory: 700Mi
+
+  # Specifies the number of RabbitMQ server instances in the cluster.
+  # It must be an odd number, and is recommended to be at least 3.
+  #
+  replicas: 1

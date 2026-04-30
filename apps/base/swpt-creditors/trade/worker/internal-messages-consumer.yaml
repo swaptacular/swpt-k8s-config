@@ -1,0 +1,116 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: trade-worker-internal-messages-consumer
+  labels:
+    app.kubernetes.io/component: internal-messages-consumer
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: internal-messages-consumer
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: internal-messages-consumer
+        log.pipeline: swpt-python-logging
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                app.kubernetes.io/component: internal-messages-consumer
+            topologyKey: kubernetes.io/hostname
+            matchLabelKeys:
+            - pod-template-hash
+      priorityClassName: shard-smp-consumer
+      imagePullSecrets:
+        - name: regcreds
+      containers:
+        - name: internal-messages-consumer
+          image: swpt-trade
+          args: ['consume_internal_messages']
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+          envFrom:
+            - secretRef:
+                name: db-owner-credentials
+              prefix: pg_
+            - secretRef:
+                name: broker-default-user
+              prefix: rmq_
+            - secretRef:
+                name: internal-broker-default-user
+              prefix: internal_rmq_
+            - configMapRef:
+                name: swpt-trade-config
+            - configMapRef:
+                name: trade-workerconfig
+          env:
+            - name: SOLVER_POSTGRES_URL
+              value: "postgresql+psycopg://$(pg_username):$(pg_password)@trade-solver-db:5432/db?connect_timeout=10"
+            - name: WORKER_POSTGRES_URL
+              value: "postgresql+psycopg://$(pg_username):$(pg_password)@$(pg_cluster_name):5432/db?connect_timeout=10"
+            - name: PROTOCOL_BROKER_URL
+              value: "$(rmq_connection_string)"
+            - name: PROTOCOL_BROKER_QUEUE
+              value: "$(pg_cluster_name)"
+            - name: INTERNAL_BROKER_URL
+              value: "$(internal_rmq_connection_string)"
+            - name: INTERNAL_BROKER_QUEUE
+              value: "$(pg_cluster_name)-internal"
+            - name: APP_LOG_LEVEL
+              value: warning
+            - name: APP_LOG_FORMAT
+              value: json
+      initContainers:
+        - name: await-migrations
+          image: swpt-trade
+          args: ["await_migrations"]
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+          envFrom:
+            - secretRef:
+                name: db-owner-credentials
+              prefix: pg_
+            - configMapRef:
+                name: swpt-trade-config
+            - configMapRef:
+                name: trade-workerconfig
+          env:
+            - name: SOLVER_POSTGRES_URL
+              value: "postgresql+psycopg://$(pg_username):$(pg_password)@trade-solver-db:5432/db?connect_timeout=10"
+            - name: WORKER_POSTGRES_URL
+              value: "postgresql+psycopg://$(pg_username):$(pg_password)@$(pg_cluster_name):5432/db?connect_timeout=10"
+            - name: APP_LOG_LEVEL
+              value: warning
+            - name: APP_LOG_FORMAT
+              value: json
+          resources:
+            limits:
+              cpu: "1"
+              memory: 100Mi
+            requests:
+              cpu: 5m
+              memory: 100Mi
+
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: trade-worker-internal-messages-consumer
+  labels:
+    app.kubernetes.io/component: internal-messages-consumer
+spec:
+  maxUnavailable: 30%
+  unhealthyPodEvictionPolicy: AlwaysAllow
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: internal-messages-consumer

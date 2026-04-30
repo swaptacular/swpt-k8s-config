@@ -1,0 +1,13 @@
+source:
+  kind: ConfigMap
+  name: debtors-agent-config
+  fieldPath: data.WEBAPP_HOSTNAME
+targets:
+  - select:
+      group: networking.k8s.io
+      version: v1
+      kind: Ingress
+      name: ingress-swpt-debtors-ui
+    fieldPaths:
+      - spec.rules.*.host
+      - spec.tls.*.hosts.*

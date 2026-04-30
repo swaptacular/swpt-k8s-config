@@ -173,7 +173,14 @@ configMapGenerator:
   # The publicly known domain name of this Swaptacular node. This must
   # match the configuration of your DNS records.
   #
-  - PUBLIC_HOSTNAME=swpt-tests
+  - PUBLIC_HOSTNAME=swpt-tests-da
+
+  # This must be a subdomain of the above configured PUBLIC_HOSTNAME,
+  # pointing to the same IP address. For example: if PUBLIC_HOSTNAME
+  # is set to "example.com", you may set "webapp.example.com" here.
+  # This must match the configuration of your DNS records.
+  #
+  - WEBAPP_HOSTNAME=webapp.swpt-tests-da
 
   # Debtor IDs are 64-bit integer numbers. The debtors agent is
   # responsible only for debtor IDs which start with the hexadecimal
@@ -259,7 +266,7 @@ configMapGenerator:
   # database driver. For example: the maximum number of open
   # connections, or the maximum number of idle connections. Normally,
   # you do not need to change this.
-  - dsn_query_params=max_conns=20&max_idle_conns=4
+  - dsn_query_params=max_conns=20&max_idle_conns=4&connect_timeout=10
 
   # Configure how many records Hydra's janitor retrieves from the
   # database for deletion. 10000 seems reasonable.
@@ -406,10 +413,10 @@ replicas:
 images:
 - name: swpt-debtors
   newName: ghcr.io/swaptacular/swpt_debtors
-  digest: sha256:b0175eaa8f1bae36a7ac487f4c37308b06247e4cc9d390c69ca7bfc110a88abc
+  digest: sha256:b3e5a843303c1248ac333765d19138d1745667e2964b9c257b87703e9c4295ec
 - name: swpt-debtors-swagger-ui
   newName: ghcr.io/swaptacular/swpt_debtors_swagger_ui
-  digest: sha256:3027dc5601fe36f94e0956db23d5f437fac0b15e6530de627a58d0082dc19b9a
+  digest: sha256:ea9687583a0334ddeda8c081b14f848c559d3c2106ab958d981a968ccfebe78d
 - name: swpt-debtors-ui
   newName: ghcr.io/swaptacular/swpt_debtors_ui
   digest: sha256:c05575c32e371a0a835a1926dfe42ed4c35e894d68b5cd084e8f5ecfd87712b9
@@ -418,7 +425,7 @@ images:
   digest: sha256:7a396d200c4c023f5cf46a3dc45d202917df4ef184e33580c3177a70c4a3675b
 - name: swpt-stomp
   newName: ghcr.io/swaptacular/swpt_stomp
-  digest: sha256:3149fe87e78b3ccb93fae3a79130f1f783c292cdcff8e70254ff4cdeffe087e2
+  digest: sha256:15cbc2b50b8728298627405461de3d4ce015f01964f7fd5f4e4ab60cd780698f
 - name: swpt-nfs-server
   newName: ghcr.io/swaptacular/swpt_nfs_server
   digest: sha256:867dbf9d15350907be5ace69a06845cb670d9a9c47bf6c872109a24669658523
@@ -433,7 +440,7 @@ images:
   digest: sha256:65645c7bb6a0661892a8b03b89d0743208a18dd2f3f17a54ef4b76fb8e2f2a10
 - name: swpt-split-shard
   newName: ghcr.io/swaptacular/swpt_split_shard
-  digest: sha256:0bf2a6820051d12cc72a8d4a46d2e5835cdbdfcc7c7fce13d2ffee59ddb93957
+  digest: sha256:997a06e52903654d1f1debf341caaa9ccca43399c1607618e81bba8a0bd01c63
 
 patches:
 # This patch configures the ingress-nginx controller.
@@ -577,9 +584,11 @@ replacements:
 - path: ../../base/swpt-debtors/replacements/ingress-nginx-memory-limit.yaml
 - path: ../../base/swpt-debtors/replacements/ingress-nginx-memory-request.yaml
 - path: ../../base/swpt-debtors/replacements/public-hostname.yaml
+- path: ../../base/swpt-debtors/replacements/webapp-hostname.yaml
 - path: ../../base/swpt-debtors/replacements/acme-cert-server.yaml
 - path: ../../base/swpt-debtors/replacements/acme-cert-email.yaml
 - path: ../../base/swpt-debtors/replacements/s3-ip-block.yaml
 - path: ../../base/swpt-debtors/replacements/ingress-nginx-namespace.yaml
 - path: ../../base/swpt-debtors/web-ui/replacements/public-hostname.yaml
+- path: ../../base/swpt-debtors/web-ui/replacements/webapp-hostname.yaml
 - path: ../../base/swpt-debtors/web-ui/replacements/ingress-nginx-namespace.yaml

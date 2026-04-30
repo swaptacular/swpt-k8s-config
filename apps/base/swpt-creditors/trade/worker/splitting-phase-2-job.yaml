@@ -96,21 +96,28 @@ spec:
           - secretRef:
               name: broker-default-user
             prefix: rmq_
+          - secretRef:
+              name: internal-broker-default-user
+            prefix: internal_rmq_
           - configMapRef:
               name: swpt-trade-config
           - configMapRef:
               name: splitting-jobs-config
         env:
           - name: SOLVER_POSTGRES_URL
-            value: "postgresql+psycopg://$(pg_username):$(pg_password)@trade-solver-db:5432/db"
+            value: "postgresql+psycopg://$(pg_username):$(pg_password)@trade-solver-db:5432/db?connect_timeout=10"
           - name: WORKER_POSTGRES_URL
-            value: "postgresql+psycopg://$(pg_username):$(pg_password)@$(SHARDS_PG_CLUSTER_PREFIX)$(SHARD0_SUFFIX):5432/db"
+            value: "postgresql+psycopg://$(pg_username):$(pg_password)@$(SHARDS_PG_CLUSTER_PREFIX)$(SHARD0_SUFFIX):5432/db?connect_timeout=10"
           - name: PROTOCOL_BROKER_URL
             value: "$(rmq_connection_string)"
           - name: PROTOCOL_BROKER_QUEUE
             value: "$(SHARDS_PG_CLUSTER_PREFIX)$(SHARD0_SUFFIX)"
           - name: PROTOCOL_BROKER_QUEUE_ROUTING_KEY
             value: "$(SHARD0_ROUTING_KEY)"
+          - name: INTERNAL_BROKER_URL
+            value: "$(internal_rmq_connection_string)"
+          - name: INTERNAL_BROKER_QUEUE
+            value: "$(SHARDS_PG_CLUSTER_PREFIX)$(SHARD0_SUFFIX)-internal"
           - name: APP_LOG_LEVEL
             value: info
         resources:
@@ -135,21 +142,28 @@ spec:
           - secretRef:
               name: broker-default-user
             prefix: rmq_
+          - secretRef:
+              name: internal-broker-default-user
+            prefix: internal_rmq_
           - configMapRef:
               name: swpt-trade-config
           - configMapRef:
               name: splitting-jobs-config
         env:
           - name: SOLVER_POSTGRES_URL
-            value: "postgresql+psycopg://$(pg_username):$(pg_password)@trade-solver-db:5432/db"
+            value: "postgresql+psycopg://$(pg_username):$(pg_password)@trade-solver-db:5432/db?connect_timeout=10"
           - name: WORKER_POSTGRES_URL
-            value: "postgresql+psycopg://$(pg_username):$(pg_password)@$(SHARDS_PG_CLUSTER_PREFIX)$(SHARD1_SUFFIX):5432/db"
+            value: "postgresql+psycopg://$(pg_username):$(pg_password)@$(SHARDS_PG_CLUSTER_PREFIX)$(SHARD1_SUFFIX):5432/db?connect_timeout=10"
           - name: PROTOCOL_BROKER_URL
             value: "$(rmq_connection_string)"
           - name: PROTOCOL_BROKER_QUEUE
             value: "$(SHARDS_PG_CLUSTER_PREFIX)$(SHARD1_SUFFIX)"
           - name: PROTOCOL_BROKER_QUEUE_ROUTING_KEY
             value: "$(SHARD1_ROUTING_KEY)"
+          - name: INTERNAL_BROKER_URL
+            value: "$(internal_rmq_connection_string)"
+          - name: INTERNAL_BROKER_QUEUE
+            value: "$(SHARDS_PG_CLUSTER_PREFIX)$(SHARD1_SUFFIX)-internal"
           - name: APP_LOG_LEVEL
             value: info
         resources:
@@ -174,21 +188,28 @@ spec:
           - secretRef:
               name: broker-default-user
             prefix: rmq_
+          - secretRef:
+              name: internal-broker-default-user
+            prefix: internal_rmq_
           - configMapRef:
               name: swpt-trade-config
           - configMapRef:
               name: splitting-jobs-config
         env:
           - name: SOLVER_POSTGRES_URL
-            value: "postgresql+psycopg://$(pg_username):$(pg_password)@trade-solver-db:5432/db"
+            value: "postgresql+psycopg://$(pg_username):$(pg_password)@trade-solver-db:5432/db?connect_timeout=10"
           - name: WORKER_POSTGRES_URL
-            value: "postgresql+psycopg://$(pg_username):$(pg_password)@$(SHARDS_PG_CLUSTER_PREFIX)$(SHARD_SUFFIX):5432/db"
+            value: "postgresql+psycopg://$(pg_username):$(pg_password)@$(SHARDS_PG_CLUSTER_PREFIX)$(SHARD_SUFFIX):5432/db?connect_timeout=10"
           - name: PROTOCOL_BROKER_URL
             value: "$(rmq_connection_string)"
           - name: PROTOCOL_BROKER_QUEUE
             value: "$(SHARDS_PG_CLUSTER_PREFIX)$(SHARD_SUFFIX)"
           - name: PROTOCOL_BROKER_QUEUE_ROUTING_KEY
             value: "$(SHARD_ROUTING_KEY)"
+          - name: INTERNAL_BROKER_URL
+            value: "$(internal_rmq_connection_string)"
+          - name: INTERNAL_BROKER_QUEUE
+            value: "$(SHARDS_PG_CLUSTER_PREFIX)$(SHARD_SUFFIX)-internal"
           - name: APP_LOG_LEVEL
             value: info
         resources:
@@ -213,21 +234,28 @@ spec:
           - secretRef:
               name: broker-default-user
             prefix: rmq_
+          - secretRef:
+              name: internal-broker-default-user
+            prefix: internal_rmq_
           - configMapRef:
               name: swpt-trade-config
           - configMapRef:
               name: splitting-jobs-config
         env:
           - name: SOLVER_POSTGRES_URL
-            value: "postgresql+psycopg://$(pg_username):$(pg_password)@trade-solver-db:5432/db"
+            value: "postgresql+psycopg://$(pg_username):$(pg_password)@trade-solver-db:5432/db?connect_timeout=10"
           - name: WORKER_POSTGRES_URL
-            value: "postgresql+psycopg://$(pg_username):$(pg_password)@$(SHARDS_PG_CLUSTER_PREFIX)$(SHARD_SUFFIX):5432/db"
+            value: "postgresql+psycopg://$(pg_username):$(pg_password)@$(SHARDS_PG_CLUSTER_PREFIX)$(SHARD_SUFFIX):5432/db?connect_timeout=10"
           - name: PROTOCOL_BROKER_URL
             value: "$(rmq_connection_string)"
           - name: PROTOCOL_BROKER_QUEUE
             value: "$(SHARDS_PG_CLUSTER_PREFIX)$(SHARD_SUFFIX)"
           - name: PROTOCOL_BROKER_QUEUE_ROUTING_KEY
             value: "$(SHARD_ROUTING_KEY)"
+          - name: INTERNAL_BROKER_URL
+            value: "$(internal_rmq_connection_string)"
+          - name: INTERNAL_BROKER_QUEUE
+            value: "$(SHARDS_PG_CLUSTER_PREFIX)$(SHARD_SUFFIX)-internal"
           - name: APP_LOG_LEVEL
             value: info
         resources:

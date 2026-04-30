@@ -7,16 +7,6 @@ targets:
       group: hydra.ory.sh
       version: v1alpha1
       kind: OAuth2Client
-      name: debtors-webapp
-    fieldPaths:
-      - spec.redirectUris.0
-    options:
-      delimiter: "/"
-      index: 2
-  - select:
-      group: hydra.ory.sh
-      version: v1alpha1
-      kind: OAuth2Client
       name: swagger-ui
     fieldPaths:
       - spec.redirectUris.0
@@ -30,4 +20,4 @@ targets:
       name: ingress-rules
     fieldPaths:
       - spec.rules.*.host
-      - spec.tls.*.hosts.*
+      - spec.tls.*.hosts.0
