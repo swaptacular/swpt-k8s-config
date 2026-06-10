@@ -5,4 +5,6 @@ metadata:
     kustomize.toolkit.fluxcd.io/prune: disabled
     app.kubernetes.io/name: swpt-nfs-server
     app.kubernetes.io/part-of: swpt-nodeset
+    pod-security.kubernetes.io/enforce: privileged
+    pod-security.kubernetes.io/enforce-version: latest
   name: swpt-nfs-server
