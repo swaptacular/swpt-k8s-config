@@ -249,6 +249,11 @@ configMapGenerator:
   - DEFAULT_PEG_ABBR=USD
   - DEFAULT_PEG_COIN=https://debtors.swaptacular.org/840#swpt:840
 
+  # If you want to recommend a website where your users can register
+  # themselves as currency issuers, set this to the URL of the
+  # website. The default is an empty string.
+  - REGISTER_ISSUER_URL=https://google.com/maps
+
   options:
     labels:
       app.kubernetes.io/name: swpt-debtors

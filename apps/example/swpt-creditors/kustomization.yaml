@@ -268,6 +268,19 @@ configMapGenerator:
   - TRANSFER_DELETION_DELAY_SECONDS=1296000
   - DEBTOR_INFOS_REVISION_DAYS=7
 
+  # If you want to recommend a website where your users can find
+  # currency issuers, set this to the URL of the website. The default
+  # is an empty string.
+  - FIND_ISSUERS_URL=https://www.google.com/maps
+
+  # If your creditors agent node performs automatic exchanges, then
+  # set these to the base currency's "debtor info locator" and "debtor
+  # ID". The defaults are empty strings. (Note: In order to be traded,
+  # currencies must be pegged to other currencies, thus forming a
+  # "peg-tree". At the root of the peg-tree sits the "base currency".)
+  - BASE_DEBTOR_INFO_LOCATOR=https://debtors.swaptacular.org/840
+  - BASE_DEBTOR_ID=840
+
   options:
     labels:
       app.kubernetes.io/name: swpt-creditors
@@ -438,7 +451,7 @@ images:
   digest: sha256:c89fcbbecf918eddf6f4a9c94f6d6c9f2ff20ee2fdaaa7b2974f63f6be7388de
 - name: swpt-creditors-ui
   newName: ghcr.io/swaptacular/swpt_creditors_ui
-  digest: sha256:b51fff41267021d7ce6bb46be31ba7e12b7211979d728170742e3920116e9c5a
+  digest: sha256:50292544e061074003c9492ad0627c9c9304cd056b63882b9edfdf9298a162f3
 - name: swpt-apiproxy
   newName: ghcr.io/swaptacular/swpt_apiproxy
   digest: sha256:7a396d200c4c023f5cf46a3dc45d202917df4ef184e33580c3177a70c4a3675b
