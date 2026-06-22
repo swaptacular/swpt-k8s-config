@@ -238,6 +238,14 @@ configMapGenerator:
   # should be short, and start with a captital letter.
   - SITE_TITLE=Swaptacular
 
+  # When crating a new currency, the "Amount divisor" input field will
+  # be pre-filled with this number. The default is 100.
+  - DEFAULT_AMOUNT_DIVISOR=100
+
+  # When crating a new currency, the "Decimal places" input field will
+  # be pre-filled with this number. The default is 2.
+  - DEFAULT_DECIMAL_PLACES=2
+
   # When the currency issuer wants to peg its currency to another
   # currency, a default peg currency will be suggested. Its
   # abbreviation will be the value of "DEFAULT_PEG_ABBR", and its
@@ -424,7 +432,7 @@ images:
   digest: sha256:ea9687583a0334ddeda8c081b14f848c559d3c2106ab958d981a968ccfebe78d
 - name: swpt-debtors-ui
   newName: ghcr.io/swaptacular/swpt_debtors_ui
-  digest: sha256:b53729463d5c401a8e0a52bf4533f79fecf39e8de95898f76f160c12054dfa16
+  digest: sha256:695927be37b449d7c75c8d1068fd5226230b079c781bebd8a8076c8e1e860d34
 - name: swpt-apiproxy
   newName: ghcr.io/swaptacular/swpt_apiproxy
   digest: sha256:7a396d200c4c023f5cf46a3dc45d202917df4ef184e33580c3177a70c4a3675b
