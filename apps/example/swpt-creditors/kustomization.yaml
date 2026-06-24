@@ -271,7 +271,7 @@ configMapGenerator:
   # If you want to recommend a website where your users can find
   # currency issuers, set this to the URL of the website. The default
   # is an empty string.
-  - FIND_ISSUERS_URL=https://www.google.com/maps
+  - FIND_ISSUERS_URL=
 
   # If your creditors agent node performs automatic exchanges, then
   # set these to the base currency's "debtor info locator" and "debtor
