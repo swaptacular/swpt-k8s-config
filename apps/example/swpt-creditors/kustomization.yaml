@@ -273,6 +273,16 @@ configMapGenerator:
   # is an empty string.
   - FIND_ISSUERS_URL=
 
+  # If you want to specify a website where your users can find more
+  # information about how automated exchanges work, set this to the
+  # URL of the website. The default is an empty string.
+  - UNDERSTAND_AUTOMATED_EXCHANGES_URL=
+
+  # A number that will be shown to the users as the transaction fee in
+  # percents, collected for arranged automatic exchanges. The default
+  # is zero.
+  - EXCHANGE_FEE=0.1
+
   # If your creditors agent node performs automatic exchanges, then
   # set these to the base currency's "debtor info locator" and "debtor
   # ID". The defaults are empty strings. (Note: In order to be traded,
