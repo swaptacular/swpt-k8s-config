@@ -466,7 +466,7 @@ images:
   digest: sha256:c89fcbbecf918eddf6f4a9c94f6d6c9f2ff20ee2fdaaa7b2974f63f6be7388de
 - name: swpt-creditors-ui
   newName: ghcr.io/swaptacular/swpt_creditors_ui
-  digest: sha256:1bc9df5f0aa0e702d751d5129f32422fc0bc1dfb3168393c1c97208ac0d2557f
+  digest: sha256:9b6a0e8c94645d416503409ebf347917dc7b6a464d33eaeea9b91f33f2f526ee
 - name: swpt-apiproxy
   newName: ghcr.io/swaptacular/swpt_apiproxy
   digest: sha256:7a396d200c4c023f5cf46a3dc45d202917df4ef184e33580c3177a70c4a3675b
