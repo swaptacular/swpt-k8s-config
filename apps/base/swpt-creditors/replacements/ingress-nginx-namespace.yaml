@@ -43,6 +43,16 @@ targets:
       delimiter: "."
       index: 0
   - select:
+      group: networking.k8s.io
+      version: v1
+      kind: Ingress
+      name: ingress-website-redirect
+    fieldPaths:
+      - spec.ingressClassName
+    options:
+      delimiter: "."
+      index: 0
+  - select:
       group: cert-manager.io
       version: v1
       kind: Issuer
