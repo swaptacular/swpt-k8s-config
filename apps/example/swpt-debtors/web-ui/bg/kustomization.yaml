@@ -66,7 +66,7 @@ replicas:
 images:
 - name: swpt-debtors-ui
   newName: ghcr.io/swaptacular/swpt_debtors_ui_bg
-  digest: sha256:b66915dfcb8bb4e7edff5154a42f6b24e2685b04e21a861b5a7960cb32a89ee8
+  digest: sha256:26a0b310bdf74cbcb3a6baf2e271a80727c4c47e78f896b469a7833ab52181da
 
 resources:
 - ../../../../base/swpt-debtors/web-ui/swpt-debtors-ui.yaml
