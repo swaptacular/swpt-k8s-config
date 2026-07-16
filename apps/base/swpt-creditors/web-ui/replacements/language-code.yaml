@@ -1,0 +1,52 @@
+source:
+  kind: ConfigMap
+  name: swpt-creditors-ui-config
+  fieldPath: "metadata.labels.app\\.kubernetes\\.io/instance"
+targets:
+  - select:
+      group: networking.k8s.io
+      version: v1
+      kind: Ingress
+      name: ingress-swpt-creditors-ui
+    fieldPaths:
+      - spec.rules.*.http.paths.0.path
+    options:
+      delimiter: "/"
+      index: 1
+  - select:
+      kind: Deployment
+      name: swpt-creditors-ui
+    fieldPaths:
+      - spec.template.spec.containers.[name=swpt-creditors-ui].readinessProbe.httpGet.path
+      - spec.template.spec.containers.[name=swpt-creditors-ui].env.[name=BASE_URL].value
+    options:
+      delimiter: "/"
+      index: 1
+  - select:
+      kind: Deployment
+      name: swpt-creditors-ui
+    fieldPaths:
+      - spec.template.spec.containers.[name=swpt-creditors-ui].env.[name=CLIENT_ID].valueFrom.secretKeyRef.name
+    options:
+      delimiter: "-"
+      index: 3
+  - select:
+      group: hydra.ory.sh
+      version: v1alpha1
+      kind: OAuth2Client
+      name: creditors-webapp
+    fieldPaths:
+      - spec.redirectUris.*
+    options:
+      delimiter: "/"
+      index: 3
+  - select:
+      group: hydra.ory.sh
+      version: v1alpha1
+      kind: OAuth2Client
+      name: creditors-webapp
+    fieldPaths:
+      - spec.secretName
+    options:
+      delimiter: "-"
+      index: 3

@@ -1,0 +1,83 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# This must be a string starting with '-', and followed by a language
+# code ("-bg" for example).
+nameSuffix: "-en"
+
+labels:
+  - includeSelectors: true
+    pairs:
+      # The value for the label must correspond to the "nameSuffix"
+      # value. For example, if "nameSuffix" is "-bg", the value for
+      # the label must be "bg".
+      app.kubernetes.io/instance: en
+
+configMapGenerator:
+- name: swpt-creditors-ui-config
+  literals:
+  # Set this to the name of the webapp, as it is known to the users.
+  # It should be short, and start with a captital letter.
+  - CLIENT_NAME=Digital wallet app
+
+  # Set this to the name of the site, as it is known to the users. It
+  # should be short, and start with a captital letter.
+  - SITE_TITLE=Swaptacular
+
+  # If you want to recommend a website where your users can find
+  # currency issuers, set this to the URL of the website. The default
+  # is an empty string.
+  - FIND_ISSUERS_URL=https://www.google.com/maps
+
+  # If you want to specify a website where your users can find more
+  # information about how automated exchanges work, set this to the
+  # URL of the website. The default is an empty string.
+  - UNDERSTAND_AUTOMATED_EXCHANGES_URL=https://swaptacular.github.io/
+
+  # A number that will be shown to the users as the transaction fee in
+  # percents, collected for arranged automatic exchanges. The default
+  # is zero.
+  - EXCHANGE_FEE=0.1
+
+  # If your creditors agent node performs automatic exchanges, then
+  # set these to the base currency's "debtor info locator" and "debtor
+  # ID". The defaults are an empty strings. (Note: In order to be
+  # traded, currencies must be pegged to other currencies, thus
+  # forming a "peg-tree". At the root of the peg-tree sits the "base
+  # currency".)
+  - BASE_DEBTOR_INFO_LOCATOR=https://debtors.swaptacular.org/840
+  - BASE_DEBTOR_ID=840
+
+  # If your creditors agent node performs automatic exchanges, then
+  # set this to an amount that is at least 20% larger the
+  # MIN_TRADE_AMOUNT configured for the swpt_trade's solver. The
+  # default is 1200.
+  - SMALL_TRADE_AMOUNT=1200
+
+  # Configuration for "swpt-creditors-ui". Normally, you do not need
+  # to change those.
+  - SERVER_API_TIMEOUT=8000
+  - TRANSFER_DELETION_DELAY_SECONDS=1296000
+  - DEBTOR_INFOS_REVISION_DAYS=7
+
+# The number of replicas for each component. One replica works fine,
+# but to have high-availability, should be at least 2. You should
+# increase those numbers as the load increases.
+#
+replicas:
+- name: swpt-creditors-ui
+  count: 1
+
+# OCI images to use for the different containers.
+#
+images:
+- name: swpt-creditors-ui
+  newName: ghcr.io/swaptacular/swpt_creditors_ui
+  digest: sha256:fb6c6fef9e156dc869ea87a03a0ed10dc1ec109b44d440c52647c7c008442469
+
+resources:
+- ../../../../base/swpt-creditors/web-ui/swpt-creditors-ui.yaml
+
+replacements:
+- path: ../../../../base/swpt-creditors/web-ui/replacements/language-code.yaml
+- path: ../../../../base/swpt-creditors/web-ui/replacements/client-name.yaml

@@ -239,45 +239,6 @@ configMapGenerator:
       kustomize_swpt_debtors_ui_memory_request: 12Mi
       kustomize_swpt_debtors_ui_memory_limit: 1Gi
 
-- name: swpt-debtors-ui-config
-  literals:
-  # Set this to the name of the site, as it is known to the users. It
-  # should be short, and start with a captital letter.
-  - SITE_TITLE=Swaptacular
-
-  # When crating a new currency, the "Amount divisor" input field will
-  # be pre-filled with this number. The default is 100.
-  - DEFAULT_AMOUNT_DIVISOR=100
-
-  # When crating a new currency, the "Decimal places" input field will
-  # be pre-filled with this number. The default is 2.
-  - DEFAULT_DECIMAL_PLACES=2
-
-  # When the currency issuer wants to peg its currency to another
-  # currency, a default peg currency will be suggested. Its
-  # abbreviation will be the value of "DEFAULT_PEG_ABBR", and its
-  # digital coin will be the value of "DEFAULT_PEG_COIN" (that is,
-  # the textual content of the digital coin's QR code). When one of
-  # those variables are set to an empty string, no default peg
-  # currency will be suggested to the user.
-  #
-  - DEFAULT_PEG_ABBR=USD
-  - DEFAULT_PEG_COIN=https://debtors.swaptacular.org/840#swpt:840
-
-  # If you want to recommend a website where your users can register
-  # themselves as currency issuers, set this to the URL of the
-  # website. The default is an empty string.
-  - REGISTER_ISSUER_URL=
-
-  # If you want to recommend a website from which your users can install
-  # a digital wallet, set this to the URL of the website.
-  # The default is an empty string.
-  - INSTALL_WALLET_URL=
-
-  options:
-    labels:
-      app.kubernetes.io/name: swpt-debtors
-
 - name: swpt-hydra
   files:
   # The configuration file for Ory-Hydra. Can reference a custom
@@ -428,8 +389,6 @@ replicas:
   count: 1
 - name: swagger-ui
   count: 1
-- name: swpt-debtors-ui
-  count: 1
 
 # OCI images to use for the different containers. Note that the digest
 # for the "swpt-debtors-swagger-ui" image must be referring to the
@@ -442,9 +401,6 @@ images:
 - name: swpt-debtors-swagger-ui
   newName: ghcr.io/swaptacular/swpt_debtors_swagger_ui
   digest: sha256:ea9687583a0334ddeda8c081b14f848c559d3c2106ab958d981a968ccfebe78d
-- name: swpt-debtors-ui
-  newName: ghcr.io/swaptacular/swpt_debtors_ui
-  digest: sha256:92531cd98e09fd85e575a546458c046019c81cfd41670494a3068eaaeb3fb03f
 - name: swpt-apiproxy
   newName: ghcr.io/swaptacular/swpt_apiproxy
   digest: sha256:7a396d200c4c023f5cf46a3dc45d202917df4ef184e33580c3177a70c4a3675b
@@ -574,10 +530,12 @@ patches:
 
 resources:
 - ../../base/swpt-debtors/
+- ../../base/swpt-debtors/web-ui/swagger-ui.yaml
 - broker.yaml
 - hydra-db/
 - login/
 - shards/
+- web-ui/
 - node-data/peers/
 
 replacements:

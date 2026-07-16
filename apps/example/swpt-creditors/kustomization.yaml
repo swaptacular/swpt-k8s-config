@@ -263,50 +263,6 @@ configMapGenerator:
       kustomize_swpt_creditors_ui_memory_request: 12Mi
       kustomize_swpt_creditors_ui_memory_limit: 1Gi
 
-- name: swpt-creditors-ui-config
-  literals:
-  # Set this to the name of the site, as it is known to the users. It
-  # should be short, and start with a captital letter.
-  - SITE_TITLE=Swaptacular
-
-  # Configuration for "swpt-creditors-ui". Normally, you do not need
-  # to change those.
-  - SERVER_API_TIMEOUT=8000
-  - TRANSFER_DELETION_DELAY_SECONDS=1296000
-  - DEBTOR_INFOS_REVISION_DAYS=7
-
-  # If you want to recommend a website where your users can find
-  # currency issuers, set this to the URL of the website. The default
-  # is an empty string.
-  - FIND_ISSUERS_URL=
-
-  # If you want to specify a website where your users can find more
-  # information about how automated exchanges work, set this to the
-  # URL of the website. The default is an empty string.
-  - UNDERSTAND_AUTOMATED_EXCHANGES_URL=
-
-  # A number that will be shown to the users as the transaction fee in
-  # percents, collected for arranged automatic exchanges. The default
-  # is zero.
-  - EXCHANGE_FEE=0.1
-
-  # If your creditors agent node performs automatic exchanges, then
-  # set these to the base currency's "debtor info locator" and "debtor
-  # ID". The defaults are empty strings. (Note: In order to be traded,
-  # currencies must be pegged to other currencies, thus forming a
-  # "peg-tree". At the root of the peg-tree sits the "base currency".)
-  - BASE_DEBTOR_INFO_LOCATOR=https://debtors.swaptacular.org/840
-  - BASE_DEBTOR_ID=840
-
-  # If your creditors agent node performs automatic exchanges, then
-  # set this to an amount that is 20% larger the MIN_TRADE_AMOUNT
-  # configured for the swpt_trade's solver. The default is 1200.
-  - SMALL_TRADE_AMOUNT=1200
-
-  options:
-    labels:
-      app.kubernetes.io/name: swpt-creditors
-
 - name: swpt-hydra
   files:
   # The configuration file for Ory-Hydra. Can reference a custom
@@ -457,8 +413,6 @@ replicas:
   count: 1
 - name: swagger-ui
   count: 1
-- name: swpt-creditors-ui
-  count: 1
 
 # OCI images to use for the different containers. Note that the digest
 # for the "swpt-creditors-swagger-ui" image must be referring to the
@@ -471,9 +425,6 @@ images:
 - name: swpt-creditors-swagger-ui
   newName: ghcr.io/swaptacular/swpt_creditors_swagger_ui
   digest: sha256:c89fcbbecf918eddf6f4a9c94f6d6c9f2ff20ee2fdaaa7b2974f63f6be7388de
-- name: swpt-creditors-ui
-  newName: ghcr.io/swaptacular/swpt_creditors_ui
-  digest: sha256:9b6a0e8c94645d416503409ebf347917dc7b6a464d33eaeea9b91f33f2f526ee
 - name: swpt-apiproxy
   newName: ghcr.io/swaptacular/swpt_apiproxy
   digest: sha256:7a396d200c4c023f5cf46a3dc45d202917df4ef184e33580c3177a70c4a3675b
@@ -603,11 +554,13 @@ patches:
 
 resources:
 - ../../base/swpt-creditors/
+- ../../base/swpt-creditors/web-ui/swagger-ui.yaml
 - broker.yaml
 - hydra-db/
 - login/
 - trade/
 - shards/
+- web-ui/
 - node-data/peers/
 
 replacements:

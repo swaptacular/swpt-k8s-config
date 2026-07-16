@@ -26,6 +26,22 @@ configMapGenerator:
   # Set this to an URL that tells more about your site.
   - ABOUT_URL=https://github.com/swaptacular/swpt_login
 
+  # Optional list of language codes separated by a comma, for example
+  # "en,bg". The first code in the list determines the default
+  # language. If not set, the default value is "en". This setting
+  # determines what languages for the UI the users will be able choose
+  # between. Here, you should list only languages for which a
+  # translation already exists.
+  - LANGUAGES=en,bg
+
+  # Optional list of URLs, separated by a comma. Setting this allows
+  # you -- once users successfully sign up -- to redirect them to
+  # different URLs depending on the language used by the user. The
+  # number and the order of the URLs must be the same as the number
+  # and the order of languages in the LANGUAGES setting. Note that
+  # configuring this will greatly improve users' experience.
+  - SIGNED_UP_REDIRECT_URLS=https://webapp.swpt-tests-ca/en/,https://webapp.swpt-tests-ca/bg/
+
   # The name of the CSS style-sheet that will be used. Currently, the
   # available names are "default" and "alt1". The default style-sheet
   # name is "default".

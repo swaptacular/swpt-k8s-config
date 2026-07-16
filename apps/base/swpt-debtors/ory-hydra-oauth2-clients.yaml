@@ -1,29 +1,6 @@
 apiVersion: hydra.ory.sh/v1alpha1
 kind: OAuth2Client
 metadata:
-  name: debtors-webapp
-  annotations:
-    kustomize.toolkit.fluxcd.io/prune: disabled
-spec:
-  clientName: "Debtors Agent UI"
-  grantTypes:
-    - authorization_code
-  responseTypes:
-    - code
-  scopeArray:
-    - access
-    - access.readonly
-  secretName: oauth2-clients.debtors-webapp
-  redirectUris:
-    # Here "webapp-hostname" will be automatically replaced with the
-    # configured webapp hostname.
-    - https://webapp-hostname/debtors-webapp/
-  tokenEndpointAuthMethod: none
-
----
-apiVersion: hydra.ory.sh/v1alpha1
-kind: OAuth2Client
-metadata:
   name: swagger-ui
   annotations:
     kustomize.toolkit.fluxcd.io/prune: disabled

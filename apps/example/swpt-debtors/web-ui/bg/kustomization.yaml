@@ -1,0 +1,76 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# This must be a string starting with '-', and followed by a language
+# code ("-bg" for example).
+nameSuffix: "-bg"
+
+labels:
+  - includeSelectors: true
+    pairs:
+      # The value for the label must correspond to the "nameSuffix"
+      # value. For example, if "nameSuffix" is "-bg", the value for
+      # the label must be "bg".
+      app.kubernetes.io/instance: bg
+
+configMapGenerator:
+- name: swpt-debtors-ui-config
+  literals:
+  # Set this to the name of the webapp, as it is known to the users.
+  # It should be short, and start with a captital letter.
+  - CLIENT_NAME=Приложение за издаване на валута
+
+  # Set this to the name of the site, as it is known to the users. It
+  # should be short, and start with a captital letter.
+  - SITE_TITLE=Swaptacular
+
+  # When crating a new currency, the "Amount divisor" input field will
+  # be pre-filled with this number. The default is 100.
+  - DEFAULT_AMOUNT_DIVISOR=100
+
+  # When crating a new currency, the "Decimal places" input field will
+  # be pre-filled with this number. The default is 2.
+  - DEFAULT_DECIMAL_PLACES=2
+
+  # When the currency issuer wants to peg its currency to another
+  # currency, a default peg currency will be suggested. Its
+  # abbreviation will be the value of "DEFAULT_PEG_ABBR", and its
+  # digital coin will be the value of "DEFAULT_PEG_COIN" (that is,
+  # the textual content of the digital coin's QR code). When one of
+  # those variables are set to an empty string, no default peg
+  # currency will be suggested to the user.
+  #
+  - DEFAULT_PEG_ABBR=USD
+  - DEFAULT_PEG_COIN=https://debtors.swaptacular.org/840#swpt:840
+
+  # If you want to recommend a website where your users can register
+  # themselves as currency issuers, set this to the URL of the
+  # website. The default is an empty string.
+  - REGISTER_ISSUER_URL=
+
+  # If you want to recommend a website from which your users can install
+  # a digital wallet, set this to the URL of the website.
+  # The default is an empty string.
+  - INSTALL_WALLET_URL=https://webapp.swpt-tests-ca/bg/
+
+# The number of replicas for each component. One replica works fine,
+# but to have high-availability, should be at least 2. You should
+# increase those numbers as the load increases.
+#
+replicas:
+- name: swpt-debtors-ui
+  count: 1
+
+# OCI images to use for the different containers.
+#
+images:
+- name: swpt-debtors-ui
+  newName: ghcr.io/swaptacular/swpt_debtors_ui_bg
+  digest: sha256:b66915dfcb8bb4e7edff5154a42f6b24e2685b04e21a861b5a7960cb32a89ee8
+
+resources:
+- ../../../../base/swpt-debtors/web-ui/swpt-debtors-ui.yaml
+
+replacements:
+- path: ../../../../base/swpt-debtors/web-ui/replacements/language-code.yaml
+- path: ../../../../base/swpt-debtors/web-ui/replacements/client-name.yaml

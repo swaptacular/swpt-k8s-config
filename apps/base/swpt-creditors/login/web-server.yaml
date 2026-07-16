@@ -85,8 +85,6 @@ spec:
                 secretKeyRef:
                   name: spilo-env-secret
                   key: WALG_LIBSODIUM_KEY
-            - name: SIGNED_UP_REDIRECT_URL
-              value: https://$(WEBAPP_HOSTNAME)/creditors-webapp/
             - name: API_AUTH2_TOKEN_URL
               value: http://swpt-hydra-public:4444/oauth2/token
             - name: API_RESOURCE_SERVER

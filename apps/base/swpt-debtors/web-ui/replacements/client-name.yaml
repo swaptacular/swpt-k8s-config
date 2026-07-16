@@ -1,0 +1,12 @@
+source:
+  kind: ConfigMap
+  name: swpt-debtors-ui-config
+  fieldPath: data.CLIENT_NAME
+targets:
+  - select:
+      group: hydra.ory.sh
+      version: v1alpha1
+      kind: OAuth2Client
+      name: debtors-webapp
+    fieldPaths:
+      - spec.clientName

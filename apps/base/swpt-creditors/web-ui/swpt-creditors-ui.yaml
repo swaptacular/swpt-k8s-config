@@ -5,17 +5,20 @@ metadata:
   labels:
     app.kubernetes.io/name: swpt-creditors
     app.kubernetes.io/component: swpt-creditors-ui
+    app.kubernetes.io/instance: en
 spec:
   replicas: 2
   selector:
     matchLabels:
       app.kubernetes.io/name: swpt-creditors
       app.kubernetes.io/component: swpt-creditors-ui
+      app.kubernetes.io/instance: en
   template:
     metadata:
       labels:
         app.kubernetes.io/name: swpt-creditors
         app.kubernetes.io/component: swpt-creditors-ui
+        app.kubernetes.io/instance: en
     spec:
       affinity:
         podAntiAffinity:
@@ -24,6 +27,7 @@ spec:
               matchLabels:
                 app.kubernetes.io/name: swpt-creditors
                 app.kubernetes.io/component: swpt-creditors-ui
+                app.kubernetes.io/instance: en
             topologyKey: kubernetes.io/hostname
             matchLabelKeys:
             - pod-template-hash
@@ -46,6 +50,10 @@ spec:
               containerPort: 80
           readinessProbe:
             httpGet:
+              # Here "creditors-webapp" will be automatically replaced
+              # with the value of the "app.kubernetes.io/instance"
+              # label.
+              #
               path: /creditors-webapp/
               port: http
             initialDelaySeconds: 5
@@ -64,6 +72,10 @@ spec:
                   name: creditors-agent-config
                   key: WEBAPP_HOSTNAME
             - name: BASE_URL
+              # Here "creditors-webapp" will be automatically replaced
+              # with the value of the "app.kubernetes.io/instance"
+              # label.
+              #
               value: /creditors-webapp
             - name: SERVER_API_ENTRYPOINT
               value: https://$(PUBLIC_HOSTNAME)/creditors/.wallet
@@ -74,10 +86,13 @@ spec:
             - name: CLIENT_ID
               valueFrom:
                 secretKeyRef:
-                  name: oauth2-clients.creditors-webapp
+                  # Here "en" will be automatically replaced with the
+                  # value of the "app.kubernetes.io/instance" label.
+                  #
+                  name: oauth2-clients.creditors-webapp-en
                   key: CLIENT_ID
             - name: REDIRECT_URL
-              value: https://$(WEBAPP_HOSTNAME)/creditors-webapp/
+              value: https://$(WEBAPP_HOSTNAME)$(BASE_URL)/
           resources:
             limits:
               cpu: "1"
@@ -94,10 +109,12 @@ metadata:
   labels:
     app.kubernetes.io/name: swpt-creditors
     app.kubernetes.io/component: swpt-creditors-ui
+    app.kubernetes.io/instance: en
 spec:
   selector:
     app.kubernetes.io/name: swpt-creditors
     app.kubernetes.io/component: swpt-creditors-ui
+    app.kubernetes.io/instance: en
   ports:
     - name: http
       port: 80
@@ -112,6 +129,7 @@ metadata:
   labels:
     app.kubernetes.io/name: swpt-creditors
     app.kubernetes.io/component: swpt-creditors-ui
+    app.kubernetes.io/instance: en
 spec:
   maxUnavailable: 30%
   unhealthyPodEvictionPolicy: AlwaysAllow
@@ -119,6 +137,7 @@ spec:
     matchLabels:
       app.kubernetes.io/name: swpt-creditors
       app.kubernetes.io/component: swpt-creditors-ui
+      app.kubernetes.io/instance: en
 
 ---
 apiVersion: networking.k8s.io/v1
@@ -148,6 +167,9 @@ spec:
   - host: webapp-hostname
     http:
       paths:
+      # Here "creditors-webapp" will be automatically replaced with
+      # the value of the "app.kubernetes.io/instance" label.
+      #
       - path: /creditors-webapp/
         pathType: Prefix
         backend:
@@ -155,3 +177,33 @@ spec:
             name: swpt-creditors-ui
             port:
               name: http
+
+---
+apiVersion: hydra.ory.sh/v1alpha1
+kind: OAuth2Client
+metadata:
+  name: creditors-webapp
+  annotations:
+    kustomize.toolkit.fluxcd.io/prune: disabled
+spec:
+  clientName: "Creditors Agent UI"
+  grantTypes:
+    - authorization_code
+  responseTypes:
+    - code
+  scopeArray:
+    - access
+    - access.readonly
+    - disable_pin
+  # Here "en" will be automatically replaced with the value of the
+  # "app.kubernetes.io/instance" label.
+  #
+  secretName: oauth2-clients.creditors-webapp-en
+  redirectUris:
+    # Here "webapp-hostname" will be automatically replaced with the
+    # configured webapp hostname, and "creditors-webapp" will be
+    # replaced with the value of the "app.kubernetes.io/instance"
+    # label.
+    #
+    - https://webapp-hostname/creditors-webapp/
+  tokenEndpointAuthMethod: none
