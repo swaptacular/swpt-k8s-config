@@ -50,3 +50,10 @@ targets:
     options:
       delimiter: "-"
       index: 3
+  - select:
+      group: hydra.ory.sh
+      version: v1alpha1
+      kind: OAuth2Client
+      name: creditors-webapp
+    fieldPaths:
+      - spec.metadata.language

@@ -207,3 +207,8 @@ spec:
     #
     - https://webapp-hostname/creditors-webapp/
   tokenEndpointAuthMethod: none
+  metadata:
+    # Here "en" will be automatically replaced with the value of the
+    # "app.kubernetes.io/instance" label.
+    #
+    language: en
