@@ -301,7 +301,7 @@ images:
   digest: sha256:7a396d200c4c023f5cf46a3dc45d202917df4ef184e33580c3177a70c4a3675b
 - name: swpt-stomp
   newName: ghcr.io/swaptacular/swpt_stomp
-  digest: sha256:15cbc2b50b8728298627405461de3d4ce015f01964f7fd5f4e4ab60cd780698f
+  digest: sha256:4f5728593e30c5b14db22c015144fa542f2aebf528b201a782471fc014913da9
 - name: nginx
   newName: ghcr.io/swaptacular/nginx
   digest: sha256:65645c7bb6a0661892a8b03b89d0743208a18dd2f3f17a54ef4b76fb8e2f2a10
