@@ -43,6 +43,16 @@ secretGenerator:
   # case, specifying `AWS_ENDPOINT` should not be necessary.
   - AWS_REGION=us-east-1
 
+  # The S3 bucket to use for shipping WAL segments with WAL-G. It has
+  # to be present and accessible using the credentials defined above.
+  - WAL_S3_BUCKET=swpt
+
+  # Setting this to "true" forces the use of path-style addressing
+  # (i.e., http://s3.amazonaws.com/BUCKET/KEY) when connecting to an
+  # S3-compatible service that lack of support for sub-domain style
+  # bucket URLs.
+  - AWS_S3_FORCE_PATH_STYLE="true"
+
   # Specifies the trusted CA for the local MinIO S3 server. This is
   # not necessary for "proper" S3 providers, and should be removed or
   # commented out.

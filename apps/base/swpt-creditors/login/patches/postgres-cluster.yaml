@@ -131,6 +131,26 @@
 - op: add
   path: /spec/env/-
   value:
+    name: CLONE_WAL_S3_BUCKET
+    valueFrom:
+      secretKeyRef:
+        name: spilo-env-secret
+        key: WAL_S3_BUCKET
+        optional: true
+
+- op: add
+  path: /spec/env/-
+  value:
+    name: CLONE_AWS_S3_FORCE_PATH_STYLE
+    valueFrom:
+      secretKeyRef:
+        name: spilo-env-secret
+        key: AWS_S3_FORCE_PATH_STYLE
+        optional: true
+
+- op: add
+  path: /spec/env/-
+  value:
     name: CLONE_WALG_S3_CA_CERT_FILE
     valueFrom:
       secretKeyRef:
@@ -183,6 +203,26 @@
       secretKeyRef:
         name: spilo-env-secret
         key: AWS_ENDPOINT
+        optional: true
+
+- op: add
+  path: /spec/env/-
+  value:
+    name: STANDBY_WAL_S3_BUCKET
+    valueFrom:
+      secretKeyRef:
+        name: spilo-env-secret
+        key: WAL_S3_BUCKET
+        optional: true
+
+- op: add
+  path: /spec/env/-
+  value:
+    name: STANDBY_AWS_S3_FORCE_PATH_STYLE
+    valueFrom:
+      secretKeyRef:
+        name: spilo-env-secret
+        key: AWS_S3_FORCE_PATH_STYLE
         optional: true
 
 - op: add
