@@ -45,13 +45,22 @@ secretGenerator:
 
   # The S3 bucket to use for shipping WAL segments with WAL-G. It has
   # to be present and accessible using the credentials defined above.
-  - WAL_S3_BUCKET=swpt
+  # Must be unique for each Swaptacular node deployed on the
+  # Kubernetes cluster.
+  - WAL_S3_BUCKET=swpt-accounts
 
   # Setting this to "true" forces the use of path-style addressing
   # (i.e., http://s3.amazonaws.com/BUCKET/KEY) when connecting to an
   # S3-compatible service that lack of support for sub-domain style
-  # bucket URLs.
+  # bucket URLs. The default value is "false", but if you use MinIO
+  # this needs to be "true".
   - AWS_S3_FORCE_PATH_STYLE="true"
+
+  # Normally, this must always be set to an empty string. The default
+  # is "<NAMESPACE>-" which is not needed if WAL_S3_BUCKET is unique
+  # for each Swaptacular node, and can cause trouble when trying to
+  # restore the database from the S3 store.
+  - WAL_BUCKET_SCOPE_PREFIX=
 
   # Specifies the trusted CA for the local MinIO S3 server. This is
   # not necessary for "proper" S3 providers, and should be removed or
