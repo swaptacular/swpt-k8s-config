@@ -947,6 +947,13 @@ data in this database **would not** be catastrophic, and since Ory
 Hydra supports databases specifically designed to scale, you could
 relatively easily switch to [CockroachDB], [YugabyteDB], or [Citus].
 
+## Docker image repositories
+
+The docker images needed for the Kubernetes cluster are uploaded at
+`docker://ghcr.io/swaptacular/` (You can see the full list at
+https://github.com/orgs/swaptacular/packages ). A backup is maintained
+at `docker://docker.io/epandurski/` (See
+https://hub.docker.com/u/epandurski ).
 
 [Swaptacular nodes]: https://swaptacular.github.io/overview
 [Kubernetes]: https://kubernetes.io/
