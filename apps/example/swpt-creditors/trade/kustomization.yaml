@@ -163,10 +163,10 @@ replicas:
 images:
 - name: swpt-trade
   newName: ghcr.io/swaptacular/swpt_trade
-  digest: sha256:1217f7b69a51fdbc2d3c19d168dcf98c83f388f9dabc452411635a8da5614584
+  digest: sha256:8c880a57ca29b1b6e4a508376535bc5ab34b9d394dad8e6609be36d8c02edf6e
 - name: swpt-trade-swagger-ui
   newName: ghcr.io/swaptacular/swpt_trade_swagger_ui
-  digest: sha256:22b4cf2c0de78e8962f3f919615cec276578d7cd61505df549e6ccd33ce3b235
+  digest: sha256:fe92679e2b7b96f90f7bc2272ea4bed7948ab7c541050f0b1c1bcfa406d446b2
 
 secretGenerator:
 - name: postgres.trade-solver-db.credentials.postgresql.acid.zalan.do
