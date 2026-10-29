@@ -217,7 +217,7 @@ export DN_SERIAL_NUMBER=$(get_dn_filed serialNumber "$DN")
 [[ "$DN_O" == "Swaptacular Nodes Registry" ]] || invalid_certificate
 [[ -n "$DN_OU" ]] || invalid_node_type
 [[ "$DN_SERIAL_NUMBER" != "$(cat "$DIR/db/nodeid")" ]] || invalid_node_type
-echo "$DN_SERIAL_NUMBER" | grep -E '[a-f0-9]+' > /dev/null || invalid_node_type
+echo "$DN_SERIAL_NUMBER" | grep -E '^[a-f0-9]+$' > /dev/null || invalid_node_type
 
 mkdir "$DIR/peers" 2> /dev/null || true
 peer_dir="$DIR/peers/$DN_SERIAL_NUMBER"
