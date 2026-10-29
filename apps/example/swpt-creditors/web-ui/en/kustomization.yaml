@@ -73,7 +73,7 @@ replicas:
 images:
 - name: swpt-creditors-ui
   newName: ghcr.io/swaptacular/swpt_creditors_ui
-  digest: sha256:e6409e1ee39be6210c4c031e78c0446a8e2ab949d74c48ccce3eca1f36aecf2f
+  digest: sha256:c1145c033d34b1fd2488ccf1c956d1cb730be47ce93730868ba4e048fd50e0d7
 
 resources:
 - ../../../../base/swpt-creditors/web-ui/swpt-creditors-ui.yaml
