@@ -46,7 +46,7 @@ if [ -s "$crt_file" ]; then
     exit 1
 fi
 
-DN=$(openssl req -noout -subject -in "$csr_file")
+DN=$(openssl req -noout -subject -nameopt oneline -in "$csr_file")
 DN_O=$(get_dn_filed O "$DN")
 DN_OU=$(get_dn_filed OU "$DN")
 DN_SERIAL_NUMBER=$(get_dn_filed serialNumber "$DN")

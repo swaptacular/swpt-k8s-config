@@ -68,7 +68,7 @@ function verify_cert_file {
 }
 
 function verify_issuer {
-    DN=$(openssl x509 -noout -issuer -in "$1")
+    DN=$(openssl x509 -noout -issuer -in "$1" -nameopt oneline)
     DN_O=$(get_dn_filed O "$DN")
     DN_OU=$(get_dn_filed OU "$DN")
     DN_SERIAL_NUMBER=$(get_dn_filed serialNumber "$DN")
@@ -112,7 +112,7 @@ function verify_basic_constraints {
 }
 
 function verify_subject {
-    sbj_dn=$(openssl x509 -noout -subject -in "$1")
+    sbj_dn=$(openssl x509 -noout -subject -in "$1" -nameopt oneline)
     sbj_dn_o=$(get_dn_filed O "$sbj_dn")
     sbj_dn_ou=$(get_dn_filed OU "$sbj_dn")
     sbj_dn_sn=$(get_dn_filed serialNumber "$sbj_dn")

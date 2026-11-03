@@ -71,8 +71,8 @@ function verify_root_crt_files {
     crt_pubkey="$(openssl x509 -in "$1" -noout -pubkey)"
     csr_pubkey="$(openssl req -in "$2" -noout -pubkey)"
     [[ "$crt_pubkey" == "$csr_pubkey" ]] || invalid_certificate
-    DN=$(openssl req -in "$2" -noout -subject )
-    [[ "$DN" == "$(openssl x509 -in "$1" -noout -subject)" ]] || invalid_certificate
+    DN=$(openssl req -in "$2" -noout -subject -nameopt oneline)
+    [[ "$DN" == "$(openssl x509 -in "$1" -noout -subject -nameopt oneline)" ]] || invalid_certificate
     openssl verify -check_ss_sig -trusted "$1" "$1" || invalid_certificate
 }
 
