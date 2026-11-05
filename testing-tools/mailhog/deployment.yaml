@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: mailhog
-          image: mailhog/mailhog
+          image: ghcr.io/swaptacular/mailhog:v1.0.1
           ports:
             - containerPort: 1025
               name: smtp
