@@ -131,15 +131,15 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: allow-login-web-server-email-servers-access
+  name: allow-login-email-servers-access
   labels:
     app.kubernetes.io/name: swpt-login
-    app.kubernetes.io/component: web-server
+    app.kubernetes.io/component: smtp-smarthost
 spec:
   podSelector:
     matchLabels:
       app.kubernetes.io/name: swpt-login
-      app.kubernetes.io/component: web-server
+      app.kubernetes.io/component: smtp-smarthost
   policyTypes:
   - Egress
   egress:

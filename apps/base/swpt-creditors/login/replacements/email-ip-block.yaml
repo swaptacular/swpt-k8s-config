@@ -5,6 +5,6 @@ source:
 targets:
   - select:
       kind: NetworkPolicy
-      name: allow-login-web-server-email-servers-access
+      name: allow-login-email-servers-access
     fieldPaths:
       - spec.egress.0.to.0.ipBlock.cidr

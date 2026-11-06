@@ -8,3 +8,4 @@ resources:
 - web-server.yaml
 - flush-activate-users.yaml
 - flush-deactivate-users.yaml
+- smtp-smarthost.yaml

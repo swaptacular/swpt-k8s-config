@@ -52,23 +52,20 @@ configMapGenerator:
   # ever been suspended.
   - SUSPENDED_ACCOUNT_HELP_URL=https://github.com/swaptacular/swpt_login
 
-  # SMTP server connection parameters. You should set MAIL_SERVER to
-  # the name of your mail server, and MAIL_PORT to the SMTP port on
-  # that server. MAIL_DEFAULT_SENDER should be set to the email
-  # address from which outgoing emails will be sent to users. Do not
-  # set MAIL_USERNAME and MAIL_PASSWORD if the SMPT server does not
-  # require username and password (you can also set them to empty
-  # strings). MAIL_USE_SSL detemines whether SSL is required from the
-  # beginning, and MAIL_USE_TLS determines whether the STARTTLS
-  # extension should be used after the connection to the mail server
-  # has bee established.
-  - MAIL_SERVER=mailhog.mailhog.svc.cluster.local
-  - MAIL_PORT=1025
-  - MAIL_DEFAULT_SENDER=Demo Creditors Agent <no-reply@example.com>
+  # SMTP server connection parameters. Normally, you should not change
+  # anything here. Outgoing emails will be sent via an SMTP smart host
+  # running in the cluster. The smart host will queue the messages and
+  # send them asynchronously.
+  - MAIL_SERVER=login-smtp-smarthost
+  - MAIL_PORT=25
   - MAIL_USERNAME=
   - MAIL_PASSWORD=
   - MAIL_USE_SSL=False
   - MAIL_USE_TLS=False
+
+  # This should be set to the name and email address from which
+  # outgoing emails will be sent to users.
+  - MAIL_DEFAULT_SENDER=Demo Creditors Agent <no-reply@example.com>
 
   # When set to "False" (the default is "True"), does not allow new
   # user registrations.
@@ -148,6 +145,8 @@ configMapGenerator:
 replicas:
 - name: login-web-server
   count: 1
+- name: login-smtp-smarthost
+  count: 1
 
 # OCI images to use for the different containers:
 #
@@ -155,6 +154,9 @@ images:
 - name: swpt-login
   newName: ghcr.io/swaptacular/swpt_login
   digest: sha256:7c76b92ee7ee65af04fc508e582683e67959a8ac8e6ac47b6524d33e9e7272dc
+- name: smtp-smarthost
+  newName: ghcr.io/swaptacular/docker_postfix
+  digest: sha256:0d70a6b1eb0e375cc2fcfd7f4d7a02203a84f90f3e677adb0311f9be2dbe2acd
 
 secretGenerator:
 - name: swpt-login-captcha-keys
@@ -182,6 +184,43 @@ secretGenerator:
   # "0x0000000000000000000000000000000000000000".
   #
   - CAPTCHA_SITEKEY_SECRET=../secrets/captcha-sitekey-secret.encrypted
+
+  options:
+    labels:
+      app.kubernetes.io/name: swpt-login
+  type: Opaque
+
+- name: swpt-login-smtp-smarthost
+
+  # Parameters for the SMTP smart host. It is used to queue emails
+  # before sending them to the recipient's SMTP server.
+
+  literals:
+  # Set this to the hostname of the SMTP server which will send
+  # (relay) your outgoing emails.
+  - SMTP_SERVER=mailhog.mailhog.svc.cluster.local
+
+  # Set this to the port on which the SMTP server listens.
+  - SMTP_PORT=1025
+
+  # The username to authenticate with the SMTP server. Leave it empty
+  # if the SMTP server requires no authentication.
+  - SMTP_USERNAME=
+
+  # Server hostname for the smart host container. Sent emails will
+  # appear to come from the hostname's domain.
+  - SERVER_HOSTNAME=mail.example.com
+
+  files:
+  # A SOPS-encrypted file containing the SMTP authentication password.
+  # To SOPS-encrypt the password, you may use these commands:
+  #
+  # $ echo -n 'YOUR_SMTP_PASSWORD' > login-smtp-password
+  # $ sops encrypt login-smtp-password > login-smtp-password.encrypted
+  # $ shred -z login-smtp-password
+  # $ rm login-smtp-password
+  #
+  - SMTP_PASSWORD=../secrets/login-smtp-password.encrypted
 
   options:
     labels:
