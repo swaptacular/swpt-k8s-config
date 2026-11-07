@@ -125,6 +125,10 @@ configMapGenerator:
       kustomize_postgres_exporter_cpu_limit: 2000m
       kustomize_postgres_exporter_memory_request: 13Mi
       kustomize_postgres_exporter_memory_limit: 1Gi
+      kustomize_smtp_smarthost_cpu_request: 1m
+      kustomize_smtp_smarthost_cpu_limit: 1000m
+      kustomize_smtp_smarthost_memory_request: 10Mi
+      kustomize_smtp_smarthost_memory_limit: 1Gi
       kustomize_walg_exporter_cpu_request: 1m
       kustomize_walg_exporter_cpu_limit: 2000m
       kustomize_walg_exporter_memory_request: 28Mi
@@ -298,6 +302,10 @@ replacements:
 - path: ../../../base/swpt-creditors/login/replacements/postgres-exporter-cpu-limit.yaml
 - path: ../../../base/swpt-creditors/login/replacements/postgres-exporter-memory-request.yaml
 - path: ../../../base/swpt-creditors/login/replacements/postgres-exporter-memory-limit.yaml
+- path: ../../../base/swpt-debtors/login/replacements/smtp-smarthost-cpu-limit.yaml
+- path: ../../../base/swpt-debtors/login/replacements/smtp-smarthost-cpu-request.yaml
+- path: ../../../base/swpt-debtors/login/replacements/smtp-smarthost-memory-limit.yaml
+- path: ../../../base/swpt-debtors/login/replacements/smtp-smarthost-memory-request.yaml
 - path: ../../../base/swpt-creditors/login/replacements/walg-exporter-image.yaml
 - path: ../../../base/swpt-creditors/login/replacements/walg-exporter-cpu-request.yaml
 - path: ../../../base/swpt-creditors/login/replacements/walg-exporter-cpu-limit.yaml
