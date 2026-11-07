@@ -57,6 +57,59 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
+  name: isolate-smtp-smarthost
+  labels:
+    app.kubernetes.io/name: swpt-login
+    app.kubernetes.io/component: smtp-smarthost
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: swpt-login
+      app.kubernetes.io/component: smtp-smarthost
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app.kubernetes.io/name: swpt-login
+          app.kubernetes.io/component: smtp-smarthost
+    - namespaceSelector:
+        matchLabels:
+          app.kubernetes.io/name: monitoring
+      podSelector:
+        matchExpressions:
+        - key: app.kubernetes.io/name
+          operator: In
+          values: ["prometheus"]
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-smtp-smarthost-users
+  labels:
+    app.kubernetes.io/name: swpt-login
+    app.kubernetes.io/component: smtp-smarthost
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: swpt-login
+      app.kubernetes.io/component: smtp-smarthost
+  policyTypes:
+  - Ingress
+  ingress:
+  - ports:
+    - port: 25
+    from:
+    - podSelector:
+        matchLabels:
+          app.kubernetes.io/name: swpt-login
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
   name: isolate-dragonfly-db
   labels:
     app.kubernetes.io/name: swpt-login
