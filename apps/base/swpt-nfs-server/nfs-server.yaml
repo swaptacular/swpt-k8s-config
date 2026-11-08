@@ -27,8 +27,7 @@ spec:
           image: swpt-nfs-server
           args: ['nfsd']
           securityContext:
-            capabilities:
-              add: ["SYS_ADMIN", "SETPCAP"]
+            privileged: true
           ports:
             - name: nfs
               containerPort: 2049
