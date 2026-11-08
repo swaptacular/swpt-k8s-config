@@ -53,7 +53,7 @@ patches:
 - patch: |-
     - op: add
       path: /metadata/annotations/swpt-node-id
-      value: $peer_id
+      value: "$peer_id"
     - op: replace
       path: /spec/replicas
       value: $number_of_queues
