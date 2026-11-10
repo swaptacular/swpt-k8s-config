@@ -280,7 +280,7 @@ spec:
       priorityClassName: critical-monitoring
       resources:
         limits:
-          cpu: 200m
+          cpu: "1"
           memory: 50Mi
         requests:
           cpu: 10m

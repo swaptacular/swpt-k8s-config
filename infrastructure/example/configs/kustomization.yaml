@@ -427,7 +427,7 @@ patches:
           cpu: 1m
           memory: 83Mi
         limits:
-          cpu: 200m
+          cpu: "1"
           memory: 128Mi
 
   target:
