@@ -309,7 +309,7 @@ patches:
           cpu: 1m
           memory: 19Mi
         limits:
-          cpu: 200m
+          cpu: "1"
           memory: 50Mi
 
     # Specifies OCI image and CPU and memory requests and limits for
