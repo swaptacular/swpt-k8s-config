@@ -9,8 +9,13 @@ spec:
   endpoints:
   - port: prometheus
     scheme: http
+    path: /metrics
     interval: 15s
     scrapeTimeout: 14s
+    relabelings:
+      - sourceLabels: [__metrics_path__]
+        targetLabel: metrics_path
+
   - port: prometheus
     scheme: http
     path: /metrics/detailed
@@ -20,6 +25,10 @@ spec:
         - queue_metrics
     interval: 15s
     scrapeTimeout: 14s
+    relabelings:
+      - sourceLabels: [__metrics_path__]
+        targetLabel: metrics_path
+
   selector:
     matchLabels:
       app.kubernetes.io/component: rabbitmq
