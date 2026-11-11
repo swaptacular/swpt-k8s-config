@@ -449,7 +449,7 @@ images:
   digest: sha256:7a396d200c4c023f5cf46a3dc45d202917df4ef184e33580c3177a70c4a3675b
 - name: swpt-stomp
   newName: ghcr.io/swaptacular/swpt_stomp
-  digest: sha256:14bca72df10105393780bee84e753a303064571d699fdaf63d24a9c6df0b75ac
+  digest: sha256:e414540adb916f7789702ace56650ac047aac5dd1bbd4c37e7b5c524223126e6
 - name: swpt-nfs-server
   newName: ghcr.io/swaptacular/swpt_nfs_server
   digest: sha256:366bd4af119b998b46df169ad15c889758e646377676598aac3e9f51bb2d02c1
