@@ -157,7 +157,7 @@ replicas:
 images:
 - name: swpt-login
   newName: ghcr.io/swaptacular/swpt_login
-  digest: sha256:7c76b92ee7ee65af04fc508e582683e67959a8ac8e6ac47b6524d33e9e7272dc
+  digest: sha256:adc5609ac0d1ce6edc3843fa6fbf66e61fb4f8bde00a69c18876be51fed57f08
 - name: smtp-smarthost
   newName: ghcr.io/swaptacular/docker_postfix
   digest: sha256:0d70a6b1eb0e375cc2fcfd7f4d7a02203a84f90f3e677adb0311f9be2dbe2acd
