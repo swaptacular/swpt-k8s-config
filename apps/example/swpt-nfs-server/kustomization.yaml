@@ -8,7 +8,7 @@ secretGenerator:
   # authenticate to the GitOps Git server. To generate a new SSH
   # private/public key pair, you may use this command:
   #
-  # $ ssh-keygen -f id_rsa -N ''
+  # $ ssh-keygen -t rsa -f id_rsa -N ''
   #
   # This will create two files:
   # 1. "id_rsa", containing the unencrypted SSH private key;
