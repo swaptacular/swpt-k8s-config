@@ -67,7 +67,7 @@ configMapGenerator:
         kustomize_walg_exporter_image: ghcr.io/swaptacular/wal-g-exporter@sha256:5f842526cdf313a3746acb8c991abc6e9243b6dc902bbf21638588e7b38803ad
         # Do not change the next two lines!
         kustomize_zalando_top_level_domain: do
-        kustomize_zalando_clone_timestamp: "2199-01-01T00:00:00.000+00:00"
+        kustomize_zalando_clone_timestamp: "2199-01-01T00:00:00.000+01:00"
 # The number of replicas for each component. One replica works fine,
 # but to have high-availability, should be at least 2. You should
 # increase those numbers as the load increases.
