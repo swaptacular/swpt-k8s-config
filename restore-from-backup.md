@@ -72,3 +72,14 @@ The parentheses keep shell settings local to these commands. The
 temporary keyring is removed automatically when the block exits. The
 resulting `sops.asc` is unprotected and readable and writable only by
 your user.
+
+## Configure all Postgres databases to be cloned from S3
+
+You can use this command to find all the places in the YAML files that
+need to be edited:
+
+``` bash
+grep -rnF "Uncomment the these lines to recover from the S3 backup."
+```
+
+Follow the comments that this `grep` search leads to.
